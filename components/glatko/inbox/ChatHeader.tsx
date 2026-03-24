@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { ArrowLeft, CheckCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -37,10 +38,13 @@ export function ChatHeader({
 
       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-teal-500/20">
         {otherUser.avatar_url ? (
-          <img
+          <Image
             src={otherUser.avatar_url}
             alt={otherUser.full_name}
+            width={40}
+            height={40}
             className="h-10 w-10 rounded-full object-cover"
+            unoptimized
           />
         ) : (
           <span className="text-sm font-semibold text-teal-400">

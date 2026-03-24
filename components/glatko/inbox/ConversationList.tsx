@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Mail } from "lucide-react";
@@ -119,10 +120,13 @@ export function ConversationList({
             >
               <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-teal-500/20">
                 {other?.avatar_url ? (
-                  <img
+                  <Image
                     src={other.avatar_url}
                     alt={otherName}
+                    width={44}
+                    height={44}
                     className="h-11 w-11 rounded-full object-cover"
+                    unoptimized
                   />
                 ) : (
                   <span className="text-sm font-semibold text-teal-400">

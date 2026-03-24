@@ -16,8 +16,23 @@ import { routing } from "@/i18n/routing";
 import { BackgroundGrids } from "@/components/aceternity/background-grids";
 import type { Locale } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
-import { getProfessionalProfile } from "@/lib/supabase/glatko.server";
+import { getProfessionalProfile, getPublishedReviews, calculateTrustBadges } from "@/lib/supabase/glatko.server";
+import { TrustBadge } from "@/components/glatko/trust/TrustBadge";
+import { ReviewSection } from "@/components/glatko/review/ReviewSection";
 import type { MultiLangText, ProService } from "@/types/glatko";
+
+type ReviewItem = {
+  id: string;
+  overall_rating: number;
+  quality_rating: number | null;
+  communication_rating: number | null;
+  punctuality_rating: number | null;
+  review_text: string | null;
+  photos: string[];
+  created_at: string;
+  reviewer: { full_name: string; avatar_url: string | null } | null;
+  service_request: { title: string; category: { name: Record<string, string>; icon: string } | null } | null;
+};
 
 function labelForCategory(
   category: ProService["category"] | undefined,
@@ -55,6 +70,24 @@ export default async function ProviderProfilePage({ params }: PageProps) {
 
   const profile = await getProfessionalProfile(id);
   if (!profile) notFound();
+
+  const { reviews, total: totalReviews } = await getPublishedReviews(id);
+  const trustBadges = await calculateTrustBadges(id);
+
+  const qualityRated = reviews.filter((r: { quality_rating: number | null }) => r.quality_rating != null);
+  const avgQuality = qualityRated.length > 0
+    ? qualityRated.reduce((sum: number, r: { quality_rating: number | null }) => sum + (r.quality_rating ?? 0), 0) / qualityRated.length
+    : null;
+
+  const commRated = reviews.filter((r: { communication_rating: number | null }) => r.communication_rating != null);
+  const avgCommunication = commRated.length > 0
+    ? commRated.reduce((sum: number, r: { communication_rating: number | null }) => sum + (r.communication_rating ?? 0), 0) / commRated.length
+    : null;
+
+  const punctRated = reviews.filter((r: { punctuality_rating: number | null }) => r.punctuality_rating != null);
+  const avgPunctuality = punctRated.length > 0
+    ? punctRated.reduce((sum: number, r: { punctuality_rating: number | null }) => sum + (r.punctuality_rating ?? 0), 0) / punctRated.length
+    : null;
 
   const displayName =
     profile.business_name?.trim() ||
@@ -112,6 +145,13 @@ export default async function ProviderProfilePage({ params }: PageProps) {
                   <CheckCircle className="h-3.5 w-3.5" aria-hidden />
                   {t("pro.profile.verified")}
                 </span>
+              )}
+              {trustBadges.length > 0 && (
+                <div className="flex flex-wrap items-center gap-1.5 mt-2">
+                  {trustBadges.map((badge) => (
+                    <TrustBadge key={badge} badge={badge} size="md" />
+                  ))}
+                </div>
               )}
             </div>
             {profile.location_city && (
@@ -233,8 +273,16 @@ export default async function ProviderProfilePage({ params }: PageProps) {
       </SpotlightCard>
 
       <SpotlightCard className="mb-8">
-        <h2 className="mb-4 font-serif text-xl text-gray-900 dark:text-white">{t("pro.profile.reviews")}</h2>
-        <p className="text-sm text-gray-500 dark:text-white/50">{t("pro.profile.noReviews")}</p>
+        <ReviewSection
+          reviews={reviews as ReviewItem[]}
+          totalReviews={totalReviews}
+          avgRating={rating}
+          avgQuality={avgQuality}
+          avgCommunication={avgCommunication}
+          avgPunctuality={avgPunctuality}
+          professionalId={id}
+          locale={locale}
+        />
       </SpotlightCard>
 
       <div className="flex justify-center">

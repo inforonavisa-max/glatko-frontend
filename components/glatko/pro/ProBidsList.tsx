@@ -5,8 +5,8 @@ import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Gavel, Calendar, MapPin, DollarSign } from "lucide-react";
-import { withdrawBidAction } from "@/app/[locale]/pro/dashboard/bids/actions";
+import { Gavel, Calendar, MapPin, DollarSign, Play, CheckCircle, MessageSquare, Star, Loader2 } from "lucide-react";
+import { withdrawBidAction, startJobAction, completeJobAction } from "@/app/[locale]/pro/dashboard/bids/actions";
 import { cn } from "@/lib/utils";
 
 interface BidItem {
@@ -50,6 +50,7 @@ export function ProBidsList({ bids, locale }: Props) {
   const [filter, setFilter] = useState("all");
   const [isPending, startTransition] = useTransition();
   const [withdrawingId, setWithdrawingId] = useState<string | null>(null);
+  const [actionId, setActionId] = useState<string | null>(null);
 
   const filters = [
     { key: "all", label: t("bids.all") },
@@ -68,6 +69,26 @@ export function ProBidsList({ bids, locale }: Props) {
       await withdrawBidAction(bidId);
       router.refresh();
       setWithdrawingId(null);
+    });
+  }
+
+  function handleStartJob(requestId: string) {
+    if (!window.confirm(t("jobStatus.startJobConfirm"))) return;
+    setActionId(requestId);
+    startTransition(async () => {
+      await startJobAction(requestId);
+      router.refresh();
+      setActionId(null);
+    });
+  }
+
+  function handleCompleteJob(requestId: string) {
+    if (!window.confirm(t("jobStatus.completeJobConfirm"))) return;
+    setActionId(requestId);
+    startTransition(async () => {
+      await completeJobAction(requestId);
+      router.refresh();
+      setActionId(null);
     });
   }
 
@@ -164,6 +185,47 @@ export function ProBidsList({ bids, locale }: Props) {
                     >
                       {isPending && withdrawingId === bid.id ? "..." : t("bids.withdraw")}
                     </button>
+                  </div>
+                )}
+
+                {bid.status === "accepted" && req && (
+                  <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
+                    <Link
+                      href={`/${locale}/inbox`}
+                      className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-teal-500/30 bg-teal-500/5 px-4 py-2 text-xs font-medium text-teal-400 transition-all hover:bg-teal-500/10"
+                    >
+                      <MessageSquare className="h-3 w-3" />
+                      {t("bids.messageButton")}
+                    </Link>
+                    {req.status === "assigned" && (
+                      <button
+                        onClick={() => handleStartJob(req.id)}
+                        disabled={isPending && actionId === req.id}
+                        className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-4 py-2 text-xs font-medium text-white shadow-lg shadow-teal-500/25 transition-all hover:shadow-xl disabled:opacity-50"
+                      >
+                        {isPending && actionId === req.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <Play className="h-3 w-3" />}
+                        {t("jobStatus.startJob")}
+                      </button>
+                    )}
+                    {req.status === "in_progress" && (
+                      <button
+                        onClick={() => handleCompleteJob(req.id)}
+                        disabled={isPending && actionId === req.id}
+                        className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-green-500 to-green-600 px-4 py-2 text-xs font-medium text-white shadow-lg shadow-green-500/25 transition-all hover:shadow-xl disabled:opacity-50"
+                      >
+                        {isPending && actionId === req.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <CheckCircle className="h-3 w-3" />}
+                        {t("jobStatus.completeJob")}
+                      </button>
+                    )}
+                    {req.status === "completed" && (
+                      <Link
+                        href={`/${locale}/review/${req.id}`}
+                        className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-4 py-2 text-xs font-medium text-white shadow-lg shadow-amber-500/25 transition-all hover:shadow-xl"
+                      >
+                        <Star className="h-3 w-3" />
+                        {t("review.rateCustomer")}
+                      </Link>
+                    )}
                   </div>
                 )}
               </motion.div>

@@ -555,3 +555,176 @@ export async function getUnreadCount(userId: string): Promise<number> {
   if (error) return 0;
   return count || 0;
 }
+
+// ─── G5: Review + Trust ───
+
+export async function startJob(requestId: string, professionalId: string) {
+  const supabase = createClient();
+
+  const { data: request } = await supabase
+    .from("glatko_service_requests")
+    .select("assigned_bid_id, status")
+    .eq("id", requestId)
+    .single();
+
+  if (!request || request.status !== "assigned") {
+    throw new Error("Invalid request status");
+  }
+
+  const { data: bid } = await supabase
+    .from("glatko_bids")
+    .select("professional_id")
+    .eq("id", request.assigned_bid_id)
+    .single();
+
+  if (bid?.professional_id !== professionalId) {
+    throw new Error("Unauthorized");
+  }
+
+  const { error } = await supabase
+    .from("glatko_service_requests")
+    .update({ status: "in_progress", updated_at: new Date().toISOString() })
+    .eq("id", requestId);
+
+  if (error) throw error;
+}
+
+export async function completeJob(requestId: string, professionalId: string) {
+  const supabase = createClient();
+
+  const { data: request } = await supabase
+    .from("glatko_service_requests")
+    .select("assigned_bid_id, status")
+    .eq("id", requestId)
+    .single();
+
+  if (!request || request.status !== "in_progress") {
+    throw new Error("Invalid request status");
+  }
+
+  const { data: bid } = await supabase
+    .from("glatko_bids")
+    .select("professional_id")
+    .eq("id", request.assigned_bid_id)
+    .single();
+
+  if (bid?.professional_id !== professionalId) {
+    throw new Error("Unauthorized");
+  }
+
+  const { error } = await supabase
+    .from("glatko_service_requests")
+    .update({ status: "completed", updated_at: new Date().toISOString() })
+    .eq("id", requestId);
+
+  if (error) throw error;
+}
+
+export async function createReview(data: {
+  service_request_id: string;
+  bid_id: string;
+  reviewer_id: string;
+  reviewee_id: string;
+  reviewer_role: "customer" | "professional";
+  overall_rating: number;
+  quality_rating?: number;
+  communication_rating?: number;
+  punctuality_rating?: number;
+  review_text?: string;
+  photos?: string[];
+}) {
+  const supabase = createClient();
+  const { data: review, error } = await supabase
+    .from("glatko_reviews")
+    .insert(data)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return review;
+}
+
+export async function getReviewStatus(requestId: string, userId: string) {
+  const supabase = createClient();
+
+  const { data: myReview } = await supabase
+    .from("glatko_reviews")
+    .select("*")
+    .eq("service_request_id", requestId)
+    .eq("reviewer_id", userId)
+    .single();
+
+  const { data: otherReview } = await supabase
+    .from("glatko_reviews")
+    .select("id, is_published")
+    .eq("service_request_id", requestId)
+    .neq("reviewer_id", userId)
+    .single();
+
+  return {
+    myReview: myReview || null,
+    otherHasReviewed: !!otherReview,
+    bothPublished: myReview?.is_published === true,
+  };
+}
+
+export async function getPublishedReviews(
+  professionalId: string,
+  limit = 10,
+  offset = 0
+) {
+  const supabase = createClient();
+  const { data, error, count } = await supabase
+    .from("glatko_reviews")
+    .select(
+      `*,
+      reviewer:profiles!reviewer_id(full_name, avatar_url),
+      service_request:glatko_service_requests(
+        title,
+        category:glatko_service_categories(name, icon)
+      )`,
+      { count: "exact" }
+    )
+    .eq("reviewee_id", professionalId)
+    .eq("reviewer_role", "customer")
+    .eq("is_published", true)
+    .order("created_at", { ascending: false })
+    .range(offset, offset + limit - 1);
+
+  if (error) throw error;
+  return { reviews: data || [], total: count || 0 };
+}
+
+export async function calculateTrustBadges(
+  professionalId: string
+): Promise<string[]> {
+  const supabase = createClient();
+  const { data: profile } = await supabase
+    .from("glatko_professional_profiles")
+    .select(
+      "is_verified, avg_rating, total_reviews, completed_jobs, created_at"
+    )
+    .eq("id", professionalId)
+    .single();
+
+  if (!profile) return [];
+
+  const badges: string[] = [];
+
+  if (profile.is_verified) badges.push("verified");
+
+  if (profile.avg_rating >= 4.8 && profile.completed_jobs >= 10) {
+    badges.push("top_pro");
+  }
+
+  if (profile.completed_jobs >= 20) badges.push("experienced");
+
+  const createdAt = new Date(profile.created_at);
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  if (createdAt > thirtyDaysAgo && profile.total_reviews === 0) {
+    badges.push("new_pro");
+  }
+
+  return badges;
+}

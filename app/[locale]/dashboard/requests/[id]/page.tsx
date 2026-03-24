@@ -17,6 +17,7 @@ import {
   Phone,
   MessageSquare,
   Image as ImageIcon,
+  Star,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { RequestStatus } from "@/types/glatko";
@@ -141,15 +142,20 @@ export default async function RequestDetailPage({ params }: Props) {
             const reached = statusIdx >= i;
             return (
               <div key={s} className="flex flex-1 items-center gap-2">
-                <div
-                  className={cn(
-                    "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-xs font-bold",
-                    reached
-                      ? "border-teal-500 bg-teal-500 text-white"
-                      : "border-gray-200 text-gray-400 dark:border-white/10 dark:text-white/30"
+                <div className="relative">
+                  {statusIdx === i && reached && (
+                    <div className="absolute inset-0 animate-ping rounded-full bg-teal-500/30" />
                   )}
-                >
-                  {i + 1}
+                  <div
+                    className={cn(
+                      "relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-xs font-bold",
+                      reached
+                        ? "border-teal-500 bg-teal-500 text-white"
+                        : "border-gray-200 text-gray-400 dark:border-white/10 dark:text-white/30"
+                    )}
+                  >
+                    {i + 1}
+                  </div>
                 </div>
                 {i < TIMELINE_STATUSES.length - 1 && (
                   <div
@@ -173,6 +179,23 @@ export default async function RequestDetailPage({ params }: Props) {
           ))}
         </div>
       </SpotlightCard>
+
+      {(status === "in_progress" || status === "assigned") && (
+        <div className="mb-6 flex items-center gap-3 rounded-2xl border border-teal-500/20 bg-teal-500/5 px-5 py-4">
+          {status === "assigned" && (
+            <>
+              <div className="h-2.5 w-2.5 shrink-0 rounded-full bg-indigo-400" />
+              <p className="text-sm font-medium text-gray-700 dark:text-white/70">{t("jobStatus.assigned")}</p>
+            </>
+          )}
+          {status === "in_progress" && (
+            <>
+              <div className="h-2.5 w-2.5 shrink-0 animate-pulse rounded-full bg-teal-400" />
+              <p className="text-sm font-medium text-gray-700 dark:text-white/70">{t("jobStatus.inProgress")}</p>
+            </>
+          )}
+        </div>
+      )}
 
       <SpotlightCard className="mb-6">
         <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-400 dark:text-white/30">
@@ -256,6 +279,30 @@ export default async function RequestDetailPage({ params }: Props) {
           locale={locale}
         />
       </SpotlightCard>
+
+      {(status === "completed" || status === "reviewed") && (
+        <SpotlightCard className="mb-6">
+          <div className="flex flex-col items-center gap-4 py-4 text-center sm:flex-row sm:text-left">
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-amber-400/20 to-amber-500/20">
+              <Star className="h-7 w-7 text-amber-400" />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-serif text-lg font-semibold text-gray-900 dark:text-white">
+                {t("review.jobCompleted")}
+              </h3>
+              <p className="mt-1 text-sm text-gray-500 dark:text-white/50">
+                {t("review.subtitle")}
+              </p>
+            </div>
+            <Link
+              href={`/review/${id}`}
+              className="shrink-0 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-3 text-sm font-medium text-white shadow-lg shadow-amber-500/25 transition-all hover:shadow-xl hover:shadow-amber-500/30 active:scale-[0.98]"
+            >
+              {t("review.ratePro")}
+            </Link>
+          </div>
+        </SpotlightCard>
+      )}
 
       {isCancellable && (
         <div className="flex justify-end">
