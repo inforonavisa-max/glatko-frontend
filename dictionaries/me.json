@@ -1,0 +1,213 @@
+{
+  "brand": {
+    "name": "Glatko",
+    "tagline": "Premium platforma usluga Crne Gore",
+    "description": "Pouzdani profesionalci za vaš dom, plovilo i životni stil"
+  },
+  "nav": {
+    "home": "Početna",
+    "services": "Usluge",
+    "howItWorks": "Kako funkcioniše",
+    "becomeAPro": "Postanite profesionalac",
+    "login": "Prijavite se",
+    "register": "Registrujte se",
+    "myAccount": "Moj nalog",
+    "dashboard": "Kontrolna tabla",
+    "logout": "Odjavite se",
+    "requestService": "Zatražite uslugu",
+    "menu": "Meni"
+  },
+  "hero": {
+    "title": "Pouzdani profesionalci u Crnoj Gori",
+    "subtitle": "Od čišćenja vila do održavanja plovila — stručne usluge za vaš dom i brod",
+    "cta": "Zatražite besplatnu ponudu",
+    "ctaSecondary": "Pregledajte profesionalce",
+    "trustedBy": "Platforma od povjerenja u Budvi, Kotoru i Tivtu",
+    "stat": {
+      "professionals": "100+ profesionalaca",
+      "completed": "500+ završenih poslova",
+      "rating": "Prosječna ocjena 4.9"
+    }
+  },
+  "categories": {
+    "title": "Kategorije usluga",
+    "subtitle": "Pronađite pravog profesionalca za vaše potrebe",
+    "home": {
+      "title": "Čišćenje doma i renoviranje",
+      "description": "Čišćenje vila, dubinsko čišćenje, farbanje, elektrika, vodovod",
+      "generalCleaning": "Generalno čišćenje",
+      "deepCleaning": "Dubinsko čišćenje",
+      "villaAirbnb": "Čišćenje vila / Airbnb",
+      "renovation": "Renoviranje i rekonstrukcija",
+      "painting": "Farbanje i dekoracija",
+      "electrical": "Elektroinstalacije",
+      "plumbing": "Vodoinstalacije",
+      "acHeating": "Klima i grijanje",
+      "furnitureAssembly": "Montaža namještaja",
+      "garden": "Održavanje bašte",
+      "pool": "Čišćenje bazena"
+    },
+    "boat": {
+      "title": "Održavanje plovila i kapetan",
+      "description": "Antifouling, servis motora, angažovanje kapetana, čišćenje trupa",
+      "captainHire": "Angažovanje kapetana",
+      "antifouling": "Antifouling",
+      "engineService": "Servis motora",
+      "hullCleaning": "Čišćenje i poliranje trupa",
+      "winterization": "Zimovanje",
+      "charterPrep": "Priprema za čarter",
+      "emergencyRepair": "Hitna popravka",
+      "haulOut": "Izvlačenje i transport"
+    },
+    "getQuote": "Zatražite ponudu"
+  },
+  "howItWorks": {
+    "title": "Kako funkcioniše",
+    "subtitle": "Profesionalna usluga u 3 koraka",
+    "step1": {
+      "title": "Zatražite uslugu",
+      "description": "Detaljno opišite šta vam treba i dodajte fotografije"
+    },
+    "step2": {
+      "title": "Uporedite ponude",
+      "description": "Dobijte ponude od provjerenih profesionalaca"
+    },
+    "step3": {
+      "title": "Završite i ocijenite",
+      "description": "Izaberite profesionalca, obavite posao, podijelite iskustvo"
+    }
+  },
+  "trust": {
+    "title": "Zašto Glatko?",
+    "verified": "Provjereni profesionalci",
+    "verifiedDesc": "Stručnjaci sa potvrđenim identitetom i kvalifikacijama",
+    "transparent": "Transparentne cijene",
+    "transparentDesc": "Dobijte više ponuda, uporedite i izaberite najbolju",
+    "reviews": "Prave ocjene",
+    "reviewsDesc": "Dvostrani sistem ocjenjivanja nakon svakog završenog posla",
+    "multilingual": "Višejezička podrška",
+    "multilingualDesc": "Dostupno na 9 jezika — turski, engleski, ruski i drugi",
+    "local": "Lokalna stručnost",
+    "localDesc": "Profesionalci širom Crne Gore, od Budve do Kotora",
+    "free": "Besplatne ponude",
+    "freeDesc": "Zahtijevanje ponude je potpuno besplatno — plaćate samo kad je posao završen"
+  },
+  "cta": {
+    "title": "Spremni da počnete?",
+    "subtitle": "Napravite prvi korak — besplatna ponuda za 60 sekundi",
+    "button": "Zatražite uslugu",
+    "pro": {
+      "title": "Vi ste profesionalac?",
+      "subtitle": "Pridružite se Glatko platformi i pronađite nove klijente",
+      "button": "Registrujte se kao profesionalac"
+    }
+  },
+  "footer": {
+    "company": "Kompanija",
+    "about": "O nama",
+    "careers": "Karijera",
+    "contact": "Kontakt",
+    "legal": "Pravne informacije",
+    "terms": "Uslovi korišćenja",
+    "privacy": "Politika privatnosti",
+    "cookies": "Politika kolačića",
+    "gdpr": "GDPR",
+    "support": "Podrška",
+    "help": "Centar za pomoć",
+    "becomeAPro": "Postanite profesionalac",
+    "forPros": "Za profesionalce",
+    "social": "Društvene mreže",
+    "copyright": "© 2026 Glatko. Sva prava zadržana.",
+    "madeIn": "Napravljeno s ljubavlju u Crnoj Gori"
+  },
+  "auth": {
+    "login": "Prijavite se",
+    "register": "Registrujte se",
+    "email": "E-pošta",
+    "password": "Lozinka",
+    "confirmPassword": "Potvrdite lozinku",
+    "fullName": "Ime i prezime",
+    "forgotPassword": "Zaboravili ste lozinku",
+    "resetPassword": "Resetujte lozinku",
+    "orContinueWith": "ili nastavite sa",
+    "google": "Prijavite se sa Google",
+    "noAccount": "Nemate nalog?",
+    "hasAccount": "Već imate nalog?",
+    "registerNow": "Registrujte se odmah",
+    "loginNow": "Prijavite se",
+    "resetSent": "Link za resetovanje lozinke je poslat",
+    "checkEmail": "Provjerite vašu e-poštu",
+    "backToLogin": "Nazad na prijavu",
+    "sendResetLink": "Pošaljite link za resetovanje",
+    "forgotPasswordDesc": "Unesite vašu e-poštu i poslaćemo vam link za resetovanje lozinke",
+    "resetLinkSent": "Link za resetovanje je poslat",
+    "resetPasswordTitle": "Postavite novu lozinku",
+    "resetPasswordDesc": "Unesite vašu novu lozinku",
+    "newPassword": "Nova lozinka",
+    "updatePassword": "Ažurirajte lozinku",
+    "updatePasswordError": "Lozinka nije mogla biti ažurirana",
+    "passwordMismatch": "Lozinke se ne poklapaju",
+    "passwordTooShort": "Lozinka mora imati najmanje 8 karaktera",
+    "resetError": "Unesite važeću adresu e-pošte",
+    "emailRequired": "E-pošta i lozinka su obavezni",
+    "invalidCredentials": "Pogrešna e-pošta ili lozinka",
+    "emailNotConfirmed": "Vaša e-pošta još nije potvrđena",
+    "allFieldsRequired": "Sva polja su obavezna",
+    "createAccount": "Kreirajte nalog",
+    "verifyEmail": "Potvrdite vašu e-poštu",
+    "verifyEmailDesc": "E-pošta za potvrdu je poslata na adresu",
+    "goToLogin": "Idite na prijavu",
+    "freeAccount": "Kreirajte besplatan nalog",
+    "googleError": "Prijava sa Google nije uspjela",
+    "backToHome": "Nazad na početnu",
+    "backToMarketplace": "Nazad na platformu"
+  },
+  "common": {
+    "loading": "Učitavanje...",
+    "error": "Došlo je do greške",
+    "retry": "Pokušajte ponovo",
+    "save": "Sačuvajte",
+    "cancel": "Otkažite",
+    "delete": "Obrišite",
+    "edit": "Izmijenite",
+    "back": "Nazad",
+    "next": "Dalje",
+    "submit": "Pošaljite",
+    "search": "Pretraži",
+    "filter": "Filtriraj",
+    "sort": "Sortiraj",
+    "all": "Sve",
+    "viewAll": "Pogledajte sve",
+    "seeMore": "Više",
+    "close": "Zatvorite",
+    "yes": "Da",
+    "no": "Ne",
+    "or": "ili",
+    "free": "Besplatno",
+    "verified": "Provjereno",
+    "new": "Novo",
+    "popular": "Popularno",
+    "recommended": "Preporučeno",
+    "comingSoon": "Uskoro",
+    "learnMore": "Saznajte više",
+    "backToHome": "Na početnu",
+    "notFound": "Stranica nije pronađena",
+    "notFoundDesc": "Stranica koju tražite ne postoji ili je premještena.",
+    "errorDesc": "Došlo je do neočekivane greške. Pokušajte ponovo."
+  },
+  "meta": {
+    "home": {
+      "title": "Glatko — Premium platforma usluga Crne Gore",
+      "description": "Pouzdani profesionalci za čišćenje vila, održavanje plovila i još mnogo toga u Crnoj Gori. Zatražite besplatnu ponudu."
+    }
+  },
+  "legal": {
+    "comingSoon": "Ova stranica se priprema.",
+    "about": "O nama",
+    "terms": "Uslovi korišćenja",
+    "privacy": "Politika privatnosti",
+    "cookies": "Politika kolačića",
+    "gdpr": "GDPR",
+    "contact": "Kontakt"
+  }
+}

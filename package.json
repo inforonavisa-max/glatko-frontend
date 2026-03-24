@@ -3,10 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --port 3001",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "smoke": "bash scripts/smoke-test.sh",
+    "i18n-check": "bash scripts/i18n-check.sh",
+    "precommit": "bash scripts/pre-commit-check.sh",
+    "safe-push": "bash scripts/pre-commit-check.sh && git push"
   },
   "dependencies": {
     "@base-ui/react": "^1.3.0",
@@ -41,9 +45,10 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/supercluster": "^7.1.3",
+    "autoprefixer": "^10.4.27",
     "eslint": "^8",
     "eslint-config-next": "14.2.15",
-    "postcss": "^8",
+    "postcss": "^8.5.8",
     "sharp": "^0.34.5",
     "supercluster": "^8.0.1",
     "tailwindcss": "^3.4.1",

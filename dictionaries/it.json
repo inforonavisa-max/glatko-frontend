@@ -1,0 +1,213 @@
+{
+  "brand": {
+    "name": "Glatko",
+    "tagline": "La piattaforma premium di servizi del Montenegro",
+    "description": "Professionisti affidabili per la tua casa, la tua barca e il tuo stile di vita"
+  },
+  "nav": {
+    "home": "Home",
+    "services": "Servizi",
+    "howItWorks": "Come Funziona",
+    "becomeAPro": "Diventa un Professionista",
+    "login": "Accedi",
+    "register": "Registrati",
+    "myAccount": "Il Mio Account",
+    "dashboard": "Pannello",
+    "logout": "Esci",
+    "requestService": "Richiedi un Servizio",
+    "menu": "Menu"
+  },
+  "hero": {
+    "title": "Professionisti affidabili in Montenegro",
+    "subtitle": "Dalla pulizia di ville alla manutenzione nautica — servizi esperti per la tua casa e la tua imbarcazione",
+    "cta": "Richiedi un Preventivo Gratuito",
+    "ctaSecondary": "Scopri i Professionisti",
+    "trustedBy": "Piattaforma di fiducia a Budva, Kotor e Tivat",
+    "stat": {
+      "professionals": "100+ Professionisti",
+      "completed": "500+ Lavori Completati",
+      "rating": "4.9 Valutazione Media"
+    }
+  },
+  "categories": {
+    "title": "Le Nostre Categorie di Servizio",
+    "subtitle": "Trova il professionista giusto per le tue esigenze",
+    "home": {
+      "title": "Pulizia Casa & Ristrutturazione",
+      "description": "Pulizia ville, pulizia profonda, tinteggiatura, elettricista, idraulica",
+      "generalCleaning": "Pulizia Generale",
+      "deepCleaning": "Pulizia Profonda",
+      "villaAirbnb": "Pulizia Villa / Airbnb",
+      "renovation": "Ristrutturazione & Rinnovamento",
+      "painting": "Tinteggiatura & Decorazione",
+      "electrical": "Impianto Elettrico",
+      "plumbing": "Impianto Idraulico",
+      "acHeating": "Climatizzazione & Riscaldamento",
+      "furnitureAssembly": "Montaggio Mobili",
+      "garden": "Manutenzione Giardino",
+      "pool": "Pulizia Piscina"
+    },
+    "boat": {
+      "title": "Manutenzione Nautica & Skipper",
+      "description": "Antivegetativa, revisione motore, noleggio skipper, pulizia carena",
+      "captainHire": "Noleggio Skipper",
+      "antifouling": "Antivegetativa",
+      "engineService": "Revisione Motore",
+      "hullCleaning": "Pulizia & Lucidatura Carena",
+      "winterization": "Rimessaggio Invernale",
+      "charterPrep": "Preparazione Charter",
+      "emergencyRepair": "Riparazione d'Emergenza",
+      "haulOut": "Alaggio & Trasporto"
+    },
+    "getQuote": "Richiedi Preventivo"
+  },
+  "howItWorks": {
+    "title": "Come Funziona",
+    "subtitle": "Servizio professionale in 3 semplici passi",
+    "step1": {
+      "title": "Richiedi un Servizio",
+      "description": "Descrivi le tue esigenze in dettaglio e allega delle foto"
+    },
+    "step2": {
+      "title": "Confronta i Preventivi",
+      "description": "Ricevi preventivi da professionisti verificati"
+    },
+    "step3": {
+      "title": "Completa & Valuta",
+      "description": "Scegli il tuo professionista, fai eseguire il lavoro, condividi la tua esperienza"
+    }
+  },
+  "trust": {
+    "title": "Perché Glatko?",
+    "verified": "Professionisti Verificati",
+    "verifiedDesc": "Esperti con identità e competenze verificate",
+    "transparent": "Prezzi Trasparenti",
+    "transparentDesc": "Ricevi più preventivi, confronta e scegli il migliore",
+    "reviews": "Recensioni Autentiche",
+    "reviewsDesc": "Sistema di valutazione bidirezionale dopo ogni lavoro completato",
+    "multilingual": "Supporto Multilingue",
+    "multilingualDesc": "Disponibile in 9 lingue — turco, inglese, russo e altre",
+    "local": "Competenza Locale",
+    "localDesc": "Professionisti in tutto il Montenegro, da Budva a Kotor",
+    "free": "Preventivi Gratuiti",
+    "freeDesc": "Richiedere preventivi è completamente gratuito — paghi solo a lavoro eseguito"
+  },
+  "cta": {
+    "title": "Pronto per Iniziare?",
+    "subtitle": "Fai il primo passo — ricevi un preventivo gratuito in 60 secondi",
+    "button": "Richiedi un Servizio",
+    "pro": {
+      "title": "Sei un Professionista?",
+      "subtitle": "Unisciti a Glatko e raggiungi nuovi clienti",
+      "button": "Registrati come Professionista"
+    }
+  },
+  "footer": {
+    "company": "Azienda",
+    "about": "Chi Siamo",
+    "careers": "Carriere",
+    "contact": "Contatti",
+    "legal": "Note Legali",
+    "terms": "Termini di Servizio",
+    "privacy": "Informativa sulla Privacy",
+    "cookies": "Politica sui Cookie",
+    "gdpr": "GDPR",
+    "support": "Supporto",
+    "help": "Centro Assistenza",
+    "becomeAPro": "Diventa un Professionista",
+    "forPros": "Per i Professionisti",
+    "social": "Social Media",
+    "copyright": "© 2026 Glatko. Tutti i diritti riservati.",
+    "madeIn": "Fatto con amore in Montenegro"
+  },
+  "auth": {
+    "login": "Accedi",
+    "register": "Registrati",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Conferma Password",
+    "fullName": "Nome e Cognome",
+    "forgotPassword": "Password Dimenticata",
+    "resetPassword": "Reimposta Password",
+    "orContinueWith": "oppure continua con",
+    "google": "Accedi con Google",
+    "noAccount": "Non hai un account?",
+    "hasAccount": "Hai già un account?",
+    "registerNow": "Registrati Ora",
+    "loginNow": "Accedi",
+    "resetSent": "Link per reimpostare la password inviato",
+    "checkEmail": "Controlla la tua email",
+    "backToLogin": "Torna al login",
+    "sendResetLink": "Invia Link di Reimpostazione",
+    "forgotPasswordDesc": "Inserisci la tua email e ti invieremo un link per reimpostare la password",
+    "resetLinkSent": "Link di reimpostazione inviato",
+    "resetPasswordTitle": "Imposta Nuova Password",
+    "resetPasswordDesc": "Inserisci la tua nuova password",
+    "newPassword": "Nuova Password",
+    "updatePassword": "Aggiorna Password",
+    "updatePasswordError": "Impossibile aggiornare la password",
+    "passwordMismatch": "Le password non corrispondono",
+    "passwordTooShort": "La password deve contenere almeno 8 caratteri",
+    "resetError": "Inserisci un indirizzo email valido",
+    "emailRequired": "Email e password sono obbligatori",
+    "invalidCredentials": "Email o password non validi",
+    "emailNotConfirmed": "Il tuo indirizzo email non è stato ancora verificato",
+    "allFieldsRequired": "Tutti i campi sono obbligatori",
+    "createAccount": "Crea Account",
+    "verifyEmail": "Verifica la Tua Email",
+    "verifyEmailDesc": "Un'email di verifica è stata inviata a",
+    "goToLogin": "Vai al login",
+    "freeAccount": "Crea un account gratuito",
+    "googleError": "Accesso con Google non riuscito",
+    "backToHome": "Torna alla home",
+    "backToMarketplace": "Torna alla piattaforma"
+  },
+  "common": {
+    "loading": "Caricamento...",
+    "error": "Si è verificato un errore",
+    "retry": "Riprova",
+    "save": "Salva",
+    "cancel": "Annulla",
+    "delete": "Elimina",
+    "edit": "Modifica",
+    "back": "Indietro",
+    "next": "Avanti",
+    "submit": "Invia",
+    "search": "Cerca",
+    "filter": "Filtra",
+    "sort": "Ordina",
+    "all": "Tutti",
+    "viewAll": "Vedi Tutti",
+    "seeMore": "Vedi Altro",
+    "close": "Chiudi",
+    "yes": "Sì",
+    "no": "No",
+    "or": "oppure",
+    "free": "Gratuito",
+    "verified": "Verificato",
+    "new": "Nuovo",
+    "popular": "Popolare",
+    "recommended": "Consigliato",
+    "comingSoon": "Prossimamente",
+    "learnMore": "Scopri di Più",
+    "backToHome": "Torna alla Home",
+    "notFound": "Pagina Non Trovata",
+    "notFoundDesc": "La pagina che cerchi non esiste o è stata spostata.",
+    "errorDesc": "Si è verificato un errore imprevisto. Riprova."
+  },
+  "meta": {
+    "home": {
+      "title": "Glatko — La piattaforma premium di servizi del Montenegro",
+      "description": "Professionisti affidabili per pulizia ville, manutenzione nautica e altro in Montenegro. Richiedi un preventivo gratuito."
+    }
+  },
+  "legal": {
+    "comingSoon": "Questa pagina è in fase di preparazione.",
+    "about": "Chi Siamo",
+    "terms": "Termini di Servizio",
+    "privacy": "Informativa sulla Privacy",
+    "cookies": "Politica sui Cookie",
+    "gdpr": "GDPR",
+    "contact": "Contatti"
+  }
+}
