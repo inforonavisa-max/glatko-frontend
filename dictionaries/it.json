@@ -258,5 +258,12 @@
   "pro.wizard.portfolioUpload": "Foto Portfolio",
   "pro.wizard.documentsUpload": "Documenti di Verifica",
   "pro.wizard.comingSoon": "Caricamento file in arrivo",
-  "pro.wizard.reviewNote": "La tua candidatura sarà esaminata dal nostro team entro 24-48 ore."
+  "pro.wizard.reviewNote": "La tua candidatura sarà esaminata dal nostro team entro 24-48 ore.",
+  "cities.budva": "Budva",
+  "cities.kotor": "Kotor",
+  "cities.tivat": "Tivat",
+  "cities.podgorica": "Podgorica",
+  "cities.hercegNovi": "Herceg Novi",
+  "cities.bar": "Bar",
+  "cities.ulcinj": "Ulcinj"
 }

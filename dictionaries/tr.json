@@ -258,5 +258,12 @@
   "pro.wizard.portfolioUpload": "Portfolio Fotoğrafları",
   "pro.wizard.documentsUpload": "Doğrulama Belgeleri",
   "pro.wizard.comingSoon": "Dosya yükleme yakında",
-  "pro.wizard.reviewNote": "Başvurunuz ekibimiz tarafından 24-48 saat içinde incelenecektir."
+  "pro.wizard.reviewNote": "Başvurunuz ekibimiz tarafından 24-48 saat içinde incelenecektir.",
+  "cities.budva": "Budva",
+  "cities.kotor": "Kotor",
+  "cities.tivat": "Tivat",
+  "cities.podgorica": "Podgorica",
+  "cities.hercegNovi": "Herceg Novi",
+  "cities.bar": "Bar",
+  "cities.ulcinj": "Ulcinj"
 }

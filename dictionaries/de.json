@@ -258,5 +258,12 @@
   "pro.wizard.portfolioUpload": "Portfolio-Fotos",
   "pro.wizard.documentsUpload": "Verifizierungsdokumente",
   "pro.wizard.comingSoon": "Datei-Upload kommt bald",
-  "pro.wizard.reviewNote": "Ihre Bewerbung wird von unserem Team innerhalb von 24-48 Stunden geprüft."
+  "pro.wizard.reviewNote": "Ihre Bewerbung wird von unserem Team innerhalb von 24-48 Stunden geprüft.",
+  "cities.budva": "Budva",
+  "cities.kotor": "Kotor",
+  "cities.tivat": "Tivat",
+  "cities.podgorica": "Podgorica",
+  "cities.hercegNovi": "Herceg Novi",
+  "cities.bar": "Bar",
+  "cities.ulcinj": "Ulcinj"
 }

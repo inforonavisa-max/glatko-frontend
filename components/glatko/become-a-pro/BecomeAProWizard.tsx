@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useTransition } from "react";
+import { useState, useCallback, useTransition, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
 import {
@@ -35,6 +35,15 @@ export function BecomeAProWizard({ userId, categories }: Props) {
   const t = useTranslations();
   const locale = useLocale() as Locale;
   const [step, setStep] = useState(0);
+  const [isNarrow, setIsNarrow] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const update = () => setIsNarrow(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
 
   const [businessName, setBusinessName] = useState("");
   const [bio, setBio] = useState("");
@@ -73,12 +82,15 @@ export function BecomeAProWizard({ userId, categories }: Props) {
   const canAdvance =
     step === 0 || (step === 1 && selectedCategoryIds.length > 0);
 
+  const stepTransition = { duration: isNarrow ? 0.15 : 0.25 };
+  const progressFillDuration = isNarrow ? 0.25 : 0.4;
+
   if (state.success) {
     return (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex min-h-[40vh] flex-col items-center justify-center text-center"
+        className="mx-auto flex min-h-[40vh] max-w-2xl flex-col items-center justify-center px-4 text-center sm:px-6 lg:px-8"
       >
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-teal-500/10">
           <CheckCircle className="h-8 w-8 text-teal-500" />
@@ -94,7 +106,7 @@ export function BecomeAProWizard({ userId, categories }: Props) {
   }
 
   return (
-    <div>
+    <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
       <div className="mb-10 text-center">
         <h1 className="text-3xl font-semibold text-gray-900 dark:text-white">
           {t("pro.wizard.title")}
@@ -105,7 +117,7 @@ export function BecomeAProWizard({ userId, categories }: Props) {
       </div>
 
       {/* Progress bar */}
-      <div className="mb-10 flex items-center gap-3">
+      <div className="mb-10 flex items-center gap-2 px-0.5 sm:gap-3 sm:px-1 md:px-2">
         {STEPS.map((s, i) => {
           const Icon = s.icon;
           const active = i <= step;
@@ -127,7 +139,7 @@ export function BecomeAProWizard({ userId, categories }: Props) {
                     className="h-full rounded-full bg-gradient-to-r from-teal-500 to-teal-400"
                     initial={false}
                     animate={{ width: i < step ? "100%" : "0%" }}
-                    transition={{ duration: 0.4 }}
+                    transition={{ duration: progressFillDuration }}
                   />
                 </div>
               )}
@@ -148,7 +160,7 @@ export function BecomeAProWizard({ userId, categories }: Props) {
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -30 }}
-          transition={{ duration: 0.25 }}
+          transition={stepTransition}
         >
           {step === 0 && (
             <StepPersonalInfo
@@ -193,15 +205,15 @@ export function BecomeAProWizard({ userId, categories }: Props) {
       </AnimatePresence>
 
       {/* Navigation */}
-      <div className="mt-8 flex items-center justify-between">
+      <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
         <button
           type="button"
           onClick={() => setStep((s) => s - 1)}
           disabled={step === 0}
           className={cn(
-            "flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-medium transition-all",
+            "flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-medium transition-all sm:w-auto",
             step === 0
-              ? "invisible"
+              ? "hidden"
               : "text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/5"
           )}
         >
@@ -215,7 +227,7 @@ export function BecomeAProWizard({ userId, categories }: Props) {
             onClick={() => setStep((s) => s + 1)}
             disabled={!canAdvance}
             className={cn(
-              "flex items-center gap-2 rounded-xl bg-teal-500 px-6 py-3 text-sm font-semibold text-white transition-all",
+              "flex w-full items-center justify-center gap-2 rounded-xl bg-teal-500 px-6 py-3 text-sm font-semibold text-white transition-all sm:w-auto",
               "hover:bg-teal-600 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
             )}
           >
@@ -245,7 +257,7 @@ export function BecomeAProWizard({ userId, categories }: Props) {
               });
             }}
             className={cn(
-              "flex items-center gap-2 rounded-xl bg-teal-500 px-6 py-3 text-sm font-semibold text-white transition-all",
+              "flex w-full items-center justify-center gap-2 rounded-xl bg-teal-500 px-6 py-3 text-sm font-semibold text-white transition-all sm:w-auto",
               "hover:bg-teal-600 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
             )}
           >

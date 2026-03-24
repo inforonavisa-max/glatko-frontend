@@ -3,15 +3,15 @@
 import { cn } from "@/lib/utils";
 import type { useTranslations } from "next-intl";
 
-const CITIES = [
-  "Budva",
-  "Kotor",
-  "Tivat",
-  "Podgorica",
-  "Herceg Novi",
-  "Bar",
-  "Ulcinj",
-];
+const CITY_SLUGS = [
+  "budva",
+  "kotor",
+  "tivat",
+  "podgorica",
+  "hercegNovi",
+  "bar",
+  "ulcinj",
+] as const;
 
 const LANGUAGES = ["TR", "EN", "DE", "IT", "RU", "UK", "SR", "ME", "AR"];
 
@@ -108,9 +108,9 @@ export function StepPersonalInfo({
             onChange={(e) => setCity(e.target.value)}
           >
             <option value="">{t("pro.wizard.selectCity")}</option>
-            {CITIES.map((c) => (
-              <option key={c} value={c}>
-                {c}
+            {CITY_SLUGS.map((slug) => (
+              <option key={slug} value={slug}>
+                {t(`cities.${slug}`)}
               </option>
             ))}
           </select>

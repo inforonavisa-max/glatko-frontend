@@ -258,5 +258,12 @@
   "pro.wizard.portfolioUpload": "Фото портфолио",
   "pro.wizard.documentsUpload": "Документы для верификации",
   "pro.wizard.comingSoon": "Загрузка файлов скоро",
-  "pro.wizard.reviewNote": "Ваша заявка будет рассмотрена нашей командой в течение 24-48 часов."
+  "pro.wizard.reviewNote": "Ваша заявка будет рассмотрена нашей командой в течение 24-48 часов.",
+  "cities.budva": "Будва",
+  "cities.kotor": "Котор",
+  "cities.tivat": "Тиват",
+  "cities.podgorica": "Подгорица",
+  "cities.hercegNovi": "Херцег-Нови",
+  "cities.bar": "Бар",
+  "cities.ulcinj": "Улцинь"
 }

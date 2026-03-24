@@ -258,5 +258,12 @@
   "pro.wizard.portfolioUpload": "صور المحفظة",
   "pro.wizard.documentsUpload": "مستندات التحقق",
   "pro.wizard.comingSoon": "رفع الملفات قريباً",
-  "pro.wizard.reviewNote": "سيتم مراجعة طلبك من قبل فريقنا خلال 24-48 ساعة."
+  "pro.wizard.reviewNote": "سيتم مراجعة طلبك من قبل فريقنا خلال 24-48 ساعة.",
+  "cities.budva": "بودفا",
+  "cities.kotor": "كوتور",
+  "cities.tivat": "تيفات",
+  "cities.podgorica": "بودغوريتسا",
+  "cities.hercegNovi": "هيرتسغ نوي",
+  "cities.bar": "بار",
+  "cities.ulcinj": "أولسيني"
 }

@@ -258,5 +258,12 @@
   "pro.wizard.portfolioUpload": "Portfolio fotografije",
   "pro.wizard.documentsUpload": "Dokumenti za verifikaciju",
   "pro.wizard.comingSoon": "Otpremanje fajlova uskoro",
-  "pro.wizard.reviewNote": "Vaša prijava biće pregledana od strane našeg tima u roku od 24-48 sati."
+  "pro.wizard.reviewNote": "Vaša prijava biće pregledana od strane našeg tima u roku od 24-48 sati.",
+  "cities.budva": "Budva",
+  "cities.kotor": "Kotor",
+  "cities.tivat": "Tivat",
+  "cities.podgorica": "Podgorica",
+  "cities.hercegNovi": "Herceg Novi",
+  "cities.bar": "Bar",
+  "cities.ulcinj": "Ulcinj"
 }
