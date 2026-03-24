@@ -12,8 +12,8 @@ import {
   Star,
 } from "lucide-react";
 import { SpotlightCard } from "@/components/landing/spotlight-card";
-import { Button } from "@/components/ui/button";
 import { routing } from "@/i18n/routing";
+import { BackgroundGrids } from "@/components/aceternity/background-grids";
 import type { Locale } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import { getProfessionalProfile } from "@/lib/supabase/glatko.server";
@@ -75,7 +75,12 @@ export default async function ProviderProfilePage({ params }: PageProps) {
   const fullStars = Math.min(5, Math.round(rating));
 
   return (
-    <div className="mx-auto max-w-4xl px-4 pb-16 pt-24">
+    <div className="relative mx-auto max-w-4xl px-4 pb-16 pt-24">
+      <div className="pointer-events-none absolute inset-0" style={{ opacity: 0.08 }}>
+        <BackgroundGrids />
+      </div>
+      <div className="pointer-events-none absolute top-0 left-0 right-0 h-48 bg-gradient-to-b from-teal-500/[0.04] to-transparent dark:from-teal-500/[0.06]" />
+      <div className="relative">
       <SpotlightCard className="mb-6">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
           {profile.profile?.avatar_url ? (
@@ -164,6 +169,29 @@ export default async function ProviderProfilePage({ params }: PageProps) {
         </div>
       </SpotlightCard>
 
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 mb-6">
+        <div className="rounded-2xl border border-gray-200/80 bg-white/80 p-4 text-center backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
+          <div className="text-2xl font-bold text-teal-600 dark:text-teal-400">{profile.completed_jobs}</div>
+          <div className="text-xs text-gray-500 dark:text-white/50">{t("pro.profile.completedJobs")}</div>
+        </div>
+        {profile.response_time_minutes != null && (
+          <div className="rounded-2xl border border-gray-200/80 bg-white/80 p-4 text-center backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
+            <div className="text-2xl font-bold text-teal-600 dark:text-teal-400">{profile.response_time_minutes}m</div>
+            <div className="text-xs text-gray-500 dark:text-white/50">{t("pro.profile.responseTime")}</div>
+          </div>
+        )}
+        {profile.years_experience != null && (
+          <div className="rounded-2xl border border-gray-200/80 bg-white/80 p-4 text-center backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
+            <div className="text-2xl font-bold text-teal-600 dark:text-teal-400">{profile.years_experience}</div>
+            <div className="text-xs text-gray-500 dark:text-white/50">{t("pro.profile.yearsExp")}</div>
+          </div>
+        )}
+        <div className="rounded-2xl border border-gray-200/80 bg-white/80 p-4 text-center backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
+          <div className="text-2xl font-bold text-teal-600 dark:text-teal-400">{rating.toFixed(1)}</div>
+          <div className="text-xs text-gray-500 dark:text-white/50">{t("pro.profile.rating")}</div>
+        </div>
+      </div>
+
       <SpotlightCard className="mb-6">
         <h2 className="mb-3 font-serif text-xl text-gray-900 dark:text-white">{t("pro.profile.about")}</h2>
         <p className="whitespace-pre-wrap text-gray-600 dark:text-white/70">
@@ -210,15 +238,15 @@ export default async function ProviderProfilePage({ params }: PageProps) {
       </SpotlightCard>
 
       <div className="flex justify-center">
-        <Button
-          size="lg"
-          variant="default"
-          className="bg-teal-600 text-white hover:bg-teal-700 dark:bg-teal-600 dark:hover:bg-teal-500"
+        <button
+          type="button"
           disabled
           title={t("common.comingSoon")}
+          className="bg-gradient-to-r from-teal-500 to-teal-600 shadow-lg shadow-teal-500/25 text-white rounded-xl px-8 py-4 font-medium transition-all hover:shadow-xl hover:shadow-teal-500/30 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {t("pro.profile.requestQuote")}
-        </Button>
+        </button>
+      </div>
       </div>
     </div>
   );

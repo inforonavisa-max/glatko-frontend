@@ -6,6 +6,7 @@ import {
   getVerificationDocuments,
 } from "@/lib/supabase/glatko.server";
 import { AdminActions } from "@/components/glatko/admin/AdminActions";
+import { BackgroundGrids } from "@/components/aceternity/background-grids";
 import type { VerificationStatus, DocumentStatus } from "@/types/glatko";
 
 type Props = {
@@ -14,12 +15,13 @@ type Props = {
 
 const STATUS_STYLES: Record<VerificationStatus, string> = {
   pending:
-    "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300",
+    "border-yellow-200 bg-yellow-50 text-yellow-700 dark:border-yellow-500/30 dark:bg-yellow-900/20 dark:text-yellow-300",
   in_review:
-    "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
+    "border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-500/30 dark:bg-blue-900/20 dark:text-blue-300",
   approved:
-    "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
-  rejected: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
+    "border-green-200 bg-green-50 text-green-700 dark:border-green-500/30 dark:bg-green-900/20 dark:text-green-300",
+  rejected:
+    "border-red-200 bg-red-50 text-red-700 dark:border-red-500/30 dark:bg-red-900/20 dark:text-red-300",
 };
 
 const STATUS_KEYS: Record<VerificationStatus, string> = {
@@ -31,10 +33,11 @@ const STATUS_KEYS: Record<VerificationStatus, string> = {
 
 const DOC_STATUS_STYLES: Record<DocumentStatus, string> = {
   pending:
-    "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300",
+    "border-yellow-200 bg-yellow-50 text-yellow-700 dark:border-yellow-500/30 dark:bg-yellow-900/20 dark:text-yellow-300",
   approved:
-    "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
-  rejected: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
+    "border-green-200 bg-green-50 text-green-700 dark:border-green-500/30 dark:bg-green-900/20 dark:text-green-300",
+  rejected:
+    "border-red-200 bg-red-50 text-red-700 dark:border-red-500/30 dark:bg-red-900/20 dark:text-red-300",
 };
 
 export default async function ProfessionalDetailPage({ params }: Props) {
@@ -55,7 +58,11 @@ export default async function ProfessionalDetailPage({ params }: Props) {
     profile.profile?.full_name ?? profile.business_name ?? "---";
 
   return (
-    <div>
+    <div className="relative">
+      <div className="pointer-events-none absolute inset-0" style={{ opacity: 0.06 }}>
+        <BackgroundGrids />
+      </div>
+      <div className="relative">
       <Link
         href={`/${locale}/admin/professionals`}
         className="mb-6 inline-flex items-center gap-1 text-sm text-gray-500 transition-colors hover:text-gray-900 dark:text-white/50 dark:hover:text-white"
@@ -65,11 +72,11 @@ export default async function ProfessionalDetailPage({ params }: Props) {
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white md:text-3xl">
+          <h1 className="font-serif text-2xl font-bold text-gray-900 dark:text-white md:text-3xl">
             {displayName}
           </h1>
           <span
-            className={`mt-2 inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUS_STYLES[profile.verification_status]}`}
+            className={`mt-2 inline-flex rounded-full border px-3 py-1 text-xs font-medium ${STATUS_STYLES[profile.verification_status]}`}
           >
             {t(STATUS_KEYS[profile.verification_status])}
           </span>
@@ -77,8 +84,8 @@ export default async function ProfessionalDetailPage({ params }: Props) {
       </div>
 
       {/* Personal information */}
-      <section className="mt-8 rounded-xl border border-gray-200 bg-white p-6 dark:border-white/10 dark:bg-white/5">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+      <section className="mt-8 rounded-2xl border border-gray-200/80 bg-white/80 p-6 shadow-sm backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.04] md:p-8">
+        <h2 className="font-serif text-lg font-semibold text-gray-900 dark:text-white">
           {t("admin.professionals.personalInfo")}
         </h2>
         <dl className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -122,8 +129,8 @@ export default async function ProfessionalDetailPage({ params }: Props) {
 
       {/* Services */}
       {profile.services && profile.services.length > 0 && (
-        <section className="mt-6 rounded-xl border border-gray-200 bg-white p-6 dark:border-white/10 dark:bg-white/5">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+        <section className="mt-6 rounded-2xl border border-gray-200/80 bg-white/80 p-6 shadow-sm backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.04] md:p-8">
+          <h2 className="font-serif text-lg font-semibold text-gray-900 dark:text-white">
             {t("admin.professionals.serviceAreas")}
           </h2>
           <ul className="mt-4 flex flex-wrap gap-2">
@@ -149,8 +156,8 @@ export default async function ProfessionalDetailPage({ params }: Props) {
       )}
 
       {/* Documents */}
-      <section className="mt-6 rounded-xl border border-gray-200 bg-white p-6 dark:border-white/10 dark:bg-white/5">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+      <section className="mt-6 rounded-2xl border border-gray-200/80 bg-white/80 p-6 shadow-sm backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.04] md:p-8">
+        <h2 className="font-serif text-lg font-semibold text-gray-900 dark:text-white">
           {t("admin.professionals.documents")}
         </h2>
         {documents.length === 0 ? (
@@ -177,7 +184,7 @@ export default async function ProfessionalDetailPage({ params }: Props) {
                   </p>
                 </div>
                 <span
-                  className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium capitalize ${DOC_STATUS_STYLES[doc.status]}`}
+                  className={`inline-flex rounded-full border px-3 py-1 text-xs font-medium capitalize ${DOC_STATUS_STYLES[doc.status]}`}
                 >
                   {doc.status}
                 </span>
@@ -194,6 +201,7 @@ export default async function ProfessionalDetailPage({ params }: Props) {
           currentStatus={profile.verification_status}
         />
       </section>
+      </div>
     </div>
   );
 }

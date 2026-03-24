@@ -63,7 +63,7 @@ export function StepCategory({
                 className={cn(
                   "cursor-pointer transition-all",
                   isSelected &&
-                    "ring-2 ring-teal-500 dark:ring-teal-400"
+                    "ring-2 ring-teal-500/60 shadow-lg shadow-teal-500/10 dark:ring-teal-400/60"
                 )}
               >
                 <div className="flex items-center gap-4">
@@ -103,7 +103,7 @@ export function StepCategory({
                   className={cn(
                     "rounded-full border px-4 py-2 text-sm font-medium transition-all",
                     isSelected
-                      ? "border-teal-500 bg-teal-500 text-white shadow-sm shadow-teal-500/25"
+                      ? "border-teal-500 bg-teal-500/10 text-teal-700 shadow-sm shadow-teal-500/10 dark:bg-teal-500/15 dark:text-teal-300"
                       : "border-gray-200 bg-gray-50 text-gray-700 hover:border-teal-300 hover:bg-teal-50 dark:border-white/10 dark:bg-white/5 dark:text-white/70 dark:hover:border-teal-500/30 dark:hover:bg-teal-500/10"
                   )}
                 >

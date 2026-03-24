@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { setRequestLocale, getTranslations } from "next-intl/server";
+import { ClipboardList } from "lucide-react";
+import { BackgroundGrids } from "@/components/aceternity/background-grids";
 import { getProfessionalsByStatus } from "@/lib/supabase/glatko.server";
 import type { VerificationStatus } from "@/types/glatko";
 
@@ -9,12 +11,13 @@ type Props = {
 
 const STATUS_STYLES: Record<VerificationStatus, string> = {
   pending:
-    "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300",
+    "border-yellow-200 bg-yellow-50 text-yellow-700 dark:border-yellow-500/30 dark:bg-yellow-900/20 dark:text-yellow-300",
   in_review:
-    "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
+    "border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-500/30 dark:bg-blue-900/20 dark:text-blue-300",
   approved:
-    "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
-  rejected: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
+    "border-green-200 bg-green-50 text-green-700 dark:border-green-500/30 dark:bg-green-900/20 dark:text-green-300",
+  rejected:
+    "border-red-200 bg-red-50 text-red-700 dark:border-red-500/30 dark:bg-red-900/20 dark:text-red-300",
 };
 
 const STATUS_KEYS: Record<VerificationStatus, string> = {
@@ -32,85 +35,80 @@ export default async function ProfessionalsAdminPage({ params }: Props) {
   const professionals = await getProfessionalsByStatus();
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white md:text-3xl">
-        {t("admin.professionals.title")}
-      </h1>
-
-      {professionals.length === 0 ? (
-        <div className="mt-12 flex flex-col items-center justify-center rounded-2xl border border-gray-200 bg-white px-6 py-16 dark:border-white/10 dark:bg-white/5">
-          <p className="text-gray-500 dark:text-white/50">
-            {t("admin.professionals.noApplications")}
-          </p>
+    <div className="relative">
+      <div className="pointer-events-none absolute inset-0" style={{ opacity: 0.06 }}>
+        <BackgroundGrids />
+      </div>
+      <div className="relative">
+        <div className="mb-8">
+          <h1 className="font-serif text-2xl font-bold text-gray-900 dark:text-white md:text-3xl">
+            {t("admin.professionals.title")}
+          </h1>
+          <div className="mt-2 h-1 w-12 rounded-full bg-gradient-to-r from-teal-500 to-teal-400" />
         </div>
-      ) : (
-        <div className="mt-6 overflow-x-auto rounded-xl border border-gray-200 dark:border-white/10">
-          <table className="min-w-full divide-y divide-gray-200 dark:divide-white/10">
-            <thead className="bg-gray-50 dark:bg-white/5">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/50">
-                  {t("admin.professionals.applicant")}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/50">
-                  {t("pro.profile.location")}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/50">
-                  {t("admin.professionals.serviceAreas")}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/50">
-                  {t("admin.professionals.appliedAt")}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/50">
-                  {t("admin.professionals.status")}
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/50">
-                  {t("admin.professionals.actions")}
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 bg-white dark:divide-white/10 dark:bg-transparent">
-              {professionals.map((pro) => (
-                <tr
+
+        {professionals.length === 0 ? (
+          <div className="mt-12 flex flex-col items-center justify-center rounded-2xl border border-gray-200/80 bg-white/80 px-6 py-16 backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.04]">
+            <ClipboardList className="h-12 w-12 text-gray-300 dark:text-white/20" />
+            <h2 className="mt-4 font-serif text-lg font-semibold text-gray-700 dark:text-white/70">
+              {t("admin.professionals.noApplications")}
+            </h2>
+          </div>
+        ) : (
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+            {professionals.map((pro) => {
+              const name = pro.profile?.full_name ?? pro.business_name ?? "---";
+              const initials = name !== "---"
+                ? name.trim().split(/\s+/).filter(Boolean).slice(0, 2).map((w: string) => w[0]).join("").toUpperCase()
+                : "?";
+              return (
+                <div
                   key={pro.id}
-                  className="transition-colors hover:bg-gray-50 dark:hover:bg-white/5"
+                  className="rounded-2xl border border-gray-200/80 bg-white/80 p-5 shadow-sm backdrop-blur-sm transition-all hover:shadow-md hover:border-teal-200 dark:border-white/[0.08] dark:bg-white/[0.03] dark:hover:border-teal-500/30"
                 >
-                  <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">
-                    {pro.profile?.full_name ?? pro.business_name ?? "---"}
-                  </td>
-                  <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600 dark:text-white/70">
-                    {pro.location_city ?? "---"}
-                  </td>
-                  <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600 dark:text-white/70">
-                    &mdash;
-                  </td>
-                  <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-600 dark:text-white/70">
-                    {new Date(pro.created_at).toLocaleDateString(locale, {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
-                  </td>
-                  <td className="whitespace-nowrap px-6 py-4">
-                    <span
-                      className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUS_STYLES[pro.verification_status]}`}
-                    >
-                      {t(STATUS_KEYS[pro.verification_status])}
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-4 min-w-0">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-teal-400 to-teal-600 text-sm font-semibold text-white">
+                        {initials}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
+                          {name}
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-white/50">
+                          {pro.location_city ?? "---"}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex shrink-0 items-center gap-3">
+                      <span
+                        className={`rounded-full border px-3 py-1 text-xs font-medium ${STATUS_STYLES[pro.verification_status]}`}
+                      >
+                        {t(STATUS_KEYS[pro.verification_status])}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-3 dark:border-white/[0.06]">
+                    <span className="text-xs text-gray-400 dark:text-white/40">
+                      {new Date(pro.created_at).toLocaleDateString(locale, {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      })}
                     </span>
-                  </td>
-                  <td className="whitespace-nowrap px-6 py-4 text-sm">
                     <Link
                       href={`/${locale}/admin/professionals/${pro.id}`}
-                      className="font-medium text-teal-600 hover:text-teal-500 dark:text-teal-400 dark:hover:text-teal-300"
+                      className="text-xs font-medium text-teal-600 hover:text-teal-500 dark:text-teal-400 dark:hover:text-teal-300"
                     >
-                      {t("admin.professionals.viewDocuments")}
+                      {t("admin.professionals.viewDocuments")} &rarr;
                     </Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

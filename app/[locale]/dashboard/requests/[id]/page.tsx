@@ -5,6 +5,7 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { getServiceRequest } from "@/lib/supabase/glatko.server";
 import { Link } from "@/i18n/navigation";
 import { SpotlightCard } from "@/components/landing/spotlight-card";
+import { BackgroundGrids } from "@/components/aceternity/background-grids";
 import { CancelRequestButton } from "@/components/glatko/dashboard/CancelRequestButton";
 import {
   ArrowLeft,
@@ -24,16 +25,16 @@ type Props = {
 };
 
 const STATUS_COLOR: Record<string, string> = {
-  draft: "bg-gray-100 text-gray-600 dark:bg-white/10 dark:text-white/50",
-  published: "bg-teal-50 text-teal-600 dark:bg-teal-500/10 dark:text-teal-400",
-  bidding: "bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400",
-  assigned: "bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400",
-  in_progress: "bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400",
-  completed: "bg-green-50 text-green-600 dark:bg-green-500/10 dark:text-green-400",
-  reviewed: "bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-300",
-  closed: "bg-gray-100 text-gray-500 dark:bg-white/10 dark:text-white/50",
-  expired: "bg-orange-50 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400",
-  cancelled: "bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400",
+  draft: "border-gray-200 bg-gray-100 text-gray-600 dark:border-white/10 dark:bg-white/10 dark:text-white/50",
+  published: "border-teal-200 bg-teal-50 text-teal-600 dark:border-teal-500/20 dark:bg-teal-500/10 dark:text-teal-400",
+  bidding: "border-blue-200 bg-blue-50 text-blue-600 dark:border-blue-500/20 dark:bg-blue-500/10 dark:text-blue-400",
+  assigned: "border-indigo-200 bg-indigo-50 text-indigo-600 dark:border-indigo-500/20 dark:bg-indigo-500/10 dark:text-indigo-400",
+  in_progress: "border-amber-200 bg-amber-50 text-amber-600 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-400",
+  completed: "border-green-200 bg-green-50 text-green-600 dark:border-green-500/20 dark:bg-green-500/10 dark:text-green-400",
+  reviewed: "border-green-200 bg-green-50 text-green-700 dark:border-green-500/20 dark:bg-green-500/10 dark:text-green-300",
+  closed: "border-gray-200 bg-gray-100 text-gray-500 dark:border-white/10 dark:bg-white/10 dark:text-white/50",
+  expired: "border-orange-200 bg-orange-50 text-orange-600 dark:border-orange-500/20 dark:bg-orange-500/10 dark:text-orange-400",
+  cancelled: "border-red-200 bg-red-50 text-red-600 dark:border-red-500/20 dark:bg-red-500/10 dark:text-red-400",
 };
 
 const TIMELINE_STATUSES: RequestStatus[] = [
@@ -79,7 +80,11 @@ export default async function RequestDetailPage({ params }: Props) {
   const statusIdx = TIMELINE_STATUSES.indexOf(status);
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12 md:py-20">
+    <div className="relative mx-auto max-w-3xl px-4 py-12 md:py-20">
+      <div className="pointer-events-none absolute inset-0" style={{ opacity: 0.08 }}>
+        <BackgroundGrids />
+      </div>
+      <div className="relative">
       <Link
         href="/dashboard/requests"
         className="mb-6 inline-flex items-center gap-2 text-sm text-gray-500 transition-colors hover:text-teal-600 dark:text-white/50 dark:hover:text-teal-400"
@@ -90,7 +95,7 @@ export default async function RequestDetailPage({ params }: Props) {
 
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
+          <h1 className="font-serif text-2xl font-semibold text-gray-900 dark:text-white">
             {request.title}
           </h1>
           <p className="mt-1 text-sm text-gray-500 dark:text-white/50">
@@ -99,7 +104,7 @@ export default async function RequestDetailPage({ params }: Props) {
         </div>
         <span
           className={cn(
-            "inline-flex shrink-0 items-center rounded-full px-3 py-1 text-xs font-medium",
+            "inline-flex shrink-0 items-center rounded-full border px-3 py-1 text-xs font-medium",
             STATUS_COLOR[status] ?? STATUS_COLOR.draft
           )}
         >
@@ -108,7 +113,7 @@ export default async function RequestDetailPage({ params }: Props) {
       </div>
 
       <SpotlightCard className="mb-6">
-        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-400 dark:text-white/30">
+        <h2 className="mb-4 font-serif text-sm font-semibold uppercase tracking-wider text-gray-400 dark:text-white/30">
           {t("dashboard.detail.timeline")}
         </h2>
         <div className="flex items-center gap-2">
@@ -270,6 +275,7 @@ export default async function RequestDetailPage({ params }: Props) {
           <CancelRequestButton requestId={id} userId={user.id} />
         </div>
       )}
+      </div>
     </div>
   );
 }

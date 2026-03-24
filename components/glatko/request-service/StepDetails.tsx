@@ -26,7 +26,7 @@ function Chip({
       className={cn(
         "rounded-full border px-4 py-2 text-sm font-medium transition-all",
         selected
-          ? "border-teal-500 bg-teal-500 text-white shadow-sm shadow-teal-500/25"
+          ? "border-teal-500 bg-teal-500/10 text-teal-700 shadow-sm shadow-teal-500/10 dark:bg-teal-500/15 dark:text-teal-300"
           : "border-gray-200 bg-gray-50 text-gray-700 hover:border-teal-300 hover:bg-teal-50 dark:border-white/10 dark:bg-white/5 dark:text-white/70 dark:hover:border-teal-500/30 dark:hover:bg-teal-500/10"
       )}
     >
@@ -131,7 +131,7 @@ function TextArea({
         placeholder={placeholder}
         required={required}
         rows={3}
-        className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-white/30"
+        className="w-full rounded-xl border border-gray-200/80 bg-white/90 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-white/[0.1] dark:bg-white/[0.04] dark:text-white dark:placeholder:text-white/30"
       />
     </div>
   );
@@ -353,7 +353,7 @@ export function StepDetails({ details, setDetails, selectedSubSlug, t }: Props) 
                 value={(d.boatLength as string) ?? ""}
                 onChange={(e) => upd("boatLength", e.target.value)}
                 placeholder={t("request.step2.boatLengthPlaceholder")}
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-white/30"
+                className="w-full rounded-xl border border-gray-200/80 bg-white/90 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-white/[0.1] dark:bg-white/[0.04] dark:text-white dark:placeholder:text-white/30"
               />
             </div>
             <div>
@@ -414,7 +414,7 @@ export function StepDetails({ details, setDetails, selectedSubSlug, t }: Props) 
                 value={(d.boatLength as string) ?? ""}
                 onChange={(e) => upd("boatLength", e.target.value)}
                 placeholder={t("request.step2.boatLengthPlaceholder")}
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-white/30"
+                className="w-full rounded-xl border border-gray-200/80 bg-white/90 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-white/[0.1] dark:bg-white/[0.04] dark:text-white dark:placeholder:text-white/30"
               />
             </div>
             <div>
@@ -461,7 +461,7 @@ export function StepDetails({ details, setDetails, selectedSubSlug, t }: Props) 
                 value={(d.boatLength as string) ?? ""}
                 onChange={(e) => upd("boatLength", e.target.value)}
                 placeholder={t("request.step2.boatLengthPlaceholder")}
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-white/30"
+                className="w-full rounded-xl border border-gray-200/80 bg-white/90 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-white/[0.1] dark:bg-white/[0.04] dark:text-white dark:placeholder:text-white/30"
               />
             </div>
             <div>
@@ -469,7 +469,7 @@ export function StepDetails({ details, setDetails, selectedSubSlug, t }: Props) 
               <select
                 value={(d.marina as string) ?? ""}
                 onChange={(e) => upd("marina", e.target.value)}
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-white/10 dark:bg-white/5 dark:text-white"
+                className="w-full rounded-xl border border-gray-200/80 bg-white/90 px-4 py-3 text-sm text-gray-900 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-white/[0.1] dark:bg-white/[0.04] dark:text-white"
               >
                 <option value="">{t("request.step2.selectMarina")}</option>
                 {["Porto Montenegro", "Marina Budva", "Marina Bar", "Lazure Marina", "Marina Kotor"].map((m) => (

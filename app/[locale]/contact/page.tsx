@@ -1,17 +1,28 @@
+"use client";
+
 import { useTranslations } from "next-intl";
+import { PageBackground } from "@/components/ui/PageBackground";
+import { SectionTitle } from "@/components/ui/SectionTitle";
+import { GlassmorphCard } from "@/components/ui/GlassmorphCard";
+import { Mail } from "lucide-react";
 
 export default function ContactPage() {
   const t = useTranslations();
   return (
-    <div className="min-h-screen pt-24 pb-16 px-4">
-      <div className="mx-auto max-w-3xl">
-        <h1 className="font-serif text-3xl text-gray-900 dark:text-white mb-8">
-          {t("legal.contact")}
-        </h1>
-        <div className="rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 p-8">
-          <p className="text-gray-500 dark:text-white/50">{t("legal.comingSoon")}</p>
-        </div>
+    <PageBackground opacity={0.08}>
+      <div className="mx-auto max-w-3xl px-4 pb-16 pt-28">
+        <SectionTitle>{t("legal.contact")}</SectionTitle>
+        <GlassmorphCard className="p-8 md:p-12" hover={false}>
+          <div className="flex flex-col items-center gap-4 py-8 text-center">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-teal-500/20 bg-teal-500/10">
+              <Mail className="h-7 w-7 text-teal-500" />
+            </div>
+            <p className="max-w-md text-sm text-gray-500 dark:text-white/50">
+              {t("legal.comingSoon")}
+            </p>
+          </div>
+        </GlassmorphCard>
       </div>
-    </div>
+    </PageBackground>
   );
 }

@@ -6,6 +6,7 @@ import { Link, useRouter } from "@/i18n/navigation";
 import { Mail, Lock, Loader2, ShieldCheck, ArrowLeft, Chrome } from "lucide-react";
 import { createClient } from "@/supabase/browser";
 import { useTranslations } from "next-intl";
+import { PageBackground } from "@/components/ui/PageBackground";
 import { cn } from "@/lib/utils";
 
 function safeRedirect(raw: string | null): string {
@@ -77,7 +78,8 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-[#080808] flex flex-col items-center justify-center relative overflow-hidden px-4 transition-colors duration-300">
+    <PageBackground opacity={0.08}>
+    <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden px-4 transition-colors duration-300">
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <div className="h-[600px] w-[600px] rounded-full bg-teal-500/5 blur-[120px]" />
       </div>
@@ -91,7 +93,7 @@ export default function LoginPage() {
             <p className="mt-1 text-sm text-gray-500 dark:text-white/50">{t("brand.tagline")}</p>
           </div>
         </div>
-        <div className="rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 p-8 backdrop-blur-sm shadow-sm">
+        <div className="rounded-2xl border border-gray-200 dark:border-white/10 bg-white/90 dark:bg-white/[0.04] backdrop-blur-xl p-8 shadow-sm">
           {error && (
             <div className="mb-6 rounded-xl border border-red-200 dark:border-red-500/20 bg-red-50 dark:bg-red-500/10 px-4 py-3 text-sm text-red-600 dark:text-red-400">{error}</div>
           )}
@@ -121,7 +123,7 @@ export default function LoginPage() {
               <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleLogin()} placeholder="••••••••" className={inputCls} />
             </div>
           </div>
-          <button onClick={handleLogin} disabled={loading || oauthLoading} className={cn("w-full rounded-xl bg-teal-500 py-3 text-sm font-semibold text-white transition-all hover:bg-teal-600 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2")}>
+          <button onClick={handleLogin} disabled={loading || oauthLoading} className={cn("w-full rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 shadow-lg shadow-teal-500/25 hover:shadow-teal-500/40 py-3 text-sm font-semibold text-white transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2")}>
             {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : t("auth.login")}
           </button>
           <p className="mt-6 text-center text-sm text-gray-500 dark:text-white/50">
@@ -137,5 +139,6 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+    </PageBackground>
   );
 }

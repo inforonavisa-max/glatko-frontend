@@ -38,7 +38,7 @@ export function RequestConfirmation({ requestSummary, onCreateAnother, t }: Prop
         {t("request.confirmation.subtitle")}
       </p>
 
-      <div className="mt-8 w-full rounded-xl border border-gray-200 bg-gray-50 p-6 text-left dark:border-white/10 dark:bg-white/5">
+      <div className="mt-8 w-full rounded-xl border border-gray-200/80 bg-white/80 p-6 text-left backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.04]">
         <div className="space-y-3">
           <div className="flex justify-between text-sm">
             <span className="text-gray-500 dark:text-white/50">
@@ -80,7 +80,7 @@ export function RequestConfirmation({ requestSummary, onCreateAnother, t }: Prop
       <div className="mt-8 flex w-full flex-col gap-3 sm:flex-row">
         <Link
           href="/dashboard/requests"
-          className="flex flex-1 items-center justify-center rounded-xl bg-teal-500 px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-teal-600"
+          className="flex flex-1 items-center justify-center rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:from-teal-600 hover:to-teal-700"
         >
           {t("request.confirmation.goToRequests")}
         </Link>

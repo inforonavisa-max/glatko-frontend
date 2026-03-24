@@ -127,8 +127,8 @@ export function StepPhotos({
             className={cn(
               "flex cursor-pointer flex-col items-center gap-3 rounded-xl border-2 border-dashed px-6 py-10 text-center transition-colors",
               dragOver
-                ? "border-teal-500 bg-teal-50 dark:bg-teal-500/10"
-                : "border-gray-200 bg-gray-50 hover:border-teal-300 dark:border-white/10 dark:bg-white/5 dark:hover:border-teal-500/30"
+                ? "border-teal-500 bg-teal-500/[0.04] dark:bg-teal-500/10"
+                : "border-gray-300/60 bg-gray-50 hover:border-teal-400/50 dark:border-white/[0.12] dark:bg-white/5 dark:hover:border-teal-500/30"
             )}
           >
             {uploading ? (
@@ -214,7 +214,7 @@ export function StepPhotos({
                   value={budgetMin}
                   onChange={(e) => setBudgetMin(e.target.value)}
                   placeholder={t("request.step4.budgetMin")}
-                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-white/30"
+                  className="w-full rounded-xl border border-gray-200/80 bg-white/90 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-white/[0.1] dark:bg-white/[0.04] dark:text-white dark:placeholder:text-white/30"
                 />
               </div>
               <div>
@@ -223,7 +223,7 @@ export function StepPhotos({
                   value={budgetMax}
                   onChange={(e) => setBudgetMax(e.target.value)}
                   placeholder={t("request.step4.budgetMax")}
-                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-white/30"
+                  className="w-full rounded-xl border border-gray-200/80 bg-white/90 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-white/[0.1] dark:bg-white/[0.04] dark:text-white dark:placeholder:text-white/30"
                 />
               </div>
             </div>
@@ -238,7 +238,7 @@ export function StepPhotos({
             onChange={(e) => setPhone(e.target.value)}
             placeholder={t("request.step4.phonePlaceholder")}
             required
-            className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-white/30"
+            className="w-full rounded-xl border border-gray-200/80 bg-white/90 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-white/[0.1] dark:bg-white/[0.04] dark:text-white dark:placeholder:text-white/30"
           />
         </div>
 
@@ -249,7 +249,7 @@ export function StepPhotos({
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder={t("request.step4.emailPlaceholder")}
-            className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-white/30"
+            className="w-full rounded-xl border border-gray-200/80 bg-white/90 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-white/[0.1] dark:bg-white/[0.04] dark:text-white dark:placeholder:text-white/30"
           />
         </div>
 
@@ -260,7 +260,7 @@ export function StepPhotos({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder={autoTitle || t("request.step4.titlePlaceholder")}
-            className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-white/30"
+            className="w-full rounded-xl border border-gray-200/80 bg-white/90 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-white/[0.1] dark:bg-white/[0.04] dark:text-white dark:placeholder:text-white/30"
           />
           {autoTitle && !title && (
             <p className="mt-1 flex items-center gap-1 text-xs text-gray-400 dark:text-white/40">
@@ -277,7 +277,7 @@ export function StepPhotos({
             onChange={(e) => setDescription(e.target.value)}
             placeholder={t("request.step4.descriptionPlaceholder")}
             rows={3}
-            className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-white/10 dark:bg-white/5 dark:text-white dark:placeholder:text-white/30"
+            className="w-full rounded-xl border border-gray-200/80 bg-white/90 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-white/[0.1] dark:bg-white/[0.04] dark:text-white dark:placeholder:text-white/30"
           />
         </div>
       </div>

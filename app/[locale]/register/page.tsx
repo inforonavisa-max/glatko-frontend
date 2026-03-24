@@ -5,6 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { User, Mail, Lock, Loader2, CheckCircle2, ArrowLeft } from "lucide-react";
 import { createClient } from "@/supabase/browser";
 import { useTranslations } from "next-intl";
+import { PageBackground } from "@/components/ui/PageBackground";
 import { cn } from "@/lib/utils";
 
 const inputCls = cn(
@@ -50,23 +51,26 @@ export default function RegisterPage() {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-[#080808] flex items-center justify-center px-4">
+      <PageBackground opacity={0.08}>
+      <div className="min-h-screen flex items-center justify-center px-4">
         <div className="relative z-10 w-full max-w-md">
-          <div className="rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 p-10 text-center">
+          <div className="rounded-2xl border border-gray-200 dark:border-white/10 bg-white/90 dark:bg-white/[0.04] backdrop-blur-xl p-10 text-center">
             <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-emerald-500/20 bg-emerald-500/10">
               <CheckCircle2 className="h-8 w-8 text-emerald-500" strokeWidth={1.5} />
             </div>
             <h2 className="font-serif text-2xl font-semibold text-gray-900 dark:text-white">{t("auth.verifyEmail")}</h2>
             <p className="mt-3 text-sm text-gray-500 dark:text-white/50"><strong className="text-gray-700 dark:text-white/80">{email}</strong> {t("auth.verifyEmailDesc")}</p>
-            <Link href="/login" className="mt-8 inline-flex items-center gap-2 rounded-xl bg-teal-500 px-6 py-3 text-sm font-semibold text-white">{t("auth.goToLogin")}</Link>
+            <Link href="/login" className="mt-8 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 shadow-lg shadow-teal-500/25 hover:shadow-teal-500/40 px-6 py-3 text-sm font-semibold text-white transition-all">{t("auth.goToLogin")}</Link>
           </div>
         </div>
       </div>
+      </PageBackground>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-[#080808] flex flex-col items-center justify-center relative overflow-hidden px-4">
+    <PageBackground opacity={0.08}>
+    <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden px-4">
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center"><div className="h-[600px] w-[600px] rounded-full bg-teal-500/5 blur-[120px]" /></div>
       <div className="relative z-10 w-full max-w-md py-12">
         <div className="mb-10 flex flex-col items-center text-center gap-4">
@@ -78,7 +82,7 @@ export default function RegisterPage() {
             <p className="mt-1 text-sm text-gray-500 dark:text-white/50">{t("auth.freeAccount")}</p>
           </div>
         </div>
-        <div className="rounded-2xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 p-8 backdrop-blur-sm shadow-sm">
+        <div className="rounded-2xl border border-gray-200 dark:border-white/10 bg-white/90 dark:bg-white/[0.04] backdrop-blur-xl p-8 shadow-sm">
           {error && <div className="mb-6 rounded-xl border border-red-200 dark:border-red-500/20 bg-red-50 dark:bg-red-500/10 px-4 py-3 text-sm text-red-600 dark:text-red-400">{error}</div>}
           <div className="mb-4 flex flex-col gap-1.5">
             <label className="text-xs font-medium text-gray-500 dark:text-white/50">{t("auth.fullName")}</label>
@@ -96,7 +100,7 @@ export default function RegisterPage() {
             <label className="text-xs font-medium text-gray-500 dark:text-white/50">{t("auth.confirmPassword")}</label>
             <div className="relative"><Lock className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 dark:text-white/30" /><input type="password" value={passwordConfirm} onChange={(e) => setPasswordConfirm(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleRegister()} placeholder="••••••••" className={inputCls} /></div>
           </div>
-          <button onClick={handleRegister} disabled={loading} className={cn("w-full rounded-xl bg-teal-500 py-3 text-sm font-semibold text-white transition-all hover:bg-teal-600 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2")}>
+          <button onClick={handleRegister} disabled={loading} className={cn("w-full rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 shadow-lg shadow-teal-500/25 hover:shadow-teal-500/40 py-3 text-sm font-semibold text-white transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2")}>
             {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : t("auth.createAccount")}
           </button>
           <p className="mt-6 text-center text-sm text-gray-500 dark:text-white/50">{t("auth.hasAccount")}{" "}<Link href="/login" className="font-semibold text-teal-500">{t("auth.loginNow")}</Link></p>
@@ -104,5 +108,6 @@ export default function RegisterPage() {
         <div className="mt-8 text-center"><Link href="/" className="inline-flex items-center gap-2 text-xs text-gray-400 dark:text-white/30"><ArrowLeft className="h-3 w-3" />{t("auth.backToMarketplace")}</Link></div>
       </div>
     </div>
+    </PageBackground>
   );
 }

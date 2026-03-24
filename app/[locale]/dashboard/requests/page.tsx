@@ -4,6 +4,7 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { getCustomerRequests } from "@/lib/supabase/glatko.server";
 import { Link } from "@/i18n/navigation";
 import { SpotlightCard } from "@/components/landing/spotlight-card";
+import { BackgroundGrids } from "@/components/aceternity/background-grids";
 import { Clock, CheckCircle, AlertCircle, XCircle, Inbox } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { RequestStatus } from "@/types/glatko";
@@ -55,9 +56,13 @@ export default async function DashboardRequestsPage({ params }: Props) {
   const requests = await getCustomerRequests(user.id);
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-12 md:py-20">
+    <div className="relative mx-auto max-w-4xl px-4 py-12 md:py-20">
+      <div className="pointer-events-none absolute inset-0" style={{ opacity: 0.08 }}>
+        <BackgroundGrids />
+      </div>
+      <div className="relative">
       <div className="mb-10">
-        <h1 className="text-3xl font-semibold text-gray-900 dark:text-white">
+        <h1 className="font-serif text-3xl font-semibold text-gray-900 dark:text-white">
           {t("dashboard.requests.title")}
         </h1>
         <p className="mt-2 text-gray-500 dark:text-white/50">
@@ -67,21 +72,23 @@ export default async function DashboardRequestsPage({ params }: Props) {
 
       {requests.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 dark:bg-white/5">
-            <Inbox className="h-8 w-8 text-gray-400 dark:text-white/30" />
+          <div className="rounded-2xl border border-gray-200/80 bg-white/80 px-10 py-12 backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
+            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-white/5">
+              <Inbox className="h-12 w-12 text-gray-400 dark:text-white/30" />
+            </div>
+            <h2 className="mt-4 font-serif text-lg font-semibold text-gray-900 dark:text-white">
+              {t("dashboard.requests.empty")}
+            </h2>
+            <p className="mt-2 max-w-sm text-sm text-gray-500 dark:text-white/50">
+              {t("dashboard.requests.emptyDesc")}
+            </p>
+            <Link
+              href="/request-service"
+              className="mt-6 inline-block rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:from-teal-600 hover:to-teal-700"
+            >
+              {t("dashboard.requests.createFirst")}
+            </Link>
           </div>
-          <h2 className="mt-4 text-lg font-semibold text-gray-900 dark:text-white">
-            {t("dashboard.requests.empty")}
-          </h2>
-          <p className="mt-2 max-w-sm text-sm text-gray-500 dark:text-white/50">
-            {t("dashboard.requests.emptyDesc")}
-          </p>
-          <Link
-            href="/request-service"
-            className="mt-6 rounded-xl bg-teal-500 px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-teal-600"
-          >
-            {t("dashboard.requests.createFirst")}
-          </Link>
         </div>
       ) : (
         <div className="space-y-4">
@@ -144,6 +151,7 @@ export default async function DashboardRequestsPage({ params }: Props) {
           })}
         </div>
       )}
+      </div>
     </div>
   );
 }

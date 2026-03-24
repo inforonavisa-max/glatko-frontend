@@ -107,6 +107,7 @@ export function BecomeAProWizard({ userId, categories }: Props) {
 
   return (
     <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+      <div className="rounded-3xl border border-gray-200/80 bg-white/80 p-6 shadow-sm backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.04] dark:shadow-none md:p-10">
       <div className="mb-10 text-center">
         <h1 className="text-3xl font-semibold text-gray-900 dark:text-white">
           {t("pro.wizard.title")}
@@ -127,7 +128,7 @@ export function BecomeAProWizard({ userId, categories }: Props) {
                 className={cn(
                   "flex h-10 w-10 shrink-0 items-center justify-center rounded-full border transition-colors",
                   active
-                    ? "border-teal-500 bg-teal-500 text-white"
+                    ? "border-teal-500 bg-gradient-to-br from-teal-400 to-teal-600 text-white shadow-md shadow-teal-500/25"
                     : "border-gray-200 dark:border-white/10 text-gray-400 dark:text-white/30"
                 )}
               >
@@ -268,6 +269,7 @@ export function BecomeAProWizard({ userId, categories }: Props) {
             )}
           </button>
         )}
+      </div>
       </div>
     </div>
   );
