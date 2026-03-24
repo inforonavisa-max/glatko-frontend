@@ -185,3 +185,78 @@ export async function getVerificationDocuments(
   if (error || !data) return [];
   return data as VerificationDocument[];
 }
+
+export async function getCustomerRequests(customerId: string) {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("glatko_service_requests")
+    .select(
+      "*, category:glatko_service_categories(id, slug, name, icon)"
+    )
+    .eq("customer_id", customerId)
+    .order("created_at", { ascending: false });
+
+  if (error) return [];
+  return data ?? [];
+}
+
+export async function getServiceRequest(requestId: string) {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("glatko_service_requests")
+    .select(
+      `*, category:glatko_service_categories(id, slug, name, icon, parent_id),
+       bids:glatko_bids(id, price, price_type, message, status, created_at,
+         professional:glatko_professional_profiles(id, business_name, avg_rating, total_reviews, completed_jobs, is_verified))`
+    )
+    .eq("id", requestId)
+    .single();
+
+  if (error) return null;
+  return data;
+}
+
+interface CreateServiceRequestInput {
+  customer_id: string;
+  category_id: string;
+  title: string;
+  description?: string;
+  details: Record<string, unknown>;
+  municipality: string;
+  address?: string;
+  budget_min?: number;
+  budget_max?: number;
+  urgency: string;
+  preferred_date_start?: string;
+  preferred_date_end?: string;
+  photos: string[];
+}
+
+export async function createServiceRequest(
+  input: CreateServiceRequestInput
+) {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("glatko_service_requests")
+    .insert({ ...input, status: "published" })
+    .select()
+    .single();
+
+  if (error) return { success: false as const, error: error.message };
+  return { success: true as const, requestId: data.id as string };
+}
+
+export async function cancelServiceRequest(
+  requestId: string,
+  userId: string
+) {
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("glatko_service_requests")
+    .update({ status: "cancelled", updated_at: new Date().toISOString() })
+    .eq("id", requestId)
+    .eq("customer_id", userId);
+
+  if (error) return { success: false as const, error: error.message };
+  return { success: true as const };
+}

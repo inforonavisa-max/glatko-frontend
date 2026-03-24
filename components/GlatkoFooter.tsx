@@ -28,6 +28,7 @@ export function GlatkoFooter() {
       title: t("footer.support"),
       links: [
         { label: t("footer.help"), href: "/contact" },
+        { label: t("footer.requestService"), href: "/request-service" },
         { label: t("footer.becomeAPro"), href: "/register" },
         { label: t("footer.forPros"), href: "/register" },
       ],

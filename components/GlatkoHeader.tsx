@@ -110,7 +110,7 @@ export function GlatkoHeader() {
               {t("nav.login")}
             </Link>
             <Link
-              href="/"
+              href="/request-service"
               className={cn(
                 "rounded-lg bg-gradient-to-r from-teal-500 to-teal-600 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white shadow-lg shadow-teal-500/30 transition-all hover:shadow-teal-500/50",
                 !reduced && "animate-teal-pulse"
@@ -161,6 +161,13 @@ export function GlatkoHeader() {
                   {l.label}
                 </a>
               ))}
+              <Link
+                href="/request-service"
+                onClick={() => setMobileOpen(false)}
+                className="border-b border-gray-100 py-3 text-lg font-medium text-teal-600 dark:border-white/5 dark:text-teal-400"
+              >
+                {t("nav.requestService")}
+              </Link>
               <div className="mt-6 flex flex-col gap-3">
                 <Link
                   href="/login"

@@ -166,7 +166,7 @@ export default function LandingPage() {
             custom={2}
             className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
           >
-            <Link href="/register">
+            <Link href="/request-service">
               <motion.span
                 whileHover={
                   reduced
@@ -445,7 +445,7 @@ export default function LandingPage() {
               <p className="mt-3 text-sm text-gray-500 dark:text-white/50">
                 {t("cta.subtitle")}
               </p>
-              <Link href="/register" className="mt-8 inline-block">
+              <Link href="/request-service" className="mt-8 inline-block">
                 <motion.span
                   whileHover={
                     reduced
@@ -468,7 +468,7 @@ export default function LandingPage() {
               <p className="mt-3 text-sm text-gray-500 dark:text-white/50">
                 {t("cta.pro.subtitle")}
               </p>
-              <Link href="/register" className="mt-8 inline-block">
+              <Link href="/become-a-pro" className="mt-8 inline-block">
                 <motion.span
                   whileHover={
                     reduced
