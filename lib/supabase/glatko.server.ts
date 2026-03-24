@@ -206,7 +206,7 @@ export async function getServiceRequest(requestId: string) {
     .from("glatko_service_requests")
     .select(
       `*, category:glatko_service_categories(id, slug, name, icon, parent_id),
-       bids:glatko_bids(id, price, price_type, message, status, created_at,
+       bids:glatko_bids(id, price, price_type, message, status, created_at, estimated_duration_hours, available_date,
          professional:glatko_professional_profiles(id, business_name, avg_rating, total_reviews, completed_jobs, is_verified))`
     )
     .eq("id", requestId)
@@ -259,4 +259,138 @@ export async function cancelServiceRequest(
 
   if (error) return { success: false as const, error: error.message };
   return { success: true as const };
+}
+
+// ─── G3: Bidding System ───
+
+export async function getMatchingRequests(professionalId: string) {
+  const supabase = createClient();
+
+  const { data: proServices } = await supabase
+    .from("glatko_pro_services")
+    .select("category_id")
+    .eq("professional_id", professionalId);
+
+  const categoryIds = proServices?.map((s) => s.category_id) || [];
+  if (categoryIds.length === 0) return [];
+
+  const { data, error } = await supabase
+    .from("glatko_service_requests")
+    .select(
+      `*, category:glatko_service_categories(id, slug, name, icon),
+       customer:profiles!customer_id(full_name, avatar_url)`
+    )
+    .in("category_id", categoryIds)
+    .in("status", ["published", "bidding"])
+    .lt("bid_count", 4)
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+
+  const { data: existingBids } = await supabase
+    .from("glatko_bids")
+    .select("service_request_id")
+    .eq("professional_id", professionalId);
+
+  const biddedIds = new Set(
+    existingBids?.map((b) => b.service_request_id) || []
+  );
+
+  return (data || []).filter((r) => !biddedIds.has(r.id));
+}
+
+export async function createBid(data: {
+  service_request_id: string;
+  professional_id: string;
+  price: number;
+  price_type: "fixed" | "hourly" | "estimate";
+  message: string;
+  estimated_duration_hours?: number;
+  available_date?: string;
+}) {
+  const supabase = createClient();
+  const { data: bid, error } = await supabase
+    .from("glatko_bids")
+    .insert(data)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return bid;
+}
+
+export async function getProfessionalBids(professionalId: string) {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("glatko_bids")
+    .select(
+      `*, service_request:glatko_service_requests(
+        id, title, status, municipality, urgency,
+        budget_min, budget_max, created_at, photos,
+        category:glatko_service_categories(id, slug, name, icon),
+        customer:profiles!customer_id(full_name, avatar_url)
+      )`
+    )
+    .eq("professional_id", professionalId)
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+  return data || [];
+}
+
+export async function acceptBid(
+  bidId: string,
+  requestId: string,
+  customerId: string
+) {
+  const supabase = createClient();
+
+  const { data: request } = await supabase
+    .from("glatko_service_requests")
+    .select("customer_id")
+    .eq("id", requestId)
+    .single();
+
+  if (request?.customer_id !== customerId) {
+    throw new Error("Unauthorized");
+  }
+
+  const { error: bidError } = await supabase
+    .from("glatko_bids")
+    .update({ status: "accepted", updated_at: new Date().toISOString() })
+    .eq("id", bidId);
+
+  if (bidError) throw bidError;
+
+  const { error: rejectError } = await supabase
+    .from("glatko_bids")
+    .update({ status: "rejected", updated_at: new Date().toISOString() })
+    .eq("service_request_id", requestId)
+    .neq("id", bidId)
+    .eq("status", "pending");
+
+  if (rejectError) throw rejectError;
+
+  const { error: requestError } = await supabase
+    .from("glatko_service_requests")
+    .update({
+      status: "assigned",
+      assigned_bid_id: bidId,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", requestId);
+
+  if (requestError) throw requestError;
+}
+
+export async function withdrawBid(bidId: string, professionalId: string) {
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("glatko_bids")
+    .update({ status: "withdrawn", updated_at: new Date().toISOString() })
+    .eq("id", bidId)
+    .eq("professional_id", professionalId)
+    .eq("status", "pending");
+
+  if (error) throw error;
 }

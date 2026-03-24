@@ -7,6 +7,7 @@ import { Link } from "@/i18n/navigation";
 import { SpotlightCard } from "@/components/landing/spotlight-card";
 import { BackgroundGrids } from "@/components/aceternity/background-grids";
 import { CancelRequestButton } from "@/components/glatko/dashboard/CancelRequestButton";
+import { BidComparison } from "@/components/glatko/dashboard/BidComparison";
 import {
   ArrowLeft,
   MapPin,
@@ -22,6 +23,25 @@ import type { RequestStatus } from "@/types/glatko";
 
 type Props = {
   params: Promise<{ locale: string; id: string }> | { locale: string; id: string };
+};
+
+type BidData = {
+  id: string;
+  price: number;
+  price_type: string;
+  message: string | null;
+  status: string;
+  created_at: string;
+  estimated_duration_hours: number | null;
+  available_date: string | null;
+  professional?: {
+    id: string;
+    business_name: string | null;
+    avg_rating: number;
+    total_reviews: number;
+    completed_jobs: number;
+    is_verified: boolean;
+  };
 };
 
 const STATUS_COLOR: Record<string, string> = {
@@ -225,49 +245,16 @@ export default async function RequestDetailPage({ params }: Props) {
       )}
 
       <SpotlightCard className="mb-6">
-        <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-gray-400 dark:text-white/30">
+        <h2 className="mb-4 flex items-center gap-2 font-serif text-sm font-semibold uppercase tracking-wider text-gray-400 dark:text-white/30">
           <MessageSquare className="h-4 w-4" />
-          {t("dashboard.detail.bids")} ({request.bid_count ?? 0})
+          {t("bidComparison.title")} ({request.bid_count ?? 0}/{request.max_bids ?? 4})
         </h2>
-        {(!request.bids || (request.bids as unknown[]).length === 0) ? (
-          <p className="text-sm text-gray-500 dark:text-white/50">
-            {t("dashboard.detail.noBids")}
-          </p>
-        ) : (
-          <div className="space-y-3">
-            {(request.bids as Array<{
-              id: string;
-              price: number;
-              price_type: string;
-              message: string | null;
-              status: string;
-              professional?: {
-                business_name: string | null;
-                avg_rating: number;
-                is_verified: boolean;
-              };
-            }>).map((bid) => (
-              <div
-                key={bid.id}
-                className="rounded-xl border border-gray-200 p-4 dark:border-white/10"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="font-medium text-gray-900 dark:text-white">
-                    {bid.professional?.business_name ?? t("dashboard.detail.anonymous")}
-                  </span>
-                  <span className="text-lg font-bold text-teal-600 dark:text-teal-400">
-                    {bid.price} EUR
-                  </span>
-                </div>
-                {bid.message && (
-                  <p className="mt-2 text-sm text-gray-600 dark:text-white/60">
-                    {bid.message}
-                  </p>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
+        <BidComparison
+          bids={(request.bids as BidData[]) ?? []}
+          requestId={id}
+          requestStatus={status}
+          locale={locale}
+        />
       </SpotlightCard>
 
       {isCancellable && (

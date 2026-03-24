@@ -57,6 +57,7 @@ export function GlatkoHeader() {
     { href: "/#categories", hash: "#categories", label: t("nav.services") },
     { href: "/#how-it-works", hash: "#how-it-works", label: t("nav.howItWorks") },
     { href: "/#cta-pro", hash: "#cta-pro", label: t("nav.becomeAPro") },
+    { href: "/pro/dashboard", hash: "", label: t("nav.proDashboard"), isPro: true },
   ];
 
   const isHome = pathname === "/";
@@ -89,6 +90,13 @@ export function GlatkoHeader() {
           <nav className="hidden items-center gap-6 md:flex">
             {navLinks.map((l) => {
               const active = isHome && hash === l.hash;
+              if ("isPro" in l) {
+                return (
+                  <Link key={l.href} href={l.href} className="nav-link relative text-xs font-medium text-teal-600 dark:text-teal-400">
+                    {l.label}
+                  </Link>
+                );
+              }
               return (
                 <a key={l.href} href={l.href} className="nav-link relative text-xs">
                   {l.label}
@@ -167,6 +175,13 @@ export function GlatkoHeader() {
                 className="border-b border-gray-100 py-3 text-lg font-medium text-teal-600 dark:border-white/5 dark:text-teal-400"
               >
                 {t("nav.requestService")}
+              </Link>
+              <Link
+                href="/pro/dashboard"
+                onClick={() => setMobileOpen(false)}
+                className="border-b border-gray-100 py-3 text-lg font-medium text-teal-600 dark:border-white/5 dark:text-teal-400"
+              >
+                {t("nav.proDashboard")}
               </Link>
               <div className="mt-6 flex flex-col gap-3">
                 <Link
