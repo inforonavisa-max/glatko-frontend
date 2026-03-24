@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Star, CheckCircle, Calendar, Clock, Loader2 } from "lucide-react";
+import { Star, CheckCircle, Calendar, Clock, Loader2, MessageSquare } from "lucide-react";
 import { acceptBidAction } from "@/app/[locale]/dashboard/requests/[id]/actions";
 import { cn } from "@/lib/utils";
 
@@ -72,7 +72,7 @@ export function BidComparison({ bids, requestId, requestStatus, locale }: Props)
   const canAccept = ["published", "bidding"].includes(requestStatus);
 
   return (
-    <div className="space-y-4">
+    <div className="grid gap-4 md:grid-cols-2">
       <AnimatePresence>
         {success && (
           <motion.div
@@ -118,6 +118,15 @@ export function BidComparison({ bids, requestId, requestStatus, locale }: Props)
                 {t("bidComparison.rejected")}
               </div>
             )}
+            {isAccepted && (
+              <Link
+                href={`/${locale}/inbox`}
+                className="mb-3 inline-flex items-center gap-1.5 rounded-xl border border-teal-500/30 bg-teal-500/5 px-4 py-2 text-xs font-medium text-teal-400 transition-all hover:bg-teal-500/10"
+              >
+                <MessageSquare className="h-3 w-3" />
+                {t("bidComparison.messageButton")}
+              </Link>
+            )}
 
             <div className="flex items-start justify-between gap-4">
               <div className="flex items-center gap-3">
@@ -145,7 +154,7 @@ export function BidComparison({ bids, requestId, requestStatus, locale }: Props)
               </div>
 
               <div className="text-right">
-                <p className="text-3xl font-bold text-teal-400">€{bid.price}</p>
+                <p className="text-2xl font-bold text-teal-400 sm:text-3xl">€{bid.price}</p>
                 <span className="text-xs text-white/40">{t(`bidForm.${bid.price_type}`)}</span>
               </div>
             </div>
@@ -164,9 +173,9 @@ export function BidComparison({ bids, requestId, requestStatus, locale }: Props)
             </div>
 
             {!isRejected && canAccept && bid.status === "pending" && (
-              <div className="mt-4 flex items-center gap-2">
+              <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
                 {pro && (
-                  <Link href={`/${locale}/provider/${pro.id}`} className="rounded-xl border border-white/[0.1] bg-white/[0.05] px-4 py-2 text-xs font-medium text-white/60 transition-all hover:bg-white/[0.08]">
+                  <Link href={`/${locale}/provider/${pro.id}`} className="w-full rounded-xl border border-white/[0.1] bg-white/[0.05] px-4 py-2 text-center text-xs font-medium text-white/60 transition-all hover:bg-white/[0.08] sm:w-auto">
                     {t("bidComparison.viewProfile")}
                   </Link>
                 )}
@@ -175,7 +184,7 @@ export function BidComparison({ bids, requestId, requestStatus, locale }: Props)
                   whileTap={{ scale: 0.99 }}
                   onClick={() => handleAccept(bid.id)}
                   disabled={isPending}
-                  className="ml-auto rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-6 py-2 text-xs font-medium text-white shadow-lg shadow-teal-500/25 disabled:opacity-50 transition-all flex items-center gap-2"
+                  className="w-full justify-center rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-6 py-2 text-xs font-medium text-white shadow-lg shadow-teal-500/25 disabled:opacity-50 transition-all flex items-center gap-2 sm:ml-auto sm:w-auto"
                 >
                   {isPending && acceptingId === bid.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <CheckCircle className="h-3 w-3" />}
                   {t("bidComparison.accept")}

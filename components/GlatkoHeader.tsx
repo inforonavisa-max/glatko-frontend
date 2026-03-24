@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Mail } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -58,6 +58,7 @@ export function GlatkoHeader() {
     { href: "/#how-it-works", hash: "#how-it-works", label: t("nav.howItWorks") },
     { href: "/#cta-pro", hash: "#cta-pro", label: t("nav.becomeAPro") },
     { href: "/pro/dashboard", hash: "", label: t("nav.proDashboard"), isPro: true },
+    { href: "/inbox", hash: "", label: t("nav.inbox"), isInbox: true },
   ];
 
   const isHome = pathname === "/";
@@ -90,6 +91,14 @@ export function GlatkoHeader() {
           <nav className="hidden items-center gap-6 md:flex">
             {navLinks.map((l) => {
               const active = isHome && hash === l.hash;
+              if ("isInbox" in l) {
+                return (
+                  <Link key={l.href} href={l.href} className="nav-link relative flex items-center gap-1 text-xs font-medium text-teal-600 dark:text-teal-400">
+                    <Mail className="h-3.5 w-3.5" />
+                    {l.label}
+                  </Link>
+                );
+              }
               if ("isPro" in l) {
                 return (
                   <Link key={l.href} href={l.href} className="nav-link relative text-xs font-medium text-teal-600 dark:text-teal-400">
@@ -182,6 +191,14 @@ export function GlatkoHeader() {
                 className="border-b border-gray-100 py-3 text-lg font-medium text-teal-600 dark:border-white/5 dark:text-teal-400"
               >
                 {t("nav.proDashboard")}
+              </Link>
+              <Link
+                href="/inbox"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center gap-2 border-b border-gray-100 py-3 text-lg font-medium text-teal-600 dark:border-white/5 dark:text-teal-400"
+              >
+                <Mail className="h-5 w-5" />
+                {t("nav.inbox")}
               </Link>
               <div className="mt-6 flex flex-col gap-3">
                 <Link

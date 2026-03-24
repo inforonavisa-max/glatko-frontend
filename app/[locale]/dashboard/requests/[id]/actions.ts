@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/supabase/server";
-import { cancelServiceRequest, acceptBid } from "@/lib/supabase/glatko.server";
+import { cancelServiceRequest, acceptBid, getOrCreateConversation, sendMessage } from "@/lib/supabase/glatko.server";
 
 interface CancelResult {
   success: boolean;
@@ -35,6 +35,29 @@ export async function acceptBidAction(
 
   try {
     await acceptBid(bidId, requestId, user.id);
+    
+    const { data: bid } = await supabase
+      .from("glatko_bids")
+      .select("professional_id")
+      .eq("id", bidId)
+      .single();
+    
+    if (bid) {
+      const conversation = await getOrCreateConversation({
+        service_request_id: requestId,
+        bid_id: bidId,
+        customer_id: user.id,
+        professional_id: bid.professional_id,
+      });
+      
+      await sendMessage({
+        conversation_id: conversation.id,
+        sender_id: user.id,
+        content: "✅ Bid accepted! You can now discuss the details here.",
+        content_type: "text",
+      });
+    }
+    
     return { success: true };
   } catch (err) {
     return { success: false, error: err instanceof Error ? err.message : "Failed" };
