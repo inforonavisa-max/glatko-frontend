@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { createClient } from "@/supabase/server";
-import { createBid, getProfessionalProfile } from "@/lib/supabase/glatko.server";
+import { createBid, getProfessionalProfile, createNotification } from "@/lib/supabase/glatko.server";
 
 const bidSchema = z.object({
   serviceRequestId: z.string().uuid(),
@@ -52,7 +52,7 @@ export async function submitBid(formData: FormData): Promise<SubmitResult> {
   }
 
   try {
-    await createBid({
+    const bid = await createBid({
       service_request_id: parsed.data.serviceRequestId,
       professional_id: parsed.data.professionalId,
       price: parsed.data.price,
@@ -61,6 +61,25 @@ export async function submitBid(formData: FormData): Promise<SubmitResult> {
       estimated_duration_hours: parsed.data.estimatedDurationHours,
       available_date: parsed.data.availableDate,
     });
+
+    const supabaseQ = createClient();
+    const { data: request } = await supabaseQ
+      .from("glatko_service_requests")
+      .select("customer_id")
+      .eq("id", parsed.data.serviceRequestId)
+      .single();
+
+    if (request?.customer_id) {
+      const proName = profile.business_name || profile.profile?.full_name || "A professional";
+      await createNotification({
+        user_id: request.customer_id,
+        type: "new_bid",
+        title: "New bid received",
+        body: `${proName} submitted a bid for your request`,
+        data: { requestId: parsed.data.serviceRequestId, bidId: bid.id },
+      }).catch(() => {});
+    }
+
     return { success: true };
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Failed to create bid";

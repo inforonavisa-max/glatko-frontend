@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import { createClient } from "@/supabase/server";
-import { createReview } from "@/lib/supabase/glatko.server";
+import { createReview, createNotification } from "@/lib/supabase/glatko.server";
 
 const reviewSchema = z.object({
   serviceRequestId: z.string().uuid(),
@@ -51,6 +51,14 @@ export async function submitReviewAction(
       review_text: d.reviewText,
       photos: d.photos,
     });
+
+    await createNotification({
+      user_id: d.revieweeId,
+      type: "review",
+      title: "New review received",
+      body: `You received a ${d.overallRating}-star review`,
+      data: { requestId: d.serviceRequestId },
+    }).catch(() => {});
 
     return { success: true };
   } catch (err) {

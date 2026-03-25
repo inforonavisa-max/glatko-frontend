@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/supabase/server";
-import { withdrawBid, startJob, completeJob } from "@/lib/supabase/glatko.server";
+import { withdrawBid, startJob, completeJob, createNotification } from "@/lib/supabase/glatko.server";
 
 export async function withdrawBidAction(bidId: string) {
   const supabase = createClient();
@@ -27,6 +27,23 @@ export async function startJobAction(
 
   try {
     await startJob(requestId, user.id);
+
+    const { data: request } = await supabase
+      .from("glatko_service_requests")
+      .select("customer_id, title")
+      .eq("id", requestId)
+      .single();
+
+    if (request?.customer_id) {
+      await createNotification({
+        user_id: request.customer_id,
+        type: "status_change",
+        title: "Job started",
+        body: `The professional has started working on "${request.title || "your request"}"`,
+        data: { requestId },
+      }).catch(() => {});
+    }
+
     return { success: true };
   } catch (err) {
     return {
@@ -47,6 +64,23 @@ export async function completeJobAction(
 
   try {
     await completeJob(requestId, user.id);
+
+    const { data: request } = await supabase
+      .from("glatko_service_requests")
+      .select("customer_id, title")
+      .eq("id", requestId)
+      .single();
+
+    if (request?.customer_id) {
+      await createNotification({
+        user_id: request.customer_id,
+        type: "status_change",
+        title: "Job completed",
+        body: `The job "${request.title || "your request"}" has been completed — leave a review!`,
+        data: { requestId },
+      }).catch(() => {});
+    }
+
     return { success: true };
   } catch (err) {
     return {

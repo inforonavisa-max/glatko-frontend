@@ -1,0 +1,305 @@
+"use client";
+
+import { useState, useEffect, useRef, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
+import {
+  Bell,
+  DollarSign,
+  CheckCircle,
+  MessageSquare,
+  RefreshCw,
+  Star,
+  ShieldCheck,
+  ShieldX,
+  CheckCheck,
+} from "lucide-react";
+import { createClient } from "@/supabase/browser";
+import {
+  getNotificationsAction,
+  markReadAction,
+  markAllReadAction,
+  getUnreadCountAction,
+} from "@/app/[locale]/notifications/actions";
+import { cn } from "@/lib/utils";
+import { useRouter } from "@/i18n/navigation";
+import { toast } from "sonner";
+
+interface GlatkoNotification {
+  id: string;
+  user_id: string;
+  type: string;
+  title: string;
+  body: string | null;
+  data: Record<string, unknown> | null;
+  read_at: string | null;
+  created_at: string;
+}
+
+const typeIcons: Record<string, typeof Bell> = {
+  new_bid: DollarSign,
+  bid_accepted: CheckCircle,
+  bid_rejected: ShieldX,
+  message: MessageSquare,
+  status_change: RefreshCw,
+  review: Star,
+  verification_approved: ShieldCheck,
+  verification_rejected: ShieldX,
+  new_request_match: Bell,
+};
+
+function getNotificationLink(n: GlatkoNotification): string {
+  const d = n.data;
+  switch (n.type) {
+    case "new_bid":
+    case "status_change":
+      return d?.requestId ? `/dashboard/requests/${d.requestId}` : "/dashboard";
+    case "bid_accepted":
+      return "/pro/dashboard/bids";
+    case "message":
+      return d?.conversationId ? `/inbox/${d.conversationId}` : "/inbox";
+    case "review":
+      return d?.requestId ? `/review/${d.requestId}` : "/dashboard";
+    case "verification_approved":
+    case "verification_rejected":
+      return "/pro/dashboard";
+    default:
+      return "/notifications";
+  }
+}
+
+function getLocalizedTitle(type: string, t: ReturnType<typeof useTranslations>): string {
+  const map: Record<string, string> = {
+    new_bid: t("notifications.newBid.title"),
+    bid_accepted: t("notifications.bidAccepted.title"),
+    bid_rejected: t("notifications.bidRejected.title"),
+    message: t("notifications.newMessage.title"),
+    status_change: t("notifications.jobStarted.title"),
+    review: t("notifications.reviewReceived.title"),
+    verification_approved: t("notifications.verificationApproved.title"),
+    verification_rejected: t("notifications.verificationRejected.title"),
+  };
+  return map[type] || type;
+}
+
+function timeAgo(dateStr: string): string {
+  const now = Date.now();
+  const then = new Date(dateStr).getTime();
+  const diff = Math.max(0, now - then);
+  const minutes = Math.floor(diff / 60000);
+  if (minutes < 1) return "now";
+  if (minutes < 60) return `${minutes}m`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h`;
+  const days = Math.floor(hours / 24);
+  return `${days}d`;
+}
+
+interface NotificationBellProps {
+  userId: string;
+}
+
+export function NotificationBell({ userId }: NotificationBellProps) {
+  const t = useTranslations();
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const [notifications, setNotifications] = useState<GlatkoNotification[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [bounce, setBounce] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const loadNotifications = useCallback(async () => {
+    setLoading(true);
+    try {
+      const [data, count] = await Promise.all([
+        getNotificationsAction(20, false),
+        getUnreadCountAction(),
+      ]);
+      setNotifications(data as GlatkoNotification[]);
+      setUnreadCount(count);
+    } catch {
+      // silent
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadNotifications();
+  }, [loadNotifications]);
+
+  useEffect(() => {
+    if (!userId) return;
+    const supabase = createClient();
+    const channel = supabase
+      .channel(`notifications:${userId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "glatko_notifications",
+          filter: `user_id=eq.${userId}`,
+        },
+        (payload) => {
+          const n = payload.new as GlatkoNotification;
+          setNotifications((prev) => [n, ...prev]);
+          setUnreadCount((prev) => prev + 1);
+          setBounce(true);
+          setTimeout(() => setBounce(false), 600);
+          toast(getLocalizedTitle(n.type, t), {
+            description: n.body || undefined,
+          });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [userId, t]);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    if (open) document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [open]);
+
+  async function handleMarkAllRead() {
+    await markAllReadAction();
+    setNotifications((prev) => prev.map((n) => ({ ...n, read_at: n.read_at || new Date().toISOString() })));
+    setUnreadCount(0);
+  }
+
+  async function handleClick(n: GlatkoNotification) {
+    if (!n.read_at) {
+      await markReadAction(n.id);
+      setNotifications((prev) =>
+        prev.map((item) => (item.id === n.id ? { ...item, read_at: new Date().toISOString() } : item))
+      );
+      setUnreadCount((prev) => Math.max(0, prev - 1));
+    }
+    setOpen(false);
+    router.push(getNotificationLink(n));
+  }
+
+  return (
+    <div ref={dropdownRef} className="relative">
+      <button
+        onClick={() => { setOpen(!open); if (!open) loadNotifications(); }}
+        className="relative rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 dark:text-white/70 dark:hover:bg-white/[0.06]"
+        aria-label={t("notifications.title")}
+      >
+        <motion.div animate={bounce ? { scale: [1, 1.3, 1] } : {}} transition={{ duration: 0.4 }}>
+          <Bell className="h-4.5 w-4.5" />
+        </motion.div>
+        {unreadCount > 0 && (
+          <motion.span
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            className="absolute -right-0.5 -top-0.5 flex min-w-[18px] items-center justify-center rounded-full bg-teal-500 px-1 text-[10px] font-bold text-white shadow-lg shadow-teal-500/30"
+          >
+            {unreadCount > 99 ? "99+" : unreadCount}
+          </motion.span>
+        )}
+      </button>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: 8, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 8, scale: 0.96 }}
+            transition={{ duration: 0.2 }}
+            className="absolute right-0 top-full z-50 mt-2 w-80 overflow-hidden rounded-2xl border border-gray-200/50 bg-white/95 shadow-2xl backdrop-blur-2xl dark:border-white/[0.08] dark:bg-[#0c0c0c]/95 sm:w-96"
+          >
+            <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3 dark:border-white/[0.06]">
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+                {t("notifications.title")}
+              </h3>
+              {unreadCount > 0 && (
+                <button
+                  onClick={handleMarkAllRead}
+                  className="flex items-center gap-1 text-xs font-medium text-teal-600 transition-colors hover:text-teal-500 dark:text-teal-400"
+                >
+                  <CheckCheck className="h-3.5 w-3.5" />
+                  {t("notifications.markAllRead")}
+                </button>
+              )}
+            </div>
+
+            <div className="max-h-[400px] overflow-y-auto overscroll-contain">
+              {loading && notifications.length === 0 && (
+                <div className="flex items-center justify-center py-12">
+                  <div className="h-5 w-5 animate-spin rounded-full border-2 border-teal-500 border-t-transparent" />
+                </div>
+              )}
+
+              {!loading && notifications.length === 0 && (
+                <div className="flex flex-col items-center gap-2 py-12 text-center">
+                  <Bell className="h-8 w-8 text-gray-300 dark:text-white/20" />
+                  <p className="text-sm text-gray-500 dark:text-white/40">
+                    {t("notifications.empty")}
+                  </p>
+                  <p className="text-xs text-gray-400 dark:text-white/25">
+                    {t("notifications.emptyDesc")}
+                  </p>
+                </div>
+              )}
+
+              {notifications.map((n) => {
+                const Icon = typeIcons[n.type] || Bell;
+                return (
+                  <button
+                    key={n.id}
+                    onClick={() => handleClick(n)}
+                    className={cn(
+                      "flex w-full items-start gap-3 px-4 py-3 text-left transition-colors hover:bg-gray-50 dark:hover:bg-white/[0.04]",
+                      !n.read_at && "bg-teal-50/50 dark:bg-teal-500/[0.04]"
+                    )}
+                  >
+                    <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-teal-500/10 dark:bg-teal-500/15">
+                      <Icon className="h-4 w-4 text-teal-600 dark:text-teal-400" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">
+                        {getLocalizedTitle(n.type, t)}
+                      </p>
+                      {n.body && (
+                        <p className="mt-0.5 truncate text-xs text-gray-500 dark:text-white/45">
+                          {n.body}
+                        </p>
+                      )}
+                      <p className="mt-1 text-[10px] text-gray-400 dark:text-white/30">
+                        {timeAgo(n.created_at)}
+                      </p>
+                    </div>
+                    {!n.read_at && (
+                      <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-teal-500 shadow-[0_0_6px_rgba(20,184,166,0.6)]" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="border-t border-gray-100 px-4 py-2.5 dark:border-white/[0.06]">
+              <Link
+                href="/notifications"
+                onClick={() => setOpen(false)}
+                className="block text-center text-xs font-medium text-teal-600 transition-colors hover:text-teal-500 dark:text-teal-400"
+              >
+                {t("notifications.viewAll")}
+              </Link>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}

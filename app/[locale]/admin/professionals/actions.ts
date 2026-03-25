@@ -1,6 +1,6 @@
 "use server";
 
-import { updateVerificationStatus } from "@/lib/supabase/glatko.server";
+import { updateVerificationStatus, createNotification } from "@/lib/supabase/glatko.server";
 import type { VerificationStatus } from "@/types/glatko";
 
 export async function updateProfessionalStatus(
@@ -8,5 +8,25 @@ export async function updateProfessionalStatus(
   status: VerificationStatus,
   reason?: string
 ) {
-  return updateVerificationStatus(professionalId, status, reason);
+  const result = await updateVerificationStatus(professionalId, status, reason);
+
+  if (result.success) {
+    if (status === "approved") {
+      await createNotification({
+        user_id: professionalId,
+        type: "verification_approved",
+        title: "Account approved!",
+        body: "Your professional account has been verified",
+      }).catch(() => {});
+    } else if (status === "rejected") {
+      await createNotification({
+        user_id: professionalId,
+        type: "verification_rejected",
+        title: "Application rejected",
+        body: reason || "Your professional application was not approved",
+      }).catch(() => {});
+    }
+  }
+
+  return result;
 }

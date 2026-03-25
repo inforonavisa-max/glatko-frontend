@@ -7,6 +7,7 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { GlatkoHeader } from "@/components/GlatkoHeader";
 import { GlatkoFooter } from "@/components/GlatkoFooter";
 import { HtmlLangSetter } from "@/components/HtmlLangSetter";
+import { createClient } from "@/supabase/server";
 
 type Props = {
   children: React.ReactNode;
@@ -27,12 +28,16 @@ export default async function LocaleLayout({ children, params }: Props) {
   const messages = await getMessages();
   const dir = RTL_LOCALES.has(locale) ? "rtl" : "ltr";
 
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const userId = user?.id ?? null;
+
   return (
     <NextIntlClientProvider messages={messages}>
       <NuqsAdapter>
         <HtmlLangSetter lang={locale} dir={dir} />
         <div className="flex min-h-screen flex-col" dir={dir}>
-          <GlatkoHeader />
+          <GlatkoHeader userId={userId} />
           <main className="flex-1">{children}</main>
           <GlatkoFooter />
         </div>

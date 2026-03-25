@@ -29,7 +29,9 @@ function isProtectedBarePath(barePath: string): boolean {
   return (
     barePath.startsWith('/dashboard') ||
     barePath.startsWith('/profile') ||
-    barePath.startsWith('/admin')
+    barePath.startsWith('/admin') ||
+    barePath.startsWith('/notifications') ||
+    barePath.startsWith('/settings')
   )
 }
 

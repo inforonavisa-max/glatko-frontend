@@ -10,8 +10,13 @@ import ThemeToggle from "@/components/ThemeToggle";
 import { useTheme } from "next-themes";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
+import { NotificationBell } from "@/components/glatko/notifications/NotificationDropdown";
 
-export function GlatkoHeader() {
+interface GlatkoHeaderProps {
+  userId?: string | null;
+}
+
+export function GlatkoHeader({ userId }: GlatkoHeaderProps) {
   const t = useTranslations();
   const pathname = usePathname();
   const { resolvedTheme } = useTheme();
@@ -118,6 +123,7 @@ export function GlatkoHeader() {
           </nav>
 
           <div className="hidden items-center gap-3 md:flex">
+            {userId && <NotificationBell userId={userId} />}
             <LanguageSwitcher />
             <ThemeToggle />
             <Link
@@ -218,6 +224,7 @@ export function GlatkoHeader() {
                 </Link>
               </div>
               <div className="mt-auto flex items-center gap-4 pt-6">
+                {userId && <NotificationBell userId={userId} />}
                 <LanguageSwitcher />
                 <ThemeToggle />
               </div>

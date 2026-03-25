@@ -728,3 +728,75 @@ export async function calculateTrustBadges(
 
   return badges;
 }
+
+// ─── G6: Notifications ───
+
+export async function createNotification(data: {
+  user_id: string;
+  type: string;
+  title: string;
+  body?: string;
+  data?: Record<string, unknown>;
+}) {
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("glatko_notifications")
+    .insert(data);
+  if (error) throw error;
+}
+
+export async function getUserNotifications(
+  userId: string,
+  limit = 20,
+  unreadOnly = false
+) {
+  const supabase = createClient();
+  let query = supabase
+    .from("glatko_notifications")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  if (unreadOnly) {
+    query = query.is("read_at", null);
+  }
+
+  const { data, error } = await query;
+  if (error) throw error;
+  return data || [];
+}
+
+export async function markNotificationRead(
+  notificationId: string,
+  userId: string
+) {
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("glatko_notifications")
+    .update({ read_at: new Date().toISOString() })
+    .eq("id", notificationId)
+    .eq("user_id", userId);
+  if (error) throw error;
+}
+
+export async function markAllNotificationsRead(userId: string) {
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("glatko_notifications")
+    .update({ read_at: new Date().toISOString() })
+    .eq("user_id", userId)
+    .is("read_at", null);
+  if (error) throw error;
+}
+
+export async function getUnreadNotificationCount(userId: string) {
+  const supabase = createClient();
+  const { count, error } = await supabase
+    .from("glatko_notifications")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", userId)
+    .is("read_at", null);
+  if (error) return 0;
+  return count || 0;
+}
