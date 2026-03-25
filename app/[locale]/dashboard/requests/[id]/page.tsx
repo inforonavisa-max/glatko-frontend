@@ -4,7 +4,6 @@ import { createClient } from "@/supabase/server";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { getServiceRequest } from "@/lib/supabase/glatko.server";
 import { Link } from "@/i18n/navigation";
-import { SpotlightCard } from "@/components/landing/spotlight-card";
 import { PageBackground } from "@/components/ui/PageBackground";
 import { CancelRequestButton } from "@/components/glatko/dashboard/CancelRequestButton";
 import { BidComparison } from "@/components/glatko/dashboard/BidComparison";
@@ -18,6 +17,8 @@ import {
   MessageSquare,
   Image as ImageIcon,
   Star,
+  Layers,
+  Check,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { RequestStatus } from "@/types/glatko";
@@ -100,186 +101,188 @@ export default async function RequestDetailPage({ params }: Props) {
 
   const statusIdx = TIMELINE_STATUSES.indexOf(status);
 
+  const infoCards = [
+    catName ? { icon: Layers, label: t("dashboard.detail.category") ?? "Category", value: catName } : null,
+    request.municipality ? { icon: MapPin, label: t("dashboard.detail.location") ?? "Location", value: `${request.municipality}${request.address ? ` – ${request.address}` : ""}` } : null,
+    (request.budget_min || request.budget_max) ? { icon: DollarSign, label: t("dashboard.detail.budget") ?? "Budget", value: `${request.budget_min ?? ""}${request.budget_min && request.budget_max ? " – " : ""}${request.budget_max ?? ""} EUR` } : null,
+    { icon: Clock, label: t("dashboard.detail.urgency") ?? "Urgency", value: t(`request.step3.urgency.${request.urgency}`) },
+    { icon: Calendar, label: t("dashboard.detail.date") ?? "Date", value: createdDate },
+    (request.details as Record<string, unknown>)?.phone ? { icon: Phone, label: t("dashboard.detail.phone") ?? "Phone", value: String((request.details as Record<string, unknown>).phone) } : null,
+  ].filter(Boolean) as { icon: typeof Clock; label: string; value: string }[];
+
   return (
-    <PageBackground opacity={0.08}>
+    <PageBackground opacity={0.06}>
       <div className="mx-auto max-w-3xl px-4 pb-20 pt-28 sm:px-6">
-      <Link
-        href="/dashboard/requests"
-        className="mb-6 inline-flex items-center gap-2 text-sm text-gray-500 transition-colors hover:text-teal-600 dark:text-white/50 dark:hover:text-teal-400"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        {t("dashboard.detail.back")}
-      </Link>
-
-      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <h1 className="font-serif text-2xl font-semibold text-gray-900 dark:text-white">
-            {request.title}
-          </h1>
-          <p className="mt-1 text-sm text-gray-500 dark:text-white/50">
-            {catName} &middot; {createdDate}
-          </p>
-        </div>
-        <span
-          className={cn(
-            "inline-flex shrink-0 items-center rounded-full border px-3 py-1 text-xs font-medium",
-            STATUS_COLOR[status] ?? STATUS_COLOR.draft
-          )}
+        {/* ── Breadcrumb ── */}
+        <Link
+          href="/dashboard/requests"
+          className="mb-6 inline-flex items-center gap-2 text-sm text-gray-500 transition-colors hover:text-teal-600 dark:text-white/50 dark:hover:text-teal-400"
         >
-          {t(`dashboard.requests.status.${status}`)}
-        </span>
-      </div>
+          <ArrowLeft className="h-4 w-4" />
+          {t("dashboard.detail.back")}
+        </Link>
 
-      <SpotlightCard className="mb-6">
-        <h2 className="mb-4 font-serif text-sm font-semibold uppercase tracking-wider text-gray-400 dark:text-white/30">
-          {t("dashboard.detail.timeline")}
-        </h2>
-        <div className="flex items-center gap-2">
-          {TIMELINE_STATUSES.map((s, i) => {
-            const reached = statusIdx >= i;
-            return (
-              <div key={s} className="flex flex-1 items-center gap-2">
-                <div className="relative">
-                  {statusIdx === i && reached && (
-                    <div className="absolute inset-0 animate-ping rounded-full bg-teal-500/30" />
-                  )}
-                  <div
-                    className={cn(
-                      "relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-xs font-bold",
-                      reached
-                        ? "border-teal-500 bg-teal-500 text-white"
-                        : "border-gray-200 text-gray-400 dark:border-white/10 dark:text-white/30"
+        {/* ── Header ── */}
+        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <h1 className="font-serif text-2xl font-bold text-gray-900 dark:text-white">
+              {request.title}
+            </h1>
+            <p className="mt-1 text-sm text-gray-500 dark:text-white/50">
+              {catName} &middot; {createdDate}
+            </p>
+          </div>
+          <span
+            className={cn(
+              "inline-flex shrink-0 items-center rounded-full border px-4 py-1.5 text-xs font-semibold",
+              STATUS_COLOR[status] ?? STATUS_COLOR.draft
+            )}
+          >
+            {t(`dashboard.requests.status.${status}`)}
+          </span>
+        </div>
+
+        {/* ── Timeline — vertical dots with teal line ── */}
+        <div className="mb-8 rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03]">
+          <h2 className="mb-5 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-white/30">
+            {t("dashboard.detail.timeline")}
+          </h2>
+          <div className="flex items-center gap-0">
+            {TIMELINE_STATUSES.map((s, i) => {
+              const reached = statusIdx >= i;
+              const isCurrent = statusIdx === i;
+              return (
+                <div key={s} className="flex flex-1 items-center">
+                  <div className="relative">
+                    {isCurrent && reached && (
+                      <div className="absolute inset-0 animate-ping rounded-full bg-teal-500/30" />
                     )}
-                  >
-                    {i + 1}
+                    <div
+                      className={cn(
+                        "relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-bold transition-all",
+                        reached
+                          ? "bg-gradient-to-br from-teal-500 to-teal-600 text-white shadow-md shadow-teal-500/25"
+                          : "border-2 border-gray-200 text-gray-400 dark:border-white/[0.12] dark:text-white/30"
+                      )}
+                    >
+                      {reached && !isCurrent ? (
+                        <Check className="h-4 w-4" strokeWidth={3} />
+                      ) : (
+                        i + 1
+                      )}
+                    </div>
                   </div>
+                  {i < TIMELINE_STATUSES.length - 1 && (
+                    <div
+                      className={cn(
+                        "mx-1 h-0.5 flex-1 rounded-full",
+                        statusIdx > i
+                          ? "bg-teal-500"
+                          : "bg-gray-200 dark:bg-white/[0.06]"
+                      )}
+                    />
+                  )}
                 </div>
-                {i < TIMELINE_STATUSES.length - 1 && (
-                  <div
-                    className={cn(
-                      "h-0.5 flex-1 rounded-full",
-                      statusIdx > i
-                        ? "bg-teal-500"
-                        : "bg-gray-200 dark:bg-white/10"
-                    )}
-                  />
-                )}
+              );
+            })}
+          </div>
+          <div className="mt-2 flex text-[10px] text-gray-400 dark:text-white/30">
+            {TIMELINE_STATUSES.map((s) => (
+              <div key={s} className="flex-1 text-center">
+                {t(`dashboard.requests.status.${s}`)}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Status banner ── */}
+        {(status === "in_progress" || status === "assigned") && (
+          <div className="mb-6 flex items-center gap-3 rounded-2xl border border-teal-500/20 bg-teal-500/[0.04] px-5 py-4">
+            <div className={cn("h-2.5 w-2.5 shrink-0 rounded-full", status === "in_progress" ? "animate-pulse bg-teal-400" : "bg-indigo-400")} />
+            <p className="text-sm font-medium text-gray-700 dark:text-white/70">
+              {status === "assigned" ? t("jobStatus.assigned") : t("jobStatus.inProgress")}
+            </p>
+          </div>
+        )}
+
+        {/* ── Info grid — glassmorphism mini cards ── */}
+        <div className="mb-8 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {infoCards.map((card) => {
+            const Icon = card.icon;
+            return (
+              <div
+                key={card.label}
+                className="flex items-start gap-3 rounded-2xl border border-gray-200/50 bg-white/70 p-4 backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]"
+              >
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-teal-500/10 dark:bg-teal-500/15">
+                  <Icon className="h-4 w-4 text-teal-600 dark:text-teal-400" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 dark:text-white/30">
+                    {card.label}
+                  </p>
+                  <p className="mt-0.5 text-sm font-medium text-gray-900 dark:text-white">
+                    {card.value}
+                  </p>
+                </div>
               </div>
             );
           })}
         </div>
-        <div className="mt-2 flex text-[10px] text-gray-400 dark:text-white/30">
-          {TIMELINE_STATUSES.map((s) => (
-            <div key={s} className="flex-1 text-center">
-              {t(`dashboard.requests.status.${s}`)}
-            </div>
-          ))}
-        </div>
-      </SpotlightCard>
 
-      {(status === "in_progress" || status === "assigned") && (
-        <div className="mb-6 flex items-center gap-3 rounded-2xl border border-teal-500/20 bg-teal-500/5 px-5 py-4">
-          {status === "assigned" && (
-            <>
-              <div className="h-2.5 w-2.5 shrink-0 rounded-full bg-indigo-400" />
-              <p className="text-sm font-medium text-gray-700 dark:text-white/70">{t("jobStatus.assigned")}</p>
-            </>
-          )}
-          {status === "in_progress" && (
-            <>
-              <div className="h-2.5 w-2.5 shrink-0 animate-pulse rounded-full bg-teal-400" />
-              <p className="text-sm font-medium text-gray-700 dark:text-white/70">{t("jobStatus.inProgress")}</p>
-            </>
-          )}
-        </div>
-      )}
-
-      <SpotlightCard className="mb-6">
-        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-400 dark:text-white/30">
-          {t("dashboard.detail.details")}
-        </h2>
-        <div className="space-y-3">
-          {request.description && (
-            <p className="text-sm text-gray-700 dark:text-white/70">
+        {/* ── Description ── */}
+        {request.description && (
+          <div className="mb-8 rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03]">
+            <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-white/30">
+              {t("dashboard.detail.details")}
+            </h2>
+            <p className="text-sm leading-relaxed text-gray-700 dark:text-white/60">
               {request.description}
             </p>
-          )}
-          <div className="grid gap-3 sm:grid-cols-2">
-            {request.municipality && (
-              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-white/60">
-                <MapPin className="h-4 w-4 text-teal-500" />
-                {request.municipality}
-                {request.address && ` - ${request.address}`}
-              </div>
-            )}
-            <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-white/60">
-              <Clock className="h-4 w-4 text-teal-500" />
-              {t(`request.step3.urgency.${request.urgency}`)}
+          </div>
+        )}
+
+        {/* ── Photos ── */}
+        {request.photos && (request.photos as string[]).length > 0 && (
+          <div className="mb-8 rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03]">
+            <h2 className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-white/30">
+              <ImageIcon className="h-4 w-4" />
+              {t("dashboard.detail.photos")}
+            </h2>
+            <div className="grid grid-cols-3 gap-3 sm:grid-cols-5">
+              {(request.photos as string[]).map((url: string) => (
+                <div key={url} className="group relative aspect-square overflow-hidden rounded-xl border border-gray-200/50 dark:border-white/[0.08]">
+                  <Image
+                    src={url}
+                    alt=""
+                    width={128}
+                    height={128}
+                    unoptimized
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                  />
+                </div>
+              ))}
             </div>
-            {request.preferred_date_start && (
-              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-white/60">
-                <Calendar className="h-4 w-4 text-teal-500" />
-                {request.preferred_date_start}
-                {request.preferred_date_end && ` - ${request.preferred_date_end}`}
-              </div>
-            )}
-            {(request.budget_min || request.budget_max) && (
-              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-white/60">
-                <DollarSign className="h-4 w-4 text-teal-500" />
-                {request.budget_min && `${request.budget_min}`}
-                {request.budget_min && request.budget_max && " - "}
-                {request.budget_max && `${request.budget_max}`} EUR
-              </div>
-            )}
-            {(request.details as Record<string, unknown>)?.phone && (
-              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-white/60">
-                <Phone className="h-4 w-4 text-teal-500" />
-                {String((request.details as Record<string, unknown>).phone)}
-              </div>
-            )}
           </div>
-        </div>
-      </SpotlightCard>
+        )}
 
-      {request.photos && (request.photos as string[]).length > 0 && (
-        <SpotlightCard className="mb-6">
-          <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-gray-400 dark:text-white/30">
-            <ImageIcon className="h-4 w-4" />
-            {t("dashboard.detail.photos")}
+        {/* ── Bids section ── */}
+        <div className="mb-8 rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03]">
+          <h2 className="mb-5 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-white/30">
+            <MessageSquare className="h-4 w-4" />
+            {t("bidComparison.title")} ({request.bid_count ?? 0}/{request.max_bids ?? 4})
           </h2>
-          <div className="flex flex-wrap gap-3">
-            {(request.photos as string[]).map((url: string) => (
-              <div key={url} className="h-24 w-24 overflow-hidden rounded-lg">
-                <Image
-                  src={url}
-                  alt=""
-                  width={96}
-                  height={96}
-                  unoptimized
-                  className="h-full w-full object-cover"
-                />
-              </div>
-            ))}
-          </div>
-        </SpotlightCard>
-      )}
+          <BidComparison
+            bids={(request.bids as BidData[]) ?? []}
+            requestId={id}
+            requestStatus={status}
+            locale={locale}
+          />
+        </div>
 
-      <SpotlightCard className="mb-6">
-        <h2 className="mb-4 flex items-center gap-2 font-serif text-sm font-semibold uppercase tracking-wider text-gray-400 dark:text-white/30">
-          <MessageSquare className="h-4 w-4" />
-          {t("bidComparison.title")} ({request.bid_count ?? 0}/{request.max_bids ?? 4})
-        </h2>
-        <BidComparison
-          bids={(request.bids as BidData[]) ?? []}
-          requestId={id}
-          requestStatus={status}
-          locale={locale}
-        />
-      </SpotlightCard>
-
-      {(status === "completed" || status === "reviewed") && (
-        <SpotlightCard className="mb-6">
-          <div className="flex flex-col items-center gap-4 py-4 text-center sm:flex-row sm:text-left">
+        {/* ── Review CTA ── */}
+        {(status === "completed" || status === "reviewed") && (
+          <div className="mb-8 flex flex-col items-center gap-4 rounded-2xl border border-gray-200/50 bg-white/70 p-6 text-center backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03] sm:flex-row sm:text-left">
             <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-amber-400/20 to-amber-500/20">
               <Star className="h-7 w-7 text-amber-400" />
             </div>
@@ -293,19 +296,19 @@ export default async function RequestDetailPage({ params }: Props) {
             </div>
             <Link
               href={`/review/${id}`}
-              className="shrink-0 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-3 text-sm font-medium text-white shadow-lg shadow-amber-500/25 transition-all hover:shadow-xl hover:shadow-amber-500/30 active:scale-[0.98]"
+              className="shrink-0 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-amber-500/25 transition-all hover:shadow-xl hover:shadow-amber-500/30"
             >
               {t("review.ratePro")}
             </Link>
           </div>
-        </SpotlightCard>
-      )}
+        )}
 
-      {isCancellable && (
-        <div className="flex justify-end">
-          <CancelRequestButton requestId={id} userId={user.id} />
-        </div>
-      )}
+        {/* ── Cancel button ── */}
+        {isCancellable && (
+          <div className="flex justify-end">
+            <CancelRequestButton requestId={id} userId={user.id} />
+          </div>
+        )}
       </div>
     </PageBackground>
   );

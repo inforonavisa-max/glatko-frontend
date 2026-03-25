@@ -5,7 +5,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Star, CheckCircle, Calendar, Clock, Loader2, MessageSquare } from "lucide-react";
+import {
+  Star,
+  CheckCircle,
+  Calendar,
+  Clock,
+  Loader2,
+  MessageSquare,
+  ShieldCheck,
+} from "lucide-react";
 import { acceptBidAction } from "@/app/[locale]/dashboard/requests/[id]/actions";
 import { cn } from "@/lib/utils";
 
@@ -56,15 +64,15 @@ export function BidComparison({ bids, requestId, requestStatus, locale }: Props)
 
   if (bids.length === 0) {
     return (
-      <div className="py-8 text-center">
-        <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/[0.05]">
+      <div className="py-10 text-center">
+        <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 dark:bg-white/[0.05]">
           <div className="flex gap-1">
             <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-teal-400" style={{ animationDelay: "0ms" }} />
             <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-teal-400" style={{ animationDelay: "150ms" }} />
             <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-teal-400" style={{ animationDelay: "300ms" }} />
           </div>
         </div>
-        <p className="text-sm text-white/50">{t("bidComparison.noBids")}</p>
+        <p className="text-sm text-gray-500 dark:text-white/40">{t("bidComparison.noBids")}</p>
       </div>
     );
   }
@@ -78,10 +86,10 @@ export function BidComparison({ bids, requestId, requestStatus, locale }: Props)
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="rounded-2xl border border-teal-500/30 bg-teal-500/10 p-4 text-center"
+            className="col-span-full rounded-2xl border border-teal-500/30 bg-teal-500/[0.06] p-5 text-center"
           >
-            <CheckCircle className="mx-auto mb-2 h-8 w-8 text-teal-400" />
-            <p className="text-sm font-medium text-teal-400">{t("bidComparison.assignedSuccess")}</p>
+            <CheckCircle className="mx-auto mb-2 h-8 w-8 text-teal-500" />
+            <p className="text-sm font-medium text-teal-600 dark:text-teal-400">{t("bidComparison.assignedSuccess")}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -99,94 +107,130 @@ export function BidComparison({ bids, requestId, requestStatus, locale }: Props)
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: i * 0.08 }}
             className={cn(
-              "rounded-2xl border p-5 transition-all",
+              "rounded-2xl border p-5 transition-all duration-300",
               isAccepted
-                ? "border-teal-500/40 bg-teal-500/[0.06]"
+                ? "border-teal-500/40 bg-teal-500/[0.04] dark:bg-teal-500/[0.06]"
                 : isRejected
-                  ? "border-white/[0.04] bg-white/[0.01] opacity-50"
-                  : "border-white/[0.08] bg-white/[0.03] backdrop-blur-sm hover:border-teal-500/20"
+                  ? "border-gray-200/50 bg-gray-50/50 opacity-50 dark:border-white/[0.04] dark:bg-white/[0.01]"
+                  : "border-gray-200/50 bg-white/50 hover:border-teal-500/20 dark:border-white/[0.08] dark:bg-white/[0.02]"
             )}
           >
+            {/* Accepted / rejected badges */}
             {isAccepted && (
-              <div className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-teal-500/10 px-3 py-1 text-xs font-medium text-teal-400">
+              <div className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-teal-500/10 px-3 py-1 text-xs font-medium text-teal-600 dark:text-teal-400">
                 <CheckCircle className="h-3 w-3" />
                 {t("bidComparison.accepted")}
               </div>
             )}
             {isRejected && (
-              <div className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-red-500/10 px-3 py-1 text-xs font-medium text-red-400">
+              <div className="mb-3 inline-flex items-center gap-1.5 rounded-full bg-red-500/10 px-3 py-1 text-xs font-medium text-red-500 dark:text-red-400">
                 {t("bidComparison.rejected")}
               </div>
             )}
+
+            {/* Quick message link for accepted */}
             {isAccepted && (
               <Link
                 href={`/${locale}/inbox`}
-                className="mb-3 inline-flex items-center gap-1.5 rounded-xl border border-teal-500/30 bg-teal-500/5 px-4 py-2 text-xs font-medium text-teal-400 transition-all hover:bg-teal-500/10"
+                className="mb-4 inline-flex items-center gap-1.5 rounded-xl border border-teal-500/30 bg-teal-500/[0.04] px-4 py-2 text-xs font-medium text-teal-600 transition-all hover:bg-teal-500/10 dark:text-teal-400"
               >
                 <MessageSquare className="h-3 w-3" />
                 {t("bidComparison.messageButton")}
               </Link>
             )}
 
+            {/* Pro info + price */}
             <div className="flex items-start justify-between gap-4">
               <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-white/[0.08] text-sm font-bold text-white/60">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 text-sm font-bold text-gray-600 dark:bg-white/[0.06] dark:text-white/60">
                   {pro?.business_name?.charAt(0) ?? "P"}
                 </div>
                 <div>
-                  <p className="font-medium text-white">{pro?.business_name ?? t("dashboard.detail.anonymous")}</p>
+                  <div className="flex items-center gap-1.5">
+                    <p className="font-semibold text-gray-900 dark:text-white">
+                      {pro?.business_name ?? t("dashboard.detail.anonymous")}
+                    </p>
+                    {pro?.is_verified && (
+                      <ShieldCheck className="h-3.5 w-3.5 text-teal-500" />
+                    )}
+                  </div>
                   <div className="mt-0.5 flex items-center gap-2">
                     <div className="flex items-center gap-0.5">
                       {Array.from({ length: 5 }, (_, j) => (
-                        <Star key={j} className={cn("h-3 w-3", j < fullStars ? "fill-teal-400 text-teal-400" : "text-white/10")} />
+                        <Star
+                          key={j}
+                          className={cn(
+                            "h-3 w-3",
+                            j < fullStars
+                              ? "fill-teal-500 text-teal-500"
+                              : "text-gray-300 dark:text-white/15"
+                          )}
+                        />
                       ))}
                     </div>
-                    <span className="text-xs text-white/40">
-                      {(pro?.avg_rating ?? 0).toFixed(1)} ({pro?.total_reviews ?? 0} {t("bidComparison.rating")})
+                    <span className="text-xs text-gray-400 dark:text-white/40">
+                      {(pro?.avg_rating ?? 0).toFixed(1)} ({pro?.total_reviews ?? 0})
                     </span>
-                    {pro?.is_verified && (
-                      <span className="inline-flex items-center gap-0.5 text-xs text-teal-400">
-                        <CheckCircle className="h-3 w-3" />
-                      </span>
-                    )}
                   </div>
                 </div>
               </div>
 
               <div className="text-right">
-                <p className="text-2xl font-bold text-teal-400 sm:text-3xl">€{bid.price}</p>
-                <span className="text-xs text-white/40">{t(`bidForm.${bid.price_type}`)}</span>
+                <p className="text-2xl font-bold text-teal-600 dark:text-teal-400 sm:text-3xl">
+                  €{bid.price}
+                </p>
+                <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-medium text-gray-500 dark:bg-white/[0.06] dark:text-white/40">
+                  {t(`bidForm.${bid.price_type}`)}
+                </span>
               </div>
             </div>
 
+            {/* Message */}
             {bid.message && (
-              <p className="mt-4 text-sm italic text-white/50">&ldquo;{bid.message}&rdquo;</p>
+              <p className="mt-4 rounded-xl bg-gray-50 p-3 text-sm italic text-gray-600 dark:bg-white/[0.02] dark:text-white/50">
+                &ldquo;{bid.message}&rdquo;
+              </p>
             )}
 
-            <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-white/40">
+            {/* Meta */}
+            <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-gray-400 dark:text-white/40">
               {bid.available_date && (
-                <span className="flex items-center gap-1"><Calendar className="h-3 w-3 text-teal-400" />{t("bidComparison.available")}: {bid.available_date}</span>
+                <span className="flex items-center gap-1">
+                  <Calendar className="h-3 w-3 text-teal-500" />
+                  {t("bidComparison.available")}: {bid.available_date}
+                </span>
               )}
               {bid.estimated_duration_hours && (
-                <span className="flex items-center gap-1"><Clock className="h-3 w-3 text-teal-400" />{t("bidComparison.duration")}: ~{bid.estimated_duration_hours} {t("bidComparison.hours")}</span>
+                <span className="flex items-center gap-1">
+                  <Clock className="h-3 w-3 text-teal-500" />
+                  {t("bidComparison.duration")}: ~{bid.estimated_duration_hours} {t("bidComparison.hours")}
+                </span>
               )}
             </div>
 
+            {/* Action buttons */}
             {!isRejected && canAccept && bid.status === "pending" && (
-              <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
+              <div className="mt-5 flex flex-col gap-2 border-t border-gray-100 pt-4 dark:border-white/[0.06] sm:flex-row sm:items-center">
                 {pro && (
-                  <Link href={`/${locale}/provider/${pro.id}`} className="w-full rounded-xl border border-white/[0.1] bg-white/[0.05] px-4 py-2 text-center text-xs font-medium text-white/60 transition-all hover:bg-white/[0.08] sm:w-auto">
+                  <Link
+                    href={`/${locale}/provider/${pro.id}`}
+                    className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-center text-xs font-medium text-gray-600 transition-all hover:bg-gray-50 dark:border-white/[0.08] dark:bg-white/[0.03] dark:text-white/60 dark:hover:bg-white/[0.06] sm:w-auto"
+                  >
                     {t("bidComparison.viewProfile")}
                   </Link>
                 )}
                 <motion.button
-                  whileHover={{ scale: 1.01, boxShadow: "0 0 30px rgba(20,184,166,0.2)" }}
-                  whileTap={{ scale: 0.99 }}
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={() => handleAccept(bid.id)}
                   disabled={isPending}
-                  className="w-full justify-center rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-6 py-2 text-xs font-medium text-white shadow-lg shadow-teal-500/25 disabled:opacity-50 transition-all flex items-center gap-2 sm:ml-auto sm:w-auto"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-6 py-2.5 text-xs font-semibold text-white shadow-lg shadow-teal-500/25 transition-all disabled:opacity-50 sm:ml-auto sm:w-auto"
                 >
-                  {isPending && acceptingId === bid.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <CheckCircle className="h-3 w-3" />}
+                  {isPending && acceptingId === bid.id ? (
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                  ) : (
+                    <CheckCircle className="h-3 w-3" />
+                  )}
                   {t("bidComparison.accept")}
                 </motion.button>
               </div>

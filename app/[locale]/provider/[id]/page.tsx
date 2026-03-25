@@ -9,9 +9,10 @@ import {
   Globe,
   Languages,
   MapPin,
+  ShieldCheck,
   Star,
+  Eye,
 } from "lucide-react";
-import { SpotlightCard } from "@/components/landing/spotlight-card";
 import { routing } from "@/i18n/routing";
 import { PageBackground } from "@/components/ui/PageBackground";
 import type { Locale } from "@/i18n/routing";
@@ -108,192 +109,269 @@ export default async function ProviderProfilePage({ params }: PageProps) {
   const rating = profile.avg_rating;
   const fullStars = Math.min(5, Math.round(rating));
 
+  const statItems = [
+    { value: profile.completed_jobs, label: t("pro.profile.completedJobs"), icon: CheckCircle },
+    ...(profile.response_time_minutes != null
+      ? [{ value: `${profile.response_time_minutes}m`, label: t("pro.profile.responseTime"), icon: Clock }]
+      : []),
+    ...(profile.years_experience != null
+      ? [{ value: profile.years_experience, label: t("pro.profile.yearsExp"), icon: Briefcase }]
+      : []),
+    { value: rating.toFixed(1), label: t("pro.profile.rating"), icon: Star },
+  ];
+
   return (
-    <PageBackground opacity={0.08}>
+    <PageBackground opacity={0.06}>
       <LocalBusinessSchema pro={profile as unknown as ProfessionalProfile} />
-      <div className="pointer-events-none absolute top-0 left-0 right-0 h-48 bg-gradient-to-b from-teal-500/[0.06] to-transparent dark:from-teal-500/[0.08]" />
-      <div className="mx-auto max-w-4xl px-4 pb-20 pt-28 sm:px-6">
-      <SpotlightCard className="mb-6">
-        <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
-          {profile.profile?.avatar_url ? (
-            <Image
-              src={profile.profile.avatar_url}
-              alt=""
-              width={112}
-              height={112}
-              className="h-28 w-28 shrink-0 rounded-full object-cover ring-2 ring-teal-500/40"
-            />
-          ) : (
-            <div
-              className="flex h-28 w-28 shrink-0 items-center justify-center rounded-full bg-teal-600 text-2xl font-semibold text-white shadow-inner"
-              aria-hidden
-            >
-              {initialsFromName(displayName)}
-            </div>
-          )}
-          <div className="min-w-0 flex-1 space-y-4">
-            <div className="flex flex-wrap items-center gap-2">
-              <h1 className="font-serif text-2xl text-gray-900 dark:text-white sm:text-3xl">
-                {displayName}
-              </h1>
-              {profile.is_verified && (
-                <span
-                  className="inline-flex items-center gap-1 rounded-full bg-teal-500/15 px-2 py-0.5 text-xs font-medium text-teal-700 dark:text-teal-400"
-                  title={t("pro.profile.verified")}
-                >
-                  <CheckCircle className="h-3.5 w-3.5" aria-hidden />
-                  {t("pro.profile.verified")}
-                </span>
-              )}
+
+      {/* ── SECTION A: Hero Banner — teal gradient top ── */}
+      <div className="relative">
+        <div className="absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-teal-600/[0.15] via-teal-500/[0.06] to-transparent dark:from-teal-600/[0.12] dark:via-teal-500/[0.04]" />
+      </div>
+
+      <div className="relative mx-auto max-w-4xl px-4 pb-20 pt-28 sm:px-6">
+        {/* Hero card */}
+        <div className="relative mb-8 rounded-3xl border border-gray-200/60 bg-white/80 p-6 shadow-xl backdrop-blur-2xl dark:border-white/[0.08] dark:bg-white/[0.03] sm:p-8">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
+            {/* Avatar */}
+            {profile.profile?.avatar_url ? (
+              <Image
+                src={profile.profile.avatar_url}
+                alt=""
+                width={112}
+                height={112}
+                className="h-28 w-28 shrink-0 rounded-full border-4 border-white object-cover shadow-2xl dark:border-[#080808]"
+              />
+            ) : (
+              <div
+                className="flex h-28 w-28 shrink-0 items-center justify-center rounded-full border-4 border-white bg-teal-500/20 text-3xl font-semibold text-teal-700 shadow-2xl dark:border-[#080808] dark:text-teal-300"
+                aria-hidden
+              >
+                {initialsFromName(displayName)}
+              </div>
+            )}
+
+            <div className="min-w-0 flex-1 space-y-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <h1 className="font-serif text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">
+                  {displayName}
+                </h1>
+                {profile.is_verified && (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-teal-500/20 bg-teal-500/10 px-2.5 py-0.5 text-xs font-medium text-teal-700 dark:text-teal-400">
+                    <ShieldCheck className="h-3.5 w-3.5" aria-hidden />
+                    {t("pro.profile.verified")}
+                  </span>
+                )}
+              </div>
+
               {trustBadges.length > 0 && (
-                <div className="flex flex-wrap items-center gap-1.5 mt-2">
+                <div className="flex flex-wrap items-center gap-1.5">
                   {trustBadges.map((badge) => (
                     <TrustBadge key={badge} badge={badge} size="md" />
                   ))}
                 </div>
               )}
-            </div>
-            {profile.location_city && (
-              <p className="flex items-center gap-2 text-sm text-gray-600 dark:text-white/60">
-                <MapPin className="h-4 w-4 shrink-0 text-teal-600 dark:text-teal-400" aria-hidden />
-                {profile.location_city}
-              </p>
-            )}
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-sm text-gray-500 dark:text-white/50">{t("pro.profile.rating")}</span>
-              <div className="flex items-center gap-0.5" role="img" aria-label={`${rating.toFixed(1)}`}>
-                {Array.from({ length: 5 }, (_, i) => (
-                  <Star
-                    key={i}
-                    className={cn(
-                      "h-4 w-4",
-                      i < fullStars
-                        ? "fill-amber-400 text-amber-400"
-                        : "text-gray-300 dark:text-gray-600"
-                    )}
-                    aria-hidden
-                  />
-                ))}
+
+              {/* Stars */}
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-0.5" role="img" aria-label={`${rating.toFixed(1)}`}>
+                  {Array.from({ length: 5 }, (_, i) => (
+                    <Star
+                      key={i}
+                      className={cn(
+                        "h-5 w-5",
+                        i < fullStars
+                          ? "fill-teal-500 text-teal-500"
+                          : "text-gray-300 dark:text-white/15"
+                      )}
+                      aria-hidden
+                    />
+                  ))}
+                </div>
+                <span className="text-sm font-medium tabular-nums text-gray-700 dark:text-white/80">
+                  {rating.toFixed(1)}
+                </span>
+                <span className="text-sm text-gray-400 dark:text-white/40">
+                  ({profile.total_reviews} {t("ratings.reviews")})
+                </span>
               </div>
-              <span className="text-sm tabular-nums text-gray-700 dark:text-white/80">
-                {rating.toFixed(1)} · {profile.total_reviews}
-              </span>
+
+              {/* Location + languages */}
+              <div className="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-white/60">
+                {profile.location_city && (
+                  <span className="inline-flex items-center gap-1.5">
+                    <MapPin className="h-4 w-4 shrink-0 text-teal-600 dark:text-teal-400" aria-hidden />
+                    {profile.location_city}
+                  </span>
+                )}
+                {profile.languages.length > 0 && (
+                  <span className="inline-flex items-center gap-1.5">
+                    <Languages className="h-4 w-4 shrink-0 text-teal-600 dark:text-teal-400" aria-hidden />
+                    {profile.languages.join(", ")}
+                  </span>
+                )}
+                {profile.years_experience != null && (
+                  <span className="inline-flex items-center gap-1.5">
+                    <Globe className="h-4 w-4 shrink-0 text-teal-600 dark:text-teal-400" aria-hidden />
+                    {profile.years_experience} {t("pro.profile.yearsExp")}
+                  </span>
+                )}
+              </div>
             </div>
-            <div className="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-white/65">
-              {profile.years_experience != null && (
-                <span className="inline-flex items-center gap-1.5">
-                  <Globe className="h-4 w-4 shrink-0 text-teal-600 dark:text-teal-400" aria-hidden />
-                  {profile.years_experience} {t("pro.profile.yearsExp")}
-                </span>
-              )}
-              <span className="inline-flex items-center gap-1.5">
-                <Briefcase className="h-4 w-4 shrink-0 text-teal-600 dark:text-teal-400" aria-hidden />
-                {profile.completed_jobs} {t("pro.profile.completedJobs")}
-              </span>
-              {profile.response_time_minutes != null && (
-                <span className="inline-flex items-center gap-1.5">
-                  <Clock className="h-4 w-4 shrink-0 text-teal-600 dark:text-teal-400" aria-hidden />
-                  {profile.response_time_minutes} {t("pro.profile.responseTime")}
-                </span>
-              )}
-            </div>
-            {profile.languages.length > 0 && (
-              <p className="flex flex-wrap items-center gap-2 text-sm text-gray-600 dark:text-white/60">
-                <Languages className="h-4 w-4 shrink-0 text-teal-600 dark:text-teal-400" aria-hidden />
-                <span className="font-medium text-gray-700 dark:text-white/80">{t("pro.profile.languages")}:</span>
-                {profile.languages.join(", ")}
-              </p>
-            )}
           </div>
         </div>
-      </SpotlightCard>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 mb-6">
-        <div className="rounded-2xl border border-gray-200/80 bg-white/80 p-4 text-center backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
-          <div className="text-2xl font-bold text-teal-600 dark:text-teal-400">{profile.completed_jobs}</div>
-          <div className="text-xs text-gray-500 dark:text-white/50">{t("pro.profile.completedJobs")}</div>
-        </div>
-        {profile.response_time_minutes != null && (
-          <div className="rounded-2xl border border-gray-200/80 bg-white/80 p-4 text-center backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
-            <div className="text-2xl font-bold text-teal-600 dark:text-teal-400">{profile.response_time_minutes}m</div>
-            <div className="text-xs text-gray-500 dark:text-white/50">{t("pro.profile.responseTime")}</div>
-          </div>
-        )}
-        {profile.years_experience != null && (
-          <div className="rounded-2xl border border-gray-200/80 bg-white/80 p-4 text-center backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
-            <div className="text-2xl font-bold text-teal-600 dark:text-teal-400">{profile.years_experience}</div>
-            <div className="text-xs text-gray-500 dark:text-white/50">{t("pro.profile.yearsExp")}</div>
-          </div>
-        )}
-        <div className="rounded-2xl border border-gray-200/80 bg-white/80 p-4 text-center backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
-          <div className="text-2xl font-bold text-teal-600 dark:text-teal-400">{rating.toFixed(1)}</div>
-          <div className="text-xs text-gray-500 dark:text-white/50">{t("pro.profile.rating")}</div>
-        </div>
-      </div>
-
-      <SpotlightCard className="mb-6">
-        <h2 className="mb-3 font-serif text-xl text-gray-900 dark:text-white">{t("pro.profile.about")}</h2>
-        <p className="whitespace-pre-wrap text-gray-600 dark:text-white/70">
-          {profile.bio?.trim() || ""}
-        </p>
-      </SpotlightCard>
-
-      <SpotlightCard className="mb-6">
-        <h2 className="mb-4 font-serif text-xl text-gray-900 dark:text-white">{t("pro.profile.services")}</h2>
-        {categories.length === 0 ? (
-          <p className="text-sm text-gray-500 dark:text-white/50">{t("pro.profile.noServices")}</p>
-        ) : (
-          <div className="flex flex-wrap gap-2">
-            {categories.map((c) => (
-              <span
-                key={c.id}
-                className="rounded-full bg-teal-600/15 px-3 py-1 text-sm font-medium text-teal-800 dark:bg-teal-500/20 dark:text-teal-300"
+        {/* ── SECTION B: Stat Strip — adapted from kit pricing.tsx grid pattern ── */}
+        <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {statItems.map((stat) => {
+            const Icon = stat.icon;
+            return (
+              <div
+                key={stat.label}
+                className="rounded-2xl border border-gray-200/50 bg-white/70 p-5 text-center backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03]"
               >
-                {labelForCategory(c, locale)}
-              </span>
-            ))}
-          </div>
-        )}
-      </SpotlightCard>
-
-      <SpotlightCard className="mb-6">
-        <h2 className="mb-4 font-serif text-xl text-gray-900 dark:text-white">{t("pro.profile.portfolio")}</h2>
-        {profile.portfolio_images.length === 0 ? (
-          <p className="text-sm text-gray-500 dark:text-white/50">{t("pro.profile.noPortfolio")}</p>
-        ) : (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-            {profile.portfolio_images.map((src) => (
-              <div key={src} className="relative aspect-square overflow-hidden rounded-lg ring-1 ring-gray-200 dark:ring-white/10">
-                <Image src={src} alt="" fill className="object-cover" sizes="(max-width: 640px) 50vw, 33vw" unoptimized />
+                <Icon className="mx-auto mb-2 h-5 w-5 text-teal-500/60" />
+                <div className="text-2xl font-bold tabular-nums text-teal-600 dark:text-teal-400">
+                  {stat.value}
+                </div>
+                <div className="mt-1 text-xs text-gray-500 dark:text-white/40">
+                  {stat.label}
+                </div>
               </div>
-            ))}
+            );
+          })}
+        </div>
+
+        {/* ── SECTION C: About ── */}
+        {profile.bio?.trim() && (
+          <div className="mb-8 rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03]">
+            <h2 className="mb-1 font-serif text-xl font-semibold text-gray-900 dark:text-white">
+              {t("pro.profile.about")}
+            </h2>
+            <div className="mt-1 h-0.5 w-8 rounded-full bg-gradient-to-r from-teal-500 to-transparent" />
+            <p className="mt-4 whitespace-pre-wrap text-sm leading-relaxed text-gray-600 dark:text-white/60">
+              {profile.bio.trim()}
+            </p>
           </div>
         )}
-      </SpotlightCard>
 
-      <SpotlightCard className="mb-8">
-        <ReviewSection
-          reviews={reviews as ReviewItem[]}
-          totalReviews={totalReviews}
-          avgRating={rating}
-          avgQuality={avgQuality}
-          avgCommunication={avgCommunication}
-          avgPunctuality={avgPunctuality}
-          professionalId={id}
-          locale={locale}
-        />
-      </SpotlightCard>
+        {/* ── SECTION D: Services — adapted from kit features.tsx Card pattern ── */}
+        <div className="mb-8">
+          <h2 className="mb-1 font-serif text-xl font-semibold text-gray-900 dark:text-white">
+            {t("pro.profile.services")}
+          </h2>
+          <div className="mb-5 h-0.5 w-8 rounded-full bg-gradient-to-r from-teal-500 to-transparent" />
+          {categories.length === 0 ? (
+            <p className="text-sm text-gray-500 dark:text-white/40">{t("pro.profile.noServices")}</p>
+          ) : (
+            <div className="space-y-3">
+              {services.map((s, i) => {
+                const isPrimary = i === 0;
+                return (
+                  <div
+                    key={`${s.category?.id ?? i}-${s.id ?? i}`}
+                    className={cn(
+                      "flex items-center gap-4 rounded-2xl border p-4 transition-all duration-300 hover:border-teal-500/30",
+                      isPrimary
+                        ? "border-l-2 border-l-teal-500 border-gray-200/50 bg-white/70 dark:border-l-teal-500 dark:border-white/[0.08] dark:bg-white/[0.03]"
+                        : "border-gray-200/50 bg-white/70 dark:border-white/[0.08] dark:bg-white/[0.03]"
+                    )}
+                  >
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-teal-500/10 dark:bg-teal-500/15">
+                      <Briefcase className="h-5 w-5 text-teal-600 dark:text-teal-400" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-gray-900 dark:text-white">
+                          {labelForCategory(s.category, locale)}
+                        </span>
+                        {isPrimary && (
+                          <span className="rounded-full bg-teal-500/10 px-2 py-0.5 text-[10px] font-medium text-teal-600 dark:text-teal-400">
+                            {t("pro.profile.primary") ?? "Primary"}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    {(s.custom_rate_min || s.custom_rate_max) && (
+                      <span className="shrink-0 text-sm font-medium text-teal-600 dark:text-teal-400">
+                        {s.custom_rate_min && `€${s.custom_rate_min}`}
+                        {s.custom_rate_min && s.custom_rate_max && " – "}
+                        {s.custom_rate_max && `€${s.custom_rate_max}`}
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
 
-      <div className="flex justify-center">
-        <button
-          type="button"
-          disabled
-          title={t("common.comingSoon")}
-          className="bg-gradient-to-r from-teal-500 to-teal-600 shadow-lg shadow-teal-500/25 text-white rounded-xl px-8 py-4 font-medium transition-all hover:shadow-xl hover:shadow-teal-500/30 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
-        >
-          {t("pro.profile.requestQuote")}
-        </button>
-      </div>
+        {/* ── SECTION E: Portfolio — masonry grid ── */}
+        <div className="mb-8">
+          <h2 className="mb-1 font-serif text-xl font-semibold text-gray-900 dark:text-white">
+            {t("pro.profile.portfolio")}
+          </h2>
+          <div className="mb-5 h-0.5 w-8 rounded-full bg-gradient-to-r from-teal-500 to-transparent" />
+          {profile.portfolio_images.length === 0 ? (
+            <div className="flex flex-col items-center py-12 text-center">
+              <Eye className="mb-3 h-10 w-10 text-gray-300 dark:text-white/15" />
+              <p className="text-sm text-gray-500 dark:text-white/40">{t("pro.profile.noPortfolio")}</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+              {profile.portfolio_images.map((src) => (
+                <div
+                  key={src}
+                  className="group relative aspect-square overflow-hidden rounded-xl border border-gray-200/50 dark:border-white/[0.08]"
+                >
+                  <Image
+                    src={src}
+                    alt=""
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                    sizes="(max-width: 640px) 50vw, 33vw"
+                    unoptimized
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-all duration-300 group-hover:bg-black/30">
+                    <Eye className="h-6 w-6 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* ── SECTION F: Reviews — adapted from kit testimonials.tsx pattern ── */}
+        <div className="mb-8 rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03]">
+          <ReviewSection
+            reviews={reviews as ReviewItem[]}
+            totalReviews={totalReviews}
+            avgRating={rating}
+            avgQuality={avgQuality}
+            avgCommunication={avgCommunication}
+            avgPunctuality={avgPunctuality}
+            professionalId={id}
+            locale={locale}
+          />
+        </div>
+
+        {/* ── SECTION G: CTA ── */}
+        <div className="rounded-2xl border border-gray-200/50 bg-white/70 p-8 text-center backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03]">
+          <h3 className="font-serif text-xl font-semibold text-gray-900 dark:text-white">
+            {t("pro.profile.ctaTitle") ?? t("pro.profile.requestQuote")}
+          </h3>
+          <p className="mt-2 text-sm text-gray-500 dark:text-white/40">
+            {t("pro.profile.ctaDesc") ?? ""}
+          </p>
+          <button
+            type="button"
+            disabled
+            title={t("common.comingSoon")}
+            className="mt-6 inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:shadow-xl hover:shadow-teal-500/30 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {t("pro.profile.requestQuote")}
+          </button>
+        </div>
       </div>
     </PageBackground>
   );
