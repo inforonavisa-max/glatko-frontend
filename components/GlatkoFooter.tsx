@@ -8,20 +8,27 @@ export function GlatkoFooter() {
 
   const columns = [
     {
-      title: t("footer.company"),
-      links: [
-        { label: t("footer.about"), href: "/about" },
-        { label: t("footer.careers"), href: "/about" },
-        { label: t("footer.contact"), href: "/contact" },
-      ],
-    },
-    {
       title: t("nav.services"),
       links: [
         { label: t("services.title"), href: "/services" },
         { label: t("search.title"), href: "/providers" },
         { label: t("categories.home.title"), href: "/providers?category=home-services" },
         { label: t("categories.boat.title"), href: "/providers?category=boat-services" },
+      ],
+    },
+    {
+      title: t("footer.company"),
+      links: [
+        { label: t("footer.about"), href: "/about" },
+        { label: t("footer.contact"), href: "/contact" },
+        { label: t("nav.becomeAPro"), href: "/become-a-pro" },
+      ],
+    },
+    {
+      title: t("footer.support"),
+      links: [
+        { label: t("footer.help"), href: "/contact" },
+        { label: t("footer.requestService"), href: "/request-service" },
       ],
     },
     {
@@ -33,33 +40,26 @@ export function GlatkoFooter() {
         { label: t("footer.gdpr"), href: "/gdpr" },
       ],
     },
-    {
-      title: t("footer.support"),
-      links: [
-        { label: t("footer.help"), href: "/contact" },
-        { label: t("footer.requestService"), href: "/request-service" },
-        { label: t("footer.becomeAPro"), href: "/register" },
-        { label: t("footer.forPros"), href: "/register" },
-      ],
-    },
   ];
 
   return (
-    <footer className="border-t border-gray-200 dark:border-white/5 bg-gray-50 dark:bg-[#080808]">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
-          <div>
-            <div className="flex items-center gap-1 mb-4">
-              <span className="text-xl font-bold text-gray-900 dark:text-white">Glatko</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-teal-500 mt-1" />
+    <footer className="border-t border-gray-200 bg-gray-50 dark:border-white/5 dark:bg-[#080808]">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-5">
+          <div className="col-span-2 md:col-span-1">
+            <div className="mb-4 flex items-center gap-1">
+              <span className="text-xl font-bold text-gray-900 dark:text-white">
+                Glatko
+              </span>
+              <span className="mt-1 h-1.5 w-1.5 rounded-full bg-teal-500" />
             </div>
-            <p className="text-sm text-gray-500 dark:text-white/50 max-w-xs">
+            <p className="max-w-xs text-sm text-gray-500 dark:text-white/50">
               {t("brand.description")}
             </p>
           </div>
           {columns.map((col) => (
             <div key={col.title}>
-              <h3 className="text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-white/30 mb-4">
+              <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-white/30">
                 {col.title}
               </h3>
               <ul className="space-y-2.5">
@@ -67,7 +67,7 @@ export function GlatkoFooter() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-sm text-gray-600 dark:text-white/60 hover:text-teal-600 dark:hover:text-teal-400 transition-colors"
+                      className="text-sm text-gray-600 transition-colors hover:text-teal-600 dark:text-white/60 dark:hover:text-teal-400"
                     >
                       {link.label}
                     </Link>
@@ -77,12 +77,12 @@ export function GlatkoFooter() {
             </div>
           ))}
         </div>
-        <div className="mt-12 pt-8 border-t border-gray-200 dark:border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-gray-200 pt-8 sm:flex-row dark:border-white/5">
           <p className="text-xs text-gray-400 dark:text-white/30">
             {t("footer.copyright")}
           </p>
           <p className="text-xs text-gray-400 dark:text-white/30">
-            {t("footer.madeIn")} 🇲🇪
+            {t("footer.madeIn")}
           </p>
         </div>
       </div>

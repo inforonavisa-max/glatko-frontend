@@ -64,6 +64,8 @@ const config: Config = {
         "shimmer": "shimmer 2s linear infinite",
         "teal-pulse": "tealPulse 2s ease-in-out infinite",
         "slide-down": "slideDown 0.3s cubic-bezier(0.4,0,0.2,1) forwards",
+        "marquee-left": "marqueeLeft 40s linear infinite",
+        "marquee-right": "marqueeRight 40s linear infinite",
       },
       keyframes: {
         fadeUp: {
@@ -85,6 +87,14 @@ const config: Config = {
         slideDown: {
           "0%": { opacity: "0", transform: "translateY(-10px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        marqueeLeft: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(calc(-100% - 2rem))" },
+        },
+        marqueeRight: {
+          "0%": { transform: "translateX(calc(-100% - 2rem))" },
+          "100%": { transform: "translateX(0)" },
         },
       },
     },
