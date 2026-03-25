@@ -8,6 +8,7 @@ import { PageBackground } from "@/components/ui/PageBackground";
 import { getCategoryWithStats, searchProfessionals } from "@/lib/supabase/glatko.server";
 import type { Locale } from "@/i18n/routing";
 import type { Metadata } from "next";
+import { getAlternates } from "@/lib/seo";
 import type { MultiLangText } from "@/types/glatko";
 
 type Props = {
@@ -32,15 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       locale,
       type: "website",
     },
-    alternates: {
-      canonical: `/${locale}/services/${slug}`,
-      languages: Object.fromEntries(
-        ["tr", "en", "de", "it", "ru", "uk", "sr", "me", "ar"].map((l) => [
-          l,
-          `/${l}/services/${slug}`,
-        ])
-      ),
-    },
+    alternates: getAlternates(locale, `/services/${slug}`),
   };
 }
 

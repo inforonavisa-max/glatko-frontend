@@ -68,7 +68,7 @@ export function GlatkoFooter() {
           </div>
           {columns.map((col) => (
             <div key={col.title}>
-              <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-white/30">
+              <h3 className="mb-4 text-xs font-semibold uppercase tracking-widest text-gray-600 dark:text-gray-300">
                 {col.title}
               </h3>
               <ul className="space-y-2.5">
@@ -101,10 +101,10 @@ export function GlatkoFooter() {
           ))}
         </div>
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-gray-200 pt-8 sm:flex-row dark:border-white/5">
-          <p className="text-xs text-gray-400 dark:text-white/30">
+          <p className="text-xs text-gray-500 dark:text-gray-400">
             {t("footer.copyright")}
           </p>
-          <p className="text-xs text-gray-400 dark:text-white/30">
+          <p className="text-xs text-gray-500 dark:text-gray-400">
             {t("footer.madeIn")}
           </p>
         </div>

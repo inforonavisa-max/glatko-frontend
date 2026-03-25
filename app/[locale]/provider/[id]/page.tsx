@@ -24,6 +24,7 @@ import { TrustBadge } from "@/components/glatko/trust/TrustBadge";
 import { ReviewSection } from "@/components/glatko/review/ReviewSection";
 import { LocalBusinessSchema } from "@/components/seo/LocalBusinessSchema";
 import type { Metadata } from "next";
+import { getAlternates } from "@/lib/seo";
 import type { MultiLangText, ProService, ProfessionalProfile } from "@/types/glatko";
 
 type ReviewItem = {
@@ -84,12 +85,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       locale,
       type: "profile",
     },
-    alternates: {
-      canonical: `/${locale}/provider/${id}`,
-      languages: Object.fromEntries(
-        ["tr", "en", "de", "it", "ru", "uk", "sr", "me", "ar"].map((l) => [l, `/${l}/provider/${id}`])
-      ),
-    },
+    alternates: getAlternates(locale, `/provider/${id}`),
     robots: { index: true, follow: true },
   };
 }

@@ -6,6 +6,7 @@ import { PageBackground } from "@/components/ui/PageBackground";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { GlassmorphCard } from "@/components/ui/GlassmorphCard";
 import type { Metadata } from "next";
+import { getAlternates } from "@/lib/seo";
 
 type Props = {
   params: Promise<{ locale: string }> | { locale: string };
@@ -26,12 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       locale,
       type: "website",
     },
-    alternates: {
-      canonical: `/${locale}/cookies`,
-      languages: Object.fromEntries(
-        ["tr", "en", "de", "it", "ru", "uk", "sr", "me", "ar"].map((l) => [l, `/${l}/cookies`])
-      ),
-    },
+    alternates: getAlternates(locale, "/cookies"),
     robots: { index: true, follow: true },
   };
 }

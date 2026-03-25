@@ -7,6 +7,7 @@ import { SectionTitle } from "@/components/ui/SectionTitle";
 import { GlassmorphCard } from "@/components/ui/GlassmorphCard";
 import { Mail, MapPin, Clock, MessageCircle, Phone } from "lucide-react";
 import type { Metadata } from "next";
+import { getAlternates } from "@/lib/seo";
 
 type Props = {
   params: Promise<{ locale: string }> | { locale: string };
@@ -25,12 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       locale,
       type: "website",
     },
-    alternates: {
-      canonical: `/${locale}/contact`,
-      languages: Object.fromEntries(
-        ["tr", "en", "de", "it", "ru", "uk", "sr", "me", "ar"].map((l) => [l, `/${l}/contact`])
-      ),
-    },
+    alternates: getAlternates(locale, "/contact"),
     robots: { index: true, follow: true },
   };
 }

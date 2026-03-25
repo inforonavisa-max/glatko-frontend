@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getAlternates } from "@/lib/seo";
 import { getTranslations } from "next-intl/server";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -17,10 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       locale,
       type: "website",
     },
-    alternates: {
-      canonical: `/${locale}/providers`,
-      languages: Object.fromEntries(["tr","en","de","it","ru","uk","sr","me","ar"].map(l => [l, `/${l}/providers`])),
-    },
+    alternates: getAlternates(locale, "/providers"),
     robots: { index: true, follow: true },
   };
 }

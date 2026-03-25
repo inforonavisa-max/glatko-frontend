@@ -6,6 +6,7 @@ import { Home, Anchor, ArrowRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { PageBackground } from "@/components/ui/PageBackground";
 import type { Metadata } from "next";
+import { getAlternates } from "@/lib/seo";
 
 type Props = {
   params: Promise<{ locale: string }> | { locale: string };
@@ -26,15 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       locale,
       type: "website",
     },
-    alternates: {
-      canonical: `/${locale}/services`,
-      languages: Object.fromEntries(
-        ["tr", "en", "de", "it", "ru", "uk", "sr", "me", "ar"].map((l) => [
-          l,
-          `/${l}/services`,
-        ])
-      ),
-    },
+    alternates: getAlternates(locale, "/services"),
     robots: { index: true, follow: true },
   };
 }
