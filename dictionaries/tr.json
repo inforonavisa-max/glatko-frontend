@@ -128,7 +128,8 @@
     "forPros": "Profesyoneller İçin",
     "social": "Sosyal Medya",
     "copyright": "© 2026 Glatko. Tüm hakları saklıdır.",
-    "madeIn": "Karadağ'da sevgiyle yapıldı"
+    "madeIn": "Karadağ'da sevgiyle yapıldı",
+    "viberSupport": "Viber Destek"
   },
   "auth": {
     "login": "Giriş Yap",
@@ -208,6 +209,8 @@
     "popular": "Popüler",
     "recommended": "Önerilen",
     "comingSoon": "Yakında",
+    "viber": "Viber",
+    "viberContact": "Viber ile İletişim",
     "learnMore": "Daha Fazla Bilgi",
     "backToHome": "Ana Sayfaya Dön",
     "notFound": "Sayfa Bulunamadı",
@@ -321,7 +324,9 @@
       "hoursLabel": "Çalışma Saatleri",
       "hours": "Pazartesi — Cuma, 09:00 — 18:00 CET",
       "whatsappLabel": "WhatsApp",
-      "whatsappDesc": "Hızlı destek için WhatsApp üzerinden yazın"
+      "whatsappDesc": "Hızlı destek için WhatsApp üzerinden yazın",
+      "viberLabel": "Viber",
+      "viberDesc": "Hızlı destek için Viber üzerinden yazın"
     }
   },
   "pro": {

@@ -128,7 +128,8 @@
     "forPros": "Для специалистов",
     "social": "Социальные сети",
     "copyright": "© 2026 Glatko. Все права защищены.",
-    "madeIn": "Сделано с любовью в Черногории"
+    "madeIn": "Сделано с любовью в Черногории",
+    "viberSupport": "Viber Support"
   },
   "auth": {
     "login": "Войти",
@@ -208,6 +209,8 @@
     "popular": "Популярное",
     "recommended": "Рекомендуемое",
     "comingSoon": "Скоро",
+    "viber": "Viber",
+    "viberContact": "Contact via Viber",
     "learnMore": "Подробнее",
     "backToHome": "На главную",
     "notFound": "Страница не найдена",
@@ -299,7 +302,9 @@
       "hoursLabel": "Business Hours",
       "hours": "Monday — Friday, 09:00 — 18:00 CET",
       "whatsappLabel": "WhatsApp",
-      "whatsappDesc": "Chat with us on WhatsApp"
+      "whatsappDesc": "Chat with us on WhatsApp",
+      "viberLabel": "Viber",
+      "viberDesc": "Chat with us on Viber"
     }
   },
   "pro": {

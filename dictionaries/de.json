@@ -128,7 +128,8 @@
     "forPros": "Für Fachleute",
     "social": "Soziale Medien",
     "copyright": "© 2026 Glatko. Alle Rechte vorbehalten.",
-    "madeIn": "Mit Liebe in Montenegro gemacht"
+    "madeIn": "Mit Liebe in Montenegro gemacht",
+    "viberSupport": "Viber Support"
   },
   "auth": {
     "login": "Anmelden",
@@ -208,6 +209,8 @@
     "popular": "Beliebt",
     "recommended": "Empfohlen",
     "comingSoon": "Demnächst",
+    "viber": "Viber",
+    "viberContact": "Contact via Viber",
     "learnMore": "Mehr erfahren",
     "backToHome": "Zurück zur Startseite",
     "notFound": "Seite nicht gefunden",
@@ -299,7 +302,9 @@
       "hoursLabel": "Business Hours",
       "hours": "Monday — Friday, 09:00 — 18:00 CET",
       "whatsappLabel": "WhatsApp",
-      "whatsappDesc": "Chat with us on WhatsApp"
+      "whatsappDesc": "Chat with us on WhatsApp",
+      "viberLabel": "Viber",
+      "viberDesc": "Chat with us on Viber"
     }
   },
   "pro": {

@@ -128,7 +128,8 @@
     "forPros": "للمحترفين",
     "social": "وسائل التواصل الاجتماعي",
     "copyright": "© 2026 Glatko. جميع الحقوق محفوظة.",
-    "madeIn": "صُنع بحب في الجبل الأسود"
+    "madeIn": "صُنع بحب في الجبل الأسود",
+    "viberSupport": "Viber Support"
   },
   "auth": {
     "login": "تسجيل الدخول",
@@ -208,6 +209,8 @@
     "popular": "شائع",
     "recommended": "موصى به",
     "comingSoon": "قريباً",
+    "viber": "Viber",
+    "viberContact": "Contact via Viber",
     "learnMore": "اعرف المزيد",
     "backToHome": "العودة للرئيسية",
     "notFound": "الصفحة غير موجودة",
@@ -299,7 +302,9 @@
       "hoursLabel": "Business Hours",
       "hours": "Monday — Friday, 09:00 — 18:00 CET",
       "whatsappLabel": "WhatsApp",
-      "whatsappDesc": "Chat with us on WhatsApp"
+      "whatsappDesc": "Chat with us on WhatsApp",
+      "viberLabel": "Viber",
+      "viberDesc": "Chat with us on Viber"
     }
   },
   "pro": {

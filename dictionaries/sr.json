@@ -128,7 +128,8 @@
     "forPros": "Za profesionalce",
     "social": "Društvene mreže",
     "copyright": "© 2026 Glatko. Sva prava zadržana.",
-    "madeIn": "Napravljeno s ljubavlju u Crnoj Gori"
+    "madeIn": "Napravljeno s ljubavlju u Crnoj Gori",
+    "viberSupport": "Viber Support"
   },
   "auth": {
     "login": "Prijavite se",
@@ -208,6 +209,8 @@
     "popular": "Popularno",
     "recommended": "Preporučeno",
     "comingSoon": "Uskoro",
+    "viber": "Viber",
+    "viberContact": "Contact via Viber",
     "learnMore": "Saznajte više",
     "backToHome": "Na početnu",
     "notFound": "Stranica nije pronađena",
@@ -299,7 +302,9 @@
       "hoursLabel": "Business Hours",
       "hours": "Monday — Friday, 09:00 — 18:00 CET",
       "whatsappLabel": "WhatsApp",
-      "whatsappDesc": "Chat with us on WhatsApp"
+      "whatsappDesc": "Chat with us on WhatsApp",
+      "viberLabel": "Viber",
+      "viberDesc": "Chat with us on Viber"
     }
   },
   "pro": {

@@ -10,6 +10,7 @@ import {
   Languages,
   MapPin,
   MessageCircle,
+  Phone,
   ShieldCheck,
   Star,
   Eye,
@@ -374,15 +375,24 @@ export default async function ProviderProfilePage({ params }: PageProps) {
               {t("pro.profile.requestQuote")}
             </button>
             {profile.phone && (
-              <a
-                href={`https://wa.me/${profile.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent("Merhaba, Glatko üzerinden ulaşıyorum.")}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl bg-[#25D366] px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-[#25D366]/25 transition-all hover:bg-[#20BD5A] hover:shadow-xl hover:shadow-[#25D366]/30"
-              >
-                <MessageCircle className="h-4 w-4" />
-                WhatsApp
-              </a>
+              <>
+                <a
+                  href={`https://wa.me/${profile.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent("Merhaba, Glatko üzerinden ulaşıyorum.")}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#25D366] px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-[#25D366]/25 transition-all hover:bg-[#20BD5A] hover:shadow-xl hover:shadow-[#25D366]/30"
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  WhatsApp
+                </a>
+                <a
+                  href={`viber://chat?number=${encodeURIComponent(profile.phone.replace(/[^0-9+]/g, ""))}`}
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#7360F2] px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-[#7360F2]/25 transition-all hover:bg-[#6352E0] hover:shadow-xl hover:shadow-[#7360F2]/30"
+                >
+                  <Phone className="h-4 w-4" />
+                  Viber
+                </a>
+              </>
             )}
           </div>
         </div>

@@ -2,11 +2,12 @@
 
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, Phone } from "lucide-react";
 
 export function GlatkoFooter() {
   const t = useTranslations();
   const whatsappSupport = process.env.NEXT_PUBLIC_WHATSAPP_SUPPORT;
+  const viberSupport = process.env.NEXT_PUBLIC_VIBER_SUPPORT;
 
   const columns = [
     {
@@ -32,7 +33,10 @@ export function GlatkoFooter() {
         { label: t("footer.help"), href: "/contact" },
         { label: t("footer.requestService"), href: "/request-service" },
         ...(whatsappSupport
-          ? [{ label: t("legal.whatsappSupport"), href: `https://wa.me/${whatsappSupport}`, external: true }]
+          ? [{ label: t("legal.whatsappSupport"), href: `https://wa.me/${whatsappSupport}`, external: true, icon: "whatsapp" as const }]
+          : []),
+        ...(viberSupport
+          ? [{ label: t("footer.viberSupport"), href: `viber://chat?number=${encodeURIComponent(viberSupport)}`, external: true, icon: "viber" as const }]
           : []),
       ],
     },
@@ -77,7 +81,9 @@ export function GlatkoFooter() {
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1.5 text-sm text-gray-600 transition-colors hover:text-teal-600 dark:text-white/60 dark:hover:text-teal-400"
                       >
-                        <MessageCircle className="h-3.5 w-3.5 text-[#25D366]" />
+                        {"icon" in link && link.icon === "viber"
+                          ? <Phone className="h-3.5 w-3.5 text-[#7360F2]" />
+                          : <MessageCircle className="h-3.5 w-3.5 text-[#25D366]" />}
                         {link.label}
                       </a>
                     ) : (

@@ -4,12 +4,13 @@ import { useTranslations } from "next-intl";
 import { PageBackground } from "@/components/ui/PageBackground";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { GlassmorphCard } from "@/components/ui/GlassmorphCard";
-import { Mail, MapPin, Clock, MessageCircle } from "lucide-react";
+import { Mail, MapPin, Clock, MessageCircle, Phone } from "lucide-react";
 
 export default function ContactPage() {
   const t = useTranslations();
   const c = (key: string) => t(`legal.contactContent.${key}`);
   const whatsapp = process.env.NEXT_PUBLIC_WHATSAPP_SUPPORT;
+  const viber = process.env.NEXT_PUBLIC_VIBER_SUPPORT;
   return (
     <PageBackground opacity={0.08}>
       <div className="mx-auto max-w-3xl px-4 pb-16 pt-28">
@@ -49,6 +50,18 @@ export default function ContactPage() {
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-white/30">{c("whatsappLabel")}</p>
                   <p className="text-sm text-gray-700 dark:text-white/70">{c("whatsappDesc")}</p>
+                </div>
+              </a>
+            )}
+            {viber && (
+              <a
+                href={`viber://chat?number=${encodeURIComponent(viber)}`}
+                className="flex items-start gap-4 rounded-xl border border-[#7360F2]/20 bg-[#7360F2]/5 p-5 transition-colors hover:bg-[#7360F2]/10"
+              >
+                <Phone className="mt-0.5 h-5 w-5 shrink-0 text-[#7360F2]" />
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-white/30">{c("viberLabel")}</p>
+                  <p className="text-sm text-gray-700 dark:text-white/70">{c("viberDesc")}</p>
                 </div>
               </a>
             )}
