@@ -11,6 +11,7 @@ import {
   ChevronRight,
   ChevronLeft,
   Loader2,
+  Check,
 } from "lucide-react";
 import { submitServiceRequest } from "@/app/[locale]/request-service/actions";
 import { cn } from "@/lib/utils";
@@ -38,6 +39,7 @@ export function RequestServiceWizard({ userId, categories }: Props) {
   const t = useTranslations();
   const locale = useLocale() as Locale;
   const [step, setStep] = useState(0);
+  const [direction, setDirection] = useState(1);
   const [isNarrow, setIsNarrow] = useState(false);
 
   useEffect(() => {
@@ -110,6 +112,16 @@ export function RequestServiceWizard({ userId, categories }: Props) {
     return true;
   };
 
+  const goNext = () => {
+    setDirection(1);
+    setStep((s) => s + 1);
+  };
+
+  const goBack = () => {
+    setDirection(-1);
+    setStep((s) => s - 1);
+  };
+
   const handleSubmit = () => {
     setError("");
     const fd = new FormData();
@@ -150,6 +162,7 @@ export function RequestServiceWizard({ userId, categories }: Props) {
 
   const resetWizard = () => {
     setStep(0);
+    setDirection(1);
     setSelectedMainId("");
     setSelectedSubId("");
     setDetails({});
@@ -182,43 +195,56 @@ export function RequestServiceWizard({ userId, categories }: Props) {
     );
   }
 
-  const stepTransition = { duration: isNarrow ? 0.15 : 0.25 };
-  const progressFillDuration = isNarrow ? 0.25 : 0.4;
+  const dur = isNarrow ? 0.15 : 0.25;
 
   return (
-    <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-3xl">
       <div className="mb-10 text-center">
-        <h1 className="text-3xl font-semibold text-gray-900 dark:text-white">
+        <h1 className="font-serif text-3xl font-semibold text-gray-900 dark:text-white">
           {t("request.wizard.title")}
         </h1>
-        <p className="mt-2 text-gray-500 dark:text-white/50">
+        <div className="mx-auto mt-3 h-0.5 w-12 rounded-full bg-gradient-to-r from-teal-500 to-transparent" />
+        <p className="mt-3 text-sm text-gray-500 dark:text-white/50">
           {t("request.wizard.subtitle")}
         </p>
       </div>
 
-      <div className="mb-10 flex items-center gap-2 px-0.5 sm:gap-3 sm:px-1 md:px-2">
+      {/* ── Step indicator — adapted from kit pricing.tsx card header pattern ── */}
+      <div className="mb-8 flex items-center justify-center gap-0 px-2 sm:px-8">
         {STEPS.map((s, i) => {
           const Icon = s.icon;
-          const active = i <= step;
+          const isPast = i < step;
+          const isCurrent = i === step;
+          const isFuture = i > step;
           return (
-            <div key={s.key} className="flex flex-1 items-center gap-3">
-              <div
+            <div key={s.key} className="flex flex-1 items-center">
+              <motion.div
+                initial={false}
+                animate={{
+                  scale: isCurrent ? 1 : 0.95,
+                  opacity: isFuture ? 0.5 : 1,
+                }}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
                 className={cn(
-                  "flex h-10 w-10 shrink-0 items-center justify-center rounded-full border transition-colors",
-                  active
-                    ? "border-teal-500 bg-gradient-to-br from-teal-400 to-teal-600 text-white shadow-md shadow-teal-500/25"
-                    : "border-gray-200 text-gray-400 dark:border-white/10 dark:text-white/30"
+                  "relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full transition-all duration-300",
+                  isPast && "bg-gradient-to-br from-teal-500 to-teal-600 shadow-md shadow-teal-500/25",
+                  isCurrent && "bg-gradient-to-br from-teal-500 to-teal-600 shadow-lg shadow-teal-500/30 ring-4 ring-teal-500/20",
+                  isFuture && "border-2 border-gray-200 dark:border-white/[0.12]"
                 )}
               >
-                <Icon className="h-4 w-4" />
-              </div>
+                {isPast ? (
+                  <Check className="h-4 w-4 text-white" strokeWidth={3} />
+                ) : (
+                  <Icon className={cn("h-4 w-4", isCurrent ? "text-white" : "text-gray-400 dark:text-white/40")} />
+                )}
+              </motion.div>
               {i < STEPS.length - 1 && (
-                <div className="h-1 flex-1 overflow-hidden rounded-full bg-gray-100 dark:bg-white/5">
+                <div className="mx-1 h-0.5 flex-1 overflow-hidden rounded-full bg-gray-100 dark:bg-white/[0.06] sm:mx-2">
                   <motion.div
                     className="h-full rounded-full bg-gradient-to-r from-teal-500 to-teal-400"
                     initial={false}
                     animate={{ width: i < step ? "100%" : "0%" }}
-                    transition={{ duration: progressFillDuration }}
+                    transition={{ duration: isNarrow ? 0.25 : 0.4 }}
                   />
                 </div>
               )}
@@ -227,20 +253,25 @@ export function RequestServiceWizard({ userId, categories }: Props) {
         })}
       </div>
 
-      <div className="rounded-3xl border border-gray-200/80 bg-white/80 p-6 shadow-sm backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.04] dark:shadow-none md:p-10">
+      {/* ── Glassmorphism container — adapted from kit pricing.tsx Card + D1 login card ── */}
+      <div className="rounded-3xl border border-gray-200/60 bg-white/80 p-6 shadow-xl backdrop-blur-2xl dark:border-white/[0.08] dark:bg-white/[0.03] dark:shadow-none md:p-10">
         {error && (
-          <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-500/20 dark:bg-red-500/10 dark:text-red-400">
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-500/20 dark:bg-red-500/10 dark:text-red-400"
+          >
             {error}
-          </div>
+          </motion.div>
         )}
 
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={step}
-            initial={{ opacity: 0, x: 30 }}
+            initial={{ opacity: 0, x: direction * 40 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -30 }}
-            transition={stepTransition}
+            exit={{ opacity: 0, x: direction * -40 }}
+            transition={{ duration: dur, ease: [0.25, 0.4, 0.25, 1] }}
           >
             {step === 0 && (
               <StepCategory
@@ -309,64 +340,52 @@ export function RequestServiceWizard({ userId, categories }: Props) {
           </motion.div>
         </AnimatePresence>
 
-        {step < 3 && (
-          <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <button
+        {/* ── Navigation buttons — D1 login gradient button pattern ── */}
+        <div className="mt-10 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <button
+            type="button"
+            onClick={goBack}
+            disabled={step === 0}
+            className={cn(
+              "flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-medium transition-all sm:w-auto",
+              step === 0
+                ? "hidden"
+                : "border border-gray-200 text-gray-600 hover:bg-gray-50 dark:border-white/[0.08] dark:text-white/60 dark:hover:bg-white/[0.04]"
+            )}
+          >
+            <ChevronLeft className="h-4 w-4" />
+            {t("request.wizard.back")}
+          </button>
+
+          {step < 3 ? (
+            <motion.button
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.97 }}
               type="button"
-              onClick={() => setStep((s) => s - 1)}
-              disabled={step === 0}
-              className={cn(
-                "flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-medium transition-all sm:w-auto",
-                step === 0
-                  ? "hidden"
-                  : "text-gray-600 hover:bg-gray-100 dark:text-white/60 dark:hover:bg-white/5"
-              )}
-            >
-              <ChevronLeft className="h-4 w-4" />
-              {t("request.wizard.back")}
-            </button>
-            <button
-              type="button"
-              onClick={() => setStep((s) => s + 1)}
+              onClick={goNext}
               disabled={!canAdvance()}
-              className={cn(
-                "flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all sm:w-auto",
-                "hover:from-teal-600 hover:to-teal-700 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
-              )}
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:shadow-xl hover:shadow-teal-500/30 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
             >
               {t("request.wizard.next")}
               <ChevronRight className="h-4 w-4" />
-            </button>
-          </div>
-        )}
-
-        {step === 3 && (
-          <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <button
-              type="button"
-              onClick={() => setStep(2)}
-              className="flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-medium text-gray-600 transition-all hover:bg-gray-100 sm:w-auto dark:text-white/60 dark:hover:bg-white/5"
-            >
-              <ChevronLeft className="h-4 w-4" />
-              {t("request.wizard.back")}
-            </button>
-            <button
+            </motion.button>
+          ) : (
+            <motion.button
+              whileHover={{ scale: 1.01, boxShadow: "0 0 30px rgba(20,184,166,0.25)" }}
+              whileTap={{ scale: 0.97 }}
               type="button"
               onClick={handleSubmit}
               disabled={isPending || !phone}
-              className={cn(
-                "flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all sm:w-auto",
-                "hover:from-teal-600 hover:to-teal-700 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
-              )}
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
             >
               {isPending ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
                 t("request.wizard.submit")
               )}
-            </button>
-          </div>
-        )}
+            </motion.button>
+          )}
+        </div>
       </div>
     </div>
   );

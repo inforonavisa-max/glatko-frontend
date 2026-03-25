@@ -1,5 +1,7 @@
 "use client";
 
+import { motion, AnimatePresence } from "framer-motion";
+import { Zap, CalendarDays, Clock, CalendarSearch } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface Props {
@@ -18,6 +20,13 @@ interface Props {
   showMarina: boolean;
   t: (key: string) => string;
 }
+
+const inputCls = cn(
+  "block w-full rounded-xl border border-gray-200 dark:border-white/[0.08]",
+  "bg-gray-50/50 dark:bg-white/[0.03] px-4 py-3 text-sm",
+  "text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-white/30",
+  "focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20 focus:outline-none transition-all"
+);
 
 const CITY_SLUGS = [
   "budva",
@@ -38,15 +47,15 @@ const MARINA_OPTIONS = [
 ] as const;
 
 const URGENCY_OPTIONS = [
-  "urgent48h",
-  "thisWeek",
-  "flexible",
-  "specificDate",
+  { key: "urgent48h", icon: Zap },
+  { key: "thisWeek", icon: CalendarDays },
+  { key: "flexible", icon: Clock },
+  { key: "specificDate", icon: CalendarSearch },
 ] as const;
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
   return (
-    <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-white/70">
+    <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/50">
       {children}
     </label>
   );
@@ -70,7 +79,7 @@ export function StepLocation({
 }: Props) {
   return (
     <div>
-      <h2 className="mb-2 text-lg font-semibold text-gray-900 dark:text-white">
+      <h2 className="mb-1 text-lg font-semibold text-gray-900 dark:text-white">
         {t("request.step3.title")}
       </h2>
       <p className="mb-6 text-sm text-gray-500 dark:text-white/50">
@@ -83,7 +92,7 @@ export function StepLocation({
           <select
             value={municipality}
             onChange={(e) => setMunicipality(e.target.value)}
-            className="w-full rounded-xl border border-gray-200/80 bg-white/90 px-4 py-3 text-sm text-gray-900 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-white/[0.1] dark:bg-white/[0.04] dark:text-white"
+            className={inputCls}
           >
             <option value="">{t("request.step3.selectCity")}</option>
             {CITY_SLUGS.map((slug) => (
@@ -101,7 +110,7 @@ export function StepLocation({
             onChange={(e) => setAddress(e.target.value)}
             placeholder={t("request.step3.addressPlaceholder")}
             rows={2}
-            className="w-full rounded-xl border border-gray-200/80 bg-white/90 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-white/[0.1] dark:bg-white/[0.04] dark:text-white dark:placeholder:text-white/30"
+            className={cn(inputCls, "resize-none")}
           />
         </div>
 
@@ -111,7 +120,7 @@ export function StepLocation({
             <select
               value={marina}
               onChange={(e) => setMarina(e.target.value)}
-              className="w-full rounded-xl border border-gray-200/80 bg-white/90 px-4 py-3 text-sm text-gray-900 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-white/[0.1] dark:bg-white/[0.04] dark:text-white"
+              className={inputCls}
             >
               <option value="">{t("request.step3.selectMarina")}</option>
               {MARINA_OPTIONS.map((m) => (
@@ -121,49 +130,67 @@ export function StepLocation({
           </div>
         )}
 
+        {/* ── Urgency cards — glassmorphism grid adapted from kit pricing Card pattern ── */}
         <div>
           <FieldLabel>{t("request.step3.urgency")}</FieldLabel>
-          <div className="flex flex-wrap gap-2">
-            {URGENCY_OPTIONS.map((opt) => (
-              <button
-                key={opt}
-                type="button"
-                onClick={() => setUrgency(opt)}
-                className={cn(
-                  "rounded-full border px-4 py-2 text-sm font-medium transition-all",
-                  urgency === opt
-                    ? "border-teal-500 bg-teal-500/10 text-teal-700 shadow-sm shadow-teal-500/10 dark:bg-teal-500/15 dark:text-teal-300"
-                    : "border-gray-200 bg-gray-50 text-gray-700 hover:border-teal-300 hover:bg-teal-50 dark:border-white/10 dark:bg-white/5 dark:text-white/70 dark:hover:border-teal-500/30 dark:hover:bg-teal-500/10"
-                )}
-              >
-                {t(`request.step3.urgency.${opt}`)}
-              </button>
-            ))}
+          <div className="grid grid-cols-2 gap-3">
+            {URGENCY_OPTIONS.map((opt) => {
+              const Icon = opt.icon;
+              const isSelected = urgency === opt.key;
+              return (
+                <motion.button
+                  key={opt.key}
+                  type="button"
+                  onClick={() => setUrgency(opt.key)}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={cn(
+                    "group relative flex flex-col items-center gap-2 rounded-2xl border p-4 text-center transition-all duration-200",
+                    isSelected
+                      ? "border-teal-500/50 bg-teal-500/[0.04] shadow-md shadow-teal-500/10 dark:border-teal-500/40 dark:bg-teal-500/[0.06]"
+                      : "border-gray-200/60 bg-white/40 hover:border-teal-400/30 dark:border-white/[0.06] dark:bg-white/[0.02] dark:hover:border-teal-500/20"
+                  )}
+                >
+                  <div className={cn(
+                    "flex h-10 w-10 items-center justify-center rounded-xl transition-colors",
+                    isSelected ? "bg-teal-500/15 dark:bg-teal-500/20" : "bg-gray-100 dark:bg-white/[0.06]"
+                  )}>
+                    <Icon className={cn("h-5 w-5", isSelected ? "text-teal-600 dark:text-teal-400" : "text-gray-400 dark:text-white/40")} />
+                  </div>
+                  <span className={cn(
+                    "text-xs font-semibold",
+                    isSelected ? "text-teal-700 dark:text-teal-300" : "text-gray-600 dark:text-white/60"
+                  )}>
+                    {t(`request.step3.urgency.${opt.key}`)}
+                  </span>
+                </motion.button>
+              );
+            })}
           </div>
         </div>
 
-        {urgency === "specificDate" && (
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <FieldLabel>{t("request.step3.dateStart")}</FieldLabel>
-              <input
-                type="date"
-                value={dateStart}
-                onChange={(e) => setDateStart(e.target.value)}
-                className="w-full rounded-xl border border-gray-200/80 bg-white/90 px-4 py-3 text-sm text-gray-900 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-white/[0.1] dark:bg-white/[0.04] dark:text-white"
-              />
-            </div>
-            <div>
-              <FieldLabel>{t("request.step3.dateEnd")}</FieldLabel>
-              <input
-                type="date"
-                value={dateEnd}
-                onChange={(e) => setDateEnd(e.target.value)}
-                className="w-full rounded-xl border border-gray-200/80 bg-white/90 px-4 py-3 text-sm text-gray-900 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 dark:border-white/[0.1] dark:bg-white/[0.04] dark:text-white"
-              />
-            </div>
-          </div>
-        )}
+        <AnimatePresence>
+          {urgency === "specificDate" && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden"
+            >
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <FieldLabel>{t("request.step3.dateStart")}</FieldLabel>
+                  <input type="date" value={dateStart} onChange={(e) => setDateStart(e.target.value)} className={inputCls} />
+                </div>
+                <div>
+                  <FieldLabel>{t("request.step3.dateEnd")}</FieldLabel>
+                  <input type="date" value={dateEnd} onChange={(e) => setDateEnd(e.target.value)} className={inputCls} />
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
