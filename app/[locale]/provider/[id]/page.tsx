@@ -9,6 +9,7 @@ import {
   Globe,
   Languages,
   MapPin,
+  MessageCircle,
   ShieldCheck,
   Star,
   Eye,
@@ -363,14 +364,27 @@ export default async function ProviderProfilePage({ params }: PageProps) {
           <p className="mt-2 text-sm text-gray-500 dark:text-white/40">
             {t("pro.profile.ctaDesc") ?? ""}
           </p>
-          <button
-            type="button"
-            disabled
-            title={t("common.comingSoon")}
-            className="mt-6 inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:shadow-xl hover:shadow-teal-500/30 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {t("pro.profile.requestQuote")}
-          </button>
+          <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <button
+              type="button"
+              disabled
+              title={t("common.comingSoon")}
+              className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:shadow-xl hover:shadow-teal-500/30 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {t("pro.profile.requestQuote")}
+            </button>
+            {profile.phone && (
+              <a
+                href={`https://wa.me/${profile.phone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent("Merhaba, Glatko üzerinden ulaşıyorum.")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#25D366] px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-[#25D366]/25 transition-all hover:bg-[#20BD5A] hover:shadow-xl hover:shadow-[#25D366]/30"
+              >
+                <MessageCircle className="h-4 w-4" />
+                WhatsApp
+              </a>
+            )}
+          </div>
         </div>
       </div>
     </PageBackground>

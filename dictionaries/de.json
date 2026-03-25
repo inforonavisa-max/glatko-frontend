@@ -221,13 +221,86 @@
     }
   },
   "legal": {
-    "comingSoon": "Diese Seite wird gerade erstellt.",
-    "about": "Über uns",
-    "terms": "Nutzungsbedingungen",
-    "privacy": "Datenschutzrichtlinie",
-    "cookies": "Cookie-Richtlinie",
-    "gdpr": "DSGVO",
-    "contact": "Kontakt"
+    "comingSoon": "This page is under construction.",
+    "about": "About Us",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "cookies": "Cookie Policy",
+    "gdpr": "GDPR",
+    "contact": "Contact",
+    "lastUpdated": "Last updated",
+    "effectiveDate": "March 2026",
+    "whatsappSupport": "WhatsApp Support",
+    "aboutContent": {
+      "intro": "Glatko is Montenegro's premium service marketplace, connecting homeowners, property managers, and boat owners with verified local professionals.",
+      "mission": "Our mission is to make finding reliable service providers in Montenegro effortless, transparent, and secure.",
+      "location": "Based in Budva, we are active across Budva, Kotor, and Tivat — with plans to expand throughout Montenegro.",
+      "services": "From villa cleaning and renovation to boat maintenance and captain hire, Glatko covers a wide range of professional services.",
+      "howItWorks": "Our platform uses a transparent bidding system: you describe what you need, verified professionals submit quotes, and you choose the best fit.",
+      "languages": "Glatko is available in 9 languages: Turkish, English, Russian, German, Italian, Ukrainian, Serbian, Montenegrin, and Arabic.",
+      "contactEmail": "contact@glatko.app",
+      "contactLine": "For inquiries, reach us at"
+    },
+    "termsContent": {
+      "intro": "These Terms of Service govern your use of the Glatko platform operated by Glatko DOO, a company registered in Montenegro.",
+      "s1Title": "1. Service Description",
+      "s1": "Glatko operates an online marketplace connecting service requesters with service providers. Glatko is not a service provider itself.",
+      "s2Title": "2. User Accounts",
+      "s2": "You must provide accurate information when creating an account. You are responsible for all activities under your account.",
+      "s3Title": "3. Payments",
+      "s3": "All payments are made directly between Customers and Professionals. Glatko does not process payments.",
+      "s4Title": "4. Limitation of Liability",
+      "s4": "Glatko acts as an intermediary and does not guarantee the quality of services. Liability is limited under Montenegrin law.",
+      "s5Title": "5. Governing Law",
+      "s5": "These terms are governed by the laws of Montenegro. Disputes shall be resolved by courts in Budva."
+    },
+    "privacyContent": {
+      "intro": "This Privacy Policy describes how Glatko DOO collects, uses, and protects your personal data in accordance with GDPR.",
+      "s1Title": "1. Data We Collect",
+      "s1": "We collect: name, email, phone, location, photos, service request details, and communication data.",
+      "s2Title": "2. How We Use Your Data",
+      "s2": "Your data is used to provide services, facilitate communication, verify accounts, and ensure security.",
+      "s3Title": "3. Your Rights",
+      "s3": "Under GDPR, you have rights to access, correct, delete, and port your data. Contact contact@glatko.app.",
+      "s4Title": "4. Contact",
+      "s4": "For privacy inquiries, contact us at contact@glatko.app. Response within 30 days."
+    },
+    "cookiesContent": {
+      "intro": "This Cookie Policy explains how Glatko uses cookies.",
+      "s1Title": "1. Essential Cookies",
+      "s1": "Required for platform functionality: session, authentication, locale.",
+      "s2Title": "2. Analytics Cookies",
+      "s2": "Vercel Analytics for anonymous usage data.",
+      "s3Title": "3. Managing Cookies",
+      "s3": "Manage cookies through your browser settings."
+    },
+    "gdprContent": {
+      "intro": "As a Glatko user, you have the following GDPR rights:",
+      "r1Title": "Right of Access (Art. 15)",
+      "r1": "Request a copy of your personal data.",
+      "r2Title": "Right to Rectification (Art. 16)",
+      "r2": "Request correction of inaccurate data.",
+      "r3Title": "Right to Erasure (Art. 17)",
+      "r3": "Request deletion of your data.",
+      "r4Title": "Right to Data Portability (Art. 20)",
+      "r4": "Receive your data in a portable format.",
+      "r5Title": "Right to Object (Art. 21)",
+      "r5": "Object to data processing for specific purposes.",
+      "howToExercise": "How to Exercise Your Rights",
+      "howToExerciseDesc": "Email contact@glatko.app with subject 'GDPR Request'. Response within 30 days.",
+      "responseTime": "Response time: 30 days"
+    },
+    "contactContent": {
+      "intro": "We'd love to hear from you.",
+      "emailLabel": "Email",
+      "email": "contact@glatko.app",
+      "addressLabel": "Address",
+      "address": "Budva, Montenegro",
+      "hoursLabel": "Business Hours",
+      "hours": "Monday — Friday, 09:00 — 18:00 CET",
+      "whatsappLabel": "WhatsApp",
+      "whatsappDesc": "Chat with us on WhatsApp"
+    }
   },
   "pro": {
     "becomeAPro": "Profi werden",

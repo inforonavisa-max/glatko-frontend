@@ -4,21 +4,24 @@ import { useTranslations } from "next-intl";
 import { PageBackground } from "@/components/ui/PageBackground";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { GlassmorphCard } from "@/components/ui/GlassmorphCard";
-import { Info } from "lucide-react";
 
 export default function AboutPage() {
   const t = useTranslations();
+  const c = (key: string) => t(`legal.aboutContent.${key}`);
   return (
     <PageBackground opacity={0.08}>
       <div className="mx-auto max-w-3xl px-4 pb-16 pt-28">
         <SectionTitle>{t("legal.about")}</SectionTitle>
         <GlassmorphCard className="p-8 md:p-12" hover={false}>
-          <div className="flex flex-col items-center gap-4 py-8 text-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-teal-500/20 bg-teal-500/10">
-              <Info className="h-7 w-7 text-teal-500" />
-            </div>
-            <p className="max-w-md text-sm text-gray-500 dark:text-white/50">
-              {t("legal.comingSoon")}
+          <div className="space-y-5 text-sm leading-relaxed text-gray-600 dark:text-white/60">
+            <p>{c("intro")}</p>
+            <p>{c("mission")}</p>
+            <p>{c("location")}</p>
+            <p>{c("services")}</p>
+            <p>{c("howItWorks")}</p>
+            <p>{c("languages")}</p>
+            <p className="pt-4 text-gray-500 dark:text-white/40">
+              {c("contactLine")}: <a href={`mailto:${c("contactEmail")}`} className="font-medium text-teal-600 hover:underline dark:text-teal-400">{c("contactEmail")}</a>
             </p>
           </div>
         </GlassmorphCard>

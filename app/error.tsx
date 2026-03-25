@@ -1,8 +1,14 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 
-export default function Error({ reset }: { error: Error; reset: () => void }) {
+export default function Error({ error, reset }: { error: Error; reset: () => void }) {
+  useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      console.error("[Glatko Error]", error.message, error.stack);
+    }
+  }, [error]);
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#F8F6F0] px-4 dark:bg-[#080808]">
       <div className="pointer-events-none absolute inset-0">

@@ -2,9 +2,11 @@
 
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
+import { MessageCircle } from "lucide-react";
 
 export function GlatkoFooter() {
   const t = useTranslations();
+  const whatsappSupport = process.env.NEXT_PUBLIC_WHATSAPP_SUPPORT;
 
   const columns = [
     {
@@ -29,6 +31,9 @@ export function GlatkoFooter() {
       links: [
         { label: t("footer.help"), href: "/contact" },
         { label: t("footer.requestService"), href: "/request-service" },
+        ...(whatsappSupport
+          ? [{ label: t("legal.whatsappSupport"), href: `https://wa.me/${whatsappSupport}`, external: true }]
+          : []),
       ],
     },
     {
@@ -65,12 +70,24 @@ export function GlatkoFooter() {
               <ul className="space-y-2.5">
                 {col.links.map((link) => (
                   <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-gray-600 transition-colors hover:text-teal-600 dark:text-white/60 dark:hover:text-teal-400"
-                    >
-                      {link.label}
-                    </Link>
+                    {"external" in link && link.external ? (
+                      <a
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-sm text-gray-600 transition-colors hover:text-teal-600 dark:text-white/60 dark:hover:text-teal-400"
+                      >
+                        <MessageCircle className="h-3.5 w-3.5 text-[#25D366]" />
+                        {link.label}
+                      </a>
+                    ) : (
+                      <Link
+                        href={link.href}
+                        className="text-sm text-gray-600 transition-colors hover:text-teal-600 dark:text-white/60 dark:hover:text-teal-400"
+                      >
+                        {link.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>
