@@ -15,9 +15,10 @@ import { createClient } from "@/supabase/browser";
 
 interface GlatkoHeaderProps {
   userId?: string | null;
+  isPro?: boolean;
 }
 
-export function GlatkoHeader({ userId }: GlatkoHeaderProps) {
+export function GlatkoHeader({ userId, isPro = false }: GlatkoHeaderProps) {
   const t = useTranslations();
   const pathname = usePathname();
   const { resolvedTheme } = useTheme();
@@ -64,21 +65,33 @@ export function GlatkoHeader({ userId }: GlatkoHeaderProps) {
     { href: "/become-a-pro", label: t("nav.becomeAPro") },
   ];
 
-  const userLinks = [
+  const customerLinks = [
     { href: "/services", label: t("nav.services") },
     { href: "/providers", label: t("search.title") },
     { href: "/dashboard/requests", label: t("nav.requests") },
     { href: "/inbox", label: t("nav.inbox"), hasIcon: true },
   ];
 
-  const navLinks = userId ? userLinks : guestLinks;
-
-  const dropdownItems = [
+  const proLinks = [
+    { href: "/services", label: t("nav.services") },
     { href: "/pro/dashboard", label: t("nav.proDashboard") },
-    { href: "/dashboard/requests", label: t("nav.requests") },
-    { href: "/inbox", label: t("nav.inbox") },
-    { href: "/settings/notifications", label: t("nav.settings") },
+    { href: "/inbox", label: t("nav.inbox"), hasIcon: true },
   ];
+
+  const navLinks = !userId ? guestLinks : isPro ? proLinks : customerLinks;
+
+  const dropdownItems = isPro
+    ? [
+        { href: "/pro/dashboard", label: t("nav.proDashboard") },
+        { href: "/inbox", label: t("nav.inbox") },
+        { href: "/pro/dashboard/profile", label: t("nav.profile") },
+        { href: "/settings/notifications", label: t("nav.settings") },
+      ]
+    : [
+        { href: "/dashboard/requests", label: t("nav.requests") },
+        { href: "/inbox", label: t("nav.inbox") },
+        { href: "/settings/notifications", label: t("nav.settings") },
+      ];
 
   return (
     <>
@@ -253,23 +266,14 @@ export function GlatkoHeader({ userId }: GlatkoHeaderProps) {
               ))}
 
               {userId && (
-                <>
-                  <Link
-                    href="/pro/dashboard"
-                    onClick={() => setMobileOpen(false)}
-                    className="border-b border-gray-100 py-3 text-lg font-medium text-teal-600 dark:border-white/5 dark:text-teal-400"
-                  >
-                    {t("nav.proDashboard")}
-                  </Link>
-                  <Link
-                    href="/settings/notifications"
-                    onClick={() => setMobileOpen(false)}
-                    className="flex items-center gap-2 border-b border-gray-100 py-3 text-lg font-medium text-gray-900 dark:border-white/5 dark:text-white"
-                  >
-                    <Settings className="h-5 w-5" />
-                    {t("nav.settings")}
-                  </Link>
-                </>
+                <Link
+                  href="/settings/notifications"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2 border-b border-gray-100 py-3 text-lg font-medium text-gray-900 dark:border-white/5 dark:text-white"
+                >
+                  <Settings className="h-5 w-5" />
+                  {t("nav.settings")}
+                </Link>
               )}
 
               <div className="mt-6 flex flex-col gap-3">

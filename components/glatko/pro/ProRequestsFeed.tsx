@@ -82,8 +82,8 @@ export function ProRequestsFeed({ requests, locale }: Props) {
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
       <div className="mb-8">
-        <h1 className="font-serif text-2xl text-white md:text-3xl">{t("proRequests.title")}</h1>
-        <p className="mt-2 text-sm text-white/50">{t("proRequests.subtitle")}</p>
+        <h1 className="font-serif text-2xl text-gray-900 dark:text-white md:text-3xl">{t("proRequests.title")}</h1>
+        <p className="mt-2 text-sm text-gray-500 dark:text-white/50">{t("proRequests.subtitle")}</p>
       </div>
 
       {/* Filters */}
@@ -96,8 +96,8 @@ export function ProRequestsFeed({ requests, locale }: Props) {
               className={cn(
                 "rounded-full border px-4 py-2 text-xs font-medium transition-all",
                 filter === f.key
-                  ? "border-teal-500 bg-teal-500/10 text-teal-400"
-                  : "border-white/[0.1] text-white/40 hover:bg-white/[0.04] hover:text-white/60"
+                  ? "border-teal-500 bg-teal-500/10 text-teal-600 dark:text-teal-400"
+                  : "border-gray-200 text-gray-500 hover:bg-gray-50 hover:text-gray-700 dark:border-white/[0.1] dark:text-white/40 dark:hover:bg-white/[0.04] dark:hover:text-white/60"
               )}
             >
               {f.label}
@@ -107,7 +107,7 @@ export function ProRequestsFeed({ requests, locale }: Props) {
         <select
           value={sort}
           onChange={(e) => setSort(e.target.value)}
-          className="ml-auto rounded-xl border border-white/[0.1] bg-white/[0.05] px-3 py-2 text-xs text-white/60 focus:border-teal-500/50 focus:outline-none"
+          className="ml-auto rounded-xl border border-gray-200 bg-gray-50 px-3 py-2 text-xs text-gray-600 focus:border-teal-500/50 focus:outline-none dark:border-white/[0.1] dark:bg-white/[0.05] dark:text-white/60"
         >
           {sorts.map((s) => (
             <option key={s.key} value={s.key}>{s.label}</option>
@@ -118,9 +118,9 @@ export function ProRequestsFeed({ requests, locale }: Props) {
       {/* Cards */}
       {filtered.length === 0 ? (
         <div className="flex min-h-[40vh] flex-col items-center justify-center text-center">
-          <Search className="mb-4 h-12 w-12 text-white/10" />
-          <h3 className="font-serif text-xl text-white">{t("proRequests.empty")}</h3>
-          <p className="mt-2 max-w-md text-sm text-white/40">{t("proRequests.emptyDesc")}</p>
+          <Search className="mb-4 h-12 w-12 text-teal-500/30" />
+          <h3 className="font-serif text-xl text-gray-900 dark:text-white">{t("proRequests.empty")}</h3>
+          <p className="mt-2 max-w-md text-sm text-gray-500 dark:text-white/40">{t("proRequests.emptyDesc")}</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -132,17 +132,17 @@ export function ProRequestsFeed({ requests, locale }: Props) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: i * 0.05 }}
-                className="group rounded-2xl border border-white/[0.08] bg-white/[0.03] p-5 backdrop-blur-sm transition-all duration-300 hover:border-teal-500/20 hover:-translate-y-0.5"
+                className="group rounded-2xl border border-gray-200/50 bg-white/70 p-5 backdrop-blur-sm transition-all duration-300 hover:border-teal-500/20 hover:-translate-y-0.5 dark:border-white/[0.08] dark:bg-white/[0.03]"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0 flex-1">
                     <div className="mb-2 flex items-center gap-2">
-                      <Briefcase className="h-4 w-4 shrink-0 text-teal-400" />
-                      <span className="text-xs text-white/40">{catName}</span>
+                      <Briefcase className="h-4 w-4 shrink-0 text-teal-500 dark:text-teal-400" />
+                      <span className="text-xs text-gray-400 dark:text-white/40">{catName}</span>
                     </div>
-                    <h3 className="text-lg font-medium text-white">{req.title}</h3>
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-white">{req.title}</h3>
                     {req.description && (
-                      <p className="mt-1 line-clamp-2 text-sm text-white/50">{req.description}</p>
+                      <p className="mt-1 line-clamp-2 text-sm text-gray-500 dark:text-white/50">{req.description}</p>
                     )}
                   </div>
                   <span className={cn("shrink-0 rounded-full border px-3 py-1 text-xs font-medium", URGENCY_STYLE[req.urgency] || URGENCY_STYLE.flexible)}>
@@ -150,7 +150,7 @@ export function ProRequestsFeed({ requests, locale }: Props) {
                   </span>
                 </div>
 
-                <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-white/40">
+                <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-gray-400 dark:text-white/40">
                   {req.municipality && (
                     <span className="flex items-center gap-1"><MapPin className="h-3 w-3" />{req.municipality}</span>
                   )}
@@ -168,15 +168,15 @@ export function ProRequestsFeed({ requests, locale }: Props) {
 
                 <div className="mt-4 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className="h-1.5 w-20 overflow-hidden rounded-full bg-white/[0.06]">
+                    <div className="h-1.5 w-20 overflow-hidden rounded-full bg-gray-200 dark:bg-white/[0.06]">
                       <div className="h-full rounded-full bg-teal-500/60" style={{ width: `${(req.bid_count / req.max_bids) * 100}%` }} />
                     </div>
-                    <span className="text-xs text-white/30">{req.bid_count}/{req.max_bids} {t("proRequests.card.bidsReceived")}</span>
+                    <span className="text-xs text-gray-400 dark:text-white/30">{req.bid_count}/{req.max_bids} {t("proRequests.card.bidsReceived")}</span>
                   </div>
                   <div className="flex gap-2">
                     <Link
                       href={`/${locale}/pro/dashboard/requests/${req.id}`}
-                      className="rounded-xl border border-white/[0.1] bg-white/[0.05] px-4 py-2 text-xs font-medium text-white/60 transition-all hover:bg-white/[0.08] hover:text-white"
+                      className="rounded-xl border border-gray-200 px-4 py-2 text-xs font-medium text-gray-600 transition-all hover:border-teal-500/30 hover:text-teal-600 dark:border-white/[0.1] dark:text-white/60 dark:hover:bg-white/[0.08] dark:hover:text-white"
                     >
                       {t("proRequests.card.viewDetail")}
                     </Link>

@@ -134,22 +134,22 @@ export default function AvailabilityPage() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <h1 className="mb-8 font-serif text-2xl text-white md:text-3xl">
+      <h1 className="mb-8 font-serif text-2xl text-gray-900 dark:text-white md:text-3xl">
         {t("availability.title")}
       </h1>
 
-      <div className="mb-8 rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 backdrop-blur-sm">
-        <h2 className="mb-4 flex items-center gap-2 font-serif text-lg text-white">
-          <Clock className="h-5 w-5 text-teal-400" />
+      <div className="mb-8 rounded-2xl border border-gray-200/50 bg-white/70 dark:border-white/[0.08] dark:bg-white/[0.03] p-6 backdrop-blur-sm">
+        <h2 className="mb-4 flex items-center gap-2 font-serif text-lg text-gray-900 dark:text-white">
+          <Clock className="h-5 w-5 text-teal-500 dark:text-teal-400" />
           {t("availability.weeklySchedule")}
         </h2>
         <div className="space-y-3">
           {weekly.map((slot) => (
             <div
               key={slot.day_of_week}
-              className="flex flex-col gap-3 rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 sm:flex-row sm:items-center"
+              className="flex flex-col gap-3 rounded-xl border border-gray-100 bg-gray-50/50 dark:border-white/[0.06] dark:bg-white/[0.02] p-4 sm:flex-row sm:items-center"
             >
-              <span className="w-24 text-sm font-medium text-white">
+              <span className="w-24 text-sm font-medium text-gray-900 dark:text-white">
                 {dayLabels[slot.day_of_week]}
               </span>
               <button
@@ -179,16 +179,16 @@ export default function AvailabilityPage() {
                     onChange={(e) =>
                       updateSlot(slot.day_of_week, "start_time", e.target.value)
                     }
-                    className="rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-1.5 text-xs text-white focus:border-teal-500/50 focus:outline-none focus:ring-1 focus:ring-teal-500/20"
+                    className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs text-gray-900 focus:border-teal-500/50 focus:outline-none focus:ring-1 focus:ring-teal-500/20 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white"
                   />
-                  <span className="text-xs text-white/30">—</span>
+                  <span className="text-xs text-gray-400 dark:text-white/30">—</span>
                   <input
                     type="time"
                     value={slot.end_time}
                     onChange={(e) =>
                       updateSlot(slot.day_of_week, "end_time", e.target.value)
                     }
-                    className="rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-1.5 text-xs text-white focus:border-teal-500/50 focus:outline-none focus:ring-1 focus:ring-teal-500/20"
+                    className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-1.5 text-xs text-gray-900 focus:border-teal-500/50 focus:outline-none focus:ring-1 focus:ring-teal-500/20 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white"
                   />
                 </div>
               )}
@@ -209,14 +209,14 @@ export default function AvailabilityPage() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 backdrop-blur-sm">
-        <h2 className="mb-4 flex items-center gap-2 font-serif text-lg text-white">
-          <CalendarDays className="h-5 w-5 text-teal-400" />
+      <div className="rounded-2xl border border-gray-200/50 bg-white/70 dark:border-white/[0.08] dark:bg-white/[0.03] p-6 backdrop-blur-sm">
+        <h2 className="mb-4 flex items-center gap-2 font-serif text-lg text-gray-900 dark:text-white">
+          <CalendarDays className="h-5 w-5 text-teal-500 dark:text-teal-400" />
           {t("availability.exceptions")}
         </h2>
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end">
           <div>
-            <label className="mb-1 block text-xs text-white/40">
+            <label className="mb-1 block text-xs text-gray-500 dark:text-white/40">
               {t("availability.exceptions")}
             </label>
             <input
@@ -224,11 +224,11 @@ export default function AvailabilityPage() {
               value={excDate}
               onChange={(e) => setExcDate(e.target.value)}
               min={new Date().toISOString().split("T")[0]}
-              className="rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-2 text-sm text-white focus:border-teal-500/50 focus:outline-none"
+              className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900 focus:border-teal-500/50 focus:outline-none dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white"
             />
           </div>
           <div>
-            <label className="mb-1 block text-xs text-white/40">
+            <label className="mb-1 block text-xs text-gray-500 dark:text-white/40">
               {t("availability.exceptionNote")}
             </label>
             <input
@@ -236,10 +236,10 @@ export default function AvailabilityPage() {
               value={excNote}
               onChange={(e) => setExcNote(e.target.value)}
               placeholder={t("availability.exceptionNote")}
-              className="rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-2 text-sm text-white placeholder:text-white/20 focus:border-teal-500/50 focus:outline-none"
+              className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-500/50 focus:outline-none dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white dark:placeholder:text-white/20"
             />
           </div>
-          <label className="flex items-center gap-2 text-xs text-white/50">
+          <label className="flex items-center gap-2 text-xs text-gray-500 dark:text-white/50">
             <input
               type="checkbox"
               checked={excAvailable}
@@ -262,9 +262,9 @@ export default function AvailabilityPage() {
             {exceptions.map((exc) => (
               <div
                 key={exc.id || exc.date}
-                className="flex items-center gap-3 rounded-lg border border-white/[0.04] bg-white/[0.02] px-4 py-2"
+                className="flex items-center gap-3 rounded-lg border border-gray-100 bg-gray-50/50 dark:border-white/[0.04] dark:bg-white/[0.02] px-4 py-2"
               >
-                <span className="text-sm text-white">{exc.date}</span>
+                <span className="text-sm text-gray-900 dark:text-white">{exc.date}</span>
                 <span
                   className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${
                     exc.is_available
@@ -277,7 +277,7 @@ export default function AvailabilityPage() {
                     : t("availability.unavailable")}
                 </span>
                 {exc.note && (
-                  <span className="text-xs text-white/30">{exc.note}</span>
+                  <span className="text-xs text-gray-400 dark:text-white/30">{exc.note}</span>
                 )}
               </div>
             ))}

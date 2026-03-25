@@ -118,14 +118,14 @@ export default function ProfileEditPage() {
       transition={{ duration: 0.5 }}
     >
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="font-serif text-2xl text-white md:text-3xl">
+        <h1 className="font-serif text-2xl text-gray-900 dark:text-white md:text-3xl">
           {t("proProfile.title")}
         </h1>
         {completeness && (
           <div className="w-48">
             <div className="mb-1 flex items-center justify-between text-xs">
-              <span className="text-white/40">{t("proAnalytics.profileCompleteness")}</span>
-              <span className="text-teal-400">{completeness.score}%</span>
+              <span className="text-gray-500 dark:text-white/40">{t("proAnalytics.profileCompleteness")}</span>
+              <span className="text-teal-600 dark:text-teal-400">{completeness.score}%</span>
             </div>
             <ProgressBar value={completeness.score} color="teal" />
           </div>
@@ -141,8 +141,8 @@ export default function ProfileEditPage() {
               onClick={() => setTab(tb.key)}
               className={`flex items-center gap-2 whitespace-nowrap rounded-xl px-4 py-2 text-xs font-medium transition-all ${
                 tab === tb.key
-                  ? "bg-teal-500/10 text-teal-400 border border-teal-500/30"
-                  : "border border-white/[0.06] text-white/40 hover:text-white/60"
+                  ? "bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/30"
+                  : "border border-gray-200 text-gray-500 hover:text-gray-700 dark:border-white/[0.06] dark:text-white/40 dark:hover:text-white/60"
               }`}
             >
               <Icon className="h-4 w-4" />
@@ -152,55 +152,55 @@ export default function ProfileEditPage() {
         })}
       </div>
 
-      <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 backdrop-blur-sm">
+      <div className="rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
         {tab === "personal" && (
           <div className="space-y-4">
             <div>
-              <label className="mb-1 block text-xs text-white/40">Business Name</label>
+              <label className="mb-1 block text-xs text-gray-500 dark:text-white/40">Business Name</label>
               <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-2 text-sm text-white focus:border-teal-500/50 focus:outline-none"
+                className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900 focus:border-teal-500/50 focus:outline-none dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white"
               />
             </div>
             <div>
-              <label className="mb-1 block text-xs text-white/40">Bio</label>
+              <label className="mb-1 block text-xs text-gray-500 dark:text-white/40">Bio</label>
               <textarea
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 rows={4}
-                className="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-2 text-sm text-white focus:border-teal-500/50 focus:outline-none"
+                className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900 focus:border-teal-500/50 focus:outline-none dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white"
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="mb-1 block text-xs text-white/40">{t("proAnalytics.addPhone")}</label>
+                <label className="mb-1 block text-xs text-gray-500 dark:text-white/40">{t("proAnalytics.addPhone")}</label>
                 <input
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-2 text-sm text-white focus:border-teal-500/50 focus:outline-none"
+                  className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900 focus:border-teal-500/50 focus:outline-none dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white"
                 />
               </div>
               <div>
-                <label className="mb-1 block text-xs text-white/40">{t("proAnalytics.addCity")}</label>
+                <label className="mb-1 block text-xs text-gray-500 dark:text-white/40">{t("proAnalytics.addCity")}</label>
                 <input
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
-                  className="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-2 text-sm text-white focus:border-teal-500/50 focus:outline-none"
+                  className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900 focus:border-teal-500/50 focus:outline-none dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white"
                 />
               </div>
             </div>
             <div>
-              <label className="mb-1 block text-xs text-white/40">{t("proAnalytics.addExperience")}</label>
+              <label className="mb-1 block text-xs text-gray-500 dark:text-white/40">{t("proAnalytics.addExperience")}</label>
               <input
                 type="number"
                 value={exp}
                 onChange={(e) => setExp(e.target.value)}
-                className="w-32 rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-2 text-sm text-white focus:border-teal-500/50 focus:outline-none"
+                className="w-32 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900 focus:border-teal-500/50 focus:outline-none dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white"
               />
             </div>
             <div>
-              <label className="mb-2 block text-xs text-white/40">{t("proAnalytics.addLanguages")}</label>
+              <label className="mb-2 block text-xs text-gray-500 dark:text-white/40">{t("proAnalytics.addLanguages")}</label>
               <div className="flex flex-wrap gap-2">
                 {LANGUAGES.map((l) => (
                   <button
@@ -215,7 +215,7 @@ export default function ProfileEditPage() {
                     className={`rounded-full border px-3 py-1 text-xs font-medium transition-all ${
                       langs.includes(l)
                         ? "border-teal-500/50 bg-teal-500/10 text-teal-400"
-                        : "border-white/[0.08] text-white/40 hover:text-white/60"
+                        : "border-gray-200 text-gray-400 hover:text-gray-600 dark:border-white/[0.08] dark:text-white/40 dark:hover:text-white/60"
                     }`}
                   >
                     {l.toUpperCase()}
@@ -228,24 +228,24 @@ export default function ProfileEditPage() {
 
         {tab === "pricing" && (
           <div className="space-y-4">
-            <p className="text-sm text-white/50">{t("proProfile.pricing")}</p>
+            <p className="text-sm text-gray-500 dark:text-white/50">{t("proProfile.pricing")}</p>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="mb-1 block text-xs text-white/40">Min (€/hr)</label>
+                <label className="mb-1 block text-xs text-gray-500 dark:text-white/40">Min (€/hr)</label>
                 <input
                   type="number"
                   value={rateMin}
                   onChange={(e) => setRateMin(e.target.value)}
-                  className="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-2 text-sm text-white focus:border-teal-500/50 focus:outline-none"
+                  className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900 focus:border-teal-500/50 focus:outline-none dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white"
                 />
               </div>
               <div>
-                <label className="mb-1 block text-xs text-white/40">Max (€/hr)</label>
+                <label className="mb-1 block text-xs text-gray-500 dark:text-white/40">Max (€/hr)</label>
                 <input
                   type="number"
                   value={rateMax}
                   onChange={(e) => setRateMax(e.target.value)}
-                  className="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-2 text-sm text-white focus:border-teal-500/50 focus:outline-none"
+                  className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900 focus:border-teal-500/50 focus:outline-none dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white"
                 />
               </div>
             </div>
@@ -254,9 +254,9 @@ export default function ProfileEditPage() {
 
         {tab === "portfolio" && (
           <div className="text-center py-8">
-            <Camera className="mx-auto mb-3 h-10 w-10 text-white/20" />
-            <p className="text-sm text-white/50">{t("proProfile.portfolio")}</p>
-            <p className="mt-1 text-xs text-white/30">
+            <Camera className="mx-auto mb-3 h-10 w-10 text-teal-500/30" />
+            <p className="text-sm text-gray-500 dark:text-white/50">{t("proProfile.portfolio")}</p>
+            <p className="mt-1 text-xs text-gray-400 dark:text-white/30">
               {profile?.portfolio_images?.length || 0} photos
             </p>
           </div>
@@ -264,8 +264,8 @@ export default function ProfileEditPage() {
 
         {tab === "services" && (
           <div className="text-center py-8">
-            <Layers className="mx-auto mb-3 h-10 w-10 text-white/20" />
-            <p className="text-sm text-white/50">{t("proProfile.serviceAreas")}</p>
+            <Layers className="mx-auto mb-3 h-10 w-10 text-teal-500/30" />
+            <p className="text-sm text-gray-500 dark:text-white/50">{t("proProfile.serviceAreas")}</p>
           </div>
         )}
 

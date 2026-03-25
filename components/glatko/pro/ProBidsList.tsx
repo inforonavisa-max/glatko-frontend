@@ -95,7 +95,7 @@ export function ProBidsList({ bids, locale }: Props) {
   return (
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
       <div className="mb-8">
-        <h1 className="font-serif text-2xl text-white md:text-3xl">{t("bids.title")}</h1>
+        <h1 className="font-serif text-2xl text-gray-900 dark:text-white md:text-3xl">{t("bids.title")}</h1>
       </div>
 
       <div className="mb-6 flex flex-wrap gap-2">
@@ -106,8 +106,8 @@ export function ProBidsList({ bids, locale }: Props) {
             className={cn(
               "rounded-full border px-4 py-2 text-xs font-medium transition-all",
               filter === f.key
-                ? "border-teal-500 bg-teal-500/10 text-teal-400"
-                : "border-white/[0.1] text-white/40 hover:bg-white/[0.04] hover:text-white/60"
+                ? "border-teal-500 bg-teal-500/10 text-teal-600 dark:text-teal-400"
+                : "border-gray-200 text-gray-500 hover:bg-gray-50 hover:text-gray-700 dark:border-white/[0.1] dark:text-white/40 dark:hover:bg-white/[0.04] dark:hover:text-white/60"
             )}
           >
             {f.label}
@@ -117,9 +117,9 @@ export function ProBidsList({ bids, locale }: Props) {
 
       {filtered.length === 0 ? (
         <div className="flex min-h-[40vh] flex-col items-center justify-center text-center">
-          <Gavel className="mb-4 h-12 w-12 text-white/10" />
-          <h3 className="font-serif text-xl text-white">{t("bids.empty")}</h3>
-          <p className="mt-2 max-w-md text-sm text-white/40">{t("bids.emptyDesc")}</p>
+          <Gavel className="mb-4 h-12 w-12 text-teal-500/30" />
+          <h3 className="font-serif text-xl text-gray-900 dark:text-white">{t("bids.empty")}</h3>
+          <p className="mt-2 max-w-md text-sm text-gray-500 dark:text-white/40">{t("bids.emptyDesc")}</p>
           <Link href={`/${locale}/pro/dashboard/requests`} className="mt-6 rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-6 py-3 text-sm font-medium text-white shadow-lg shadow-teal-500/25">
             {t("proRequests.title")}
           </Link>
@@ -136,18 +136,18 @@ export function ProBidsList({ bids, locale }: Props) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: i * 0.05 }}
                 className={cn(
-                  "rounded-2xl border border-white/[0.08] bg-white/[0.03] p-5 backdrop-blur-sm transition-all",
+                  "rounded-2xl border border-gray-200/50 bg-white/70 p-5 backdrop-blur-sm transition-all dark:border-white/[0.08] dark:bg-white/[0.03]",
                   bid.status === "rejected" || bid.status === "withdrawn" ? "opacity-60" : ""
                 )}
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0 flex-1">
                     {req && (
-                      <Link href={`/${locale}/pro/dashboard/requests/${req.id}`} className="text-lg font-medium text-white hover:text-teal-400 transition-colors">
+                      <Link href={`/${locale}/pro/dashboard/requests/${req.id}`} className="text-lg font-medium text-gray-900 hover:text-teal-600 transition-colors dark:text-white dark:hover:text-teal-400">
                         {req.title}
                       </Link>
                     )}
-                    <p className="mt-1 text-xs text-white/40">{catName}</p>
+                    <p className="mt-1 text-xs text-gray-400 dark:text-white/40">{catName}</p>
                   </div>
                   <span className={cn("shrink-0 rounded-full border px-3 py-1 text-xs font-medium", BID_STATUS_STYLE[bid.status] || BID_STATUS_STYLE.pending)}>
                     {t(`bids.${bid.status}`)}
@@ -155,22 +155,22 @@ export function ProBidsList({ bids, locale }: Props) {
                 </div>
 
                 <div className="mt-4 flex flex-wrap items-center gap-4">
-                  <span className="text-2xl font-bold text-teal-400">€{bid.price}</span>
-                  <span className="rounded-full border border-white/[0.1] px-2 py-0.5 text-xs text-white/40">
+                  <span className="text-2xl font-bold text-teal-500">€{bid.price}</span>
+                  <span className="rounded-full border border-gray-200 px-2 py-0.5 text-xs text-gray-400 dark:border-white/[0.1] dark:text-white/40">
                     {t(`bidForm.${bid.price_type}`)}
                   </span>
                   {bid.estimated_duration_hours && (
-                    <span className="text-xs text-white/40">~{bid.estimated_duration_hours} {t("bidComparison.hours")}</span>
+                    <span className="text-xs text-gray-400 dark:text-white/40">~{bid.estimated_duration_hours} {t("bidComparison.hours")}</span>
                   )}
                   {bid.available_date && (
-                    <span className="flex items-center gap-1 text-xs text-white/40">
+                    <span className="flex items-center gap-1 text-xs text-gray-400 dark:text-white/40">
                       <Calendar className="h-3 w-3" />{bid.available_date}
                     </span>
                   )}
                 </div>
 
                 {req && (
-                  <div className="mt-3 flex items-center gap-3 text-xs text-white/30">
+                  <div className="mt-3 flex items-center gap-3 text-xs text-gray-400 dark:text-white/30">
                     {req.municipality && <span className="flex items-center gap-1"><MapPin className="h-3 w-3" />{req.municipality}</span>}
                     {(req.budget_min || req.budget_max) && <span className="flex items-center gap-1"><DollarSign className="h-3 w-3" />€{req.budget_min ?? "?"}-€{req.budget_max ?? "?"}</span>}
                   </div>

@@ -62,8 +62,8 @@ export function ProDashboardShell({ children, profile, locale, translations }: P
         className={cn(
           "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200",
           active
-            ? "bg-teal-500/10 text-teal-400 border-l-2 border-teal-500"
-            : "text-white/50 hover:bg-white/[0.04] hover:text-white/80"
+            ? "bg-teal-500/10 text-teal-600 border-l-2 border-teal-500 dark:text-teal-400"
+            : "text-gray-500 hover:bg-gray-100 hover:text-gray-900 dark:text-white/50 dark:hover:bg-white/[0.04] dark:hover:text-white/80"
         )}
       >
         <Icon className="h-5 w-5" />
@@ -83,25 +83,25 @@ export function ProDashboardShell({ children, profile, locale, translations }: P
       </div>
 
       {/* Desktop sidebar */}
-      <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 border-r border-white/[0.06] bg-[#080808]/80 backdrop-blur-xl md:block">
+      <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 border-r border-gray-200/50 bg-white/80 backdrop-blur-xl dark:border-white/[0.06] dark:bg-[#080808]/80 md:block">
         <div className="flex h-full flex-col">
-          <div className="border-b border-white/[0.06] p-6">
+          <div className="border-b border-gray-200/50 p-6 dark:border-white/[0.06]">
             <Link href={`/${locale}`} className="inline-flex items-center gap-1">
-              <span className="text-xl font-bold tracking-tight text-white">Glatko</span>
+              <span className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">Glatko</span>
               <span className="mt-1 h-1.5 w-1.5 rounded-full bg-teal-500" />
             </Link>
           </div>
 
-          <div className="border-b border-white/[0.06] p-4">
+          <div className="border-b border-gray-200/50 p-4 dark:border-white/[0.06]">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-500/10 text-sm font-bold text-teal-400">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-500/10 text-sm font-bold text-teal-600 dark:text-teal-400">
                 {displayName.charAt(0).toUpperCase()}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-white">{displayName}</p>
+                <p className="truncate text-sm font-medium text-gray-900 dark:text-white">{displayName}</p>
                 <div className="flex items-center gap-1">
-                  {profile.is_verified && <CheckCircle className="h-3 w-3 text-teal-400" />}
-                  <span className="text-xs text-white/40">
+                  {profile.is_verified && <CheckCircle className="h-3 w-3 text-teal-500 dark:text-teal-400" />}
+                  <span className="text-xs text-gray-400 dark:text-white/40">
                     {profile.is_verified ? "Verified" : profile.verification_status}
                   </span>
                 </div>
@@ -114,12 +114,12 @@ export function ProDashboardShell({ children, profile, locale, translations }: P
       </aside>
 
       {/* Mobile top bar */}
-      <div className="fixed left-0 right-0 top-0 z-40 flex h-16 items-center justify-between border-b border-white/[0.06] bg-[#080808]/80 px-4 backdrop-blur-xl md:hidden">
+      <div className="fixed left-0 right-0 top-0 z-40 flex h-16 items-center justify-between border-b border-gray-200/50 bg-white/80 px-4 backdrop-blur-xl dark:border-white/[0.06] dark:bg-[#080808]/80 md:hidden">
         <Link href={`/${locale}`} className="inline-flex items-center gap-1">
-          <span className="text-lg font-bold text-white">Glatko</span>
+          <span className="text-lg font-bold text-gray-900 dark:text-white">Glatko</span>
           <span className="mt-0.5 h-1 w-1 rounded-full bg-teal-500" />
         </Link>
-        <button onClick={() => setMobileOpen(true)} className="p-2 text-white/60" aria-label="Menu">
+        <button onClick={() => setMobileOpen(true)} className="p-2 text-gray-600 dark:text-white/60" aria-label="Menu">
           <Menu className="h-5 w-5" />
         </button>
       </div>
@@ -140,22 +140,22 @@ export function ProDashboardShell({ children, profile, locale, translations }: P
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="fixed left-0 top-0 z-50 h-screen w-72 border-r border-white/[0.06] bg-[#080808] md:hidden"
+              className="fixed left-0 top-0 z-50 h-screen w-72 border-r border-gray-200/50 bg-white dark:border-white/[0.06] dark:bg-[#080808] md:hidden"
             >
-              <div className="flex h-16 items-center justify-between border-b border-white/[0.06] px-4">
-                <span className="text-lg font-bold text-white">Glatko<span className="text-teal-500">.</span></span>
-                <button onClick={() => setMobileOpen(false)} className="p-2 text-white/60" aria-label="Close">
+              <div className="flex h-16 items-center justify-between border-b border-gray-200/50 px-4 dark:border-white/[0.06]">
+                <span className="text-lg font-bold text-gray-900 dark:text-white">Glatko<span className="text-teal-500">.</span></span>
+                <button onClick={() => setMobileOpen(false)} className="p-2 text-gray-500 dark:text-white/60" aria-label="Close">
                   <X className="h-5 w-5" />
                 </button>
               </div>
               <div className="p-4">
                 <div className="mb-4 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-500/10 text-sm font-bold text-teal-400">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-500/10 text-sm font-bold text-teal-600 dark:text-teal-400">
                     {displayName.charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-white">{displayName}</p>
-                    <p className="text-xs text-white/40">{profile.verification_status}</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">{displayName}</p>
+                    <p className="text-xs text-gray-400 dark:text-white/40">{profile.verification_status}</p>
                   </div>
                 </div>
                 <nav className="space-y-1">{navContent}</nav>

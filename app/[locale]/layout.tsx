@@ -33,6 +33,16 @@ export default async function LocaleLayout({ children, params }: Props) {
   const { data: { user } } = await supabase.auth.getUser();
   const userId = user?.id ?? null;
 
+  let isPro = false;
+  if (userId) {
+    const { data: proProfile } = await supabase
+      .from("glatko_professional_profiles")
+      .select("id, verification_status")
+      .eq("id", userId)
+      .single();
+    isPro = !!proProfile && proProfile.verification_status === "approved";
+  }
+
   return (
     <NextIntlClientProvider messages={messages}>
       <NuqsAdapter>
@@ -44,7 +54,7 @@ export default async function LocaleLayout({ children, params }: Props) {
           >
             Skip to content
           </a>
-          <GlatkoHeader userId={userId} />
+          <GlatkoHeader userId={userId} isPro={isPro} />
           <main id="main-content" className="flex-1">{children}</main>
           <GlatkoFooter />
           <CookieConsent />

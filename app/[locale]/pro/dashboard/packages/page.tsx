@@ -157,7 +157,7 @@ export default function PackagesPage() {
       transition={{ duration: 0.5 }}
     >
       <div className="mb-8 flex items-center justify-between">
-        <h1 className="font-serif text-2xl text-white md:text-3xl">
+        <h1 className="font-serif text-2xl text-gray-900 dark:text-white md:text-3xl">
           {t("packages.title")}
         </h1>
         <button
@@ -170,10 +170,10 @@ export default function PackagesPage() {
       </div>
 
       {packages.length === 0 && !showForm && (
-        <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-12 text-center backdrop-blur-sm">
-          <Package className="mx-auto mb-4 h-12 w-12 text-white/20" />
-          <p className="text-sm font-medium text-white">{t("packages.empty")}</p>
-          <p className="mt-1 text-xs text-white/40">{t("packages.emptyDesc")}</p>
+        <div className="rounded-2xl border border-gray-200/50 bg-white/70 p-12 text-center backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
+          <Package className="mx-auto mb-4 h-12 w-12 text-teal-500/30" />
+          <p className="text-sm font-medium text-gray-900 dark:text-white">{t("packages.empty")}</p>
+          <p className="mt-1 text-xs text-gray-500 dark:text-white/40">{t("packages.emptyDesc")}</p>
         </div>
       )}
 
@@ -184,23 +184,23 @@ export default function PackagesPage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.05 }}
-            className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 backdrop-blur-sm transition-colors hover:border-teal-500/20"
+            className="rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-sm transition-colors hover:border-teal-500/20 dark:border-white/[0.08] dark:bg-white/[0.03]"
           >
-            <h3 className="text-lg font-medium text-white">{pkg.name}</h3>
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white">{pkg.name}</h3>
             {pkg.description && (
-              <p className="mt-1 text-xs text-white/40">{pkg.description}</p>
+              <p className="mt-1 text-xs text-gray-500 dark:text-white/40">{pkg.description}</p>
             )}
             <div className="mt-4 flex flex-wrap items-center gap-3">
-              <span className="text-2xl font-bold text-teal-400">
+              <span className="text-2xl font-bold text-teal-500">
                 €{pkg.price}
               </span>
-              <span className="rounded-full bg-white/[0.06] px-2 py-0.5 text-[10px] font-medium text-white/50">
+              <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-medium text-gray-500 dark:bg-white/[0.06] dark:text-white/50">
                 {pkg.price_type === "fixed"
                   ? t("packages.fixed")
                   : t("packages.startingAt")}
               </span>
               {pkg.estimated_duration_hours && (
-                <span className="flex items-center gap-1 text-xs text-white/40">
+                <span className="flex items-center gap-1 text-xs text-gray-400 dark:text-white/40">
                   <Clock className="h-3 w-3" />~{pkg.estimated_duration_hours}h
                 </span>
               )}
@@ -221,14 +221,14 @@ export default function PackagesPage() {
             <div className="mt-4 flex gap-2">
               <button
                 onClick={() => openEdit(pkg)}
-                className="flex items-center gap-1 rounded-lg border border-white/[0.08] px-3 py-1.5 text-xs text-white/60 transition-colors hover:border-teal-500/30 hover:text-teal-400"
+                className="flex items-center gap-1 rounded-lg border border-gray-200 px-3 py-1.5 text-xs text-gray-600 transition-colors hover:border-teal-500/30 hover:text-teal-600 dark:border-white/[0.08] dark:text-white/60 dark:hover:text-teal-400"
               >
                 <Pencil className="h-3 w-3" />
                 {t("packages.edit")}
               </button>
               <button
                 onClick={() => handleDelete(pkg.id)}
-                className="flex items-center gap-1 rounded-lg border border-white/[0.06] px-3 py-1.5 text-xs text-red-400/60 transition-colors hover:border-red-500/30 hover:text-red-400"
+                className="flex items-center gap-1 rounded-lg border border-gray-200 px-3 py-1.5 text-xs text-red-400/60 transition-colors hover:border-red-500/30 hover:text-red-400 dark:border-white/[0.06]"
               >
                 <Trash2 className="h-3 w-3" />
                 {t("packages.delete")}
@@ -253,15 +253,15 @@ export default function PackagesPage() {
               initial={{ scale: 0.95, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 20 }}
-              className="w-full max-w-md rounded-2xl border border-white/[0.1] bg-[#0c0c0c] p-6 shadow-2xl"
+              className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-2xl dark:border-white/[0.1] dark:bg-[#0c0c0c]"
             >
               <div className="mb-4 flex items-center justify-between">
-                <h2 className="font-serif text-lg text-white">
+                <h2 className="font-serif text-lg text-gray-900 dark:text-white">
                   {editId ? t("packages.edit") : t("packages.create")}
                 </h2>
                 <button
                   onClick={() => setShowForm(false)}
-                  className="p-1 text-white/40 hover:text-white"
+                  className="p-1 text-gray-400 hover:text-gray-600 dark:text-white/40 dark:hover:text-white"
                   aria-label={t("common.close")}
                 >
                   <X className="h-5 w-5" />
@@ -269,7 +269,7 @@ export default function PackagesPage() {
               </div>
               <div className="space-y-3">
                 <div>
-                  <label className="mb-1 block text-xs text-white/40">
+                  <label className="mb-1 block text-xs text-gray-500 dark:text-white/40">
                     {t("packages.name")}
                   </label>
                   <input
@@ -277,11 +277,11 @@ export default function PackagesPage() {
                     onChange={(e) =>
                       setForm((p) => ({ ...p, name: e.target.value }))
                     }
-                    className="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-2 text-sm text-white placeholder:text-white/20 focus:border-teal-500/50 focus:outline-none"
+                    className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-500/50 focus:outline-none dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white dark:placeholder:text-white/20"
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-xs text-white/40">
+                  <label className="mb-1 block text-xs text-gray-500 dark:text-white/40">
                     {t("packages.description")}
                   </label>
                   <textarea
@@ -290,12 +290,12 @@ export default function PackagesPage() {
                       setForm((p) => ({ ...p, description: e.target.value }))
                     }
                     rows={2}
-                    className="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-2 text-sm text-white placeholder:text-white/20 focus:border-teal-500/50 focus:outline-none"
+                    className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-500/50 focus:outline-none dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white dark:placeholder:text-white/20"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="mb-1 block text-xs text-white/40">
+                    <label className="mb-1 block text-xs text-gray-500 dark:text-white/40">
                       {t("packages.price")}
                     </label>
                     <input
@@ -304,11 +304,11 @@ export default function PackagesPage() {
                       onChange={(e) =>
                         setForm((p) => ({ ...p, price: e.target.value }))
                       }
-                      className="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-2 text-sm text-white focus:border-teal-500/50 focus:outline-none"
+                      className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900 focus:border-teal-500/50 focus:outline-none dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white"
                     />
                   </div>
                   <div>
-                    <label className="mb-1 block text-xs text-white/40">
+                    <label className="mb-1 block text-xs text-gray-500 dark:text-white/40">
                       {t("packages.priceType")}
                     </label>
                     <div className="flex gap-2">
@@ -321,7 +321,7 @@ export default function PackagesPage() {
                           className={`flex-1 rounded-lg border px-2 py-2 text-[11px] font-medium transition-all ${
                             form.priceType === pt
                               ? "border-teal-500/50 bg-teal-500/10 text-teal-400"
-                              : "border-white/[0.08] text-white/40"
+                              : "border-gray-200 text-gray-400 dark:border-white/[0.08] dark:text-white/40"
                           }`}
                         >
                           {pt === "fixed"
@@ -333,7 +333,7 @@ export default function PackagesPage() {
                   </div>
                 </div>
                 <div>
-                  <label className="mb-1 block text-xs text-white/40">
+                  <label className="mb-1 block text-xs text-gray-500 dark:text-white/40">
                     {t("packages.duration")}
                   </label>
                   <input
@@ -342,11 +342,11 @@ export default function PackagesPage() {
                     onChange={(e) =>
                       setForm((p) => ({ ...p, duration: e.target.value }))
                     }
-                    className="w-full rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-2 text-sm text-white focus:border-teal-500/50 focus:outline-none"
+                    className="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900 focus:border-teal-500/50 focus:outline-none dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white"
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-xs text-white/40">
+                  <label className="mb-1 block text-xs text-gray-500 dark:text-white/40">
                     {t("packages.includes")}
                   </label>
                   <div className="flex gap-2">
@@ -359,7 +359,7 @@ export default function PackagesPage() {
                           addInclude();
                         }
                       }}
-                      className="flex-1 rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-2 text-sm text-white placeholder:text-white/20 focus:border-teal-500/50 focus:outline-none"
+                      className="flex-1 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-500/50 focus:outline-none dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white dark:placeholder:text-white/20"
                     />
                     <button
                       type="button"
@@ -392,7 +392,7 @@ export default function PackagesPage() {
               <div className="mt-6 flex gap-2">
                 <button
                   onClick={() => setShowForm(false)}
-                  className="flex-1 rounded-lg border border-white/[0.08] py-2 text-sm text-white/60"
+                  className="flex-1 rounded-lg border border-gray-200 py-2 text-sm text-gray-600 dark:border-white/[0.08] dark:text-white/60"
                 >
                   {t("common.cancel")}
                 </button>

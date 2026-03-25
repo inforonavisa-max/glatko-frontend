@@ -143,24 +143,24 @@ export function ProDashboardClient(props: Props) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="mb-8 rounded-3xl border border-white/[0.08] bg-white/[0.03] p-6 backdrop-blur-xl md:p-8">
+      <div className="mb-8 rounded-3xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03] md:p-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-teal-500/10 text-xl font-bold text-teal-400">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-teal-500/10 text-xl font-bold text-teal-600 dark:text-teal-400">
               {props.displayName.charAt(0).toUpperCase()}
             </div>
             <div>
-              <h1 className="font-serif text-2xl text-white md:text-3xl">
+              <h1 className="font-serif text-2xl text-gray-900 dark:text-white md:text-3xl">
                 {t("proAnalytics.welcome")}, {props.displayName}
               </h1>
               <div className="mt-1 flex items-center gap-2">
                 {props.isVerified && (
-                  <span className="inline-flex items-center gap-1 text-xs text-teal-400">
+                  <span className="inline-flex items-center gap-1 text-xs text-teal-600 dark:text-teal-400">
                     <CheckCircle className="h-3 w-3" /> Verified
                   </span>
                 )}
                 {props.rating > 0 && (
-                  <span className="text-xs text-white/40">
+                  <span className="text-xs text-gray-400 dark:text-white/40">
                     ★ {props.rating.toFixed(1)}
                   </span>
                 )}
@@ -170,16 +170,16 @@ export function ProDashboardClient(props: Props) {
           {completeness && (
             <div className="w-full max-w-xs">
               <div className="mb-1 flex items-center justify-between text-xs">
-                <span className="text-white/50">
+                <span className="text-gray-500 dark:text-white/50">
                   {t("proAnalytics.profileCompleteness")}
                 </span>
-                <span className="font-medium text-teal-400">
+                <span className="font-medium text-teal-600 dark:text-teal-400">
                   {completeness.score}%
                 </span>
               </div>
               <ProgressBar value={completeness.score} color="teal" className="mt-1" />
               {completeness.score < 100 && completeness.missing.length > 0 && (
-                <p className="mt-1 text-[10px] text-white/30">
+                <p className="mt-1 text-[10px] text-gray-400 dark:text-white/30">
                   {missingLabels[completeness.missing[0]] || completeness.missing[0]}
                 </p>
               )}
@@ -203,10 +203,10 @@ export function ProDashboardClient(props: Props) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.1 + i * 0.05 }}
-              className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 backdrop-blur-sm"
+              className="rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]"
             >
               <Icon className={`mb-3 h-6 w-6 ${kpi.color}`} />
-              <p className="text-3xl font-bold text-white">
+              <p className="text-3xl font-bold text-gray-900 dark:text-white">
                 {kpi.prefix || ""}
                 {kpi.isDecimal ? (
                   props.rating.toFixed(1)
@@ -215,7 +215,7 @@ export function ProDashboardClient(props: Props) {
                 )}
                 {kpi.suffix || ""}
               </p>
-              <p className="mt-1 text-xs text-white/40">{kpi.label}</p>
+              <p className="mt-1 text-xs text-gray-500 dark:text-white/40">{kpi.label}</p>
             </motion.div>
           );
         })}
@@ -226,10 +226,10 @@ export function ProDashboardClient(props: Props) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 backdrop-blur-sm"
+          className="rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]"
         >
-          <h3 className="mb-4 flex items-center gap-2 font-serif text-lg text-white">
-            <TrendingUp className="h-5 w-5 text-teal-400" />
+          <h3 className="mb-4 flex items-center gap-2 font-serif text-lg text-gray-900 dark:text-white">
+            <TrendingUp className="h-5 w-5 text-teal-500 dark:text-teal-400" />
             {t("proAnalytics.earningsTrend")}
           </h3>
           {analytics?.monthlyEarnings && (
@@ -256,10 +256,10 @@ export function ProDashboardClient(props: Props) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.35 }}
-          className="rounded-2xl border border-white/[0.08] bg-white/[0.03] p-6 backdrop-blur-sm"
+          className="rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]"
         >
-          <h3 className="mb-4 flex items-center gap-2 font-serif text-lg text-white">
-            <Star className="h-5 w-5 text-amber-400" />
+          <h3 className="mb-4 flex items-center gap-2 font-serif text-lg text-gray-900 dark:text-white">
+            <Star className="h-5 w-5 text-amber-500 dark:text-amber-400" />
             {t("proAnalytics.ratingTrend")}
           </h3>
           {analytics?.recentReviews && analytics.recentReviews.length > 0 ? (
@@ -277,7 +277,7 @@ export function ProDashboardClient(props: Props) {
               showGridLines={false}
             />
           ) : analytics ? (
-            <div className="flex h-48 items-center justify-center text-sm text-white/30">
+            <div className="flex h-48 items-center justify-center text-sm text-gray-400 dark:text-white/30">
               No reviews yet
             </div>
           ) : (
@@ -289,7 +289,7 @@ export function ProDashboardClient(props: Props) {
       </div>
 
       <div>
-        <h3 className="mb-4 font-serif text-lg text-white">
+        <h3 className="mb-4 font-serif text-lg text-gray-900 dark:text-white">
           {t("proAnalytics.quickActions")}
         </h3>
         <div className="grid gap-3 sm:grid-cols-2">
@@ -299,22 +299,22 @@ export function ProDashboardClient(props: Props) {
               <Link key={action.href} href={action.href}>
                 <motion.div
                   whileHover={{ scale: 1.01 }}
-                  className="group flex items-center justify-between rounded-2xl border border-white/[0.08] bg-white/[0.03] p-5 backdrop-blur-sm transition-colors hover:border-teal-500/30"
+                  className="group flex items-center justify-between rounded-2xl border border-gray-200/50 bg-white/70 p-5 backdrop-blur-sm transition-colors hover:border-teal-500/30 dark:border-white/[0.08] dark:bg-white/[0.03]"
                 >
                   <div className="flex items-center gap-3">
                     <Icon className={`h-5 w-5 ${action.color}`} />
                     <div>
-                      <p className="text-sm font-medium text-white">
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">
                         {action.label}
                       </p>
                       {"count" in action && action.count != null && (
-                        <p className="text-xs text-white/30">
+                        <p className="text-xs text-gray-400 dark:text-white/30">
                           {action.count}
                         </p>
                       )}
                     </div>
                   </div>
-                  <ArrowRight className="h-4 w-4 text-white/20 transition-colors group-hover:text-teal-400" />
+                  <ArrowRight className="h-4 w-4 text-gray-300 transition-colors group-hover:text-teal-500 dark:text-white/20 dark:group-hover:text-teal-400" />
                 </motion.div>
               </Link>
             );
