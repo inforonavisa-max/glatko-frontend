@@ -4,17 +4,8 @@ import { createAdminClient } from '@/supabase/server';
 import { defaultLocale } from '@/i18n/routing';
 
 function resolveBaseUrl(request: NextRequest): string {
-  let base = process.env.NEXT_PUBLIC_APP_URL || process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3001';
-  try {
-    const proto = request.headers.get('x-forwarded-proto') || 'https';
-    const host = request.headers.get('x-forwarded-host') || request.headers.get('host');
-    if (host && base.includes('localhost')) {
-      base = `${proto}://${host}`;
-    }
-  } catch {
-    /* keep canonical */
-  }
-  return base.endsWith('/') ? base.slice(0, -1) : base;
+  const url = new URL(request.url);
+  return url.origin;
 }
 
 export async function GET(request: NextRequest) {
