@@ -6,7 +6,7 @@ import {
   getVerificationDocuments,
 } from "@/lib/supabase/glatko.server";
 import { AdminActions } from "@/components/glatko/admin/AdminActions";
-import { BackgroundGrids } from "@/components/aceternity/background-grids";
+import { ArrowLeft } from "lucide-react";
 import type { VerificationStatus, DocumentStatus } from "@/types/glatko";
 
 type Props = {
@@ -58,16 +58,13 @@ export default async function ProfessionalDetailPage({ params }: Props) {
     profile.profile?.full_name ?? profile.business_name ?? "---";
 
   return (
-    <div className="relative">
-      <div className="pointer-events-none absolute inset-0" style={{ opacity: 0.06 }}>
-        <BackgroundGrids />
-      </div>
-      <div className="relative">
+    <div>
       <Link
         href={`/${locale}/admin/professionals`}
-        className="mb-6 inline-flex items-center gap-1 text-sm text-gray-500 transition-colors hover:text-gray-900 dark:text-white/50 dark:hover:text-white"
+        className="mb-6 inline-flex items-center gap-1.5 text-sm text-gray-500 transition-colors hover:text-gray-900 dark:text-white/50 dark:hover:text-white"
       >
-        &larr; {t("common.back")}
+        <ArrowLeft className="h-4 w-4" />
+        {t("common.back")}
       </Link>
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -75,132 +72,136 @@ export default async function ProfessionalDetailPage({ params }: Props) {
           <h1 className="font-serif text-2xl font-bold text-gray-900 dark:text-white md:text-3xl">
             {displayName}
           </h1>
+          <div className="mt-1 h-0.5 w-12 rounded-full bg-gradient-to-r from-teal-500 to-teal-600" />
           <span
-            className={`mt-2 inline-flex rounded-full border px-3 py-1 text-xs font-medium ${STATUS_STYLES[profile.verification_status]}`}
+            className={`mt-3 inline-flex rounded-full border px-3 py-1 text-xs font-medium ${STATUS_STYLES[profile.verification_status]}`}
           >
             {t(STATUS_KEYS[profile.verification_status])}
           </span>
         </div>
       </div>
 
-      {/* Personal information */}
-      <section className="mt-8 rounded-2xl border border-gray-200/80 bg-white/80 p-6 shadow-sm backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.04] md:p-8">
-        <h2 className="font-serif text-lg font-semibold text-gray-900 dark:text-white">
-          {t("admin.professionals.personalInfo")}
-        </h2>
-        <dl className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <InfoItem label={t("admin.professionals.applicant")} value={displayName} />
-          <InfoItem label={t("pro.wizard.businessName")} value={profile.business_name} />
-          <InfoItem label={t("pro.wizard.phone")} value={profile.phone} />
-          <InfoItem label={t("pro.profile.location")} value={profile.location_city} />
-          <InfoItem
-            label={t("pro.profile.languages")}
-            value={profile.languages.length > 0 ? profile.languages.join(", ") : null}
-          />
-          <InfoItem
-            label={t("pro.wizard.experience")}
-            value={
-              profile.years_experience != null
-                ? `${profile.years_experience} ${t("pro.profile.yearsExp")}`
-                : null
-            }
-          />
-          <InfoItem
-            label={t("pro.profile.hourlyRate")}
-            value={
-              profile.hourly_rate_min != null || profile.hourly_rate_max != null
-                ? `${profile.hourly_rate_min ?? "---"} - ${profile.hourly_rate_max ?? "---"} EUR`
-                : null
-            }
-          />
-        </dl>
+      <div className="mt-8 grid gap-6 md:grid-cols-3">
+        {/* Left: Profile info (2 cols) */}
+        <div className="space-y-6 md:col-span-2">
+          <section className="rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03] md:p-8">
+            <h2 className="font-serif text-lg font-semibold text-gray-900 dark:text-white">
+              {t("admin.professionals.personalInfo")}
+            </h2>
+            <dl className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <InfoItem label={t("admin.professionals.applicant")} value={displayName} />
+              <InfoItem label={t("pro.wizard.businessName")} value={profile.business_name} />
+              <InfoItem label={t("pro.wizard.phone")} value={profile.phone} />
+              <InfoItem label={t("pro.profile.location")} value={profile.location_city} />
+              <InfoItem
+                label={t("pro.profile.languages")}
+                value={profile.languages.length > 0 ? profile.languages.join(", ") : null}
+              />
+              <InfoItem
+                label={t("pro.wizard.experience")}
+                value={
+                  profile.years_experience != null
+                    ? `${profile.years_experience} ${t("pro.profile.yearsExp")}`
+                    : null
+                }
+              />
+              <InfoItem
+                label={t("pro.profile.hourlyRate")}
+                value={
+                  profile.hourly_rate_min != null || profile.hourly_rate_max != null
+                    ? `${profile.hourly_rate_min ?? "---"} - ${profile.hourly_rate_max ?? "---"} EUR`
+                    : null
+                }
+              />
+            </dl>
 
-        {profile.bio && (
-          <div className="mt-6">
-            <dt className="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-white/50">
-              {t("pro.wizard.bio")}
-            </dt>
-            <dd className="mt-1 whitespace-pre-line text-sm text-gray-700 dark:text-white/80">
-              {profile.bio}
-            </dd>
-          </div>
-        )}
-      </section>
+            {profile.bio && (
+              <div className="mt-6">
+                <dt className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/50">
+                  {t("pro.wizard.bio")}
+                </dt>
+                <dd className="mt-1 whitespace-pre-line text-sm text-gray-700 dark:text-white/80">
+                  {profile.bio}
+                </dd>
+              </div>
+            )}
+          </section>
 
-      {/* Services */}
-      {profile.services && profile.services.length > 0 && (
-        <section className="mt-6 rounded-2xl border border-gray-200/80 bg-white/80 p-6 shadow-sm backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.04] md:p-8">
-          <h2 className="font-serif text-lg font-semibold text-gray-900 dark:text-white">
-            {t("admin.professionals.serviceAreas")}
-          </h2>
-          <ul className="mt-4 flex flex-wrap gap-2">
-            {profile.services.map((svc) => (
-              <li
-                key={svc.id}
-                className={`rounded-full border px-3 py-1 text-sm ${
-                  svc.is_primary
-                    ? "border-teal-500 bg-teal-50 text-teal-700 dark:border-teal-400 dark:bg-teal-900/20 dark:text-teal-300"
-                    : "border-gray-200 bg-gray-50 text-gray-700 dark:border-white/10 dark:bg-white/5 dark:text-white/70"
-                }`}
-              >
-                {svc.category?.slug ?? svc.category_id}
-                {svc.is_primary && (
-                  <span className="ml-1 text-xs opacity-60">
-                    ({t("pro.wizard.primaryService")})
-                  </span>
-                )}
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+          {profile.services && profile.services.length > 0 && (
+            <section className="rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03] md:p-8">
+              <h2 className="font-serif text-lg font-semibold text-gray-900 dark:text-white">
+                {t("admin.professionals.serviceAreas")}
+              </h2>
+              <ul className="mt-4 flex flex-wrap gap-2">
+                {profile.services.map((svc) => (
+                  <li
+                    key={svc.id}
+                    className={`rounded-full border px-3 py-1.5 text-sm ${
+                      svc.is_primary
+                        ? "border-teal-500/30 bg-teal-500/10 text-teal-700 dark:text-teal-300"
+                        : "border-gray-200 bg-gray-100/80 text-gray-700 dark:border-white/[0.08] dark:bg-white/[0.06] dark:text-white/70"
+                    }`}
+                  >
+                    {svc.category?.slug ?? svc.category_id}
+                    {svc.is_primary && (
+                      <span className="ml-1 text-xs opacity-60">
+                        ({t("pro.wizard.primaryService")})
+                      </span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+        </div>
 
-      {/* Documents */}
-      <section className="mt-6 rounded-2xl border border-gray-200/80 bg-white/80 p-6 shadow-sm backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.04] md:p-8">
-        <h2 className="font-serif text-lg font-semibold text-gray-900 dark:text-white">
-          {t("admin.professionals.documents")}
-        </h2>
-        {documents.length === 0 ? (
-          <p className="mt-4 text-sm text-gray-500 dark:text-white/50">
-            &mdash;
-          </p>
-        ) : (
-          <ul className="mt-4 divide-y divide-gray-100 dark:divide-white/10">
-            {documents.map((doc) => (
-              <li
-                key={doc.id}
-                className="flex items-center justify-between py-3"
-              >
-                <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">
-                    {doc.document_type.replace(/_/g, " ")}
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-white/50">
-                    {new Date(doc.created_at).toLocaleDateString(locale, {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
-                  </p>
-                </div>
-                <span
-                  className={`inline-flex rounded-full border px-3 py-1 text-xs font-medium capitalize ${DOC_STATUS_STYLES[doc.status]}`}
-                >
-                  {doc.status}
-                </span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+        {/* Right: Documents + Actions (1 col) */}
+        <div className="space-y-6">
+          <section className="rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03]">
+            <h2 className="font-serif text-lg font-semibold text-gray-900 dark:text-white">
+              {t("admin.professionals.documents")}
+            </h2>
+            {documents.length === 0 ? (
+              <p className="mt-4 text-sm text-gray-500 dark:text-white/50">
+                &mdash;
+              </p>
+            ) : (
+              <ul className="mt-4 divide-y divide-gray-100 dark:divide-white/[0.06]">
+                {documents.map((doc) => (
+                  <li
+                    key={doc.id}
+                    className="flex items-center justify-between py-3"
+                  >
+                    <div>
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">
+                        {doc.document_type.replace(/_/g, " ")}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-white/50">
+                        {new Date(doc.created_at).toLocaleDateString(locale, {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        })}
+                      </p>
+                    </div>
+                    <span
+                      className={`inline-flex rounded-full border px-3 py-1 text-xs font-medium capitalize ${DOC_STATUS_STYLES[doc.status]}`}
+                    >
+                      {doc.status}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
 
-      {/* Actions */}
-      <section className="mt-8">
-        <AdminActions
-          professionalId={profile.id}
-          currentStatus={profile.verification_status}
-        />
-      </section>
+          <section>
+            <AdminActions
+              professionalId={profile.id}
+              currentStatus={profile.verification_status}
+            />
+          </section>
+        </div>
       </div>
     </div>
   );
@@ -214,11 +215,11 @@ function InfoItem({
   value: string | null | undefined;
 }) {
   return (
-    <div>
-      <dt className="text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-white/50">
+    <div className="rounded-xl border border-gray-100/80 bg-white/40 p-3 backdrop-blur-sm dark:border-white/[0.06] dark:bg-white/[0.02]">
+      <dt className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/50">
         {label}
       </dt>
-      <dd className="mt-1 text-sm text-gray-900 dark:text-white">
+      <dd className="mt-1 text-sm font-medium text-gray-900 dark:text-white">
         {value ?? "---"}
       </dd>
     </div>

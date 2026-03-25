@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { MapPin, Globe, Star, CheckCircle } from "lucide-react";
-import { SpotlightCard } from "@/components/landing/spotlight-card";
 import { TrustBadge } from "@/components/glatko/trust/TrustBadge";
 import type { Locale } from "@/i18n/routing";
 import type { MultiLangText } from "@/types/glatko";
@@ -70,9 +69,9 @@ export function ProfessionalCard({ pro, locale, index }: ProfessionalCardProps) 
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.05, duration: 0.4 }}
+      transition={{ delay: index * 0.04, duration: 0.4 }}
     >
-      <SpotlightCard className="h-full">
+      <div className="group h-full rounded-2xl border border-gray-200/50 bg-white/70 p-5 backdrop-blur-xl transition-all duration-300 hover:border-teal-500/20 hover:shadow-lg dark:border-white/[0.08] dark:bg-white/[0.03] md:p-6">
         <div className="flex items-start gap-4">
           {pro.profile?.avatar_url ? (
             <Image
@@ -80,16 +79,16 @@ export function ProfessionalCard({ pro, locale, index }: ProfessionalCardProps) 
               alt=""
               width={64}
               height={64}
-              className="h-16 w-16 shrink-0 rounded-full object-cover ring-2 ring-teal-500/20"
+              className="h-16 w-16 shrink-0 rounded-full border-2 border-gray-200/60 object-cover dark:border-white/[0.1]"
             />
           ) : (
-            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-teal-600 text-lg font-semibold text-white ring-2 ring-teal-500/20">
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-2 border-gray-200/60 bg-teal-500/10 text-lg font-semibold text-teal-600 dark:border-white/[0.1] dark:text-teal-400">
               {initialsFromName(displayName)}
             </div>
           )}
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                 {displayName}
               </h3>
               {pro.is_verified && (
@@ -103,14 +102,14 @@ export function ProfessionalCard({ pro, locale, index }: ProfessionalCardProps) 
                     key={i}
                     className={`h-3.5 w-3.5 ${
                       i < fullStars
-                        ? "fill-amber-400 text-amber-400"
-                        : "text-gray-300 dark:text-gray-600"
+                        ? "fill-teal-500 text-teal-500"
+                        : "text-gray-300 dark:text-white/20"
                     }`}
                   />
                 ))}
               </div>
               <span className="text-xs text-gray-500 dark:text-white/50">
-                {pro.avg_rating.toFixed(1)} ({pro.total_reviews} {t("bidComparison.rating")})
+                {pro.avg_rating.toFixed(1)} ({pro.total_reviews})
               </span>
             </div>
             {badges.length > 0 && (
@@ -163,7 +162,7 @@ export function ProfessionalCard({ pro, locale, index }: ProfessionalCardProps) 
         <div className="mt-3 flex items-center gap-3 text-sm">
           {(pro.hourly_rate_min || pro.hourly_rate_max) && (
             <span className="font-semibold text-teal-600 dark:text-teal-400">
-              €{pro.hourly_rate_min || 0}–{pro.hourly_rate_max || 0}{t("search.card.perHour")}
+              &euro;{pro.hourly_rate_min || 0}&ndash;{pro.hourly_rate_max || 0}{t("search.card.perHour")}
             </span>
           )}
           {pro.years_experience != null && pro.years_experience > 0 && (
@@ -173,21 +172,21 @@ export function ProfessionalCard({ pro, locale, index }: ProfessionalCardProps) 
           )}
         </div>
 
-        <div className="mt-5 flex gap-2">
+        <div className="mt-5 flex gap-2 border-t border-gray-100 pt-5 dark:border-white/[0.06]">
           <Link
             href={`/provider/${pro.id}`}
-            className="flex-1 rounded-lg border border-gray-200 py-2 text-center text-xs font-medium text-gray-700 transition-colors hover:border-teal-500/30 hover:text-teal-600 dark:border-white/10 dark:text-white/70 dark:hover:border-teal-500/30 dark:hover:text-teal-400"
+            className="flex-1 rounded-xl border border-gray-200 py-2.5 text-center text-xs font-medium text-gray-700 transition-all hover:border-teal-500/30 hover:text-teal-600 dark:border-white/[0.1] dark:text-white/70 dark:hover:border-teal-500/30 dark:hover:text-teal-400"
           >
             {t("search.card.viewProfile")}
           </Link>
           <Link
             href="/request-service"
-            className="flex-1 rounded-lg bg-gradient-to-r from-teal-500 to-teal-600 py-2 text-center text-xs font-medium text-white shadow-md shadow-teal-500/20 transition-all hover:shadow-teal-500/30"
+            className="flex-1 rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 py-2.5 text-center text-xs font-semibold text-white shadow-md shadow-teal-500/20 transition-all hover:shadow-teal-500/30"
           >
             {t("search.card.requestQuote")}
           </Link>
         </div>
-      </SpotlightCard>
+      </div>
     </motion.div>
   );
 }

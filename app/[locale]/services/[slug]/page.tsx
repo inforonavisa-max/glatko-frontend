@@ -3,8 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { Link } from "@/i18n/navigation";
-import { ArrowRight, Users } from "lucide-react";
-import { SpotlightCard } from "@/components/landing/spotlight-card";
+import { ArrowRight, Users, Star } from "lucide-react";
 import { PageBackground } from "@/components/ui/PageBackground";
 import { getCategoryWithStats, searchProfessionals } from "@/lib/supabase/glatko.server";
 import type { Locale } from "@/i18n/routing";
@@ -68,31 +67,33 @@ export default async function CategoryDetailPage({ params }: Props) {
 
   return (
     <PageBackground opacity={0.1}>
-      <div className="mx-auto max-w-5xl px-4 pb-20 pt-28 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="font-serif text-3xl text-gray-900 dark:text-white sm:text-4xl">
+      {/* Hero */}
+      <div className="bg-gradient-to-b from-teal-600/[0.12] via-teal-500/[0.05] to-transparent py-16 md:py-20">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <h1 className="font-serif text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl">
             {categoryName}
           </h1>
-          <div className="mt-3 h-0.5 w-12 rounded-full bg-gradient-to-r from-teal-500 to-transparent" />
+          <div className="mt-2 h-0.5 w-16 rounded-full bg-gradient-to-r from-teal-500 to-teal-600" />
           {categoryDesc && (
-            <p className="mt-3 text-sm text-gray-500 dark:text-white/50">
+            <p className="mt-4 max-w-2xl text-sm text-gray-600 dark:text-white/50">
               {categoryDesc}
             </p>
           )}
-          <div className="mt-4 flex items-center gap-2">
-            <Users className="h-4 w-4 text-teal-500" />
-            <span className="text-sm text-gray-600 dark:text-white/50">
-              {category.proCount} {t("services.prosInCategory")}
-            </span>
+          <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-teal-500/20 bg-teal-500/5 px-4 py-1.5 text-sm text-teal-700 dark:text-teal-300">
+            <Users className="h-4 w-4" />
+            {category.proCount} {t("services.prosInCategory")}
           </div>
         </div>
+      </div>
 
+      <div className="mx-auto max-w-5xl px-4 pb-20 sm:px-6 lg:px-8">
+        {/* Sub-categories */}
         {category.children.length > 0 && (
-          <div className="mb-10">
-            <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-400 dark:text-white/30">
+          <div className="mb-12">
+            <h2 className="mb-4 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-white/30">
               {t("services.subcategories")}
             </h2>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-3">
               {category.children.map((child: { id: string; slug: string; name: unknown }) => {
                 const childName = (child.name as MultiLangText)?.[locale] ||
                   (child.name as MultiLangText)?.en || child.slug;
@@ -100,7 +101,7 @@ export default async function CategoryDetailPage({ params }: Props) {
                   <Link
                     key={child.id}
                     href={`/providers?category=${child.slug}`}
-                    className="rounded-full border border-gray-200 bg-white px-4 py-2 text-sm text-gray-700 transition-colors hover:border-teal-500/30 hover:bg-teal-50 hover:text-teal-700 dark:border-white/10 dark:bg-white/[0.04] dark:text-white/60 dark:hover:border-teal-500/20 dark:hover:text-teal-400"
+                    className="rounded-full border border-gray-200/50 bg-white/70 px-5 py-2.5 text-sm text-gray-700 backdrop-blur-sm transition-all duration-200 hover:border-teal-500/30 hover:bg-teal-500/5 hover:text-teal-700 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white/60 dark:hover:border-teal-500/20 dark:hover:text-teal-400"
                   >
                     {childName}
                   </Link>
@@ -110,8 +111,12 @@ export default async function CategoryDetailPage({ params }: Props) {
           </div>
         )}
 
+        {/* Pro list */}
         {professionals.length > 0 && (
-          <div className="mb-10">
+          <div className="mb-12">
+            <h2 className="mb-6 font-serif text-xl font-semibold text-gray-900 dark:text-white">
+              {t("services.topPros")}
+            </h2>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {professionals.map((pro) => {
                 const p = pro as {
@@ -129,43 +134,53 @@ export default async function CategoryDetailPage({ params }: Props) {
                 const ini = initials.length >= 2
                   ? (initials[0][0] + initials[1][0]).toUpperCase()
                   : (initials[0] || "?").slice(0, 2).toUpperCase();
+                const fullStars = Math.min(5, Math.round(p.avg_rating));
                 return (
-                  <SpotlightCard key={p.id}>
+                  <Link
+                    key={p.id}
+                    href={`/provider/${p.id}`}
+                    className="group rounded-2xl border border-gray-200/50 bg-white/70 p-5 backdrop-blur-xl transition-all duration-300 hover:border-teal-500/20 hover:shadow-lg dark:border-white/[0.08] dark:bg-white/[0.03]"
+                  >
                     <div className="flex items-center gap-3">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-teal-600 text-sm font-semibold text-white">
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-teal-500/10 text-sm font-semibold text-teal-600 dark:text-teal-400">
                         {ini}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="truncate font-medium text-gray-900 dark:text-white">{displayName}</p>
-                        <p className="text-xs text-gray-500 dark:text-white/40">
-                          ★ {p.avg_rating.toFixed(1)} · {p.total_reviews} {t("bidComparison.rating")}
-                          {p.location_city && ` · ${p.location_city}`}
-                        </p>
+                        <p className="truncate font-semibold text-gray-900 dark:text-white">{displayName}</p>
+                        <div className="mt-0.5 flex items-center gap-1">
+                          {Array.from({ length: 5 }, (_, i) => (
+                            <Star
+                              key={i}
+                              className={`h-3 w-3 ${i < fullStars ? "fill-teal-500 text-teal-500" : "text-gray-300 dark:text-white/20"}`}
+                            />
+                          ))}
+                          <span className="ml-1 text-xs text-gray-500 dark:text-white/40">
+                            {p.avg_rating.toFixed(1)} ({p.total_reviews})
+                          </span>
+                        </div>
                       </div>
                     </div>
-                    <Link
-                      href={`/provider/${p.id}`}
-                      className="mt-3 block text-center text-xs font-medium text-teal-600 hover:underline dark:text-teal-400"
-                    >
-                      {t("search.card.viewProfile")}
-                    </Link>
-                  </SpotlightCard>
+                    <p className="mt-3 text-xs font-medium text-teal-600 opacity-0 transition-opacity group-hover:opacity-100 dark:text-teal-400">
+                      {t("search.card.viewProfile")} &rarr;
+                    </p>
+                  </Link>
                 );
               })}
             </div>
           </div>
         )}
 
+        {/* CTAs */}
         <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
           <Link
             href={`/providers?category=${slug}`}
-            className="inline-flex items-center gap-1 rounded-xl border border-teal-500/30 px-6 py-3 text-sm font-medium text-teal-700 transition-all hover:border-teal-500/50 hover:bg-teal-500/5 dark:text-teal-300"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-teal-500/30 px-6 py-3 text-sm font-medium text-teal-700 transition-all hover:border-teal-500/50 hover:bg-teal-500/5 dark:text-teal-300"
           >
             {t("services.viewAllPros")} <ArrowRight className="h-4 w-4" />
           </Link>
           <Link
             href="/request-service"
-            className="inline-block rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-6 py-3 text-sm font-medium text-white shadow-lg shadow-teal-500/20"
+            className="inline-block rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:shadow-xl hover:shadow-teal-500/30"
           >
             {t("services.requestInCategory")}
           </Link>
