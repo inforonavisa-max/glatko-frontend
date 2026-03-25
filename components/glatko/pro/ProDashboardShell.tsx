@@ -4,7 +4,7 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Home, Search, Gavel, User, Settings, Menu, X, CheckCircle } from "lucide-react";
+import { Home, Search, Gavel, User, Settings, Menu, X, CheckCircle, MessageSquare, Package, CalendarDays, UserCog } from "lucide-react";
 import { BackgroundGrids } from "@/components/aceternity/background-grids";
 import { cn } from "@/lib/utils";
 import type { ProfessionalProfile } from "@/types/glatko";
@@ -19,6 +19,10 @@ interface Props {
     bids: string;
     profile: string;
     settings: string;
+    inbox: string;
+    packages: string;
+    availability: string;
+    editProfile: string;
   };
 }
 
@@ -26,8 +30,12 @@ const NAV_ITEMS = [
   { key: "home", href: "/pro/dashboard", icon: Home, exact: true },
   { key: "requests", href: "/pro/dashboard/requests", icon: Search },
   { key: "bids", href: "/pro/dashboard/bids", icon: Gavel },
+  { key: "inbox", href: "/inbox", icon: MessageSquare },
+  { key: "packages", href: "/pro/dashboard/packages", icon: Package },
+  { key: "availability", href: "/pro/dashboard/availability", icon: CalendarDays },
+  { key: "editProfile", href: "/pro/dashboard/profile", icon: UserCog },
   { key: "profile", href: "/provider", icon: User, external: true },
-  { key: "settings", href: "/pro/dashboard", icon: Settings, disabled: true },
+  { key: "settings", href: "/settings/notifications", icon: Settings },
 ] as const;
 
 export function ProDashboardShell({ children, profile, locale, translations }: Props) {
@@ -45,15 +53,6 @@ export function ProDashboardShell({ children, profile, locale, translations }: P
     const active = isActive(item.href, "exact" in item ? item.exact : false);
     const href = item.key === "profile" ? `/${locale}/provider/${profile.id}` : `/${locale}${item.href}`;
     const label = translations[item.key as keyof typeof translations];
-
-    if ("disabled" in item && item.disabled) {
-      return (
-        <div key={item.key} className="flex items-center gap-3 rounded-xl px-4 py-3 text-white/20 cursor-not-allowed">
-          <Icon className="h-5 w-5" />
-          <span className="text-sm">{label}</span>
-        </div>
-      );
-    }
 
     return (
       <Link

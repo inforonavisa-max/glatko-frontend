@@ -965,3 +965,269 @@ export async function getSearchSuggestions(searchQuery: string, locale: string) 
 
   return results.slice(0, 8);
 }
+
+// ─── G8: Pro Dashboard Analytics ───
+
+export async function getProAnalytics(professionalId: string) {
+  const supabase = createClient();
+
+  const { data: profile } = await supabase
+    .from("glatko_professional_profiles")
+    .select("avg_rating, total_reviews, completed_jobs, created_at")
+    .eq("id", professionalId)
+    .single();
+
+  const { data: acceptedBids } = await supabase
+    .from("glatko_bids")
+    .select("price, price_type, created_at")
+    .eq("professional_id", professionalId)
+    .eq("status", "accepted");
+
+  const totalEarnings = (acceptedBids || []).reduce(
+    (sum, bid) => sum + Number(bid.price),
+    0
+  );
+
+  const monthlyEarnings: { month: string; earnings: number; jobs: number }[] = [];
+  const now = new Date();
+  for (let i = 5; i >= 0; i--) {
+    const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const nextDate = new Date(now.getFullYear(), now.getMonth() - i + 1, 1);
+    const monthBids = (acceptedBids || []).filter((b) => {
+      const d = new Date(b.created_at);
+      return d >= date && d < nextDate;
+    });
+    monthlyEarnings.push({
+      month: date.toLocaleString("default", { month: "short", year: "2-digit" }),
+      earnings: monthBids.reduce((s, b) => s + Number(b.price), 0),
+      jobs: monthBids.length,
+    });
+  }
+
+  const { count: pendingBids } = await supabase
+    .from("glatko_bids")
+    .select("id", { count: "exact", head: true })
+    .eq("professional_id", professionalId)
+    .eq("status", "pending");
+
+  const { count: activeJobs } = await supabase
+    .from("glatko_bids")
+    .select("id", { count: "exact", head: true })
+    .eq("professional_id", professionalId)
+    .eq("status", "accepted");
+
+  const { data: recentReviews } = await supabase
+    .from("glatko_reviews")
+    .select("overall_rating, created_at")
+    .eq("reviewee_id", professionalId)
+    .eq("reviewer_role", "customer")
+    .eq("is_published", true)
+    .order("created_at", { ascending: false })
+    .limit(20);
+
+  return {
+    profile,
+    totalEarnings,
+    monthlyEarnings,
+    pendingBids: pendingBids || 0,
+    activeJobs: activeJobs || 0,
+    recentReviews: recentReviews || [],
+  };
+}
+
+export async function getProAvailability(professionalId: string) {
+  const supabase = createClient();
+
+  const { data: weekly } = await supabase
+    .from("glatko_availability")
+    .select("*")
+    .eq("professional_id", professionalId)
+    .order("day_of_week");
+
+  const { data: exceptions } = await supabase
+    .from("glatko_availability_exceptions")
+    .select("*")
+    .eq("professional_id", professionalId)
+    .gte("date", new Date().toISOString().split("T")[0])
+    .order("date");
+
+  return { weekly: weekly || [], exceptions: exceptions || [] };
+}
+
+export async function updateProAvailability(
+  professionalId: string,
+  day: number,
+  startTime: string,
+  endTime: string,
+  isAvailable: boolean
+) {
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("glatko_availability")
+    .upsert(
+      {
+        professional_id: professionalId,
+        day_of_week: day,
+        start_time: startTime,
+        end_time: endTime,
+        is_available: isAvailable,
+      },
+      { onConflict: "professional_id,day_of_week" }
+    );
+  if (error) throw error;
+}
+
+export async function upsertAvailabilityException(
+  professionalId: string,
+  date: string,
+  isAvailable: boolean,
+  note?: string
+) {
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("glatko_availability_exceptions")
+    .upsert(
+      { professional_id: professionalId, date, is_available: isAvailable, note },
+      { onConflict: "professional_id,date" }
+    );
+  if (error) throw error;
+}
+
+export async function getProPackages(professionalId: string) {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("glatko_service_packages")
+    .select(
+      `*, category:glatko_service_categories(id, slug, name, icon)`
+    )
+    .eq("professional_id", professionalId)
+    .eq("is_active", true)
+    .order("sort_order");
+  if (error) throw error;
+  return data || [];
+}
+
+export async function createProPackage(data: {
+  professional_id: string;
+  category_id?: string;
+  name: string;
+  description?: string;
+  price: number;
+  price_type: "fixed" | "starting_at";
+  estimated_duration_hours?: number;
+  includes?: string[];
+}) {
+  const supabase = createClient();
+  const { data: pkg, error } = await supabase
+    .from("glatko_service_packages")
+    .insert(data)
+    .select()
+    .single();
+  if (error) throw error;
+  return pkg;
+}
+
+export async function updateProPackage(
+  packageId: string,
+  professionalId: string,
+  updates: Partial<{
+    name: string;
+    description: string;
+    price: number;
+    price_type: string;
+    estimated_duration_hours: number;
+    includes: string[];
+    is_active: boolean;
+    sort_order: number;
+  }>
+) {
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("glatko_service_packages")
+    .update(updates)
+    .eq("id", packageId)
+    .eq("professional_id", professionalId);
+  if (error) throw error;
+}
+
+export async function deleteProPackage(
+  packageId: string,
+  professionalId: string
+) {
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("glatko_service_packages")
+    .update({ is_active: false })
+    .eq("id", packageId)
+    .eq("professional_id", professionalId);
+  if (error) throw error;
+}
+
+export async function getProfileCompleteness(
+  professionalId: string
+): Promise<{ score: number; missing: string[] }> {
+  const supabase = createClient();
+  const { data: pro } = await supabase
+    .from("glatko_professional_profiles")
+    .select("*")
+    .eq("id", professionalId)
+    .single();
+
+  if (!pro) return { score: 0, missing: ["profile"] };
+
+  const checks = [
+    { field: "bio", label: "bio" },
+    { field: "phone", label: "phone" },
+    { field: "location_city", label: "city" },
+    { field: "years_experience", label: "experience" },
+    { field: "hourly_rate_min", label: "rate" },
+  ];
+
+  const missing: string[] = [];
+  let filled = 0;
+
+  for (const check of checks) {
+    if (pro[check.field as keyof typeof pro]) {
+      filled++;
+    } else {
+      missing.push(check.label);
+    }
+  }
+
+  if (pro.portfolio_images && (pro.portfolio_images as string[]).length > 0) {
+    filled++;
+  } else {
+    missing.push("portfolio");
+  }
+
+  if (pro.languages && (pro.languages as string[]).length > 1) {
+    filled++;
+  } else {
+    missing.push("languages");
+  }
+
+  const total = checks.length + 2;
+  return { score: Math.round((filled / total) * 100), missing };
+}
+
+export async function updateProfessionalProfile(
+  professionalId: string,
+  updates: Partial<{
+    business_name: string;
+    bio: string;
+    phone: string;
+    location_city: string;
+    languages: string[];
+    years_experience: number;
+    hourly_rate_min: number;
+    hourly_rate_max: number;
+    portfolio_images: string[];
+  }>
+) {
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("glatko_professional_profiles")
+    .update({ ...updates, updated_at: new Date().toISOString() })
+    .eq("id", professionalId);
+  if (error) throw error;
+}

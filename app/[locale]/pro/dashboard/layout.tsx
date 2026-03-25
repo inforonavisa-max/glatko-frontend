@@ -32,6 +32,10 @@ export default async function ProDashboardLayout({ children, params }: Props) {
         bids: t("proDashboard.nav.bids"),
         profile: t("proDashboard.nav.profile"),
         settings: t("proDashboard.nav.settings"),
+        inbox: t("nav.inbox"),
+        packages: t("packages.title"),
+        availability: t("availability.title"),
+        editProfile: t("proProfile.title"),
       }}
     >
       {children}
