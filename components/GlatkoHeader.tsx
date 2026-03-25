@@ -177,7 +177,7 @@ export function GlatkoHeader({ userId }: GlatkoHeaderProps) {
                 </span>
                 <span className="mt-1 h-1.5 w-1.5 rounded-full bg-teal-500" />
               </Link>
-              <button onClick={() => setMobileOpen(false)} className="p-2">
+              <button onClick={() => setMobileOpen(false)} className="p-2" aria-label={t("common.close")}>
                 <X className="h-5 w-5 text-gray-700 dark:text-white" />
               </button>
             </div>

@@ -771,5 +771,8 @@
   "proProfile.pricing": "Ценообразование",
   "proProfile.portfolio": "Портфолио",
   "proProfile.serviceAreas": "Области услуг",
-  "proProfile.saved": "Профиль обновлён"
+  "proProfile.saved": "Профиль обновлён",
+  "cookie.message": "Этот сайт использует файлы cookie для улучшения вашего опыта.",
+  "cookie.accept": "Принять",
+  "cookie.learnMore": "Подробнее"
 }

@@ -3,6 +3,8 @@ import { Inter, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({
   subsets: ["latin", "cyrillic", "latin-ext"],
@@ -25,9 +27,21 @@ export const metadata: Metadata = {
   description:
     "Find trusted professionals for home services, boat maintenance, and more in Montenegro. Get free quotes from verified experts.",
   metadataBase: new URL("https://glatko.app"),
+  icons: {
+    icon: "/icon.svg",
+    apple: "/apple-icon.svg",
+  },
   openGraph: {
     type: "website",
     siteName: "Glatko",
+    locale: "en",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 
@@ -49,6 +63,8 @@ export default function RootLayout({
         >
           {children}
           <Toaster richColors position="top-right" />
+          <Analytics />
+          <SpeedInsights />
         </ThemeProvider>
       </body>
     </html>

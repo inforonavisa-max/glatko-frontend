@@ -262,6 +262,7 @@ export default function PackagesPage() {
                 <button
                   onClick={() => setShowForm(false)}
                   className="p-1 text-white/40 hover:text-white"
+                  aria-label={t("common.close")}
                 >
                   <X className="h-5 w-5" />
                 </button>

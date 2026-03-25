@@ -771,5 +771,8 @@
   "proProfile.pricing": "Fiyatlandırma",
   "proProfile.portfolio": "Portfolio",
   "proProfile.serviceAreas": "Hizmet Alanları",
-  "proProfile.saved": "Profil güncellendi"
+  "proProfile.saved": "Profil güncellendi",
+  "cookie.message": "Bu site deneyiminizi iyileştirmek için çerezleri kullanır.",
+  "cookie.accept": "Kabul Et",
+  "cookie.learnMore": "Daha Fazla Bilgi"
 }

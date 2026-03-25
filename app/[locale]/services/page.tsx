@@ -19,6 +19,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: t("seo.servicesTitle"),
     description: t("seo.servicesDesc"),
+    openGraph: {
+      title: t("seo.servicesTitle"),
+      description: t("seo.servicesDesc"),
+      url: `https://glatko.app/${locale}/services`,
+      siteName: "Glatko",
+      locale,
+      type: "website",
+    },
+    alternates: {
+      languages: Object.fromEntries(
+        ["tr", "en", "de", "it", "ru", "uk", "sr", "me", "ar"].map((l) => [
+          l,
+          `/${l}/services`,
+        ])
+      ),
+    },
   };
 }
 

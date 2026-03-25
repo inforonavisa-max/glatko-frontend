@@ -771,5 +771,8 @@
   "proProfile.pricing": "التسعير",
   "proProfile.portfolio": "معرض الأعمال",
   "proProfile.serviceAreas": "مجالات الخدمة",
-  "proProfile.saved": "تم تحديث الملف الشخصي"
+  "proProfile.saved": "تم تحديث الملف الشخصي",
+  "cookie.message": "يستخدم هذا الموقع ملفات تعريف الارتباط لتحسين تجربتك.",
+  "cookie.accept": "قبول",
+  "cookie.learnMore": "اعرف المزيد"
 }

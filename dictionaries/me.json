@@ -771,5 +771,8 @@
   "proProfile.pricing": "Cijene",
   "proProfile.portfolio": "Portfolio",
   "proProfile.serviceAreas": "Oblasti usluga",
-  "proProfile.saved": "Profil ažuriran"
+  "proProfile.saved": "Profil ažuriran",
+  "cookie.message": "Ova stranica koristi kolačiće za poboljšanje vašeg iskustva.",
+  "cookie.accept": "Prihvati",
+  "cookie.learnMore": "Saznajte više"
 }

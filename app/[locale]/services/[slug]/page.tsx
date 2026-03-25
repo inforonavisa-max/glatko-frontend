@@ -25,6 +25,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${name} — Glatko`,
     description: `${name} professionals in Montenegro. Get verified quotes on Glatko.`,
+    openGraph: {
+      title: `${name} — Glatko`,
+      description: `${name} professionals in Montenegro. Get verified quotes on Glatko.`,
+      url: `https://glatko.app/${locale}/services/${slug}`,
+      siteName: "Glatko",
+      locale,
+      type: "website",
+    },
+    alternates: {
+      languages: Object.fromEntries(
+        ["tr", "en", "de", "it", "ru", "uk", "sr", "me", "ar"].map((l) => [
+          l,
+          `/${l}/services/${slug}`,
+        ])
+      ),
+    },
   };
 }
 

@@ -771,5 +771,8 @@
   "proProfile.pricing": "Ціноутворення",
   "proProfile.portfolio": "Портфоліо",
   "proProfile.serviceAreas": "Сфери послуг",
-  "proProfile.saved": "Профіль оновлено"
+  "proProfile.saved": "Профіль оновлено",
+  "cookie.message": "Цей сайт використовує файли cookie для покращення вашого досвіду.",
+  "cookie.accept": "Прийняти",
+  "cookie.learnMore": "Дізнатися більше"
 }

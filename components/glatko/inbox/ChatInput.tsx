@@ -56,6 +56,7 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
           type="button"
           disabled
           title={t("chat.attachPhoto")}
+          aria-label={t("chat.attachPhoto")}
           className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white/30 dark:text-white/30 lg:text-gray-300"
         >
           <Paperclip className="h-5 w-5" />
@@ -80,6 +81,7 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
           whileTap={{ scale: 0.95 }}
           onClick={handleSend}
           disabled={isEmpty || sending || disabled}
+          aria-label={t("chat.send")}
           className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-teal-500 to-teal-600 text-white shadow-lg shadow-teal-500/20 transition-opacity disabled:opacity-40"
         >
           {sending ? (

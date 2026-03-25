@@ -8,6 +8,7 @@ import { GlatkoHeader } from "@/components/GlatkoHeader";
 import { GlatkoFooter } from "@/components/GlatkoFooter";
 import { HtmlLangSetter } from "@/components/HtmlLangSetter";
 import { createClient } from "@/supabase/server";
+import { CookieConsent } from "@/components/glatko/CookieConsent";
 
 type Props = {
   children: React.ReactNode;
@@ -37,9 +38,16 @@ export default async function LocaleLayout({ children, params }: Props) {
       <NuqsAdapter>
         <HtmlLangSetter lang={locale} dir={dir} />
         <div className="flex min-h-screen flex-col" dir={dir}>
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[999] focus:rounded-xl focus:bg-teal-500 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white focus:shadow-lg"
+          >
+            Skip to content
+          </a>
           <GlatkoHeader userId={userId} />
-          <main className="flex-1">{children}</main>
+          <main id="main-content" className="flex-1">{children}</main>
           <GlatkoFooter />
+          <CookieConsent />
         </div>
       </NuqsAdapter>
     </NextIntlClientProvider>

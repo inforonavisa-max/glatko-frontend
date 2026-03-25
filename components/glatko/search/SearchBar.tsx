@@ -87,6 +87,7 @@ export function SearchBar({ locale, defaultValue = "", onSearch, fetchSuggestion
             value={value}
             onChange={(e) => setValue(e.target.value)}
             onFocus={() => { if (suggestions.length > 0) setOpen(true); }}
+            aria-label={t("common.search")}
             placeholder={t("search.searchPlaceholder")}
             className="w-full rounded-2xl border border-gray-200/80 bg-white/90 py-4 pl-12 pr-4 text-sm text-gray-900 shadow-sm backdrop-blur-xl placeholder:text-gray-400 focus:border-teal-500/50 focus:outline-none focus:ring-2 focus:ring-teal-500/20 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white dark:placeholder:text-white/30 dark:focus:border-teal-500/40"
           />

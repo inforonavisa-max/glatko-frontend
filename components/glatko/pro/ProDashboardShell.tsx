@@ -115,7 +115,7 @@ export function ProDashboardShell({ children, profile, locale, translations }: P
           <span className="text-lg font-bold text-white">Glatko</span>
           <span className="mt-0.5 h-1 w-1 rounded-full bg-teal-500" />
         </Link>
-        <button onClick={() => setMobileOpen(true)} className="p-2 text-white/60">
+        <button onClick={() => setMobileOpen(true)} className="p-2 text-white/60" aria-label="Menu">
           <Menu className="h-5 w-5" />
         </button>
       </div>
@@ -140,7 +140,7 @@ export function ProDashboardShell({ children, profile, locale, translations }: P
             >
               <div className="flex h-16 items-center justify-between border-b border-white/[0.06] px-4">
                 <span className="text-lg font-bold text-white">Glatko<span className="text-teal-500">.</span></span>
-                <button onClick={() => setMobileOpen(false)} className="p-2 text-white/60">
+                <button onClick={() => setMobileOpen(false)} className="p-2 text-white/60" aria-label="Close">
                   <X className="h-5 w-5" />
                 </button>
               </div>

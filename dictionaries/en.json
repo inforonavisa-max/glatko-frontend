@@ -771,5 +771,8 @@
   "proProfile.pricing": "Pricing",
   "proProfile.portfolio": "Portfolio",
   "proProfile.serviceAreas": "Service Areas",
-  "proProfile.saved": "Profile updated"
+  "proProfile.saved": "Profile updated",
+  "cookie.message": "This site uses cookies to improve your experience.",
+  "cookie.accept": "Accept",
+  "cookie.learnMore": "Learn More"
 }
