@@ -28,7 +28,7 @@ export default async function RequestServicePage({ params }: Props) {
   return (
     <PageBackground opacity={0.1}>
       <div className="mx-auto max-w-3xl px-4 pb-20 pt-28 sm:px-6">
-        <RequestServiceWizard userId={user.id} categories={categories} />
+        <RequestServiceWizard categories={categories} />
       </div>
     </PageBackground>
   );

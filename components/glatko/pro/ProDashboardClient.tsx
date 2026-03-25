@@ -278,7 +278,7 @@ export function ProDashboardClient(props: Props) {
             />
           ) : analytics ? (
             <div className="flex h-48 items-center justify-center text-sm text-gray-400 dark:text-white/30">
-              No reviews yet
+              {t("pro.profile.noReviews")}
             </div>
           ) : (
             <div className="flex h-48 items-center justify-center">

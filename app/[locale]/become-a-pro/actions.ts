@@ -1,5 +1,6 @@
 "use server";
 
+import { createClient } from "@/supabase/server";
 import { createProfessionalProfile } from "@/lib/supabase/glatko.server";
 
 interface FormState {
@@ -11,7 +12,10 @@ export async function submitProfessionalApplication(
   _prev: FormState,
   formData: FormData
 ): Promise<FormState> {
-  const userId = formData.get("userId") as string;
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { success: false, error: "Authentication required" };
+
   const businessName = formData.get("businessName") as string;
   const bio = formData.get("bio") as string;
   const phone = formData.get("phone") as string;
@@ -23,16 +27,12 @@ export async function submitProfessionalApplication(
   const categoryIds = formData.getAll("categoryIds") as string[];
   const primaryCategoryId = formData.get("primaryCategoryId") as string;
 
-  if (!userId) {
-    return { success: false, error: "User ID required" };
-  }
-
   if (categoryIds.length === 0) {
     return { success: false, error: "Select at least one service category" };
   }
 
   return createProfessionalProfile({
-    userId,
+    userId: user.id,
     businessName: businessName || undefined,
     bio: bio || undefined,
     phone: phone || undefined,

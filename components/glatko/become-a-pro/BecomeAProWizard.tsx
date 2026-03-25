@@ -21,7 +21,6 @@ import type { ServiceCategory } from "@/types/glatko";
 import type { Locale } from "@/i18n/routing";
 
 interface Props {
-  userId: string;
   categories: ServiceCategory[];
 }
 
@@ -31,7 +30,7 @@ const STEPS = [
   { icon: FolderOpen, key: "step3" },
 ] as const;
 
-export function BecomeAProWizard({ userId, categories }: Props) {
+export function BecomeAProWizard({ categories }: Props) {
   const t = useTranslations();
   const locale = useLocale() as Locale;
   const [step, setStep] = useState(0);
@@ -241,7 +240,6 @@ export function BecomeAProWizard({ userId, categories }: Props) {
             disabled={isPending || selectedCategoryIds.length === 0}
             onClick={() => {
               const fd = new FormData();
-              fd.set("userId", userId);
               fd.set("businessName", businessName);
               fd.set("bio", bio);
               fd.set("phone", phone);

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createAdminClient } from "@/supabase/server";
+import { createClient } from "@/supabase/server";
 
 export async function GET() {
   const checks: Record<string, string> = {
@@ -10,7 +10,7 @@ export async function GET() {
   };
 
   try {
-    const supabase = createAdminClient();
+    const supabase = createClient();
     const { error } = await supabase
       .from("glatko_service_categories")
       .select("id")

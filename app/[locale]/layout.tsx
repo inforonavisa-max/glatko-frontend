@@ -30,7 +30,8 @@ export default async function LocaleLayout({ children, params }: Props) {
   const dir = RTL_LOCALES.has(locale) ? "rtl" : "ltr";
 
   const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data } = await supabase.auth.getUser();
+  const user = data?.user ?? null;
   const userId = user?.id ?? null;
 
   let isPro = false;

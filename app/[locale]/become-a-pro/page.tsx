@@ -57,7 +57,6 @@ export default async function BecomeAProPage({ params }: Props) {
     <PageBackground opacity={0.1}>
       <div className="mx-auto max-w-3xl px-4 pb-20 pt-28 sm:px-6">
         <BecomeAProWizard
-          userId={user.id}
           categories={
             (categories ?? []) as import("@/types/glatko").ServiceCategory[]
           }

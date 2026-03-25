@@ -1,6 +1,7 @@
 "use server";
 
 import { z } from "zod";
+import { createClient } from "@/supabase/server";
 import { createServiceRequest } from "@/lib/supabase/glatko.server";
 
 const createRequestSchema = z.object({
@@ -29,10 +30,10 @@ interface SubmitResult {
 export async function submitServiceRequest(
   formData: FormData
 ): Promise<SubmitResult> {
-  const customerId = formData.get("customerId") as string | null;
-  if (!customerId) {
-    return { success: false, error: "Authentication required." };
-  }
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { success: false, error: "Authentication required." };
+  const customerId = user.id;
 
   let details: Record<string, unknown> = {};
   const detailsRaw = formData.get("details") as string | null;

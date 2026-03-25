@@ -306,7 +306,7 @@ export default async function RequestDetailPage({ params }: Props) {
         {/* ── Cancel button ── */}
         {isCancellable && (
           <div className="flex justify-end">
-            <CancelRequestButton requestId={id} userId={user.id} />
+            <CancelRequestButton requestId={id} />
           </div>
         )}
       </div>

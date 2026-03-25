@@ -8,20 +8,14 @@ interface CancelResult {
   error?: string;
 }
 
-export async function cancelRequest(
-  requestId: string,
-  userId: string
-): Promise<CancelResult> {
-  if (!requestId || !userId) {
-    return { success: false, error: "Missing request or user ID." };
-  }
+export async function cancelRequest(requestId: string): Promise<CancelResult> {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { success: false, error: "Not authenticated." };
+  if (!requestId) return { success: false, error: "Missing request ID." };
 
-  const result = await cancelServiceRequest(requestId, userId);
-
-  if (!result.success) {
-    return { success: false, error: result.error };
-  }
-
+  const result = await cancelServiceRequest(requestId, user.id);
+  if (!result.success) return { success: false, error: result.error };
   return { success: true };
 }
 

@@ -9,10 +9,9 @@ import { Loader2, X } from "lucide-react";
 
 interface Props {
   requestId: string;
-  userId: string;
 }
 
-export function CancelRequestButton({ requestId, userId }: Props) {
+export function CancelRequestButton({ requestId }: Props) {
   const t = useTranslations();
   const router = useRouter();
   const [showConfirm, setShowConfirm] = useState(false);
@@ -22,7 +21,7 @@ export function CancelRequestButton({ requestId, userId }: Props) {
   const handleCancel = () => {
     setError("");
     startTransition(async () => {
-      const result = await cancelRequest(requestId, userId);
+      const result = await cancelRequest(requestId);
       if (result.success) {
         router.refresh();
       } else {

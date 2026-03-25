@@ -1,13 +1,26 @@
 "use server";
 
+import { createClient } from "@/supabase/server";
 import { updateVerificationStatus, createNotification } from "@/lib/supabase/glatko.server";
 import type { VerificationStatus } from "@/types/glatko";
+
+const ADMIN_EMAILS = new Set([
+  "rohat@glatko.app",
+  "admin@glatko.app",
+  "contact@glatko.app",
+]);
 
 export async function updateProfessionalStatus(
   professionalId: string,
   status: VerificationStatus,
   reason?: string
 ) {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user?.email || !ADMIN_EMAILS.has(user.email)) {
+    return { success: false, error: "Unauthorized" };
+  }
+
   const result = await updateVerificationStatus(professionalId, status, reason);
 
   if (result.success) {

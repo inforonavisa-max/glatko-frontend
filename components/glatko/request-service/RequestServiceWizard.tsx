@@ -24,7 +24,6 @@ import type { ServiceCategory } from "@/types/glatko";
 import type { Locale } from "@/i18n/routing";
 
 interface Props {
-  userId: string;
   categories: ServiceCategory[];
 }
 
@@ -35,7 +34,7 @@ const STEPS = [
   { icon: Camera, key: "photos" },
 ] as const;
 
-export function RequestServiceWizard({ userId, categories }: Props) {
+export function RequestServiceWizard({ categories }: Props) {
   const t = useTranslations();
   const locale = useLocale() as Locale;
   const [step, setStep] = useState(0);
@@ -125,7 +124,6 @@ export function RequestServiceWizard({ userId, categories }: Props) {
   const handleSubmit = () => {
     setError("");
     const fd = new FormData();
-    fd.set("customerId", userId);
     fd.set("categoryId", selectedSubId);
     fd.set("title", title || autoTitle);
     fd.set("description", description);
