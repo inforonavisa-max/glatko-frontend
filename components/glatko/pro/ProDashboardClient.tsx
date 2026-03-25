@@ -16,7 +16,20 @@ import {
   MessageSquare,
   Package,
 } from "lucide-react";
-import { AreaChart, BarChart, ProgressBar } from "@tremor/react";
+import dynamic from "next/dynamic";
+
+const AreaChart = dynamic(
+  () => import("@tremor/react").then((m) => m.AreaChart),
+  { ssr: false, loading: () => <div className="h-48 animate-pulse rounded-2xl bg-gray-100 dark:bg-white/[0.03]" /> }
+);
+const BarChart = dynamic(
+  () => import("@tremor/react").then((m) => m.BarChart),
+  { ssr: false, loading: () => <div className="h-48 animate-pulse rounded-2xl bg-gray-100 dark:bg-white/[0.03]" /> }
+);
+const ProgressBar = dynamic(
+  () => import("@tremor/react").then((m) => m.ProgressBar),
+  { ssr: false, loading: () => <div className="h-2 animate-pulse rounded-full bg-gray-100 dark:bg-white/[0.03]" /> }
+);
 import {
   getProAnalyticsAction,
   getProfileCompletenessAction,

@@ -1,6 +1,6 @@
 import { hasLocale } from "next-intl";
 import { NextIntlClientProvider } from "next-intl";
-import { getMessages, setRequestLocale } from "next-intl/server";
+import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
@@ -9,11 +9,40 @@ import { GlatkoFooter } from "@/components/GlatkoFooter";
 import { HtmlLangSetter } from "@/components/HtmlLangSetter";
 import { createClient } from "@/supabase/server";
 import { CookieConsent } from "@/components/glatko/CookieConsent";
+import type { Metadata } from "next";
 
 type Props = {
   children: React.ReactNode;
   params: Promise<{ locale: string }> | { locale: string };
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }> | { locale: string };
+}): Promise<Metadata> {
+  const { locale } = await Promise.resolve(params);
+  if (!hasLocale(routing.locales, locale)) return {};
+  const t = await getTranslations({ locale });
+  return {
+    title: t("seo.landingTitle"),
+    description: t("seo.landingDesc"),
+    openGraph: {
+      title: t("seo.landingTitle"),
+      description: t("seo.landingDesc"),
+      url: `https://glatko.app/${locale}`,
+      siteName: "Glatko",
+      locale,
+      type: "website",
+    },
+    alternates: {
+      canonical: `/${locale}`,
+      languages: Object.fromEntries(
+        ["tr", "en", "de", "it", "ru", "uk", "sr", "me", "ar"].map((l) => [l, `/${l}`])
+      ),
+    },
+  };
+}
 
 const RTL_LOCALES = new Set(["ar"]);
 

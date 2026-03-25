@@ -53,6 +53,26 @@ export default function LandingPage() {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "Glatko",
+            url: "https://glatko.app",
+            logo: "https://glatko.app/favicon.svg",
+            description: "Montenegro's Premier Service Platform",
+            address: {
+              "@type": "PostalAddress",
+              addressLocality: "Budva",
+              addressCountry: "ME",
+            },
+            sameAs: [],
+          }),
+        }}
+      />
+
       {/* ── Hero ── */}
       <section
         ref={heroParentRef}

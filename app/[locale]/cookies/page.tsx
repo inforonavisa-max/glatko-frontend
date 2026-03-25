@@ -1,14 +1,46 @@
-"use client";
-
-import { useTranslations } from "next-intl";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { hasLocale } from "next-intl";
+import { notFound } from "next/navigation";
+import { routing } from "@/i18n/routing";
 import { PageBackground } from "@/components/ui/PageBackground";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { GlassmorphCard } from "@/components/ui/GlassmorphCard";
+import type { Metadata } from "next";
+
+type Props = {
+  params: Promise<{ locale: string }> | { locale: string };
+};
 
 const ALL_SECTIONS = ["s1", "s2", "s3", "s4"] as const;
 
-export default function CookiesPage() {
-  const t = useTranslations();
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await Promise.resolve(params);
+  if (!hasLocale(routing.locales, locale)) return {};
+  return {
+    title: "Cookie Policy — Glatko",
+    description: "Cookie policy for the Glatko platform — types and management.",
+    openGraph: {
+      title: "Cookie Policy — Glatko",
+      url: `https://glatko.app/${locale}/cookies`,
+      siteName: "Glatko",
+      locale,
+      type: "website",
+    },
+    alternates: {
+      canonical: `/${locale}/cookies`,
+      languages: Object.fromEntries(
+        ["tr", "en", "de", "it", "ru", "uk", "sr", "me", "ar"].map((l) => [l, `/${l}/cookies`])
+      ),
+    },
+    robots: { index: true, follow: true },
+  };
+}
+
+export default async function CookiesPage({ params }: Props) {
+  const { locale } = await Promise.resolve(params);
+  if (!hasLocale(routing.locales, locale)) notFound();
+  setRequestLocale(locale);
+  const t = await getTranslations();
   return (
     <PageBackground opacity={0.08}>
       <div className="mx-auto max-w-3xl px-4 pb-16 pt-28">

@@ -1,8 +1,13 @@
+import type { Metadata } from "next";
 import { createClient } from "@/supabase/server";
 import { redirect } from "next/navigation";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { getProfessionalProfile } from "@/lib/supabase/glatko.server";
 import { ProDashboardShell } from "@/components/glatko/pro/ProDashboardShell";
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 type Props = {
   children: React.ReactNode;

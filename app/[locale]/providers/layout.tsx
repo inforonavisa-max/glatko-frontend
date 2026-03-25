@@ -9,7 +9,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: t("seo.providersTitle"),
     description: t("seo.providersDesc"),
-    alternates: { languages: Object.fromEntries(["tr","en","de","it","ru","uk","sr","me","ar"].map(l => [l, `/${l}/providers`])) },
+    openGraph: {
+      title: t("seo.providersTitle"),
+      description: t("seo.providersDesc"),
+      url: `https://glatko.app/${locale}/providers`,
+      siteName: "Glatko",
+      locale,
+      type: "website",
+    },
+    alternates: {
+      canonical: `/${locale}/providers`,
+      languages: Object.fromEntries(["tr","en","de","it","ru","uk","sr","me","ar"].map(l => [l, `/${l}/providers`])),
+    },
+    robots: { index: true, follow: true },
   };
 }
 

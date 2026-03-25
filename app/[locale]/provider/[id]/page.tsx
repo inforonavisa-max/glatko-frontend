@@ -23,6 +23,7 @@ import { getProfessionalProfile, getPublishedReviews, calculateTrustBadges } fro
 import { TrustBadge } from "@/components/glatko/trust/TrustBadge";
 import { ReviewSection } from "@/components/glatko/review/ReviewSection";
 import { LocalBusinessSchema } from "@/components/seo/LocalBusinessSchema";
+import type { Metadata } from "next";
 import type { MultiLangText, ProService, ProfessionalProfile } from "@/types/glatko";
 
 type ReviewItem = {
@@ -64,6 +65,34 @@ function initialsFromName(name: string): string {
 type PageProps = {
   params: Promise<{ locale: string; id: string }> | { locale: string; id: string };
 };
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale, id } = await Promise.resolve(params);
+  if (!hasLocale(routing.locales, locale)) return {};
+  const profile = await getProfessionalProfile(id);
+  if (!profile) return {};
+  const name = profile.business_name?.trim() || profile.profile?.full_name?.trim() || "Professional";
+  const city = profile.location_city || "Montenegro";
+  return {
+    title: `${name} — Glatko`,
+    description: `${name} — verified professional in ${city}. ${profile.avg_rating.toFixed(1)}★ rating, ${profile.completed_jobs} jobs completed.`,
+    openGraph: {
+      title: `${name} — Glatko`,
+      description: `Verified professional in ${city}. Get a quote on Glatko.`,
+      url: `https://glatko.app/${locale}/provider/${id}`,
+      siteName: "Glatko",
+      locale,
+      type: "profile",
+    },
+    alternates: {
+      canonical: `/${locale}/provider/${id}`,
+      languages: Object.fromEntries(
+        ["tr", "en", "de", "it", "ru", "uk", "sr", "me", "ar"].map((l) => [l, `/${l}/provider/${id}`])
+      ),
+    },
+    robots: { index: true, follow: true },
+  };
+}
 
 export default async function ProviderProfilePage({ params }: PageProps) {
   const { locale: localeParam, id } = await Promise.resolve(params);

@@ -1,7 +1,12 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createClient } from "@/supabase/server";
 import { setRequestLocale } from "next-intl/server";
 import { PageBackground } from "@/components/ui/PageBackground";
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 type Props = {
   children: React.ReactNode;

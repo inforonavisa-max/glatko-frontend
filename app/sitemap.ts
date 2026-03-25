@@ -4,16 +4,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const locales = ["tr", "en", "de", "it", "ru", "uk", "sr", "me", "ar"];
   const routes: MetadataRoute.Sitemap = [];
 
-  const staticPages = ["", "/services", "/providers", "/about",
-    "/terms", "/privacy", "/contact"];
+  const staticPages = [
+    { path: "", freq: "daily" as const, priority: 1.0 },
+    { path: "/services", freq: "weekly" as const, priority: 0.9 },
+    { path: "/providers", freq: "daily" as const, priority: 0.9 },
+    { path: "/become-a-pro", freq: "monthly" as const, priority: 0.7 },
+    { path: "/about", freq: "monthly" as const, priority: 0.6 },
+    { path: "/terms", freq: "monthly" as const, priority: 0.4 },
+    { path: "/privacy", freq: "monthly" as const, priority: 0.4 },
+    { path: "/cookies", freq: "monthly" as const, priority: 0.3 },
+    { path: "/gdpr", freq: "monthly" as const, priority: 0.4 },
+    { path: "/contact", freq: "monthly" as const, priority: 0.6 },
+  ];
 
   for (const locale of locales) {
     for (const page of staticPages) {
       routes.push({
-        url: `https://glatko.app/${locale}${page}`,
+        url: `https://glatko.app/${locale}${page.path}`,
         lastModified: new Date(),
-        changeFrequency: page === "" ? "daily" : "weekly",
-        priority: page === "" ? 1.0 : 0.8,
+        changeFrequency: page.freq,
+        priority: page.priority,
       });
     }
   }

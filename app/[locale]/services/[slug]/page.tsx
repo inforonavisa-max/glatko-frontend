@@ -33,6 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "website",
     },
     alternates: {
+      canonical: `/${locale}/services/${slug}`,
       languages: Object.fromEntries(
         ["tr", "en", "de", "it", "ru", "uk", "sr", "me", "ar"].map((l) => [
           l,
@@ -42,6 +43,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
   };
 }
+
+export const revalidate = 3600;
 
 export default async function CategoryDetailPage({ params }: Props) {
   const { locale: localeParam, slug } = await Promise.resolve(params);
@@ -67,6 +70,20 @@ export default async function CategoryDetailPage({ params }: Props) {
 
   return (
     <PageBackground opacity={0.1}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Service",
+            name: categoryName,
+            description: categoryDesc || `${categoryName} professionals in Montenegro`,
+            provider: { "@type": "Organization", name: "Glatko", url: "https://glatko.app" },
+            areaServed: { "@type": "Country", name: "Montenegro" },
+          }),
+        }}
+      />
+
       {/* Hero */}
       <div className="bg-gradient-to-b from-teal-600/[0.12] via-teal-500/[0.05] to-transparent py-16 md:py-20">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">

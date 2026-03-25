@@ -19,9 +19,9 @@ export function PageBackground({ children, opacity = 0.15, meshBlobs = true }: P
         <BackgroundGrids />
       </div>
       {meshBlobs && (
-        <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-          <div className="absolute left-1/4 top-1/4 h-[500px] w-[500px] rounded-full bg-teal-500/[0.04] blur-[120px] dark:bg-teal-500/[0.06]" />
-          <div className="absolute bottom-1/4 right-1/4 h-[400px] w-[400px] rounded-full bg-cyan-500/[0.03] blur-[100px] dark:bg-cyan-500/[0.05]" />
+        <div className="pointer-events-none absolute inset-0 hidden overflow-hidden md:block" aria-hidden>
+          <div className="absolute left-1/4 top-1/4 h-[500px] w-[500px] rounded-full bg-teal-500/[0.04] blur-[80px] dark:bg-teal-500/[0.06]" />
+          <div className="absolute bottom-1/4 right-1/4 h-[400px] w-[400px] rounded-full bg-cyan-500/[0.03] blur-[80px] dark:bg-cyan-500/[0.05]" />
         </div>
       )}
       <div className="relative z-10">{children}</div>

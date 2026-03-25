@@ -27,6 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: "website",
     },
     alternates: {
+      canonical: `/${locale}/services`,
       languages: Object.fromEntries(
         ["tr", "en", "de", "it", "ru", "uk", "sr", "me", "ar"].map((l) => [
           l,
@@ -34,8 +35,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         ])
       ),
     },
+    robots: { index: true, follow: true },
   };
 }
+
+export const revalidate = 3600;
 
 export default async function ServicesPage({ params }: Props) {
   const { locale } = await Promise.resolve(params);
