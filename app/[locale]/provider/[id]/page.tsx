@@ -19,7 +19,8 @@ import { cn } from "@/lib/utils";
 import { getProfessionalProfile, getPublishedReviews, calculateTrustBadges } from "@/lib/supabase/glatko.server";
 import { TrustBadge } from "@/components/glatko/trust/TrustBadge";
 import { ReviewSection } from "@/components/glatko/review/ReviewSection";
-import type { MultiLangText, ProService } from "@/types/glatko";
+import { LocalBusinessSchema } from "@/components/seo/LocalBusinessSchema";
+import type { MultiLangText, ProService, ProfessionalProfile } from "@/types/glatko";
 
 type ReviewItem = {
   id: string;
@@ -109,6 +110,7 @@ export default async function ProviderProfilePage({ params }: PageProps) {
 
   return (
     <div className="relative mx-auto max-w-4xl px-4 pb-16 pt-24">
+      <LocalBusinessSchema pro={profile as unknown as ProfessionalProfile} />
       <div className="pointer-events-none absolute inset-0" style={{ opacity: 0.08 }}>
         <BackgroundGrids />
       </div>

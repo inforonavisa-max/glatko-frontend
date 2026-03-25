@@ -16,6 +16,15 @@ export function GlatkoFooter() {
       ],
     },
     {
+      title: t("nav.services"),
+      links: [
+        { label: t("services.title"), href: "/services" },
+        { label: t("search.title"), href: "/providers" },
+        { label: t("categories.home.title"), href: "/providers?category=home-services" },
+        { label: t("categories.boat.title"), href: "/providers?category=boat-services" },
+      ],
+    },
+    {
       title: t("footer.legal"),
       links: [
         { label: t("footer.terms"), href: "/terms" },
@@ -38,7 +47,7 @@ export function GlatkoFooter() {
   return (
     <footer className="border-t border-gray-200 dark:border-white/5 bg-gray-50 dark:bg-[#080808]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
           <div>
             <div className="flex items-center gap-1 mb-4">
               <span className="text-xl font-bold text-gray-900 dark:text-white">Glatko</span>

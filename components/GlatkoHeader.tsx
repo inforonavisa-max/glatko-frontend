@@ -59,7 +59,8 @@ export function GlatkoHeader({ userId }: GlatkoHeaderProps) {
   }, [pathname]);
 
   const navLinks = [
-    { href: "/#categories", hash: "#categories", label: t("nav.services") },
+    { href: "/services", hash: "", label: t("nav.services"), isLink: true },
+    { href: "/providers", hash: "", label: t("search.title"), isLink: true },
     { href: "/#how-it-works", hash: "#how-it-works", label: t("nav.howItWorks") },
     { href: "/#cta-pro", hash: "#cta-pro", label: t("nav.becomeAPro") },
     { href: "/pro/dashboard", hash: "", label: t("nav.proDashboard"), isPro: true },
@@ -107,6 +108,13 @@ export function GlatkoHeader({ userId }: GlatkoHeaderProps) {
               if ("isPro" in l) {
                 return (
                   <Link key={l.href} href={l.href} className="nav-link relative text-xs font-medium text-teal-600 dark:text-teal-400">
+                    {l.label}
+                  </Link>
+                );
+              }
+              if ("isLink" in l) {
+                return (
+                  <Link key={l.href} href={l.href} className="nav-link relative text-xs">
                     {l.label}
                   </Link>
                 );

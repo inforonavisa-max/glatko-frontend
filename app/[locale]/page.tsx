@@ -179,18 +179,19 @@ export default function LandingPage() {
                 {t("hero.cta")}
               </motion.span>
             </Link>
-            <motion.a
-              href="#categories"
-              whileHover={
-                reduced
-                  ? undefined
-                  : { scale: 1.02, backgroundColor: "rgba(20,184,166,0.1)" }
-              }
-              whileTap={reduced ? undefined : { scale: 0.98 }}
-              className="inline-block rounded-xl border border-teal-500/30 px-8 py-4 text-lg font-medium text-teal-700 backdrop-blur-sm transition-all hover:border-teal-500/50 dark:text-teal-300"
-            >
-              {t("hero.ctaSecondary")}
-            </motion.a>
+            <Link href="/providers">
+              <motion.span
+                whileHover={
+                  reduced
+                    ? undefined
+                    : { scale: 1.02, backgroundColor: "rgba(20,184,166,0.1)" }
+                }
+                whileTap={reduced ? undefined : { scale: 0.98 }}
+                className="inline-block rounded-xl border border-teal-500/30 px-8 py-4 text-lg font-medium text-teal-700 backdrop-blur-sm transition-all hover:border-teal-500/50 dark:text-teal-300"
+              >
+                {t("search.title")}
+              </motion.span>
+            </Link>
           </motion.div>
           <div
             ref={heroCollisionTargetRef}
@@ -266,12 +267,12 @@ export default function LandingPage() {
                     </span>
                   ))}
                 </div>
-                <a
-                  href="#"
+                <Link
+                  href="/services/home-services"
                   className="text-sm font-semibold text-teal-600 hover:underline dark:text-teal-400"
                 >
                   {t("categories.getQuote")} →
-                </a>
+                </Link>
               </SpotlightCard>
             </StaggerItem>
             <StaggerItem index={1}>
@@ -306,12 +307,12 @@ export default function LandingPage() {
                     </span>
                   ))}
                 </div>
-                <a
-                  href="#"
+                <Link
+                  href="/services/boat-services"
                   className="text-sm font-semibold text-teal-600 hover:underline dark:text-teal-400"
                 >
                   {t("categories.getQuote")} →
-                </a>
+                </Link>
               </SpotlightCard>
             </StaggerItem>
           </div>

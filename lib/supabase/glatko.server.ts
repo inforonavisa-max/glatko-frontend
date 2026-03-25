@@ -800,3 +800,168 @@ export async function getUnreadNotificationCount(userId: string) {
   if (error) return 0;
   return count || 0;
 }
+
+// ─── G7: Search + Discovery ───
+
+export async function searchProfessionals(params: {
+  locale: string;
+  categorySlug?: string;
+  city?: string;
+  minRating?: number;
+  languages?: string[];
+  query?: string;
+  sortBy?: "rating" | "reviews" | "newest" | "jobs";
+  page?: number;
+  limit?: number;
+}) {
+  const supabase = createClient();
+  const { page = 1, limit = 12 } = params;
+  const offset = (page - 1) * limit;
+
+  let q = supabase
+    .from("glatko_professional_profiles")
+    .select(
+      `*,
+      profile:profiles!id(full_name, avatar_url),
+      services:glatko_pro_services(
+        category:glatko_service_categories(id, slug, name, icon)
+      )`,
+      { count: "exact" }
+    )
+    .eq("is_active", true)
+    .eq("is_verified", true);
+
+  if (params.categorySlug) {
+    const { data: cat } = await supabase
+      .from("glatko_service_categories")
+      .select("id")
+      .eq("slug", params.categorySlug)
+      .single();
+
+    if (cat) {
+      const { data: proIds } = await supabase
+        .from("glatko_pro_services")
+        .select("professional_id")
+        .eq("category_id", cat.id);
+
+      if (proIds && proIds.length > 0) {
+        q = q.in(
+          "id",
+          proIds.map((p) => p.professional_id)
+        );
+      } else {
+        return { professionals: [], total: 0, page, totalPages: 0 };
+      }
+    }
+  }
+
+  if (params.city) {
+    q = q.eq("location_city", params.city);
+  }
+
+  if (params.minRating) {
+    q = q.gte("avg_rating", params.minRating);
+  }
+
+  if (params.languages && params.languages.length > 0) {
+    q = q.overlaps("languages", params.languages);
+  }
+
+  switch (params.sortBy) {
+    case "rating":
+      q = q.order("avg_rating", { ascending: false });
+      break;
+    case "reviews":
+      q = q.order("total_reviews", { ascending: false });
+      break;
+    case "jobs":
+      q = q.order("completed_jobs", { ascending: false });
+      break;
+    case "newest":
+    default:
+      q = q.order("created_at", { ascending: false });
+      break;
+  }
+
+  q = q.range(offset, offset + limit - 1);
+
+  const { data, error, count } = await q;
+  if (error) throw error;
+
+  return {
+    professionals: data || [],
+    total: count || 0,
+    page,
+    totalPages: Math.ceil((count || 0) / limit),
+  };
+}
+
+export async function getCategoryWithStats(slug: string) {
+  const supabase = createClient();
+
+  const { data: category } = await supabase
+    .from("glatko_service_categories")
+    .select("*")
+    .eq("slug", slug)
+    .eq("is_active", true)
+    .single();
+
+  if (!category) return null;
+
+  const { data: children } = await supabase
+    .from("glatko_service_categories")
+    .select("*")
+    .eq("parent_id", category.id)
+    .eq("is_active", true)
+    .order("sort_order");
+
+  const { count: proCount } = await supabase
+    .from("glatko_pro_services")
+    .select("professional_id", { count: "exact", head: true })
+    .eq("category_id", category.id);
+
+  return {
+    ...category,
+    children: children || [],
+    proCount: proCount || 0,
+  };
+}
+
+export async function getSearchSuggestions(searchQuery: string, locale: string) {
+  const supabase = createClient();
+  const results: { type: string; label: string; slug: string }[] = [];
+
+  const { data: categories } = await supabase
+    .from("glatko_service_categories")
+    .select("slug, name")
+    .eq("is_active", true);
+
+  if (categories) {
+    for (const cat of categories) {
+      const nameObj = cat.name as Record<string, string> | null;
+      const name = nameObj?.[locale] || nameObj?.["en"] || "";
+      if (name.toLowerCase().includes(searchQuery.toLowerCase())) {
+        results.push({ type: "category", label: name, slug: cat.slug });
+      }
+    }
+  }
+
+  const { data: pros } = await supabase
+    .from("glatko_professional_profiles")
+    .select("id, business_name, profile:profiles!id(full_name)")
+    .eq("is_active", true)
+    .eq("is_verified", true)
+    .limit(5);
+
+  if (pros) {
+    for (const pro of pros) {
+      const profileData = pro.profile as unknown as { full_name: string } | null;
+      const name = pro.business_name || profileData?.full_name || "";
+      if (name.toLowerCase().includes(searchQuery.toLowerCase())) {
+        results.push({ type: "professional", label: name, slug: pro.id });
+      }
+    }
+  }
+
+  return results.slice(0, 8);
+}
