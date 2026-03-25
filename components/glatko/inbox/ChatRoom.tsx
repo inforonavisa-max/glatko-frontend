@@ -159,10 +159,10 @@ export function ChatRoom({
       <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
         {messages.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center gap-3 text-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/[0.04] dark:bg-white/[0.04] lg:bg-gray-100">
-              <MessageSquare className="h-6 w-6 text-white/30 dark:text-white/30 lg:text-gray-400" />
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-100 dark:bg-white/[0.04]">
+              <MessageSquare className="h-6 w-6 text-gray-400 dark:text-white/30" />
             </div>
-            <p className="text-sm text-white/40 dark:text-white/40 lg:text-gray-500">
+            <p className="text-sm text-gray-500 dark:text-white/40">
               {t("chat.noMessages")}
             </p>
           </div>

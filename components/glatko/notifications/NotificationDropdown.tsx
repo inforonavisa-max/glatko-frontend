@@ -37,17 +37,19 @@ interface GlatkoNotification {
   created_at: string;
 }
 
-const typeIcons: Record<string, typeof Bell> = {
-  new_bid: DollarSign,
-  bid_accepted: CheckCircle,
-  bid_rejected: ShieldX,
-  message: MessageSquare,
-  status_change: RefreshCw,
-  review: Star,
-  verification_approved: ShieldCheck,
-  verification_rejected: ShieldX,
-  new_request_match: Bell,
+const typeConfig: Record<string, { icon: typeof Bell; bgColor: string; iconColor: string }> = {
+  new_bid: { icon: DollarSign, bgColor: "bg-teal-500/10", iconColor: "text-teal-600 dark:text-teal-400" },
+  bid_accepted: { icon: CheckCircle, bgColor: "bg-green-500/10", iconColor: "text-green-600 dark:text-green-400" },
+  bid_rejected: { icon: ShieldX, bgColor: "bg-red-500/10", iconColor: "text-red-500 dark:text-red-400" },
+  message: { icon: MessageSquare, bgColor: "bg-blue-500/10", iconColor: "text-blue-600 dark:text-blue-400" },
+  status_change: { icon: RefreshCw, bgColor: "bg-purple-500/10", iconColor: "text-purple-600 dark:text-purple-400" },
+  review: { icon: Star, bgColor: "bg-amber-500/10", iconColor: "text-amber-600 dark:text-amber-400" },
+  verification_approved: { icon: ShieldCheck, bgColor: "bg-teal-500/10", iconColor: "text-teal-600 dark:text-teal-400" },
+  verification_rejected: { icon: ShieldX, bgColor: "bg-red-500/10", iconColor: "text-red-500 dark:text-red-400" },
+  new_request_match: { icon: Bell, bgColor: "bg-teal-500/10", iconColor: "text-teal-600 dark:text-teal-400" },
 };
+
+const defaultConfig = { icon: Bell, bgColor: "bg-gray-500/10", iconColor: "text-gray-500 dark:text-gray-400" };
 
 function getNotificationLink(n: GlatkoNotification): string {
   const d = n.data;
@@ -197,7 +199,7 @@ export function NotificationBell({ userId }: NotificationBellProps) {
         aria-label={t("notifications.title")}
       >
         <motion.div animate={bounce ? { scale: [1, 1.3, 1] } : {}} transition={{ duration: 0.4 }}>
-          <Bell className="h-4.5 w-4.5" />
+          <Bell className="h-5 w-5" />
         </motion.div>
         {unreadCount > 0 && (
           <motion.span
@@ -217,7 +219,7 @@ export function NotificationBell({ userId }: NotificationBellProps) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.96 }}
             transition={{ duration: 0.2 }}
-            className="absolute right-0 top-full z-50 mt-2 w-80 overflow-hidden rounded-2xl border border-gray-200/50 bg-white/95 shadow-2xl backdrop-blur-2xl dark:border-white/[0.08] dark:bg-[#0c0c0c]/95 sm:w-96"
+            className="absolute right-0 top-full z-50 mt-2 w-[360px] overflow-hidden rounded-2xl border border-gray-200/50 bg-white/95 shadow-2xl backdrop-blur-2xl dark:border-white/[0.08] dark:bg-[#0a0a0a]/95 sm:w-[380px]"
           >
             <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3 dark:border-white/[0.06]">
               <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
@@ -254,7 +256,8 @@ export function NotificationBell({ userId }: NotificationBellProps) {
               )}
 
               {notifications.map((n) => {
-                const Icon = typeIcons[n.type] || Bell;
+                const config = typeConfig[n.type] || defaultConfig;
+                const Icon = config.icon;
                 return (
                   <button
                     key={n.id}
@@ -264,11 +267,11 @@ export function NotificationBell({ userId }: NotificationBellProps) {
                       !n.read_at && "bg-teal-50/50 dark:bg-teal-500/[0.04]"
                     )}
                   >
-                    <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-teal-500/10 dark:bg-teal-500/15">
-                      <Icon className="h-4 w-4 text-teal-600 dark:text-teal-400" />
+                    <div className={cn("mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl", config.bgColor)}>
+                      <Icon className={cn("h-4 w-4", config.iconColor)} />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium text-gray-900 dark:text-white">
+                      <p className={cn("text-sm text-gray-900 dark:text-white", !n.read_at ? "font-semibold" : "font-medium")}>
                         {getLocalizedTitle(n.type, t)}
                       </p>
                       {n.body && (
@@ -294,7 +297,7 @@ export function NotificationBell({ userId }: NotificationBellProps) {
                 onClick={() => setOpen(false)}
                 className="block text-center text-xs font-medium text-teal-600 transition-colors hover:text-teal-500 dark:text-teal-400"
               >
-                {t("notifications.viewAll")}
+                {t("notifications.viewAll")} &rarr;
               </Link>
             </div>
           </motion.div>

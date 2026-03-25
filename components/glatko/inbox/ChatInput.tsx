@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
-import { Send, Paperclip, Loader2 } from "lucide-react";
+import { ArrowUp, Paperclip, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 interface ChatInputProps {
   onSend: (content: string) => Promise<void>;
@@ -20,7 +21,7 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
     const el = textareaRef.current;
     if (!el) return;
     el.style.height = "auto";
-    el.style.height = `${Math.min(el.scrollHeight, 120)}px`;
+    el.style.height = `${Math.min(el.scrollHeight, 128)}px`;
   }, []);
 
   const handleSend = async () => {
@@ -50,14 +51,14 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
   const isEmpty = value.trim().length === 0;
 
   return (
-    <div className="sticky bottom-0 z-20 border-t border-white/[0.06] bg-white/[0.03] px-4 py-3 backdrop-blur-xl dark:border-white/[0.06] dark:bg-white/[0.03] sm:px-6 lg:border-gray-200 lg:bg-white/80">
-      <div className="flex items-end gap-2">
+    <div className="sticky bottom-0 z-20 border-t border-gray-200/50 bg-white/80 px-4 py-3 backdrop-blur-xl dark:border-white/[0.06] dark:bg-[#080808]/80 sm:px-6">
+      <div className="flex items-end gap-3">
         <button
           type="button"
           disabled
           title={t("chat.attachPhoto")}
           aria-label={t("chat.attachPhoto")}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white/30 dark:text-white/30 lg:text-gray-300"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-gray-300 dark:text-white/20"
         >
           <Paperclip className="h-5 w-5" />
         </button>
@@ -73,21 +74,26 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
           onKeyDown={handleKeyDown}
           placeholder={t("chat.placeholder")}
           disabled={disabled}
-          className="flex-1 resize-none rounded-full bg-white/[0.05] px-4 py-2.5 text-sm text-white placeholder-white/30 outline-none transition-shadow focus:ring-2 focus:ring-teal-500/30 dark:bg-white/[0.05] dark:text-white dark:placeholder-white/30 lg:bg-gray-100 lg:text-gray-900 lg:placeholder-gray-400"
+          className={cn(
+            "max-h-32 flex-1 resize-none overflow-y-auto rounded-2xl border px-4 py-2.5 text-sm transition-all",
+            "border-gray-200 bg-gray-100 text-gray-900 placeholder-gray-400",
+            "dark:border-white/[0.08] dark:bg-white/[0.06] dark:text-white dark:placeholder-white/30",
+            "focus:border-teal-500/50 focus:ring-2 focus:ring-teal-500/20 focus:outline-none"
+          )}
         />
 
         <motion.button
           type="button"
-          whileTap={{ scale: 0.95 }}
+          whileTap={{ scale: 0.9 }}
           onClick={handleSend}
           disabled={isEmpty || sending || disabled}
           aria-label={t("chat.send")}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-teal-500 to-teal-600 text-white shadow-lg shadow-teal-500/20 transition-opacity disabled:opacity-40"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-lg shadow-teal-500/25 transition-all hover:shadow-teal-500/40 disabled:opacity-40 disabled:shadow-none"
         >
           {sending ? (
-            <Loader2 className="h-4.5 w-4.5 animate-spin" />
+            <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
-            <Send className="h-4.5 w-4.5" />
+            <ArrowUp className="h-4 w-4" />
           )}
         </motion.button>
       </div>

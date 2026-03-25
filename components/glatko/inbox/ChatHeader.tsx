@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowLeft, CheckCircle } from "lucide-react";
+import { ChevronLeft, CheckCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 
@@ -27,16 +27,16 @@ export function ChatHeader({
   const initial = otherUser.full_name.charAt(0).toUpperCase();
 
   return (
-    <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-white/[0.06] bg-white/[0.03] px-4 py-3 backdrop-blur-xl dark:border-white/[0.06] dark:bg-white/[0.03] sm:px-6 lg:border-gray-200 lg:bg-white/80">
+    <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-gray-200/50 bg-white/80 px-4 py-3 backdrop-blur-xl dark:border-white/[0.06] dark:bg-[#080808]/80 sm:px-6">
       <Link
         href={`/${locale}/inbox`}
-        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white/60 transition-colors hover:bg-white/[0.06] hover:text-white dark:text-white/60 dark:hover:bg-white/[0.06] dark:hover:text-white lg:text-gray-500 lg:hover:bg-gray-100 lg:hover:text-gray-900"
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-gray-500 transition-colors hover:bg-gray-100 dark:text-white/60 dark:hover:bg-white/[0.06]"
         aria-label="Back"
       >
-        <ArrowLeft className="h-5 w-5" />
+        <ChevronLeft className="h-5 w-5" />
       </Link>
 
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-teal-500/20">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-teal-500/10 dark:bg-teal-500/20">
         {otherUser.avatar_url ? (
           <Image
             src={otherUser.avatar_url}
@@ -47,7 +47,7 @@ export function ChatHeader({
             unoptimized
           />
         ) : (
-          <span className="text-sm font-semibold text-teal-400">
+          <span className="text-sm font-semibold text-teal-600 dark:text-teal-400">
             {initial}
           </span>
         )}
@@ -55,21 +55,21 @@ export function ChatHeader({
 
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1.5">
-          <span className="truncate text-sm font-medium text-white dark:text-white lg:text-gray-900">
+          <span className="truncate text-sm font-semibold text-gray-900 dark:text-white">
             {otherUser.full_name}
           </span>
           {otherUser.is_verified && (
-            <CheckCircle className="h-3.5 w-3.5 shrink-0 text-teal-400" />
+            <CheckCircle className="h-3.5 w-3.5 shrink-0 text-teal-500" />
           )}
         </div>
         {requestTitle && (
-          <p className="truncate text-xs text-white/40 dark:text-white/40 lg:text-gray-500">
+          <p className="truncate text-xs text-gray-400 dark:text-white/40">
             {requestId ? (
               <Link
                 href={`/${locale}/dashboard/requests/${requestId}`}
-                className="transition-colors hover:text-teal-400"
+                className="transition-colors hover:text-teal-500"
               >
-                {requestTitle} · {t("chat.viewRequest")}
+                {requestTitle} &middot; {t("chat.viewRequest")}
               </Link>
             ) : (
               requestTitle
@@ -80,7 +80,7 @@ export function ChatHeader({
 
       <Link
         href={`/${locale}/provider/${otherUser.id}`}
-        className="shrink-0 text-xs text-white/40 transition-colors hover:text-teal-400 dark:text-white/40 lg:text-gray-400"
+        className="shrink-0 text-xs font-medium text-gray-400 transition-colors hover:text-teal-500 dark:text-white/40"
       >
         {t("chat.viewProfile")}
       </Link>

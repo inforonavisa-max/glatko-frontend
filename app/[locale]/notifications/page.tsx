@@ -15,8 +15,6 @@ import {
   CheckCheck,
 } from "lucide-react";
 import { PageBackground } from "@/components/ui/PageBackground";
-import { SectionTitle } from "@/components/ui/SectionTitle";
-import { GlassmorphCard } from "@/components/ui/GlassmorphCard";
 import {
   getNotificationsAction,
   markReadAction,
@@ -36,17 +34,19 @@ interface GlatkoNotification {
   created_at: string;
 }
 
-const typeIcons: Record<string, typeof Bell> = {
-  new_bid: DollarSign,
-  bid_accepted: CheckCircle,
-  bid_rejected: ShieldX,
-  message: MessageSquare,
-  status_change: RefreshCw,
-  review: Star,
-  verification_approved: ShieldCheck,
-  verification_rejected: ShieldX,
-  new_request_match: Bell,
+const typeConfig: Record<string, { icon: typeof Bell; bgColor: string; iconColor: string }> = {
+  new_bid: { icon: DollarSign, bgColor: "bg-teal-500/10", iconColor: "text-teal-600 dark:text-teal-400" },
+  bid_accepted: { icon: CheckCircle, bgColor: "bg-green-500/10", iconColor: "text-green-600 dark:text-green-400" },
+  bid_rejected: { icon: ShieldX, bgColor: "bg-red-500/10", iconColor: "text-red-500 dark:text-red-400" },
+  message: { icon: MessageSquare, bgColor: "bg-blue-500/10", iconColor: "text-blue-600 dark:text-blue-400" },
+  status_change: { icon: RefreshCw, bgColor: "bg-purple-500/10", iconColor: "text-purple-600 dark:text-purple-400" },
+  review: { icon: Star, bgColor: "bg-amber-500/10", iconColor: "text-amber-600 dark:text-amber-400" },
+  verification_approved: { icon: ShieldCheck, bgColor: "bg-teal-500/10", iconColor: "text-teal-600 dark:text-teal-400" },
+  verification_rejected: { icon: ShieldX, bgColor: "bg-red-500/10", iconColor: "text-red-500 dark:text-red-400" },
+  new_request_match: { icon: Bell, bgColor: "bg-teal-500/10", iconColor: "text-teal-600 dark:text-teal-400" },
 };
+
+const defaultConfig = { icon: Bell, bgColor: "bg-gray-500/10", iconColor: "text-gray-500 dark:text-gray-400" };
 
 type FilterType = "all" | "unread" | "bids" | "messages" | "status" | "reviews";
 
@@ -165,9 +165,12 @@ export default function NotificationsPage() {
     <PageBackground>
       <div className="mx-auto max-w-3xl px-4 pb-20 pt-28 sm:px-6 lg:px-8">
         <div className="flex items-start justify-between">
-          <SectionTitle subtitle={t("notifications.emptyDesc")}>
-            {t("notifications.title")}
-          </SectionTitle>
+          <div>
+            <h1 className="font-serif text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+              {t("notifications.title")}
+            </h1>
+            <div className="mt-1 h-0.5 w-12 rounded-full bg-gradient-to-r from-teal-500 to-teal-600" />
+          </div>
           {notifications.some((n) => !n.read_at) && (
             <motion.button
               whileHover={{ scale: 1.02 }}
@@ -190,7 +193,7 @@ export default function NotificationsPage() {
                 "rounded-full px-3.5 py-1.5 text-xs font-medium transition-all",
                 filter === f.key
                   ? "bg-teal-500 text-white shadow-md shadow-teal-500/25"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-white/[0.06] dark:text-white/60 dark:hover:bg-white/[0.1]"
+                  : "border border-gray-200 bg-white/70 text-gray-600 hover:bg-gray-50 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white/60 dark:hover:bg-white/[0.08]"
               )}
             >
               {f.label}
@@ -198,7 +201,7 @@ export default function NotificationsPage() {
           ))}
         </div>
 
-        <div className="mt-8 space-y-3">
+        <div className="mt-8 space-y-2">
           {loading && (
             <div className="flex items-center justify-center py-20">
               <div className="h-6 w-6 animate-spin rounded-full border-2 border-teal-500 border-t-transparent" />
@@ -206,24 +209,21 @@ export default function NotificationsPage() {
           )}
 
           {!loading && filtered.length === 0 && (
-            <GlassmorphCard hover={false} className="p-12">
-              <div className="flex flex-col items-center gap-3 text-center">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-teal-500/10">
-                  <Bell className="h-8 w-8 text-teal-500/50" />
-                </div>
-                <p className="text-sm font-medium text-gray-900 dark:text-white">
-                  {t("notifications.empty")}
-                </p>
-                <p className="text-xs text-gray-500 dark:text-white/40">
-                  {t("notifications.emptyDesc")}
-                </p>
-              </div>
-            </GlassmorphCard>
+            <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-gray-200/50 bg-white/70 py-16 text-center backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03]">
+              <Bell className="h-14 w-14 text-teal-500/30" strokeWidth={1.5} />
+              <p className="font-serif text-lg font-semibold text-gray-900 dark:text-white">
+                {t("notifications.empty")}
+              </p>
+              <p className="text-sm text-gray-500 dark:text-white/40">
+                {t("notifications.emptyDesc")}
+              </p>
+            </div>
           )}
 
           {!loading &&
             filtered.map((n, i) => {
-              const Icon = typeIcons[n.type] || Bell;
+              const config = typeConfig[n.type] || defaultConfig;
+              const Icon = config.icon;
               return (
                 <motion.div
                   key={n.id}
@@ -231,37 +231,38 @@ export default function NotificationsPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.03 }}
                 >
-                  <GlassmorphCard className="cursor-pointer">
-                    <button
-                      onClick={() => handleClick(n)}
-                      className={cn(
-                        "flex w-full items-start gap-4 p-4 text-left",
-                        !n.read_at && "bg-teal-50/30 dark:bg-teal-500/[0.03]"
-                      )}
-                    >
-                      <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-teal-500/10 dark:bg-teal-500/15">
-                        <Icon className="h-5 w-5 text-teal-600 dark:text-teal-400" />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-center gap-2">
-                          <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                            {getLocalizedTitle(n.type, t)}
-                          </p>
-                          {!n.read_at && (
-                            <span className="h-2 w-2 rounded-full bg-teal-500 shadow-[0_0_6px_rgba(20,184,166,0.6)]" />
-                          )}
-                        </div>
-                        {n.body && (
-                          <p className="mt-0.5 text-sm text-gray-600 dark:text-white/50">
-                            {n.body}
-                          </p>
-                        )}
-                        <p className="mt-1.5 text-xs text-gray-400 dark:text-white/30">
-                          {formatTime(n.created_at)}
+                  <button
+                    onClick={() => handleClick(n)}
+                    className={cn(
+                      "flex w-full items-start gap-4 rounded-2xl border p-4 text-left backdrop-blur-xl transition-all duration-300",
+                      "border-gray-200/50 bg-white/70 hover:border-teal-500/20 hover:shadow-md",
+                      "dark:border-white/[0.08] dark:bg-white/[0.03] dark:hover:border-teal-500/20",
+                      "cursor-pointer",
+                      !n.read_at && "border-l-2 border-l-teal-500 bg-teal-500/[0.02] dark:bg-teal-500/[0.04]"
+                    )}
+                  >
+                    <div className={cn("mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl", config.bgColor)}>
+                      <Icon className={cn("h-5 w-5", config.iconColor)} />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <p className={cn("text-sm text-gray-900 dark:text-white", !n.read_at ? "font-bold" : "font-medium")}>
+                          {getLocalizedTitle(n.type, t)}
                         </p>
+                        {!n.read_at && (
+                          <span className="h-2.5 w-2.5 rounded-full bg-teal-500 shadow-[0_0_6px_rgba(20,184,166,0.6)]" />
+                        )}
                       </div>
-                    </button>
-                  </GlassmorphCard>
+                      {n.body && (
+                        <p className="mt-0.5 text-sm text-gray-600 dark:text-white/50">
+                          {n.body}
+                        </p>
+                      )}
+                      <p className="mt-1.5 text-xs text-gray-400 dark:text-white/30">
+                        {formatTime(n.created_at)}
+                      </p>
+                    </div>
+                  </button>
                 </motion.div>
               );
             })}

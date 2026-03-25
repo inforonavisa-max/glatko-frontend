@@ -31,12 +31,12 @@ export function MessageBubble({
   return (
     <>
       {showDate && dateLabel && (
-        <div className="flex items-center gap-3 py-4">
-          <div className="h-px flex-1 bg-white/[0.06] dark:bg-white/[0.06] lg:bg-gray-200" />
-          <span className="shrink-0 text-[11px] text-white/30 dark:text-white/30 lg:text-gray-400">
+        <div className="flex items-center gap-3 py-6">
+          <div className="h-px flex-1 bg-gray-200 dark:bg-white/[0.06]" />
+          <span className="shrink-0 px-1 text-[11px] text-gray-400 dark:text-white/30">
             {dateLabel}
           </span>
-          <div className="h-px flex-1 bg-white/[0.06] dark:bg-white/[0.06] lg:bg-gray-200" />
+          <div className="h-px flex-1 bg-gray-200 dark:bg-white/[0.06]" />
         </div>
       )}
 
@@ -47,10 +47,10 @@ export function MessageBubble({
         className={`flex ${isOwn ? "justify-end" : "justify-start"}`}
       >
         <div
-          className={`max-w-[75%] px-4 py-2.5 sm:max-w-[65%] ${
+          className={`max-w-[75%] px-4 py-2.5 shadow-sm sm:max-w-[65%] ${
             isOwn
-              ? "rounded-2xl rounded-br-sm bg-gradient-to-br from-teal-500 to-teal-600 text-white"
-              : "rounded-2xl rounded-bl-sm bg-white/[0.06] text-white dark:bg-white/[0.06] dark:text-white lg:bg-gray-100 lg:text-gray-900"
+              ? "rounded-2xl rounded-br-sm bg-gradient-to-r from-teal-500 to-teal-600 text-white"
+              : "rounded-2xl rounded-bl-sm bg-gray-100 text-gray-900 dark:bg-white/[0.06] dark:text-white"
           }`}
         >
           <p className="whitespace-pre-wrap break-words text-sm leading-relaxed">
@@ -62,16 +62,14 @@ export function MessageBubble({
           >
             <span
               className={`text-[10px] ${
-                isOwn
-                  ? "text-white/60"
-                  : "text-white/40 dark:text-white/40 lg:text-gray-400"
+                isOwn ? "text-white/60" : "text-gray-400 dark:text-white/40"
               }`}
             >
               {formatTime(message.created_at)}
             </span>
             {isOwn &&
               (message.read_at ? (
-                <CheckCheck className="h-3.5 w-3.5 text-teal-300" />
+                <CheckCheck className="h-3.5 w-3.5 text-teal-200" />
               ) : (
                 <Check className="h-3.5 w-3.5 text-white/50" />
               ))}

@@ -41,14 +41,14 @@ function ReviewCard({
     <motion.div
       initial={{ filter: "blur(16px)", opacity: 0, scale: 0.95 }}
       animate={{ filter: "blur(0px)", opacity: 1, scale: 1 }}
-      transition={{ duration: 0.6, delay, ease: "easeOut" }}
-      className="rounded-2xl border border-gray-200 bg-white/80 p-6 backdrop-blur-2xl dark:border-white/[0.08] dark:bg-white/[0.03]"
+      transition={{ duration: 0.8, delay, ease: [0.25, 0.4, 0.25, 1] }}
+      className="rounded-2xl border border-gray-200/50 bg-white/80 p-6 shadow-xl backdrop-blur-2xl dark:border-white/[0.08] dark:bg-white/[0.03]"
     >
-      <p className="mb-4 text-xs font-medium uppercase tracking-wider text-teal-500">
+      <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-teal-600 dark:text-teal-400">
         {heading}
       </p>
 
-        {reviewer && (
+      {reviewer && (
         <div className="mb-4 flex items-center gap-3">
           {reviewer.avatar_url ? (
             <Image
@@ -60,7 +60,7 @@ function ReviewCard({
               unoptimized
             />
           ) : (
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-500/10 text-sm font-bold text-teal-400">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-500/10 text-sm font-bold text-teal-600 dark:text-teal-400">
               {reviewer.full_name.charAt(0)}
             </div>
           )}
@@ -75,26 +75,26 @@ function ReviewCard({
       </div>
 
       {(review.quality_rating || review.communication_rating || review.punctuality_rating) && (
-        <div className="mb-4 flex flex-wrap gap-4">
+        <div className="mb-4 space-y-3 rounded-xl border border-gray-100/80 bg-white/40 p-4 backdrop-blur-sm dark:border-white/[0.06] dark:bg-white/[0.02]">
           {review.quality_rating !== null && (
-            <div>
-              <p className="mb-0.5 text-[10px] font-medium uppercase tracking-wider text-gray-400 dark:text-white/30">
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-medium text-gray-500 dark:text-white/40">
                 {t("review.qualityRating")}
               </p>
               <StarRating value={review.quality_rating} readonly size="sm" />
             </div>
           )}
           {review.communication_rating !== null && (
-            <div>
-              <p className="mb-0.5 text-[10px] font-medium uppercase tracking-wider text-gray-400 dark:text-white/30">
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-medium text-gray-500 dark:text-white/40">
                 {t("review.communicationRating")}
               </p>
               <StarRating value={review.communication_rating} readonly size="sm" />
             </div>
           )}
           {review.punctuality_rating !== null && (
-            <div>
-              <p className="mb-0.5 text-[10px] font-medium uppercase tracking-wider text-gray-400 dark:text-white/30">
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-medium text-gray-500 dark:text-white/40">
                 {t("review.punctualityRating")}
               </p>
               <StarRating value={review.punctuality_rating} readonly size="sm" />
@@ -104,9 +104,11 @@ function ReviewCard({
       )}
 
       {review.review_text && (
-        <p className="text-sm leading-relaxed text-gray-600 dark:text-white/60">
-          &ldquo;{review.review_text}&rdquo;
-        </p>
+        <div className="rounded-xl bg-gray-50 p-4 dark:bg-white/[0.02]">
+          <p className="text-sm italic leading-relaxed text-gray-600 dark:text-white/60">
+            &ldquo;{review.review_text}&rdquo;
+          </p>
+        </div>
       )}
 
       {review.photos.length > 0 && (
@@ -141,11 +143,12 @@ export function ReviewReveal({
       transition={{ duration: 0.5 }}
       className="mx-auto max-w-4xl"
     >
-      <h1 className="mb-8 font-serif text-3xl bg-gradient-to-r from-teal-400 to-teal-500 bg-clip-text text-transparent sm:text-4xl">
+      <h1 className="font-serif text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">
         {t("review.reveal.title")}
       </h1>
+      <div className="mt-1 h-0.5 w-16 rounded-full bg-gradient-to-r from-teal-500 to-teal-600" />
 
-      <div className={cn("grid gap-6", (customerReview && proReview) && "md:grid-cols-2")}>
+      <div className={cn("mt-8 grid gap-6", (customerReview && proReview) && "md:grid-cols-2")}>
         {customerReview && (
           <ReviewCard
             review={customerReview}
