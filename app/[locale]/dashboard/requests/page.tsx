@@ -4,7 +4,7 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { getCustomerRequests } from "@/lib/supabase/glatko.server";
 import { Link } from "@/i18n/navigation";
 import { SpotlightCard } from "@/components/landing/spotlight-card";
-import { BackgroundGrids } from "@/components/aceternity/background-grids";
+import { PageBackground } from "@/components/ui/PageBackground";
 import { Clock, CheckCircle, AlertCircle, XCircle, Inbox } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { RequestStatus } from "@/types/glatko";
@@ -56,16 +56,14 @@ export default async function DashboardRequestsPage({ params }: Props) {
   const requests = await getCustomerRequests(user.id);
 
   return (
-    <div className="relative mx-auto max-w-4xl px-4 py-12 md:py-20">
-      <div className="pointer-events-none absolute inset-0" style={{ opacity: 0.08 }}>
-        <BackgroundGrids />
-      </div>
-      <div className="relative">
+    <PageBackground opacity={0.08}>
+      <div className="mx-auto max-w-4xl px-4 pb-20 pt-28 sm:px-6">
       <div className="mb-10">
         <h1 className="font-serif text-3xl font-semibold text-gray-900 dark:text-white">
           {t("dashboard.requests.title")}
         </h1>
-        <p className="mt-2 text-gray-500 dark:text-white/50">
+        <div className="mt-3 h-0.5 w-12 rounded-full bg-gradient-to-r from-teal-500 to-transparent" />
+        <p className="mt-3 text-gray-500 dark:text-white/50">
           {t("dashboard.requests.subtitle")}
         </p>
       </div>
@@ -152,6 +150,6 @@ export default async function DashboardRequestsPage({ params }: Props) {
         </div>
       )}
       </div>
-    </div>
+    </PageBackground>
   );
 }

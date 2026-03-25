@@ -2,7 +2,7 @@ import { redirect, notFound } from "next/navigation";
 import { createClient } from "@/supabase/server";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { getServiceRequest, getReviewStatus } from "@/lib/supabase/glatko.server";
-import { BackgroundGrids } from "@/components/aceternity/background-grids";
+import { PageBackground } from "@/components/ui/PageBackground";
 import { ReviewForm } from "@/components/glatko/review/ReviewForm";
 import { ReviewPending } from "@/components/glatko/review/ReviewPending";
 import { ReviewReveal } from "@/components/glatko/review/ReviewReveal";
@@ -34,13 +34,10 @@ export default async function ReviewPage({ params }: Props) {
 
   if (request.status !== "completed" && request.status !== "reviewed") {
     return (
-      <div className="relative min-h-screen overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 z-0 opacity-[0.08]">
-          <BackgroundGrids />
-        </div>
-        <div className="relative z-10 mx-auto max-w-2xl px-4 py-12 md:py-20">
-          <div className="rounded-2xl border border-white/20 bg-white/60 p-8 text-center shadow-xl backdrop-blur-xl dark:border-white/10 dark:bg-white/5">
-            <p className="text-lg text-neutral-600 dark:text-neutral-400">
+      <PageBackground opacity={0.08}>
+        <div className="mx-auto max-w-2xl px-4 pb-20 pt-28 sm:px-6">
+          <div className="rounded-2xl border border-gray-200/80 bg-white/80 p-8 text-center shadow-xl backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03]">
+            <p className="text-lg text-gray-600 dark:text-white/50">
               {t("review.notCompleted")}
             </p>
             <Link
@@ -51,7 +48,7 @@ export default async function ReviewPage({ params }: Props) {
             </Link>
           </div>
         </div>
-      </div>
+      </PageBackground>
     );
   }
 
@@ -102,43 +99,34 @@ export default async function ReviewPage({ params }: Props) {
     const mappedPro = proReview ? mapReview(proReview) : null;
 
     return (
-      <div className="relative min-h-screen overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 z-0 opacity-[0.08]">
-          <BackgroundGrids />
-        </div>
-        <div className="relative z-10 mx-auto max-w-2xl px-4 py-12 md:py-20">
+      <PageBackground opacity={0.08}>
+        <div className="mx-auto max-w-2xl px-4 pb-20 pt-28 sm:px-6">
           <ReviewReveal
             customerReview={mappedCustomer}
             proReview={mappedPro}
             requestTitle={request.title}
           />
         </div>
-      </div>
+      </PageBackground>
     );
   }
 
   if (reviewStatus.myReview) {
     return (
-      <div className="relative min-h-screen overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 z-0 opacity-[0.08]">
-          <BackgroundGrids />
-        </div>
-        <div className="relative z-10 mx-auto max-w-2xl px-4 py-12 md:py-20">
+      <PageBackground opacity={0.08}>
+        <div className="mx-auto max-w-2xl px-4 pb-20 pt-28 sm:px-6">
           <ReviewPending
             requestTitle={request.title}
             otherHasReviewed={reviewStatus.otherHasReviewed}
           />
         </div>
-      </div>
+      </PageBackground>
     );
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      <div className="pointer-events-none absolute inset-0 z-0 opacity-[0.08]">
-        <BackgroundGrids />
-      </div>
-      <div className="relative z-10 mx-auto max-w-2xl px-4 py-12 md:py-20">
+    <PageBackground opacity={0.08}>
+      <div className="mx-auto max-w-2xl px-4 pb-20 pt-28 sm:px-6">
         <ReviewForm
           serviceRequestId={requestId}
           bidId={acceptedBid?.id ?? ""}
@@ -149,6 +137,6 @@ export default async function ReviewPage({ params }: Props) {
           otherPartyAvatar={otherPartyAvatar}
         />
       </div>
-    </div>
+    </PageBackground>
   );
 }

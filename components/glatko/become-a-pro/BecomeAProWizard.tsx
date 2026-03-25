@@ -228,8 +228,8 @@ export function BecomeAProWizard({ userId, categories }: Props) {
             onClick={() => setStep((s) => s + 1)}
             disabled={!canAdvance}
             className={cn(
-              "flex w-full items-center justify-center gap-2 rounded-xl bg-teal-500 px-6 py-3 text-sm font-semibold text-white transition-all sm:w-auto",
-              "hover:bg-teal-600 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+              "flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all sm:w-auto",
+              "hover:from-teal-600 hover:to-teal-700 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
             )}
           >
             {t("pro.wizard.next")}
@@ -258,8 +258,8 @@ export function BecomeAProWizard({ userId, categories }: Props) {
               });
             }}
             className={cn(
-              "flex w-full items-center justify-center gap-2 rounded-xl bg-teal-500 px-6 py-3 text-sm font-semibold text-white transition-all sm:w-auto",
-              "hover:bg-teal-600 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+              "flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all sm:w-auto",
+              "hover:from-teal-600 hover:to-teal-700 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
             )}
           >
             {isPending ? (

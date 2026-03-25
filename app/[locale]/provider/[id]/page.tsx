@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { SpotlightCard } from "@/components/landing/spotlight-card";
 import { routing } from "@/i18n/routing";
-import { BackgroundGrids } from "@/components/aceternity/background-grids";
+import { PageBackground } from "@/components/ui/PageBackground";
 import type { Locale } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import { getProfessionalProfile, getPublishedReviews, calculateTrustBadges } from "@/lib/supabase/glatko.server";
@@ -109,13 +109,10 @@ export default async function ProviderProfilePage({ params }: PageProps) {
   const fullStars = Math.min(5, Math.round(rating));
 
   return (
-    <div className="relative mx-auto max-w-4xl px-4 pb-16 pt-24">
+    <PageBackground opacity={0.08}>
       <LocalBusinessSchema pro={profile as unknown as ProfessionalProfile} />
-      <div className="pointer-events-none absolute inset-0" style={{ opacity: 0.08 }}>
-        <BackgroundGrids />
-      </div>
-      <div className="pointer-events-none absolute top-0 left-0 right-0 h-48 bg-gradient-to-b from-teal-500/[0.04] to-transparent dark:from-teal-500/[0.06]" />
-      <div className="relative">
+      <div className="pointer-events-none absolute top-0 left-0 right-0 h-48 bg-gradient-to-b from-teal-500/[0.06] to-transparent dark:from-teal-500/[0.08]" />
+      <div className="mx-auto max-w-4xl px-4 pb-20 pt-28 sm:px-6">
       <SpotlightCard className="mb-6">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
           {profile.profile?.avatar_url ? (
@@ -298,6 +295,6 @@ export default async function ProviderProfilePage({ params }: PageProps) {
         </button>
       </div>
       </div>
-    </div>
+    </PageBackground>
   );
 }

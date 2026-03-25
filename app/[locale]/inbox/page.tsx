@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { getUserConversations } from "@/lib/supabase/glatko.server";
 import { getTranslations } from "next-intl/server";
 import { ConversationList } from "@/components/glatko/inbox/ConversationList";
-import { BackgroundGrids } from "@/components/aceternity/background-grids";
+import { PageBackground } from "@/components/ui/PageBackground";
 
 export default async function InboxPage({
   params,
@@ -27,17 +27,12 @@ export default async function InboxPage({
   }
 
   return (
-    <main className="relative min-h-screen pt-20 pb-12">
-      <div
-        className="pointer-events-none absolute inset-0"
-        style={{ opacity: 0.1 }}
-      >
-        <BackgroundGrids />
-      </div>
-      <div className="relative z-10 mx-auto max-w-3xl px-4 sm:px-6">
+    <PageBackground opacity={0.08}>
+      <main className="mx-auto max-w-3xl px-4 pb-20 pt-28 sm:px-6">
         <h1 className="font-serif text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
           {t("inbox.title")}
         </h1>
+        <div className="mt-3 h-0.5 w-12 rounded-full bg-gradient-to-r from-teal-500 to-transparent" />
         <div className="mt-8">
           <ConversationList
             conversations={conversations}
@@ -45,7 +40,7 @@ export default async function InboxPage({
             locale={locale}
           />
         </div>
-      </div>
-    </main>
+      </main>
+    </PageBackground>
   );
 }

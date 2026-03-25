@@ -5,7 +5,7 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { getServiceRequest } from "@/lib/supabase/glatko.server";
 import { Link } from "@/i18n/navigation";
 import { SpotlightCard } from "@/components/landing/spotlight-card";
-import { BackgroundGrids } from "@/components/aceternity/background-grids";
+import { PageBackground } from "@/components/ui/PageBackground";
 import { CancelRequestButton } from "@/components/glatko/dashboard/CancelRequestButton";
 import { BidComparison } from "@/components/glatko/dashboard/BidComparison";
 import {
@@ -101,11 +101,8 @@ export default async function RequestDetailPage({ params }: Props) {
   const statusIdx = TIMELINE_STATUSES.indexOf(status);
 
   return (
-    <div className="relative mx-auto max-w-3xl px-4 py-12 md:py-20">
-      <div className="pointer-events-none absolute inset-0" style={{ opacity: 0.08 }}>
-        <BackgroundGrids />
-      </div>
-      <div className="relative">
+    <PageBackground opacity={0.08}>
+      <div className="mx-auto max-w-3xl px-4 pb-20 pt-28 sm:px-6">
       <Link
         href="/dashboard/requests"
         className="mb-6 inline-flex items-center gap-2 text-sm text-gray-500 transition-colors hover:text-teal-600 dark:text-white/50 dark:hover:text-teal-400"
@@ -310,6 +307,6 @@ export default async function RequestDetailPage({ params }: Props) {
         </div>
       )}
       </div>
-    </div>
+    </PageBackground>
   );
 }

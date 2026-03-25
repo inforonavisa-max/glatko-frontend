@@ -3,7 +3,7 @@ import { createClient } from "@/supabase/server";
 import { setRequestLocale } from "next-intl/server";
 import { getServiceCategories } from "@/lib/supabase/glatko.server";
 import { RequestServiceWizard } from "@/components/glatko/request-service/RequestServiceWizard";
-import { BackgroundGrids } from "@/components/aceternity/background-grids";
+import { PageBackground } from "@/components/ui/PageBackground";
 import type { ServiceCategory } from "@/types/glatko";
 
 type Props = {
@@ -26,13 +26,10 @@ export default async function RequestServicePage({ params }: Props) {
   const categories: ServiceCategory[] = await getServiceCategories();
 
   return (
-    <div className="relative mx-auto max-w-3xl px-4 py-12 md:py-20">
-      <div className="pointer-events-none absolute inset-0" style={{ opacity: 0.12 }}>
-        <BackgroundGrids />
-      </div>
-      <div className="relative">
+    <PageBackground opacity={0.1}>
+      <div className="mx-auto max-w-3xl px-4 pb-20 pt-28 sm:px-6">
         <RequestServiceWizard userId={user.id} categories={categories} />
       </div>
-    </div>
+    </PageBackground>
   );
 }

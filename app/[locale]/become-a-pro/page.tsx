@@ -3,7 +3,7 @@ import { createClient } from "@/supabase/server";
 import { getTranslations } from "next-intl/server";
 import { setRequestLocale } from "next-intl/server";
 import { BecomeAProWizard } from "@/components/glatko/become-a-pro/BecomeAProWizard";
-import { BackgroundGrids } from "@/components/aceternity/background-grids";
+import { PageBackground } from "@/components/ui/PageBackground";
 
 type Props = {
   params: Promise<{ locale: string }> | { locale: string };
@@ -38,28 +38,24 @@ export default async function BecomeAProPage({ params }: Props) {
 
   if (existingPro) {
     return (
-      <div className="relative flex min-h-[60vh] items-center justify-center px-4">
-        <div className="pointer-events-none absolute inset-0" style={{ opacity: 0.15 }}>
-          <BackgroundGrids />
+      <PageBackground opacity={0.12}>
+        <div className="flex min-h-[60vh] items-center justify-center px-4">
+          <div className="text-center">
+            <h1 className="font-serif text-2xl font-semibold text-gray-900 dark:text-white">
+              {t("pro.wizard.alreadyPro")}
+            </h1>
+            <p className="mt-2 text-gray-500 dark:text-white/50">
+              {t("pro.wizard.successDesc")}
+            </p>
+          </div>
         </div>
-        <div className="relative text-center">
-          <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
-            {t("pro.wizard.alreadyPro")}
-          </h1>
-          <p className="mt-2 text-gray-500 dark:text-white/50">
-            {t("pro.wizard.successDesc")}
-          </p>
-        </div>
-      </div>
+      </PageBackground>
     );
   }
 
   return (
-    <div className="relative mx-auto max-w-3xl px-4 py-12 md:py-20">
-      <div className="pointer-events-none absolute inset-0" style={{ opacity: 0.15 }}>
-        <BackgroundGrids />
-      </div>
-      <div className="relative">
+    <PageBackground opacity={0.1}>
+      <div className="mx-auto max-w-3xl px-4 pb-20 pt-28 sm:px-6">
         <BecomeAProWizard
           userId={user.id}
           categories={
@@ -67,6 +63,6 @@ export default async function BecomeAProPage({ params }: Props) {
           }
         />
       </div>
-    </div>
+    </PageBackground>
   );
 }

@@ -4,8 +4,8 @@ import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { Home, Anchor, ArrowRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
-import { BackgroundGrids } from "@/components/aceternity/background-grids";
 import { SpotlightCard } from "@/components/landing/spotlight-card";
+import { PageBackground } from "@/components/ui/PageBackground";
 import type { Metadata } from "next";
 
 type Props = {
@@ -70,11 +70,8 @@ export default async function ServicesPage({ params }: Props) {
   ];
 
   return (
-    <div className="relative min-h-screen bg-[#F8F6F0] dark:bg-[#080808]">
-      <div className="pointer-events-none absolute inset-0 overflow-hidden" style={{ opacity: 0.12 }} aria-hidden>
-        <BackgroundGrids />
-      </div>
-      <div className="relative z-10 mx-auto max-w-6xl px-4 pb-20 pt-28 sm:px-6 lg:px-8">
+    <PageBackground opacity={0.1}>
+      <div className="mx-auto max-w-6xl px-4 pb-20 pt-28 sm:px-6 lg:px-8">
         <div className="mb-12 text-center">
           <h1 className="font-serif text-3xl text-gray-900 dark:text-white sm:text-4xl">
             {t("services.title")}
@@ -162,6 +159,6 @@ export default async function ServicesPage({ params }: Props) {
           </Link>
         </div>
       </div>
-    </div>
+    </PageBackground>
   );
 }
