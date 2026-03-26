@@ -8,7 +8,7 @@ export default function GlobalError({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-[#F8F6F0] text-gray-900 dark:bg-[#080808] dark:text-white flex items-center justify-center">
+      <body className="min-h-screen bg-[#F8F6F0] text-gray-900 dark:bg-[#0b1f23] dark:text-white flex items-center justify-center">
         <div className="relative w-full max-w-md mx-4">
           <div className="pointer-events-none absolute inset-0">
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[300px] w-[300px] rounded-full bg-teal-500/[0.06] blur-[100px] dark:bg-teal-500/10" />

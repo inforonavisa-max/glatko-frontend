@@ -64,7 +64,7 @@ export function MobileShowcase({ title, subtitle }: MobileShowcaseProps) {
           className="flex justify-center"
         >
           <IPhoneMockup>
-            <div className="flex h-full min-h-[480px] flex-col items-center justify-center bg-[#080808] p-6">
+            <div className="flex h-full min-h-[480px] flex-col items-center justify-center bg-[#0b1f23] p-6">
               <span className="text-2xl font-bold text-white">
                 Glatko<span className="text-teal-500">.</span>
               </span>

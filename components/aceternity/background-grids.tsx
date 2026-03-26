@@ -4,7 +4,7 @@
  * Adapted from Aceternity Pro template `components/hero.tsx`:
  * - BackgroundGrids (lines 158–179)
  * - GridLineVertical (lines 350–383)
- * Middle column gradient tinted for Glatko teal; CSS vars aligned with page bg (#F8F6F0 / #080808).
+ * Middle column gradient tinted for Glatko teal; CSS vars aligned with page bg (#F8F6F0 / #0b1f23).
  */
 
 import React from "react";
@@ -62,7 +62,7 @@ const GridLineVertical = ({
         "[mask-composite:exclude]",
         "z-30",
         "dark:bg-[linear-gradient(to_bottom,var(--color-dark),var(--color-dark)_50%,transparent_0,transparent)]",
-        "dark:[--background:#080808]",
+        "dark:[--background:#0b1f23]",
         className
       )}
     />

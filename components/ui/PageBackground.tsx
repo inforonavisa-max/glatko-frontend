@@ -10,7 +10,7 @@ interface PageBackgroundProps {
 
 export function PageBackground({ children, opacity = 0.15, meshBlobs = true }: PageBackgroundProps) {
   return (
-    <div className="relative min-h-screen bg-[#F8F6F0] dark:bg-[#080808]">
+    <div className="relative min-h-screen bg-[#F8F6F0] dark:bg-[#0b1f23]">
       <div
         className="pointer-events-none absolute inset-0 overflow-hidden"
         style={{ opacity }}

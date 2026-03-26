@@ -16,7 +16,7 @@ export function AceternityHeroBackground({ className }: AceternityHeroBackground
   return (
     <div
       className={cn(
-        "pointer-events-none absolute inset-0 overflow-hidden bg-[#F8F6F0] dark:bg-[#080808]",
+        "pointer-events-none absolute inset-0 overflow-hidden bg-[#F8F6F0] dark:bg-[#0b1f23]",
         className
       )}
     >
@@ -53,7 +53,7 @@ export function AceternityHeroBackground({ className }: AceternityHeroBackground
       </div>
 
       <div className="absolute inset-0 z-[2] bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:32px_32px]" />
-      <div className="absolute inset-0 z-[3] bg-[#F8F6F0] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_-20%,transparent_70%,#000_100%)] dark:bg-[#080808]" />
+      <div className="absolute inset-0 z-[3] bg-[#F8F6F0] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_-20%,transparent_70%,#000_100%)] dark:bg-[#0b1f23]" />
     </div>
   );
 }

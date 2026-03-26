@@ -1,6 +1,6 @@
 export default function Loading() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#080808]">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-[#0b1f23]">
       <div className="flex flex-col items-center gap-4">
         <div className="relative">
           <div className="h-10 w-10 rounded-full border-2 border-teal-500/30 border-t-teal-500 animate-spin" />

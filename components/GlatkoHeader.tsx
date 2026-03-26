@@ -236,7 +236,7 @@ export function GlatkoHeader({ userId, isPro = false }: GlatkoHeaderProps) {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="fixed inset-0 z-[100] flex flex-col bg-white dark:bg-[#080808]"
+            className="fixed inset-0 z-[100] flex flex-col bg-white dark:bg-[#0b1f23]"
           >
             <div className="flex h-16 items-center justify-between border-b border-gray-200 px-4 dark:border-white/10">
               <Link href="/" className="flex items-center gap-1">

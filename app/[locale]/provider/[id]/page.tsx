@@ -165,11 +165,11 @@ export default async function ProviderProfilePage({ params }: PageProps) {
                 alt=""
                 width={112}
                 height={112}
-                className="h-28 w-28 shrink-0 rounded-full border-4 border-white object-cover shadow-2xl dark:border-[#080808]"
+                className="h-28 w-28 shrink-0 rounded-full border-4 border-white object-cover shadow-2xl dark:border-[#0b1f23]"
               />
             ) : (
               <div
-                className="flex h-28 w-28 shrink-0 items-center justify-center rounded-full border-4 border-white bg-teal-500/20 text-3xl font-semibold text-teal-700 shadow-2xl dark:border-[#080808] dark:text-teal-300"
+                className="flex h-28 w-28 shrink-0 items-center justify-center rounded-full border-4 border-white bg-teal-500/20 text-3xl font-semibold text-teal-700 shadow-2xl dark:border-[#0b1f23] dark:text-teal-300"
                 aria-hidden
               >
                 {initialsFromName(displayName)}

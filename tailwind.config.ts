@@ -55,7 +55,7 @@ const config: Config = {
       },
       backgroundImage: {
         "teal-gradient": "linear-gradient(135deg, #14B8A6 0%, #0D9488 100%)",
-        "dark-gradient": "linear-gradient(135deg, #1E2022 0%, #080808 100%)",
+        "dark-gradient": "linear-gradient(135deg, #1E2022 0%, #0b1f23 100%)",
       },
       animation: {
         "fade-up": "fadeUp 0.6s cubic-bezier(0.4,0,0.2,1) forwards",

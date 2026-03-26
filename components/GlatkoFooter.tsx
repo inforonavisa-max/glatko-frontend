@@ -52,7 +52,7 @@ export function GlatkoFooter() {
   ];
 
   return (
-    <footer className="border-t border-gray-200 bg-gray-50 dark:border-white/5 dark:bg-[#080808]">
+    <footer className="border-t border-gray-200 bg-gray-50 dark:border-white/5 dark:bg-[#0b1f23]">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 gap-8 md:grid-cols-5">
           <div className="col-span-2 md:col-span-1">
