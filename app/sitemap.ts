@@ -1,50 +1,86 @@
 import type { MetadataRoute } from "next";
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const locales = ["tr", "en", "de", "it", "ru", "uk", "sr", "me", "ar"];
-  const routes: MetadataRoute.Sitemap = [];
+const LOCALES = ["tr", "en", "de", "it", "ru", "uk", "sr", "me", "ar"] as const;
+const BASE = "https://glatko.app";
 
+function hreflangForLocale(locale: string): string {
+  if (locale === "me") return "sr-ME";
+  if (locale === "sr") return "sr-RS";
+  return locale;
+}
+
+function makeAlternates(path: string): Record<string, string> {
+  return Object.fromEntries([
+    ...LOCALES.map((l) => [hreflangForLocale(l), `${BASE}/${l}${path}`]),
+    ["x-default", `${BASE}/en${path}`],
+  ]);
+}
+
+export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages = [
-    { path: "", freq: "daily" as const, priority: 1.0 },
-    { path: "/services", freq: "weekly" as const, priority: 0.9 },
-    { path: "/providers", freq: "daily" as const, priority: 0.9 },
-    { path: "/become-a-pro", freq: "monthly" as const, priority: 0.7 },
-    { path: "/about", freq: "monthly" as const, priority: 0.6 },
-    { path: "/terms", freq: "monthly" as const, priority: 0.4 },
-    { path: "/privacy", freq: "monthly" as const, priority: 0.4 },
-    { path: "/cookies", freq: "monthly" as const, priority: 0.3 },
-    { path: "/gdpr", freq: "monthly" as const, priority: 0.4 },
-    { path: "/contact", freq: "monthly" as const, priority: 0.6 },
+    { path: "", priority: 1.0, changeFrequency: "daily" as const },
+    { path: "/services", priority: 0.9, changeFrequency: "weekly" as const },
+    { path: "/providers", priority: 0.9, changeFrequency: "weekly" as const },
+    { path: "/become-a-pro", priority: 0.8, changeFrequency: "monthly" as const },
+    { path: "/about", priority: 0.5, changeFrequency: "monthly" as const },
+    { path: "/terms", priority: 0.3, changeFrequency: "monthly" as const },
+    { path: "/privacy", priority: 0.3, changeFrequency: "monthly" as const },
+    { path: "/cookies", priority: 0.3, changeFrequency: "monthly" as const },
+    { path: "/gdpr", priority: 0.3, changeFrequency: "monthly" as const },
+    { path: "/contact", priority: 0.5, changeFrequency: "monthly" as const },
   ];
 
-  for (const locale of locales) {
-    for (const page of staticPages) {
+  const categorySlugs = [
+    "home-services",
+    "boat-services",
+    "general-cleaning",
+    "deep-cleaning",
+    "villa-airbnb",
+    "renovation",
+    "painting",
+    "electrical",
+    "plumbing",
+    "ac-heating",
+    "furniture-assembly",
+    "garden",
+    "pool",
+    "captain-hire",
+    "antifouling",
+    "engine-service",
+    "hull-cleaning",
+    "winterization",
+    "charter-prep",
+    "emergency-repair",
+    "haul-out",
+  ];
+
+  const routes: MetadataRoute.Sitemap = [];
+
+  for (const page of staticPages) {
+    for (const locale of LOCALES) {
       routes.push({
-        url: `https://glatko.app/${locale}${page.path}`,
+        url: `${BASE}/${locale}${page.path}`,
         lastModified: new Date(),
-        changeFrequency: page.freq,
+        changeFrequency: page.changeFrequency,
         priority: page.priority,
+        alternates: {
+          languages: makeAlternates(page.path),
+        },
       });
     }
   }
 
-  const categorySlugs = [
-    "home-services", "boat-services",
-    "general-cleaning", "deep-cleaning", "villa-airbnb",
-    "renovation", "painting", "electrical", "plumbing",
-    "ac-heating", "furniture-assembly", "garden", "pool",
-    "captain-hire", "antifouling", "engine-service",
-    "hull-cleaning", "winterization", "charter-prep",
-    "emergency-repair", "haul-out",
-  ];
-
-  for (const locale of locales) {
-    for (const slug of categorySlugs) {
+  for (const slug of categorySlugs) {
+    const path = `/services/${slug}`;
+    for (const locale of LOCALES) {
       routes.push({
-        url: `https://glatko.app/${locale}/services/${slug}`,
+        url: `${BASE}/${locale}${path}`,
         lastModified: new Date(),
         changeFrequency: "weekly",
         priority: 0.7,
+        alternates: {
+          languages: makeAlternates(path),
+        },
       });
     }
   }

@@ -1,10 +1,55 @@
 import createIntlMiddleware from 'next-intl/middleware';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { updateSession } from '@/supabase/middleware';
 import { enforceRateLimit } from '@/lib/rateLimit';
-import { routing } from '@/i18n/routing';
+import { locales, routing } from '@/i18n/routing';
 
 const intlMiddleware = createIntlMiddleware(routing);
+
+const HREFLANG_LOCALES = ['tr', 'en', 'de', 'it', 'ru', 'uk', 'sr', 'me', 'ar'] as const;
+const HREFLANG_MAP: Record<string, string> = {
+  me: 'sr-ME',
+  sr: 'sr-RS',
+};
+
+const PRIVATE_BARE_PREFIXES = [
+  '/dashboard',
+  '/inbox',
+  '/pro/dashboard',
+  '/admin',
+  '/settings',
+  '/review',
+];
+
+function isLocaleSegment(seg: string): boolean {
+  return (locales as readonly string[]).includes(seg);
+}
+
+/** HTTP Link header alternates — no JS; skip private app routes. */
+function addHreflangHeaders(response: NextResponse, pathname: string) {
+  const segments = pathname.split('/').filter(Boolean);
+  if (segments.length === 0) return;
+
+  const maybeLocale = segments[0];
+  if (!isLocaleSegment(maybeLocale)) return;
+
+  const bare = '/' + segments.slice(1).join('/');
+  if (
+    PRIVATE_BARE_PREFIXES.some((p) => bare === p || bare.startsWith(`${p}/`))
+  ) {
+    return;
+  }
+
+  const cleanPath = bare === '/' ? '' : bare;
+
+  const links = HREFLANG_LOCALES.map((l) => {
+    const tag = HREFLANG_MAP[l] ?? l;
+    return `<https://glatko.app/${l}${cleanPath}>; rel="alternate"; hreflang="${tag}"`;
+  });
+  links.push(`<https://glatko.app/en${cleanPath}>; rel="alternate"; hreflang="x-default"`);
+
+  response.headers.set('Link', links.join(', '));
+}
 
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
@@ -40,11 +85,13 @@ export async function middleware(request: NextRequest) {
         supabaseResponse.cookies.set(cookie.name, cookie.value);
     });
 
+    addHreflangHeaders(supabaseResponse, pathname);
+
     return supabaseResponse;
 }
 
 export const config = {
     matcher: [
-        '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+        '/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
     ],
 };
