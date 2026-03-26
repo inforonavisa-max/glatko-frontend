@@ -255,7 +255,17 @@
       "s4Title": "4. Limitation of Liability",
       "s4": "Glatko acts as an intermediary and does not guarantee the quality of services. Liability is limited under Montenegrin law.",
       "s5Title": "5. Governing Law",
-      "s5": "These terms are governed by the laws of Montenegro. Disputes shall be resolved by courts in Budva."
+      "s5": "These terms are governed by the laws of Montenegro. Disputes shall be resolved by courts in Budva.",
+      "s6Title": "6. Proprietà intellettuale",
+      "s6": "Il nome Glatko, il logo e il design della piattaforma sono di proprietà di Glatko DOO. I contenuti caricati dagli utenti restano di loro proprietà, ma gli utenti concedono a Glatko una licenza non esclusiva per mostrarli sulla piattaforma.",
+      "s7Title": "7. Limitazione di responsabilità",
+      "s7": "Glatko opera esclusivamente come intermediario. Non garantiamo la qualità, la sicurezza o la legalità dei servizi forniti dai professionisti. La responsabilità di Glatko è limitata nella misura massima consentita dalla legge montenegrina.",
+      "s8Title": "8. Risoluzione delle controversie",
+      "s8": "I presenti termini sono regolati dalle leggi del Montenegro. Eventuali controversie saranno risolte dai tribunali competenti di Budva, Montenegro.",
+      "s9Title": "9. Risoluzione del contratto",
+      "s9": "Glatko si riserva il diritto di sospendere o chiudere account che violano questi termini, si impegnano in attività fraudolente o danneggiano la community.",
+      "s10Title": "10. Modifiche ai termini",
+      "s10": "Possiamo aggiornare questi termini di tanto in tanto. L'uso continuato della piattaforma dopo le modifiche costituisce accettazione dei termini rivisti."
     },
     "privacyContent": {
       "intro": "This Privacy Policy describes how Glatko DOO collects, uses, and protects your personal data in accordance with GDPR.",
@@ -266,7 +276,15 @@
       "s3Title": "3. Your Rights",
       "s3": "Under GDPR, you have rights to access, correct, delete, and port your data. Contact contact@glatko.app.",
       "s4Title": "4. Contact",
-      "s4": "For privacy inquiries, contact us at contact@glatko.app. Response within 30 days."
+      "s4": "For privacy inquiries, contact us at contact@glatko.app. Response within 30 days.",
+      "s5Title": "5. I tuoi diritti",
+      "s5": "In base al GDPR hai diritto di accesso, rettifica, cancellazione, limitazione del trattamento e portabilità dei dati. Puoi anche opporti al trattamento. Vedi la nostra pagina GDPR per i dettagli.",
+      "s6Title": "6. Cookie",
+      "s6": "Utilizziamo cookie per funzionalità essenziali e analisi. Per maggiori informazioni consulta la nostra Cookie Policy.",
+      "s7Title": "7. Sicurezza dei dati",
+      "s7": "Adottiamo misure di sicurezza standard del settore, tra cui trasmissione crittografata (TLS), autenticazione sicura e revisioni periodiche della sicurezza.",
+      "s8Title": "8. Contatto",
+      "s8": "Per richieste sulla privacy o per esercitare i tuoi diritti, contatta il nostro DPO all'indirizzo contact@glatko.app. Rispondiamo di solito entro 30 giorni."
     },
     "cookiesContent": {
       "intro": "This Cookie Policy explains how Glatko uses cookies.",
@@ -275,7 +293,9 @@
       "s2Title": "2. Analytics Cookies",
       "s2": "Vercel Analytics for anonymous usage data.",
       "s3Title": "3. Managing Cookies",
-      "s3": "Manage cookies through your browser settings."
+      "s3": "Manage cookies through your browser settings.",
+      "s4Title": "4. Gestione dei cookie",
+      "s4": "Puoi gestire o eliminare i cookie dalle impostazioni del browser. Disabilitare i cookie essenziali può influire sul funzionamento della piattaforma."
     },
     "gdprContent": {
       "intro": "As a Glatko user, you have the following GDPR rights:",
@@ -289,6 +309,8 @@
       "r4": "Receive your data in a portable format.",
       "r5Title": "Right to Object (Art. 21)",
       "r5": "Object to data processing for specific purposes.",
+      "r6Title": "Diritto di opposizione (art. 21)",
+      "r6": "Hai il diritto di opporti al trattamento dei tuoi dati personali per finalità specifiche.",
       "howToExercise": "How to Exercise Your Rights",
       "howToExerciseDesc": "Email contact@glatko.app with subject 'GDPR Request'. Response within 30 days.",
       "responseTime": "Response time: 30 days"

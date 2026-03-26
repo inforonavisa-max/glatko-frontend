@@ -255,7 +255,17 @@
       "s4Title": "4. Limitation of Liability",
       "s4": "Glatko acts as an intermediary and does not guarantee the quality of services. Liability is limited under Montenegrin law.",
       "s5Title": "5. Governing Law",
-      "s5": "These terms are governed by the laws of Montenegro. Disputes shall be resolved by courts in Budva."
+      "s5": "These terms are governed by the laws of Montenegro. Disputes shall be resolved by courts in Budva.",
+      "s6Title": "6. الملكية الفكرية",
+      "s6": "اسم Glatko والشعار وتصميم المنصة ملك لشركة Glatko DOO. يبقى المحتوى الذي يرفعه المستخدمون ملكاً لهم، لكن المستخدمون يمنحون Glatko ترخيصاً غير حصري لعرضه على المنصة.",
+      "s7Title": "7. تحديد المسؤولية",
+      "s7": "تعمل Glatko كوسيط فقط. لا نضمن جودة أو سلامة أو شرعية الخدمات التي يقدمها المحترفون. تقتصر مسؤولية Glatko على الحد الأقصى المسموح به بموجب قانون الجبل الأسود.",
+      "s8Title": "8. تسوية المنازعات",
+      "s8": "تخضع هذه الشروط لقوانين الجبل الأسود. تُحل النزاعات لدى المحاكم المختصة في بودفا، الجبل الأسود.",
+      "s9Title": "9. الإنهاء",
+      "s9": "تحتفظ Glatko بحق تعليق أو إنهاء الحسابات التي تنتهك هذه الشروط أو تنخرط في احتيال أو تضر بالمجتمع.",
+      "s10Title": "10. تغييرات الشروط",
+      "s10": "قد نحدّث هذه الشروط من وقت لآخر. استمرار استخدام المنصة بعد التغييرات يعني قبول الشروط المعدّلة."
     },
     "privacyContent": {
       "intro": "This Privacy Policy describes how Glatko DOO collects, uses, and protects your personal data in accordance with GDPR.",
@@ -266,7 +276,15 @@
       "s3Title": "3. Your Rights",
       "s3": "Under GDPR, you have rights to access, correct, delete, and port your data. Contact contact@glatko.app.",
       "s4Title": "4. Contact",
-      "s4": "For privacy inquiries, contact us at contact@glatko.app. Response within 30 days."
+      "s4": "For privacy inquiries, contact us at contact@glatko.app. Response within 30 days.",
+      "s5Title": "5. حقوقك",
+      "s5": "بموجب اللائحة العامة لحماية البيانات (GDPR) لك الحق في الوصول والتصحيح والحذف وتقييد المعالجة ونقل البيانات، والحق في الاعتراض على المعالجة. راجع صفحة GDPR لمزيد من التفاصيل.",
+      "s6Title": "6. ملفات تعريف الارتباط (كوكيز)",
+      "s6": "نستخدم ملفات تعريف الارتباط للوظائف الأساسية والتحليلات. لمزيد من المعلومات راجع سياسة ملفات تعريف الارتباط.",
+      "s7Title": "7. أمان البيانات",
+      "s7": "نطبق تدابير أمنية قياسية في القطاع تشمل نقل البيانات المشفّر (TLS) والمصادقة الآمنة والمراجعات الدورية للأمان.",
+      "s8Title": "8. الاتصال",
+      "s8": "للاستفسارات المتعلقة بالخصوصية أو لممارسة حقوقك، تواصل مع مسؤول حماية البيانات على contact@glatko.app. نهدف للرد خلال 30 يوماً."
     },
     "cookiesContent": {
       "intro": "This Cookie Policy explains how Glatko uses cookies.",
@@ -275,7 +293,9 @@
       "s2Title": "2. Analytics Cookies",
       "s2": "Vercel Analytics for anonymous usage data.",
       "s3Title": "3. Managing Cookies",
-      "s3": "Manage cookies through your browser settings."
+      "s3": "Manage cookies through your browser settings.",
+      "s4Title": "4. إدارة ملفات تعريف الارتباط",
+      "s4": "يمكنك إدارة ملفات تعريف الارتباط أو حذفها من إعدادات المتصفح. قد يؤثر تعطيل ملفات تعريف الارتباط الأساسية على عمل المنصة."
     },
     "gdprContent": {
       "intro": "As a Glatko user, you have the following GDPR rights:",
@@ -289,6 +309,8 @@
       "r4": "Receive your data in a portable format.",
       "r5Title": "Right to Object (Art. 21)",
       "r5": "Object to data processing for specific purposes.",
+      "r6Title": "حق الاعتراض (المادة 21)",
+      "r6": "لديك الحق في الاعتراض على معالجة بياناتك الشخصية لأغراض محددة.",
       "howToExercise": "How to Exercise Your Rights",
       "howToExerciseDesc": "Email contact@glatko.app with subject 'GDPR Request'. Response within 30 days.",
       "responseTime": "Response time: 30 days"

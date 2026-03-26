@@ -255,7 +255,17 @@
       "s4Title": "4. Limitation of Liability",
       "s4": "Glatko acts as an intermediary and does not guarantee the quality of services. Liability is limited under Montenegrin law.",
       "s5Title": "5. Governing Law",
-      "s5": "These terms are governed by the laws of Montenegro. Disputes shall be resolved by courts in Budva."
+      "s5": "These terms are governed by the laws of Montenegro. Disputes shall be resolved by courts in Budva.",
+      "s6Title": "6. Интелектуална својина",
+      "s6": "Име Glatko, лого и дизајн платформе су власништво Glatko DOO. Садржај који корисници отпремају остаје њихова својина, али корисници дају Glatko-у неискључиву лиценцу за приказ на платформи.",
+      "s7Title": "7. Ограничење одговорности",
+      "s7": "Glatko делује искључиво као посредник. Не гарантујемо квалитет, безбедност или законитост услуга професионалаца. Одговорност Glatka је ограничена у највећој мери дозвољеној законом Црне Горе.",
+      "s8Title": "8. Решавање спорова",
+      "s8": "Ови услови се уређују законима Црне Горе. Спорове решавају надлежни судови у Будви, Црна Гора.",
+      "s9Title": "9. Прекид",
+      "s9": "Glatko задржава право да суспендује или угаси налоге који крше ове услове, баве се преваром или штете заједници.",
+      "s10Title": "10. Промене услова",
+      "s10": "Можемо повремено ажурирати ове услове. Даља употреба платформе након промена значи прихватање измењених услова."
     },
     "privacyContent": {
       "intro": "This Privacy Policy describes how Glatko DOO collects, uses, and protects your personal data in accordance with GDPR.",
@@ -266,7 +276,15 @@
       "s3Title": "3. Your Rights",
       "s3": "Under GDPR, you have rights to access, correct, delete, and port your data. Contact contact@glatko.app.",
       "s4Title": "4. Contact",
-      "s4": "For privacy inquiries, contact us at contact@glatko.app. Response within 30 days."
+      "s4": "For privacy inquiries, contact us at contact@glatko.app. Response within 30 days.",
+      "s5Title": "5. Ваша права",
+      "s5": "Према GDPR-у имате право на приступ, исправку, брисање, ограничење обраде и преносивост података, као и право приговора. Детаљи на нашој GDPR страници.",
+      "s6Title": "6. Колачићи",
+      "s6": "Користимо колачиће за основне функције и аналитику. Више у Политици колачића.",
+      "s7Title": "7. Безбедност података",
+      "s7": "Примењујемо стандардне мере безбедности: шифрован пренос (TLS), сигурна аутентификација и редовни прегледи.",
+      "s8Title": "8. Контакт",
+      "s8": "За питања приватности или остваривање права контактирајте DPO на contact@glatko.app. Одговор у року од 30 дана."
     },
     "cookiesContent": {
       "intro": "This Cookie Policy explains how Glatko uses cookies.",
@@ -275,7 +293,9 @@
       "s2Title": "2. Analytics Cookies",
       "s2": "Vercel Analytics for anonymous usage data.",
       "s3Title": "3. Managing Cookies",
-      "s3": "Manage cookies through your browser settings."
+      "s3": "Manage cookies through your browser settings.",
+      "s4Title": "4. Управљање колачићима",
+      "s4": "Можете управљати или брисати колачиће у подешавањима прегледача. Онемогућавање неопходних колачића може утицати на функционалност платформе."
     },
     "gdprContent": {
       "intro": "As a Glatko user, you have the following GDPR rights:",
@@ -289,6 +309,8 @@
       "r4": "Receive your data in a portable format.",
       "r5Title": "Right to Object (Art. 21)",
       "r5": "Object to data processing for specific purposes.",
+      "r6Title": "Право на приговор (чл. 21)",
+      "r6": "Имате право да се успротивите обради ваших личних података за одређене сврхе.",
       "howToExercise": "How to Exercise Your Rights",
       "howToExerciseDesc": "Email contact@glatko.app with subject 'GDPR Request'. Response within 30 days.",
       "responseTime": "Response time: 30 days"

@@ -255,7 +255,17 @@
       "s4Title": "4. Limitation of Liability",
       "s4": "Glatko acts as an intermediary and does not guarantee the quality of services. Liability is limited under Montenegrin law.",
       "s5Title": "5. Governing Law",
-      "s5": "These terms are governed by the laws of Montenegro. Disputes shall be resolved by courts in Budva."
+      "s5": "These terms are governed by the laws of Montenegro. Disputes shall be resolved by courts in Budva.",
+      "s6Title": "6. Интеллектуальная собственность",
+      "s6": "Название Glatko, логотип и дизайн платформы принадлежат Glatko DOO. Контент, загружаемый пользователями, остаётся их собственностью, но пользователи предоставляют Glatko неисключительную лицензию на отображение на платформе.",
+      "s7Title": "7. Ограничение ответственности",
+      "s7": "Glatko выступает исключительно посредником. Мы не гарантируем качество, безопасность или законность услуг специалистов. Ответственность Glatko ограничена в максимальной степени, допустимой законодательством Черногории.",
+      "s8Title": "8. Разрешение споров",
+      "s8": "Настоящие условия регулируются законодательством Черногории. Споры подлежат рассмотрению в компетентных судах Будвы, Черногория.",
+      "s9Title": "9. Прекращение",
+      "s9": "Glatko оставляет за собой право приостановить или закрыть учётные записи, нарушающие эти условия, занимающиеся мошенничеством или вредящие сообществу.",
+      "s10Title": "10. Изменения условий",
+      "s10": "Мы можем периодически обновлять эти условия. Продолжение использования платформы после изменений означает принятие новой редакции."
     },
     "privacyContent": {
       "intro": "This Privacy Policy describes how Glatko DOO collects, uses, and protects your personal data in accordance with GDPR.",
@@ -266,7 +276,15 @@
       "s3Title": "3. Your Rights",
       "s3": "Under GDPR, you have rights to access, correct, delete, and port your data. Contact contact@glatko.app.",
       "s4Title": "4. Contact",
-      "s4": "For privacy inquiries, contact us at contact@glatko.app. Response within 30 days."
+      "s4": "For privacy inquiries, contact us at contact@glatko.app. Response within 30 days.",
+      "s5Title": "5. Ваши права",
+      "s5": "В соответствии с GDPR вы имеете право на доступ, исправление, удаление, ограничение обработки и переносимость данных, а также право возражать против обработки. Подробности — на нашей странице GDPR.",
+      "s6Title": "6. Файлы cookie",
+      "s6": "Мы используем cookie для основных функций и аналитики. Подробнее см. нашу Политику cookie.",
+      "s7Title": "7. Безопасность данных",
+      "s7": "Мы применяем стандартные меры безопасности: шифрование передачи (TLS), безопасная аутентификация и регулярные проверки.",
+      "s8Title": "8. Контакты",
+      "s8": "По вопросам конфиденциальности или для реализации прав обращайтесь к нашему DPO: contact@glatko.app. Ответ в течение 30 дней."
     },
     "cookiesContent": {
       "intro": "This Cookie Policy explains how Glatko uses cookies.",
@@ -275,7 +293,9 @@
       "s2Title": "2. Analytics Cookies",
       "s2": "Vercel Analytics for anonymous usage data.",
       "s3Title": "3. Managing Cookies",
-      "s3": "Manage cookies through your browser settings."
+      "s3": "Manage cookies through your browser settings.",
+      "s4Title": "4. Управление cookie",
+      "s4": "Вы можете управлять или удалять cookie в настройках браузера. Отключение обязательных cookie может повлиять на работу платформы."
     },
     "gdprContent": {
       "intro": "As a Glatko user, you have the following GDPR rights:",
@@ -289,6 +309,8 @@
       "r4": "Receive your data in a portable format.",
       "r5Title": "Right to Object (Art. 21)",
       "r5": "Object to data processing for specific purposes.",
+      "r6Title": "Право на возражение (ст. 21)",
+      "r6": "Вы имеете право возражать против обработки ваших персональных данных в определённых целях.",
       "howToExercise": "How to Exercise Your Rights",
       "howToExerciseDesc": "Email contact@glatko.app with subject 'GDPR Request'. Response within 30 days.",
       "responseTime": "Response time: 30 days"
