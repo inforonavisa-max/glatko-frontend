@@ -4,7 +4,7 @@ import { ChevronDown, Globe } from "lucide-react";
 import { useRouter, usePathname } from "@/i18n/navigation";
 import { useLocale } from "next-intl";
 
-const availableLanguages: {
+export const availableLanguages: {
   code: string;
   name: string;
   flag: string;

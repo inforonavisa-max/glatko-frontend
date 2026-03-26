@@ -20,6 +20,8 @@
     "inbox": "Poruke",
     "requests": "Моји захтеви",
     "profile": "Профил",
+    "userProfile": "Moj profil",
+    "businessProfile": "Poslovni profil",
     "settings": "Подешавања"
   },
   "hero": {
@@ -435,6 +437,8 @@
     "podgorica": "Podgorica",
     "hercegNovi": "Herceg Novi",
     "bar": "Bar",
+    "niksic": "Nikšić",
+    "cetinje": "Cetinje",
     "ulcinj": "Ulcinj"
   },
   "request": {
@@ -935,6 +939,40 @@
       "messages": "Poruke",
       "statusChanges": "Promene statusa",
       "reviews": "Ocene"
+    },
+    "profile": {
+      "title": "Moj profil",
+      "avatar": "Profilna fotografija",
+      "changeAvatar": "Promeni fotografiju",
+      "fullName": "Ime i prezime",
+      "fullNameRequired": "Unesite ime",
+      "bioMax": "O meni — najviše 500 karaktera",
+      "email": "Email",
+      "emailHint": "Email se upravlja nalogom i ovde se ne menja.",
+      "phone": "Telefon",
+      "phonePlaceholder": "+382 XX XXX XXX",
+      "city": "Grad",
+      "cityPlaceholder": "Izaberite grad",
+      "cityOther": "Drugo",
+      "preferredLang": "Željeni jezik",
+      "bio": "O meni",
+      "bioPlaceholder": "Ukratko se predstavite…",
+      "save": "Sačuvaj",
+      "saving": "Čuvanje…",
+      "saved": "Profil ažuriran",
+      "notifications": "Podešavanja obaveštenja",
+      "notifNewBid": "Kada stigne nova ponuda",
+      "notifMessage": "Kada stigne poruka",
+      "notifStatus": "Kada se promeni status zahteva",
+      "notifPush": "Push obaveštenja",
+      "notifPushSoon": "Uskoro",
+      "account": "Nalog",
+      "changePassword": "Promeni lozinku",
+      "deleteAccount": "Obriši nalog",
+      "deleteConfirm": "Da li zaista želite da obrišete nalog?",
+      "deleteWarning": "Ova radnja se ne može poništiti.",
+      "deleteCancel": "Otkaži",
+      "deleteConfirmBtn": "Obriši nalog"
     }
   },
   "search": {

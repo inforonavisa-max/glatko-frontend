@@ -20,6 +20,8 @@
     "inbox": "Повідомлення",
     "requests": "Мої заявки",
     "profile": "Профіль",
+    "userProfile": "Мій профіль",
+    "businessProfile": "Профіль бізнесу",
     "settings": "Налаштування"
   },
   "hero": {
@@ -435,6 +437,8 @@
     "podgorica": "Подгориця",
     "hercegNovi": "Херцег-Нови",
     "bar": "Бар",
+    "niksic": "Нікшич",
+    "cetinje": "Цетинє",
     "ulcinj": "Улцинь"
   },
   "request": {
@@ -935,6 +939,40 @@
       "messages": "Повідомлення",
       "statusChanges": "Зміни статусу",
       "reviews": "Відгуки"
+    },
+    "profile": {
+      "title": "Мій профіль",
+      "avatar": "Фото профілю",
+      "changeAvatar": "Змінити фото",
+      "fullName": "Ім'я та прізвище",
+      "fullNameRequired": "Введіть ім'я",
+      "bioMax": "Про себе — не більше 500 символів",
+      "email": "Електронна пошта",
+      "emailHint": "Пошта керується обліковим записом і тут не змінюється.",
+      "phone": "Телефон",
+      "phonePlaceholder": "+382 XX XXX XXX",
+      "city": "Місто",
+      "cityPlaceholder": "Оберіть місто",
+      "cityOther": "Інше",
+      "preferredLang": "Бажана мова",
+      "bio": "Про себе",
+      "bioPlaceholder": "Коротко розкажіть про себе…",
+      "save": "Зберегти",
+      "saving": "Збереження…",
+      "saved": "Профіль оновлено",
+      "notifications": "Налаштування сповіщень",
+      "notifNewBid": "Коли надійде нова пропозиція",
+      "notifMessage": "Коли надійде повідомлення",
+      "notifStatus": "Коли зміниться статус запиту",
+      "notifPush": "Push-сповіщення",
+      "notifPushSoon": "Незабаром",
+      "account": "Обліковий запис",
+      "changePassword": "Змінити пароль",
+      "deleteAccount": "Видалити обліковий запис",
+      "deleteConfirm": "Ви впевнені, що хочете видалити обліковий запис?",
+      "deleteWarning": "Цю дію неможливо скасувати.",
+      "deleteCancel": "Скасувати",
+      "deleteConfirmBtn": "Видалити обліковий запис"
     }
   },
   "search": {

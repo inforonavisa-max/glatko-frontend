@@ -84,12 +84,14 @@ export function GlatkoHeader({ userId, isPro = false }: GlatkoHeaderProps) {
     ? [
         { href: "/pro/dashboard", label: t("nav.proDashboard") },
         { href: "/inbox", label: t("nav.inbox") },
-        { href: "/pro/dashboard/profile", label: t("nav.profile") },
+        { href: "/settings/profile", label: t("nav.userProfile"), icon: User },
+        { href: "/pro/dashboard/profile", label: t("nav.businessProfile") },
         { href: "/settings/notifications", label: t("nav.settings") },
       ]
     : [
         { href: "/dashboard/requests", label: t("nav.requests") },
         { href: "/inbox", label: t("nav.inbox") },
+        { href: "/settings/profile", label: t("nav.userProfile"), icon: User },
         { href: "/settings/notifications", label: t("nav.settings") },
       ];
 
@@ -177,6 +179,9 @@ export function GlatkoHeader({ userId, isPro = false }: GlatkoHeaderProps) {
                           href={item.href}
                           className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-gray-700 transition-colors hover:bg-gray-100 dark:text-neutral-300 dark:hover:bg-neutral-800"
                         >
+                          {"icon" in item && item.icon ? (
+                            <item.icon className="h-4 w-4 shrink-0 text-teal-600 dark:text-teal-400" />
+                          ) : null}
                           {item.label}
                         </Link>
                       ))}
@@ -266,14 +271,33 @@ export function GlatkoHeader({ userId, isPro = false }: GlatkoHeaderProps) {
               ))}
 
               {userId && (
-                <Link
-                  href="/settings/notifications"
-                  onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-2 border-b border-gray-100 py-3 text-lg font-medium text-gray-900 dark:border-white/5 dark:text-white"
-                >
-                  <Settings className="h-5 w-5" />
-                  {t("nav.settings")}
-                </Link>
+                <>
+                  <Link
+                    href="/settings/profile"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center gap-2 border-b border-gray-100 py-3 text-lg font-medium text-gray-900 dark:border-white/5 dark:text-white"
+                  >
+                    <User className="h-5 w-5 text-teal-600 dark:text-teal-400" />
+                    {t("nav.userProfile")}
+                  </Link>
+                  {isPro && (
+                    <Link
+                      href="/pro/dashboard/profile"
+                      onClick={() => setMobileOpen(false)}
+                      className="border-b border-gray-100 py-3 text-lg font-medium text-gray-900 dark:border-white/5 dark:text-white"
+                    >
+                      {t("nav.businessProfile")}
+                    </Link>
+                  )}
+                  <Link
+                    href="/settings/notifications"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center gap-2 border-b border-gray-100 py-3 text-lg font-medium text-gray-900 dark:border-white/5 dark:text-white"
+                  >
+                    <Settings className="h-5 w-5" />
+                    {t("nav.settings")}
+                  </Link>
+                </>
               )}
 
               <div className="mt-6 flex flex-col gap-3">

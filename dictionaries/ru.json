@@ -20,6 +20,8 @@
     "inbox": "Сообщения",
     "requests": "Мои заявки",
     "profile": "Профиль",
+    "userProfile": "Мой профиль",
+    "businessProfile": "Профиль бизнеса",
     "settings": "Настройки"
   },
   "hero": {
@@ -435,6 +437,8 @@
     "podgorica": "Подгорица",
     "hercegNovi": "Херцег-Нови",
     "bar": "Бар",
+    "niksic": "Никшич",
+    "cetinje": "Цетине",
     "ulcinj": "Улцинь"
   },
   "request": {
@@ -935,6 +939,40 @@
       "messages": "Сообщения",
       "statusChanges": "Изменения статуса",
       "reviews": "Отзывы"
+    },
+    "profile": {
+      "title": "Мой профиль",
+      "avatar": "Фото профиля",
+      "changeAvatar": "Сменить фото",
+      "fullName": "Имя и фамилия",
+      "fullNameRequired": "Введите имя",
+      "bioMax": "О себе — не более 500 символов",
+      "email": "Email",
+      "emailHint": "Email управляется аккаунтом и здесь не меняется.",
+      "phone": "Телефон",
+      "phonePlaceholder": "+382 XX XXX XXX",
+      "city": "Город",
+      "cityPlaceholder": "Выберите город",
+      "cityOther": "Другое",
+      "preferredLang": "Предпочитаемый язык",
+      "bio": "О себе",
+      "bioPlaceholder": "Кратко расскажите о себе…",
+      "save": "Сохранить",
+      "saving": "Сохранение…",
+      "saved": "Профиль обновлён",
+      "notifications": "Настройки уведомлений",
+      "notifNewBid": "При новом предложении",
+      "notifMessage": "При новом сообщении",
+      "notifStatus": "При изменении статуса заявки",
+      "notifPush": "Push-уведомления",
+      "notifPushSoon": "Скоро",
+      "account": "Аккаунт",
+      "changePassword": "Сменить пароль",
+      "deleteAccount": "Удалить аккаунт",
+      "deleteConfirm": "Вы уверены, что хотите удалить аккаунт?",
+      "deleteWarning": "Это действие нельзя отменить.",
+      "deleteCancel": "Отмена",
+      "deleteConfirmBtn": "Удалить аккаунт"
     }
   },
   "search": {

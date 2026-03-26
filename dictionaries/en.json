@@ -20,6 +20,8 @@
     "inbox": "Messages",
     "requests": "My Requests",
     "profile": "Profile",
+    "userProfile": "My profile",
+    "businessProfile": "Business profile",
     "settings": "Settings"
   },
   "hero": {
@@ -435,6 +437,8 @@
     "podgorica": "Podgorica",
     "hercegNovi": "Herceg Novi",
     "bar": "Bar",
+    "niksic": "Nikšić",
+    "cetinje": "Cetinje",
     "ulcinj": "Ulcinj"
   },
   "request": {
@@ -935,6 +939,40 @@
       "messages": "Messages",
       "statusChanges": "Status Changes",
       "reviews": "Reviews"
+    },
+    "profile": {
+      "title": "My profile",
+      "avatar": "Profile photo",
+      "changeAvatar": "Change photo",
+      "fullName": "Full name",
+      "fullNameRequired": "Please enter your name",
+      "bioMax": "Bio must be at most 500 characters",
+      "email": "Email",
+      "emailHint": "Email is managed by your account and cannot be changed here.",
+      "phone": "Phone",
+      "phonePlaceholder": "+382 XX XXX XXX",
+      "city": "City",
+      "cityPlaceholder": "Select a city",
+      "cityOther": "Other",
+      "preferredLang": "Preferred language",
+      "bio": "About me",
+      "bioPlaceholder": "Tell others a little about yourself…",
+      "save": "Save",
+      "saving": "Saving…",
+      "saved": "Profile updated",
+      "notifications": "Notification preferences",
+      "notifNewBid": "When a new bid arrives",
+      "notifMessage": "When a message arrives",
+      "notifStatus": "When request status changes",
+      "notifPush": "Push notifications",
+      "notifPushSoon": "Coming soon",
+      "account": "Account",
+      "changePassword": "Change password",
+      "deleteAccount": "Delete account",
+      "deleteConfirm": "Are you sure you want to delete your account?",
+      "deleteWarning": "This action cannot be undone.",
+      "deleteCancel": "Cancel",
+      "deleteConfirmBtn": "Delete account"
     }
   },
   "search": {

@@ -20,6 +20,8 @@
     "inbox": "Nachrichten",
     "requests": "Meine Anfragen",
     "profile": "Profil",
+    "userProfile": "Mein Profil",
+    "businessProfile": "Geschäftsprofil",
     "settings": "Einstellungen"
   },
   "hero": {
@@ -435,6 +437,8 @@
     "podgorica": "Podgorica",
     "hercegNovi": "Herceg Novi",
     "bar": "Bar",
+    "niksic": "Nikšić",
+    "cetinje": "Cetinje",
     "ulcinj": "Ulcinj"
   },
   "request": {
@@ -935,6 +939,40 @@
       "messages": "Nachrichten",
       "statusChanges": "Statusänderungen",
       "reviews": "Bewertungen"
+    },
+    "profile": {
+      "title": "Mein Profil",
+      "avatar": "Profilfoto",
+      "changeAvatar": "Foto ändern",
+      "fullName": "Vor- und Nachname",
+      "fullNameRequired": "Bitte geben Sie Ihren Namen ein",
+      "bioMax": "Über mich darf höchstens 500 Zeichen haben",
+      "email": "E-Mail",
+      "emailHint": "Die E-Mail wird über Ihr Konto verwaltet und kann hier nicht geändert werden.",
+      "phone": "Telefon",
+      "phonePlaceholder": "+382 XX XXX XXX",
+      "city": "Stadt",
+      "cityPlaceholder": "Stadt wählen",
+      "cityOther": "Sonstiges",
+      "preferredLang": "Bevorzugte Sprache",
+      "bio": "Über mich",
+      "bioPlaceholder": "Erzählen Sie kurz etwas über sich…",
+      "save": "Speichern",
+      "saving": "Wird gespeichert…",
+      "saved": "Profil aktualisiert",
+      "notifications": "Benachrichtigungseinstellungen",
+      "notifNewBid": "Bei neuem Angebot",
+      "notifMessage": "Bei neuer Nachricht",
+      "notifStatus": "Bei Statusänderung der Anfrage",
+      "notifPush": "Push-Benachrichtigungen",
+      "notifPushSoon": "Demnächst",
+      "account": "Konto",
+      "changePassword": "Passwort ändern",
+      "deleteAccount": "Konto löschen",
+      "deleteConfirm": "Möchten Sie Ihr Konto wirklich löschen?",
+      "deleteWarning": "Dieser Vorgang kann nicht rückgängig gemacht werden.",
+      "deleteCancel": "Abbrechen",
+      "deleteConfirmBtn": "Konto löschen"
     }
   },
   "search": {

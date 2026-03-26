@@ -20,6 +20,8 @@
     "inbox": "Messaggi",
     "requests": "Le mie richieste",
     "profile": "Profilo",
+    "userProfile": "Il mio profilo",
+    "businessProfile": "Profilo attività",
     "settings": "Impostazioni"
   },
   "hero": {
@@ -435,6 +437,8 @@
     "podgorica": "Podgorica",
     "hercegNovi": "Herceg Novi",
     "bar": "Bar",
+    "niksic": "Nikšić",
+    "cetinje": "Cetinje",
     "ulcinj": "Ulcinj"
   },
   "request": {
@@ -935,6 +939,40 @@
       "messages": "Messaggi",
       "statusChanges": "Cambiamenti di stato",
       "reviews": "Recensioni"
+    },
+    "profile": {
+      "title": "Il mio profilo",
+      "avatar": "Foto profilo",
+      "changeAvatar": "Cambia foto",
+      "fullName": "Nome e cognome",
+      "fullNameRequired": "Inserisci il tuo nome",
+      "bioMax": "La descrizione può contenere al massimo 500 caratteri",
+      "email": "Email",
+      "emailHint": "L’email è gestita dall’account e non può essere modificata qui.",
+      "phone": "Telefono",
+      "phonePlaceholder": "+382 XX XXX XXX",
+      "city": "Città",
+      "cityPlaceholder": "Seleziona una città",
+      "cityOther": "Altro",
+      "preferredLang": "Lingua preferita",
+      "bio": "Su di me",
+      "bioPlaceholder": "Racconta qualcosa di te…",
+      "save": "Salva",
+      "saving": "Salvataggio…",
+      "saved": "Profilo aggiornato",
+      "notifications": "Preferenze notifiche",
+      "notifNewBid": "Quando arriva una nuova offerta",
+      "notifMessage": "Quando arriva un messaggio",
+      "notifStatus": "Quando cambia lo stato della richiesta",
+      "notifPush": "Notifiche push",
+      "notifPushSoon": "Presto",
+      "account": "Account",
+      "changePassword": "Cambia password",
+      "deleteAccount": "Elimina account",
+      "deleteConfirm": "Vuoi davvero eliminare il tuo account?",
+      "deleteWarning": "Questa azione non può essere annullata.",
+      "deleteCancel": "Annulla",
+      "deleteConfirmBtn": "Elimina account"
     }
   },
   "search": {

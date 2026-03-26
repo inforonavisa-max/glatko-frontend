@@ -20,6 +20,8 @@
     "inbox": "Mesajlar",
     "requests": "Taleplerim",
     "profile": "Profilim",
+    "userProfile": "Profilim",
+    "businessProfile": "İşletme profili",
     "settings": "Ayarlar"
   },
   "hero": {
@@ -435,6 +437,8 @@
     "podgorica": "Podgorica",
     "hercegNovi": "Herceg Novi",
     "bar": "Bar",
+    "niksic": "Nikšić",
+    "cetinje": "Cetinje",
     "ulcinj": "Ulcinj"
   },
   "request": {
@@ -935,6 +939,40 @@
       "messages": "Mesajlar",
       "statusChanges": "Durum Değişiklikleri",
       "reviews": "Değerlendirmeler"
+    },
+    "profile": {
+      "title": "Profilim",
+      "avatar": "Profil fotoğrafı",
+      "changeAvatar": "Fotoğraf Değiştir",
+      "fullName": "Ad Soyad",
+      "fullNameRequired": "Lütfen adınızı girin",
+      "bioMax": "Hakkımda en fazla 500 karakter olabilir",
+      "email": "E-posta",
+      "emailHint": "E-posta hesap ayarlarından yönetilir; buradan değiştirilemez.",
+      "phone": "Telefon",
+      "phonePlaceholder": "+382 XX XXX XXX",
+      "city": "Şehir",
+      "cityPlaceholder": "Şehir seçin",
+      "cityOther": "Diğer",
+      "preferredLang": "Tercih Edilen Dil",
+      "bio": "Hakkımda",
+      "bioPlaceholder": "Kendinizden kısaca bahsedin…",
+      "save": "Kaydet",
+      "saving": "Kaydediliyor…",
+      "saved": "Profil güncellendi",
+      "notifications": "Bildirim Tercihleri",
+      "notifNewBid": "Yeni teklif geldiğinde",
+      "notifMessage": "Mesaj geldiğinde",
+      "notifStatus": "Talep durumu değiştiğinde",
+      "notifPush": "Anlık bildirimler",
+      "notifPushSoon": "Yakında",
+      "account": "Hesap",
+      "changePassword": "Şifre Değiştir",
+      "deleteAccount": "Hesabı Sil",
+      "deleteConfirm": "Hesabınızı silmek istediğinize emin misiniz?",
+      "deleteWarning": "Bu işlem geri alınamaz.",
+      "deleteCancel": "İptal",
+      "deleteConfirmBtn": "Hesabı Sil"
     }
   },
   "search": {

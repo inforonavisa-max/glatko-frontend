@@ -20,6 +20,8 @@
     "inbox": "الرسائل",
     "requests": "طلباتي",
     "profile": "الملف الشخصي",
+    "userProfile": "ملفي الشخصي",
+    "businessProfile": "ملف النشاط التجاري",
     "settings": "الإعدادات"
   },
   "hero": {
@@ -435,6 +437,8 @@
     "podgorica": "بودغوريتسا",
     "hercegNovi": "هيرتسغ نوي",
     "bar": "بار",
+    "niksic": "نيكشيتش",
+    "cetinje": "تسيتينييه",
     "ulcinj": "أولسيني"
   },
   "request": {
@@ -935,6 +939,40 @@
       "messages": "الرسائل",
       "statusChanges": "تغييرات الحالة",
       "reviews": "التقييمات"
+    },
+    "profile": {
+      "title": "ملفي الشخصي",
+      "avatar": "صورة الملف الشخصي",
+      "changeAvatar": "تغيير الصورة",
+      "fullName": "الاسم الكامل",
+      "fullNameRequired": "يرجى إدخال اسمك",
+      "bioMax": "نبذة عني: 500 حرفًا كحد أقصى",
+      "email": "البريد الإلكتروني",
+      "emailHint": "يُدار البريد عبر الحساب ولا يمكن تغييره هنا.",
+      "phone": "الهاتف",
+      "phonePlaceholder": "+382 XX XXX XXX",
+      "city": "المدينة",
+      "cityPlaceholder": "اختر مدينة",
+      "cityOther": "أخرى",
+      "preferredLang": "اللغة المفضلة",
+      "bio": "نبذة عني",
+      "bioPlaceholder": "قدّم نفسك باختصار…",
+      "save": "حفظ",
+      "saving": "جارٍ الحفظ…",
+      "saved": "تم تحديث الملف الشخصي",
+      "notifications": "تفضيلات الإشعارات",
+      "notifNewBid": "عند وصول عرض جديد",
+      "notifMessage": "عند وصول رسالة",
+      "notifStatus": "عند تغيّر حالة الطلب",
+      "notifPush": "إشعارات الدفع",
+      "notifPushSoon": "قريبًا",
+      "account": "الحساب",
+      "changePassword": "تغيير كلمة المرور",
+      "deleteAccount": "حذف الحساب",
+      "deleteConfirm": "هل أنت متأكد أنك تريد حذف حسابك؟",
+      "deleteWarning": "لا يمكن التراجع عن هذا الإجراء.",
+      "deleteCancel": "إلغاء",
+      "deleteConfirmBtn": "حذف الحساب"
     }
   },
   "search": {
