@@ -1,20 +1,9 @@
-const LOCALES = ["tr", "en", "de", "it", "ru", "uk", "sr", "me", "ar"] as const;
-const BASE = "https://glatko.app";
+export const SEO_LOCALES = ["tr", "en", "de", "it", "ru", "uk", "sr", "me", "ar"] as const;
+export const SEO_BASE = "https://glatko.app";
 
-/** BCP 47 hreflang; path segment "me" is not a valid ISO 639-1 language tag. */
-function hreflangForLocale(locale: string): string {
+/** BCP 47 hreflang; disambiguate sr (Serbia) vs me (Montenegro path segment). */
+export function hreflangForLocale(locale: string): string {
   if (locale === "me") return "sr-ME";
+  if (locale === "sr") return "sr-RS";
   return locale;
-}
-
-export function getAlternates(locale: string, path: string) {
-  return {
-    canonical: `${BASE}/${locale}${path}`,
-    languages: {
-      ...Object.fromEntries(
-        LOCALES.map((l) => [hreflangForLocale(l), `${BASE}/${l}${path}`])
-      ),
-      "x-default": `${BASE}/en${path}`,
-    },
-  };
 }

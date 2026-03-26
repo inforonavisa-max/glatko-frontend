@@ -6,7 +6,7 @@ import { PageBackground } from "@/components/ui/PageBackground";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { GlassmorphCard } from "@/components/ui/GlassmorphCard";
 import type { Metadata } from "next";
-import { getAlternates } from "@/lib/seo";
+import { HreflangLinks } from "@/components/seo/HreflangLinks";
 
 type Props = {
   params: Promise<{ locale: string }> | { locale: string };
@@ -27,7 +27,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       locale,
       type: "website",
     },
-    alternates: getAlternates(locale, "/terms"),
     robots: { index: true, follow: true },
   };
 }
@@ -38,7 +37,9 @@ export default async function TermsPage({ params }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations();
   return (
-    <PageBackground opacity={0.08}>
+    <>
+      <HreflangLinks locale={locale} path="/terms" />
+      <PageBackground opacity={0.08}>
       <div className="mx-auto max-w-3xl px-4 pb-16 pt-28">
         <SectionTitle>{t("legal.terms")}</SectionTitle>
         <GlassmorphCard className="p-8 md:p-12" hover={false}>
@@ -63,5 +64,6 @@ export default async function TermsPage({ params }: Props) {
         </GlassmorphCard>
       </div>
     </PageBackground>
+    </>
   );
 }

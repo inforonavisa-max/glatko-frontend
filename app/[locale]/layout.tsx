@@ -10,7 +10,6 @@ import { HtmlLangSetter } from "@/components/HtmlLangSetter";
 import { createClient } from "@/supabase/server";
 import { CookieConsent } from "@/components/glatko/CookieConsent";
 import type { Metadata } from "next";
-import { getAlternates } from "@/lib/seo";
 
 type Props = {
   children: React.ReactNode;
@@ -36,7 +35,6 @@ export async function generateMetadata({
       locale,
       type: "website",
     },
-    alternates: getAlternates(locale, ""),
   };
 }
 

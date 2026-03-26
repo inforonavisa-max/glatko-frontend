@@ -24,7 +24,7 @@ import { TrustBadge } from "@/components/glatko/trust/TrustBadge";
 import { ReviewSection } from "@/components/glatko/review/ReviewSection";
 import { LocalBusinessSchema } from "@/components/seo/LocalBusinessSchema";
 import type { Metadata } from "next";
-import { getAlternates } from "@/lib/seo";
+import { HreflangLinks } from "@/components/seo/HreflangLinks";
 import type { MultiLangText, ProService, ProfessionalProfile } from "@/types/glatko";
 
 type ReviewItem = {
@@ -85,7 +85,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       locale,
       type: "profile",
     },
-    alternates: getAlternates(locale, `/provider/${id}`),
     robots: { index: true, follow: true },
   };
 }
@@ -148,7 +147,9 @@ export default async function ProviderProfilePage({ params }: PageProps) {
   ];
 
   return (
-    <PageBackground opacity={0.06}>
+    <>
+      <HreflangLinks locale={locale} path={`/provider/${id}`} />
+      <PageBackground opacity={0.06}>
       <LocalBusinessSchema pro={profile as unknown as ProfessionalProfile} />
 
       {/* ── SECTION A: Hero Banner — teal gradient top ── */}
@@ -423,5 +424,6 @@ export default async function ProviderProfilePage({ params }: PageProps) {
         </div>
       </div>
     </PageBackground>
+    </>
   );
 }
