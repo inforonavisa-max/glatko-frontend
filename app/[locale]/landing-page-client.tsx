@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { motion } from "framer-motion";
 import { Home, Anchor } from "lucide-react";
 import { AceternityHeroBackground } from "@/components/aceternity/hero-background";
+import { LinesGradient } from "@/components/aceternity/lines-gradient";
 import { CollisionMechanism } from "@/components/aceternity/collision-beam";
 import { LazyAnimation } from "@/components/ui/LazyAnimation";
 import { SpotlightCard } from "@/components/landing/spotlight-card";
@@ -21,6 +22,8 @@ import { DeepFeatures } from "@/components/glatko/landing/DeepFeatures";
 import { Testimonials } from "@/components/glatko/landing/Testimonials";
 import { FAQ } from "@/components/glatko/landing/FAQ";
 import { DashedGridCTA } from "@/components/glatko/landing/DashedGridCTA";
+import { ImagesCTA } from "@/components/glatko/landing/ImagesCTA";
+import { MobileShowcase } from "@/components/glatko/landing/MobileShowcase";
 
 const easePremium = [0.25, 0.4, 0.25, 1] as const;
 
@@ -79,6 +82,12 @@ export default function LandingPageClient() {
         ref={heroParentRef}
         className="relative flex min-h-screen items-center justify-center overflow-hidden pt-16"
       >
+        <div
+          className="pointer-events-none absolute inset-0 z-0 opacity-30"
+          aria-hidden
+        >
+          <LinesGradient />
+        </div>
         <AceternityHeroBackground />
         {!reduced && (
           <LazyAnimation
@@ -268,8 +277,21 @@ export default function LandingPageClient() {
       {/* ── Deep Features (Why Glatko?) — from schedule/features3.tsx pattern ── */}
       <DeepFeatures />
 
+      <MobileShowcase
+        title={t("landing.mobile.title")}
+        subtitle={t("landing.mobile.subtitle")}
+      />
+
       {/* ── Testimonials — from schedule/testimonials.tsx ── */}
       <Testimonials />
+
+      <ImagesCTA
+        title={t("landing.cta.title")}
+        subtitle={t("landing.cta.subtitle")}
+        buttonText={t("landing.cta.requestBtn")}
+        buttonHref="/request-service"
+        trustText={t("auth.brandPanel.bullet1")}
+      />
 
       {/* ── FAQ — from schedule/faq.tsx ── */}
       <FAQ />

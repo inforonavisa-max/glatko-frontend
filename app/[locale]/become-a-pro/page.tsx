@@ -3,6 +3,8 @@ import { createClient } from "@/supabase/server";
 import { getTranslations } from "next-intl/server";
 import { setRequestLocale } from "next-intl/server";
 import { BecomeAProWizard } from "@/components/glatko/become-a-pro/BecomeAProWizard";
+import { GlatkoBentoImages } from "@/components/glatko/landing/BentoImagesGrid";
+import { NoiseCTA } from "@/components/glatko/landing/NoiseCTA";
 import { PageBackground } from "@/components/ui/PageBackground";
 
 type Props = {
@@ -55,13 +57,32 @@ export default async function BecomeAProPage({ params }: Props) {
 
   return (
     <PageBackground opacity={0.1}>
-      <div className="mx-auto max-w-3xl px-4 pb-20 pt-28 sm:px-6">
+      <div className="mx-auto max-w-6xl px-4 pt-28 sm:px-6">
+        <GlatkoBentoImages
+          title={t("becomePro.whyJoin.title")}
+          card1Title={t("becomePro.whyJoin.card1")}
+          card1Desc={t("becomePro.whyJoin.card1Desc")}
+          card2Title={t("becomePro.whyJoin.card2")}
+          card2Desc={t("becomePro.whyJoin.card2Desc")}
+          card3Title={t("becomePro.whyJoin.card3")}
+          card3Desc={t("becomePro.whyJoin.card3Desc")}
+          card4Title={t("becomePro.whyJoin.card4")}
+          card4Desc={t("becomePro.whyJoin.card4Desc")}
+        />
+      </div>
+      <div className="mx-auto max-w-3xl px-4 pb-12 sm:px-6">
         <BecomeAProWizard
           categories={
             (categories ?? []) as import("@/types/glatko").ServiceCategory[]
           }
         />
       </div>
+      <NoiseCTA
+        title={t("landing.cta.proTitle")}
+        subtitle={t("landing.cta.proSubtitle")}
+        buttonText={t("landing.cta.proFooterBtn")}
+        buttonHref="/become-a-pro"
+      />
     </PageBackground>
   );
 }

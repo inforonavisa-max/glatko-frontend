@@ -1134,7 +1134,27 @@
       "title": "Hemen Başlayın",
       "subtitle": "Karadağ'ın en güvenilir hizmet platformu",
       "requestBtn": "Ücretsiz Teklif Al",
-      "proBtn": "Profesyonel Ol"
+      "proBtn": "Profesyonel Ol",
+      "proTitle": "Profesyonel misiniz?",
+      "proSubtitle": "Glatko'ya katılın, müşterilerinizi bulun",
+      "proFooterBtn": "Hemen Başvur"
+    },
+    "mobile": {
+      "title": "Her Yerden Erişin",
+      "subtitle": "Telefonunuzdan hizmet talep edin, teklifleri karşılaştırın, profesyonellerle mesajlaşın"
+    }
+  },
+  "becomePro": {
+    "whyJoin": {
+      "title": "Neden Glatko'ya Katılmalısınız?",
+      "card1": "Müşteri Havuzu",
+      "card1Desc": "Budva, Kotor ve Tivat'taki müşterilere ulaşın",
+      "card2": "Esnek Çalışma",
+      "card2Desc": "Kendi programınızı belirleyin",
+      "card3": "Güvenli Platform",
+      "card3Desc": "Doğrulanmış müşteriler, şeffaf teklif sistemi",
+      "card4": "9 Dil Desteği",
+      "card4Desc": "Farklı dillerdeki müşterilerle iletişim kurun"
     }
   }
 }

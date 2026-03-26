@@ -1134,7 +1134,27 @@
       "title": "Get Started Now",
       "subtitle": "Montenegro's most trusted service platform",
       "requestBtn": "Get a Free Quote",
-      "proBtn": "Become a Professional"
+      "proBtn": "Become a Professional",
+      "proTitle": "Are you a professional?",
+      "proSubtitle": "Join Glatko and reach customers looking for your skills",
+      "proFooterBtn": "Apply now"
+    },
+    "mobile": {
+      "title": "Access Glatko anywhere",
+      "subtitle": "Request services, compare quotes, and message professionals from your phone"
+    }
+  },
+  "becomePro": {
+    "whyJoin": {
+      "title": "Why join Glatko?",
+      "card1": "Customer pool",
+      "card1Desc": "Reach clients in Budva, Kotor, and Tivat",
+      "card2": "Flexible work",
+      "card2Desc": "Set your own schedule",
+      "card3": "Trusted platform",
+      "card3Desc": "Verified customers and transparent quoting",
+      "card4": "9 languages",
+      "card4Desc": "Connect with customers in multiple languages"
     }
   }
 }

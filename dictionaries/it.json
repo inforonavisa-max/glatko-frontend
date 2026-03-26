@@ -1112,7 +1112,27 @@
       "title": "Inizia ora",
       "subtitle": "La piattaforma di servizi più affidabile del Montenegro",
       "requestBtn": "Preventivo gratuito",
-      "proBtn": "Diventa professionista"
+      "proBtn": "Diventa professionista",
+      "proTitle": "Sei un professionista?",
+      "proSubtitle": "Unisciti a Glatko e trova nuovi clienti",
+      "proFooterBtn": "Candidati ora"
+    },
+    "mobile": {
+      "title": "Accesso ovunque",
+      "subtitle": "Richiedi servizi, confronta preventivi e scrivi ai professionisti dal telefono"
+    }
+  },
+  "becomePro": {
+    "whyJoin": {
+      "title": "Perché Glatko?",
+      "card1": "Rete di clienti",
+      "card1Desc": "Clienti a Budva, Kotor e Tivat",
+      "card2": "Lavoro flessibile",
+      "card2Desc": "Decidi il tuo programma",
+      "card3": "Piattaforma sicura",
+      "card3Desc": "Clienti verificati e preventivi trasparenti",
+      "card4": "9 lingue",
+      "card4Desc": "Comunica in più lingue"
     }
   }
 }

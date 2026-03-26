@@ -1112,7 +1112,27 @@
       "title": "Započnite odmah",
       "subtitle": "Najpouzdanija servisna platforma Crne Gore",
       "requestBtn": "Besplatna ponuda",
-      "proBtn": "Postanite stručnjak"
+      "proBtn": "Postanite stručnjak",
+      "proTitle": "Da li ste profesionalac?",
+      "proSubtitle": "Pridružite se Glatko-u i pronađite klijente",
+      "proFooterBtn": "Prijavite se"
+    },
+    "mobile": {
+      "title": "Pristupite bilo gdje",
+      "subtitle": "Naručite usluge, uporedite ponude i pišite profesionalcima s telefona"
+    }
+  },
+  "becomePro": {
+    "whyJoin": {
+      "title": "Zašto Glatko?",
+      "card1": "Pool klijenata",
+      "card1Desc": "Klijenti u Budvi, Kotoru i Tivatu",
+      "card2": "Fleksibilan rad",
+      "card2Desc": "Sami određujete raspored",
+      "card3": "Sigurna platforma",
+      "card3Desc": "Provjereni klijenti i transparentne ponude",
+      "card4": "9 jezika",
+      "card4Desc": "Komunicirajte na više jezika"
     }
   }
 }

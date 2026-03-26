@@ -1112,7 +1112,27 @@
       "title": "Jetzt starten",
       "subtitle": "Montenegros vertrauenswürdigste Serviceplattform",
       "requestBtn": "Kostenloses Angebot",
-      "proBtn": "Fachmann werden"
+      "proBtn": "Fachmann werden",
+      "proTitle": "Sind Sie Profi?",
+      "proSubtitle": "Werden Sie Teil von Glatko und erreichen Sie neue Kunden",
+      "proFooterBtn": "Jetzt bewerben"
+    },
+    "mobile": {
+      "title": "Überall verfügbar",
+      "subtitle": "Fordern Sie Leistungen an, vergleichen Sie Angebote und chatten Sie mit Profis — direkt vom Handy"
+    }
+  },
+  "becomePro": {
+    "whyJoin": {
+      "title": "Warum Glatko?",
+      "card1": "Kundenstamm",
+      "card1Desc": "Erreichen Sie Kund:innen in Budva, Kotor und Tivat",
+      "card2": "Flexible Arbeit",
+      "card2Desc": "Bestimmen Sie Ihren eigenen Zeitplan",
+      "card3": "Sichere Plattform",
+      "card3Desc": "Verifizierte Kund:innen, transparente Angebote",
+      "card4": "9 Sprachen",
+      "card4Desc": "Kommunizieren Sie in vielen Sprachen"
     }
   }
 }
