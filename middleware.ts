@@ -1,5 +1,5 @@
 import createIntlMiddleware from 'next-intl/middleware';
-import type { NextRequest } from 'next/server';
+import { NextRequest } from 'next/server';
 import { updateSession } from '@/supabase/middleware';
 import { enforceRateLimit } from '@/lib/rateLimit';
 import { routing } from '@/i18n/routing';
@@ -9,18 +9,24 @@ const intlMiddleware = createIntlMiddleware(routing);
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set('x-pathname', pathname);
+    const requestWithPath = new NextRequest(request.url, {
+        headers: requestHeaders,
+    });
+
     if (pathname.startsWith('/api/') || pathname.startsWith('/auth/')) {
         const limited = await enforceRateLimit(request);
         if (limited) return limited;
-        return await updateSession(request);
+        return await updateSession(requestWithPath);
     }
 
     const limited = await enforceRateLimit(request);
     if (limited) return limited;
 
-    const intlResponse = intlMiddleware(request);
+    const intlResponse = intlMiddleware(requestWithPath);
 
-    const supabaseResponse = await updateSession(request);
+    const supabaseResponse = await updateSession(requestWithPath);
 
     if (intlResponse.headers.get('location')) {
         return intlResponse;

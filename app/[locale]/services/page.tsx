@@ -6,7 +6,6 @@ import { Home, Anchor, ArrowRight } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { PageBackground } from "@/components/ui/PageBackground";
 import type { Metadata } from "next";
-import { HreflangLinks } from "@/components/seo/HreflangLinks";
 
 type Props = {
   params: Promise<{ locale: string }> | { locale: string };
@@ -65,9 +64,7 @@ export default async function ServicesPage({ params }: Props) {
   ];
 
   return (
-    <>
-      <HreflangLinks locale={locale} path="/services" />
-      <PageBackground opacity={0.1}>
+    <PageBackground opacity={0.1}>
       <div className="mx-auto max-w-5xl px-4 pb-20 pt-28 sm:px-6 lg:px-8">
         <div className="mb-12 text-center">
           <h1 className="font-serif text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl">
@@ -163,6 +160,5 @@ export default async function ServicesPage({ params }: Props) {
         </div>
       </div>
     </PageBackground>
-    </>
   );
 }

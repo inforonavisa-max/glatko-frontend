@@ -7,7 +7,6 @@ import { SectionTitle } from "@/components/ui/SectionTitle";
 import { GlassmorphCard } from "@/components/ui/GlassmorphCard";
 import { Mail, MapPin, Clock, MessageCircle, Phone } from "lucide-react";
 import type { Metadata } from "next";
-import { HreflangLinks } from "@/components/seo/HreflangLinks";
 
 type Props = {
   params: Promise<{ locale: string }> | { locale: string };
@@ -39,9 +38,7 @@ export default async function ContactPage({ params }: Props) {
   const whatsapp = process.env.NEXT_PUBLIC_WHATSAPP_SUPPORT;
   const viber = process.env.NEXT_PUBLIC_VIBER_SUPPORT;
   return (
-    <>
-      <HreflangLinks locale={locale} path="/contact" />
-      <PageBackground opacity={0.08}>
+    <PageBackground opacity={0.08}>
       <div className="mx-auto max-w-3xl px-4 pb-16 pt-28">
         <SectionTitle>{t("legal.contact")}</SectionTitle>
         <GlassmorphCard className="p-8 md:p-12" hover={false}>
@@ -98,6 +95,5 @@ export default async function ContactPage({ params }: Props) {
         </GlassmorphCard>
       </div>
     </PageBackground>
-    </>
   );
 }

@@ -8,7 +8,6 @@ import { PageBackground } from "@/components/ui/PageBackground";
 import { getCategoryWithStats, searchProfessionals } from "@/lib/supabase/glatko.server";
 import type { Locale } from "@/i18n/routing";
 import type { Metadata } from "next";
-import { HreflangLinks } from "@/components/seo/HreflangLinks";
 import type { MultiLangText } from "@/types/glatko";
 
 type Props = {
@@ -61,9 +60,7 @@ export default async function CategoryDetailPage({ params }: Props) {
   });
 
   return (
-    <>
-      <HreflangLinks locale={locale} path={`/services/${slug}`} />
-      <PageBackground opacity={0.1}>
+    <PageBackground opacity={0.1}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -198,6 +195,5 @@ export default async function CategoryDetailPage({ params }: Props) {
         </div>
       </div>
     </PageBackground>
-    </>
   );
 }

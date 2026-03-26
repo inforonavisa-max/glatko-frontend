@@ -1,7 +1,6 @@
 import { hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
-import { HreflangLinks } from "@/components/seo/HreflangLinks";
 import LandingPageClient from "./landing-page-client";
 
 type Props = {
@@ -11,10 +10,5 @@ type Props = {
 export default async function LocaleHomePage({ params }: Props) {
   const { locale } = await Promise.resolve(params);
   if (!hasLocale(routing.locales, locale)) notFound();
-  return (
-    <>
-      <HreflangLinks locale={locale} path="" />
-      <LandingPageClient />
-    </>
-  );
+  return <LandingPageClient />;
 }

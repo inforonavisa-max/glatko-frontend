@@ -6,7 +6,6 @@ import { PageBackground } from "@/components/ui/PageBackground";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { GlassmorphCard } from "@/components/ui/GlassmorphCard";
 import type { Metadata } from "next";
-import { HreflangLinks } from "@/components/seo/HreflangLinks";
 
 type Props = {
   params: Promise<{ locale: string }> | { locale: string };
@@ -38,9 +37,7 @@ export default async function AboutPage({ params }: Props) {
   const t = await getTranslations();
   const c = (key: string) => t(`legal.aboutContent.${key}`);
   return (
-    <>
-      <HreflangLinks locale={locale} path="/about" />
-      <PageBackground opacity={0.08}>
+    <PageBackground opacity={0.08}>
       <div className="mx-auto max-w-3xl px-4 pb-16 pt-28">
         <SectionTitle>{t("legal.about")}</SectionTitle>
         <GlassmorphCard className="p-8 md:p-12" hover={false}>
@@ -58,6 +55,5 @@ export default async function AboutPage({ params }: Props) {
         </GlassmorphCard>
       </div>
     </PageBackground>
-    </>
   );
 }

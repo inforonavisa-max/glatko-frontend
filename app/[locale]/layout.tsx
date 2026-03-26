@@ -2,6 +2,7 @@ import { hasLocale } from "next-intl";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 import { routing } from "@/i18n/routing";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { GlatkoHeader } from "@/components/GlatkoHeader";
@@ -9,7 +10,17 @@ import { GlatkoFooter } from "@/components/GlatkoFooter";
 import { HtmlLangSetter } from "@/components/HtmlLangSetter";
 import { createClient } from "@/supabase/server";
 import { CookieConsent } from "@/components/glatko/CookieConsent";
+import { HreflangLinks } from "@/components/seo/HreflangLinks";
 import type { Metadata } from "next";
+
+/** Path segment after `/${locale}` for hreflang URLs (set by middleware `x-pathname`). */
+function hreflangPathForRequest(locale: string): string {
+  const pathname = headers().get("x-pathname") ?? "";
+  const prefix = `/${locale}`;
+  if (pathname === prefix || pathname === `${prefix}/`) return "";
+  if (pathname.startsWith(`${prefix}/`)) return pathname.slice(prefix.length);
+  return "";
+}
 
 type Props = {
   children: React.ReactNode;
@@ -67,9 +78,12 @@ export default async function LocaleLayout({ children, params }: Props) {
     isPro = !!proProfile && proProfile.verification_status === "approved";
   }
 
+  const hreflangPath = hreflangPathForRequest(locale);
+
   return (
     <NextIntlClientProvider messages={messages}>
       <NuqsAdapter>
+        <HreflangLinks locale={locale} path={hreflangPath} />
         <HtmlLangSetter lang={locale} dir={dir} />
         <div className="flex min-h-screen flex-col" dir={dir}>
           <a
