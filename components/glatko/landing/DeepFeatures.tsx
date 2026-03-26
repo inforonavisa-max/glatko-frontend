@@ -21,8 +21,9 @@ export function DeepFeatures() {
         <motion.div
           initial={reduced ? {} : { opacity: 0, y: 20 }}
           whileInView={reduced ? {} : { opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.5 }}
+          style={reduced ? undefined : { willChange: "transform, opacity" }}
           className="mb-14 text-center"
         >
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white md:text-4xl">
@@ -37,10 +38,11 @@ export function DeepFeatures() {
               initial={reduced ? {} : { opacity: 0, y: 20 }}
               whileInView={reduced ? {} : { opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.5, delay: i * 0.12 }}
+              transition={{ duration: 0.5, delay: Math.min(i, 7) * 0.12 }}
+              style={reduced ? undefined : { willChange: "transform, opacity" }}
               className="group relative overflow-hidden rounded-2xl border border-gray-200/80 bg-white p-8 transition-all duration-300 hover:shadow-lg dark:border-white/10 dark:bg-neutral-900"
             >
-              <div className={`pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-gradient-to-br ${feature.gradient} blur-3xl transition-all duration-500 group-hover:scale-125`} />
+              <div className={`pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-gradient-to-br ${feature.gradient} blur-md transition-all duration-500 group-hover:scale-125`} />
 
               <div className="relative">
                 <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-teal-200 bg-teal-50 transition-all group-hover:border-teal-300 group-hover:bg-teal-100 dark:border-teal-500/20 dark:bg-teal-500/10">

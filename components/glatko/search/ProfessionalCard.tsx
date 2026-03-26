@@ -71,7 +71,7 @@ export function ProfessionalCard({ pro, locale, index }: ProfessionalCardProps) 
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.04, duration: 0.4 }}
     >
-      <div className="group h-full rounded-2xl border border-gray-200/50 bg-white/70 p-5 backdrop-blur-xl transition-all duration-300 hover:border-teal-500/20 hover:shadow-lg dark:border-white/[0.08] dark:bg-white/[0.03] md:p-6">
+      <div className="group h-full rounded-2xl border border-gray-200/50 bg-white/70 p-5 backdrop-blur-sm transition-all duration-300 hover:border-teal-500/20 hover:shadow-lg dark:border-white/[0.08] dark:bg-white/[0.03] md:p-6">
         <div className="flex items-start gap-4">
           {pro.profile?.avatar_url ? (
             <Image

@@ -81,7 +81,7 @@ export default async function ServicesPage({ params }: Props) {
 
         <div className="grid gap-6 md:grid-cols-2">
           {/* Home Services */}
-          <div className="group rounded-3xl border border-gray-200/50 bg-white/70 p-8 backdrop-blur-xl transition-all duration-300 hover:border-teal-500/30 hover:shadow-xl dark:border-white/[0.08] dark:bg-white/[0.03] md:p-10">
+          <div className="group rounded-3xl border border-gray-200/50 bg-white/70 p-8 backdrop-blur-sm transition-all duration-300 hover:border-teal-500/30 hover:shadow-xl dark:border-white/[0.08] dark:bg-white/[0.03] md:p-10">
             <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-teal-500/10">
               <Home className="h-8 w-8 text-teal-600 dark:text-teal-400" />
             </div>
@@ -111,7 +111,7 @@ export default async function ServicesPage({ params }: Props) {
           </div>
 
           {/* Boat Services */}
-          <div className="group rounded-3xl border border-gray-200/50 bg-white/70 p-8 backdrop-blur-xl transition-all duration-300 hover:border-teal-500/30 hover:shadow-xl dark:border-white/[0.08] dark:bg-white/[0.03] md:p-10">
+          <div className="group rounded-3xl border border-gray-200/50 bg-white/70 p-8 backdrop-blur-sm transition-all duration-300 hover:border-teal-500/30 hover:shadow-xl dark:border-white/[0.08] dark:bg-white/[0.03] md:p-10">
             <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-teal-500/10">
               <Anchor className="h-8 w-8 text-teal-600 dark:text-teal-400" />
             </div>
@@ -142,7 +142,7 @@ export default async function ServicesPage({ params }: Props) {
         </div>
 
         {/* CTA */}
-        <div className="mt-16 rounded-2xl border border-gray-200/50 bg-white/70 p-8 text-center backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03]">
+        <div className="mt-16 rounded-2xl border border-gray-200/50 bg-white/70 p-8 text-center backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
           <p className="font-serif text-lg font-semibold text-gray-900 dark:text-white">
             {t("services.requestInCategory")}
           </p>

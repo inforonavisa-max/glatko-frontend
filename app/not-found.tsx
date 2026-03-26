@@ -9,7 +9,7 @@ export default function NotFound() {
         <div className="absolute bottom-1/4 right-1/4 h-[400px] w-[400px] rounded-full bg-cyan-500/[0.03] blur-[100px] dark:bg-cyan-500/[0.05]" />
       </div>
       <div className="relative z-10 w-full max-w-md">
-        <div className="rounded-3xl border border-gray-200/60 bg-white/70 p-10 text-center shadow-xl backdrop-blur-2xl dark:border-white/[0.08] dark:bg-white/[0.03]">
+        <div className="rounded-3xl border border-gray-200/60 bg-white/70 p-10 text-center shadow-xl backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
           <div className="mb-6 flex items-center justify-center gap-1">
             <span className="text-lg font-bold tracking-tight text-gray-900 dark:text-white">Glatko</span>
             <span className="mt-0.5 h-1.5 w-1.5 rounded-full bg-teal-500" />

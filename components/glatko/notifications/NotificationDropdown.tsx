@@ -219,7 +219,7 @@ export function NotificationBell({ userId }: NotificationBellProps) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.96 }}
             transition={{ duration: 0.2 }}
-            className="absolute right-0 top-full z-50 mt-2 w-[360px] overflow-hidden rounded-2xl border border-gray-200/50 bg-white/95 shadow-2xl backdrop-blur-2xl dark:border-white/[0.08] dark:bg-[#0a0a0a]/95 sm:w-[380px]"
+            className="absolute right-0 top-full z-50 mt-2 w-[360px] overflow-hidden rounded-2xl border border-gray-200/50 bg-white/95 shadow-2xl backdrop-blur-sm dark:border-white/[0.08] dark:bg-[#0a0a0a]/95 sm:w-[380px]"
           >
             <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3 dark:border-white/[0.06]">
               <h3 className="text-sm font-semibold text-gray-900 dark:text-white">

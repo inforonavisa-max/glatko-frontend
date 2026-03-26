@@ -18,7 +18,7 @@ export function ReviewPending({ requestTitle }: ReviewPendingProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="mx-auto flex max-w-lg flex-col items-center rounded-3xl border border-gray-200/50 bg-white/80 p-8 text-center shadow-2xl backdrop-blur-2xl dark:border-white/[0.08] dark:bg-white/[0.03] md:p-12"
+      className="mx-auto flex max-w-lg flex-col items-center rounded-3xl border border-gray-200/50 bg-white/80 p-8 text-center shadow-2xl backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03] md:p-12"
     >
       <motion.div
         animate={{ rotate: 360 }}

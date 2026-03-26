@@ -43,7 +43,7 @@ export default async function ProfessionalsAdminPage({ params }: Props) {
       </div>
 
       {professionals.length === 0 ? (
-        <div className="mt-12 flex flex-col items-center justify-center rounded-2xl border border-gray-200/50 bg-white/70 px-6 py-16 backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03]">
+        <div className="mt-12 flex flex-col items-center justify-center rounded-2xl border border-gray-200/50 bg-white/70 px-6 py-16 backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
           <ClipboardList className="h-14 w-14 text-teal-500/30" strokeWidth={1.5} />
           <h2 className="mt-4 font-serif text-lg font-semibold text-gray-700 dark:text-white/70">
             {t("admin.professionals.noApplications")}
@@ -59,7 +59,7 @@ export default async function ProfessionalsAdminPage({ params }: Props) {
             return (
               <div
                 key={pro.id}
-                className="rounded-2xl border border-gray-200/50 bg-white/70 p-5 backdrop-blur-xl transition-all duration-300 hover:border-teal-500/20 hover:shadow-md dark:border-white/[0.08] dark:bg-white/[0.03]"
+                className="rounded-2xl border border-gray-200/50 bg-white/70 p-5 backdrop-blur-sm transition-all duration-300 hover:border-teal-500/20 hover:shadow-md dark:border-white/[0.08] dark:bg-white/[0.03]"
               >
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex min-w-0 items-center gap-4">

@@ -111,7 +111,7 @@ export default async function DashboardRequestsPage({ params }: Props) {
         {requests.length === 0 ? (
           /* ── Empty state ── */
           <div className="flex flex-col items-center justify-center py-20 text-center">
-            <div className="rounded-3xl border border-gray-200/60 bg-white/70 px-10 py-14 backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03]">
+            <div className="rounded-3xl border border-gray-200/60 bg-white/70 px-10 py-14 backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
               <ClipboardList className="mx-auto mb-4 h-14 w-14 text-teal-500/30" strokeWidth={1.5} />
               <h2 className="font-serif text-lg font-semibold text-gray-900 dark:text-white">
                 {t("dashboard.requests.empty")}
@@ -151,7 +151,7 @@ export default async function DashboardRequestsPage({ params }: Props) {
               return (
                 <Link key={req.id} href={`/dashboard/requests/${req.id}`}>
                   <div
-                    className="group flex items-start gap-4 rounded-2xl border border-gray-200/50 bg-white/70 p-5 backdrop-blur-xl transition-all duration-300 hover:border-teal-500/20 hover:shadow-lg dark:border-white/[0.08] dark:bg-white/[0.03] dark:hover:border-teal-500/15 md:p-6"
+                    className="group flex items-start gap-4 rounded-2xl border border-gray-200/50 bg-white/70 p-5 backdrop-blur-sm transition-all duration-300 hover:border-teal-500/20 hover:shadow-lg dark:border-white/[0.08] dark:bg-white/[0.03] dark:hover:border-teal-500/15 md:p-6"
                     style={{ animationDelay: `${i * 50}ms` }}
                   >
                     {/* Category icon */}

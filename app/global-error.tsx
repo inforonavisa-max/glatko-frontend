@@ -13,7 +13,7 @@ export default function GlobalError({
           <div className="pointer-events-none absolute inset-0">
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[300px] w-[300px] rounded-full bg-teal-500/[0.06] blur-[100px] dark:bg-teal-500/10" />
           </div>
-          <div className="relative rounded-3xl border border-gray-200/60 bg-white/70 p-10 text-center shadow-xl backdrop-blur-2xl dark:border-white/[0.08] dark:bg-white/[0.03]">
+          <div className="relative rounded-3xl border border-gray-200/60 bg-white/70 p-10 text-center shadow-xl backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
             <div className="mb-6 flex items-center justify-center gap-1">
               <span className="text-lg font-bold tracking-tight">Glatko</span>
               <span className="mt-0.5 h-1.5 w-1.5 rounded-full bg-teal-500" />

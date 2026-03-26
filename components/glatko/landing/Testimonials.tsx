@@ -17,8 +17,9 @@ export function Testimonials() {
         <motion.div
           initial={reduced ? {} : { opacity: 0, y: 20 }}
           whileInView={reduced ? {} : { opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.5 }}
+          style={reduced ? undefined : { willChange: "transform, opacity" }}
           className="mb-14 text-center"
         >
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white md:text-4xl">
@@ -33,10 +34,11 @@ export function Testimonials() {
               initial={reduced ? {} : { opacity: 0, y: 20 }}
               whileInView={reduced ? {} : { opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.5, delay: i * 0.12 }}
+              transition={{ duration: 0.5, delay: Math.min(i, 7) * 0.12 }}
+              style={reduced ? undefined : { willChange: "transform, opacity" }}
               className="group relative overflow-hidden rounded-2xl border border-gray-200/80 bg-white p-6 transition-all duration-300 hover:shadow-lg dark:border-white/10 dark:bg-neutral-900"
             >
-              <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-teal-500/5 blur-2xl group-hover:bg-teal-500/10 dark:bg-teal-500/10" />
+              <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-teal-500/5 blur-sm group-hover:bg-teal-500/10 dark:bg-teal-500/10" />
 
               <div className="relative">
                 <div className="mb-4 flex gap-0.5">

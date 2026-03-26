@@ -51,7 +51,7 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
   const isEmpty = value.trim().length === 0;
 
   return (
-    <div className="sticky bottom-0 z-20 border-t border-gray-200/50 bg-white/80 px-4 py-3 backdrop-blur-xl dark:border-white/[0.06] dark:bg-[#080808]/80 sm:px-6">
+    <div className="sticky bottom-0 z-20 border-t border-gray-200/50 bg-white/80 px-4 py-3 backdrop-blur-sm dark:border-white/[0.06] dark:bg-[#080808]/80 sm:px-6">
       <div className="flex items-end gap-3">
         <button
           type="button"

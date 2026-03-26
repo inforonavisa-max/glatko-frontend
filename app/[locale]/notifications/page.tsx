@@ -209,7 +209,7 @@ export default function NotificationsPage() {
           )}
 
           {!loading && filtered.length === 0 && (
-            <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-gray-200/50 bg-white/70 py-16 text-center backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03]">
+            <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-gray-200/50 bg-white/70 py-16 text-center backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
               <Bell className="h-14 w-14 text-teal-500/30" strokeWidth={1.5} />
               <p className="font-serif text-lg font-semibold text-gray-900 dark:text-white">
                 {t("notifications.empty")}
@@ -234,7 +234,7 @@ export default function NotificationsPage() {
                   <button
                     onClick={() => handleClick(n)}
                     className={cn(
-                      "flex w-full items-start gap-4 rounded-2xl border p-4 text-left backdrop-blur-xl transition-all duration-300",
+                      "flex w-full items-start gap-4 rounded-2xl border p-4 text-left backdrop-blur-sm transition-all duration-300",
                       "border-gray-200/50 bg-white/70 hover:border-teal-500/20 hover:shadow-md",
                       "dark:border-white/[0.08] dark:bg-white/[0.03] dark:hover:border-teal-500/20",
                       "cursor-pointer",

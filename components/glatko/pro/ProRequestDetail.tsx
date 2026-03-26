@@ -179,7 +179,7 @@ export function ProRequestDetail({ request, professionalId, alreadyBid, maxBidsR
 
         {/* Right: Bid Form */}
         <div className="lg:col-span-1">
-          <div className="sticky top-4 rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03]">
+          <div className="sticky top-4 rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
             <h3 className="mb-1 font-serif text-xl text-gray-900 dark:text-white">{t("bidForm.title")}</h3>
             <p className="mb-6 text-xs text-gray-400 dark:text-white/30">{request.bid_count}/{request.max_bids} {t("proRequests.card.bidsReceived")}</p>
 

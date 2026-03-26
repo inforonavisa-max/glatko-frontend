@@ -159,7 +159,7 @@ export default async function ProviderProfilePage({ params }: PageProps) {
 
       <div className="relative mx-auto max-w-4xl px-4 pb-20 pt-28 sm:px-6">
         {/* Hero card */}
-        <div className="relative mb-8 rounded-3xl border border-gray-200/60 bg-white/80 p-6 shadow-xl backdrop-blur-2xl dark:border-white/[0.08] dark:bg-white/[0.03] sm:p-8">
+        <div className="relative mb-8 rounded-3xl border border-gray-200/60 bg-white/80 p-6 shadow-xl backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03] sm:p-8">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
             {/* Avatar */}
             {profile.profile?.avatar_url ? (
@@ -256,7 +256,7 @@ export default async function ProviderProfilePage({ params }: PageProps) {
             return (
               <div
                 key={stat.label}
-                className="rounded-2xl border border-gray-200/50 bg-white/70 p-5 text-center backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03]"
+                className="rounded-2xl border border-gray-200/50 bg-white/70 p-5 text-center backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]"
               >
                 <Icon className="mx-auto mb-2 h-5 w-5 text-teal-500/60" />
                 <div className="text-2xl font-bold tabular-nums text-teal-600 dark:text-teal-400">
@@ -272,7 +272,7 @@ export default async function ProviderProfilePage({ params }: PageProps) {
 
         {/* ── SECTION C: About ── */}
         {profile.bio?.trim() && (
-          <div className="mb-8 rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03]">
+          <div className="mb-8 rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
             <h2 className="mb-1 font-serif text-xl font-semibold text-gray-900 dark:text-white">
               {t("pro.profile.about")}
             </h2>
@@ -370,7 +370,7 @@ export default async function ProviderProfilePage({ params }: PageProps) {
         </div>
 
         {/* ── SECTION F: Reviews — adapted from kit testimonials.tsx pattern ── */}
-        <div className="mb-8 rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03]">
+        <div className="mb-8 rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
           <ReviewSection
             reviews={reviews as ReviewItem[]}
             totalReviews={totalReviews}
@@ -384,7 +384,7 @@ export default async function ProviderProfilePage({ params }: PageProps) {
         </div>
 
         {/* ── SECTION G: CTA ── */}
-        <div className="rounded-2xl border border-gray-200/50 bg-white/70 p-8 text-center backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03]">
+        <div className="rounded-2xl border border-gray-200/50 bg-white/70 p-8 text-center backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
           <h3 className="font-serif text-xl font-semibold text-gray-900 dark:text-white">
             {t("pro.profile.ctaTitle") ?? t("pro.profile.requestQuote")}
           </h3>

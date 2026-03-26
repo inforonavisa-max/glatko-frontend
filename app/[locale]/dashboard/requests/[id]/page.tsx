@@ -143,7 +143,7 @@ export default async function RequestDetailPage({ params }: Props) {
         </div>
 
         {/* ── Timeline — vertical dots with teal line ── */}
-        <div className="mb-8 rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03]">
+        <div className="mb-8 rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
           <h2 className="mb-5 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-white/30">
             {t("dashboard.detail.timeline")}
           </h2>
@@ -232,7 +232,7 @@ export default async function RequestDetailPage({ params }: Props) {
 
         {/* ── Description ── */}
         {request.description && (
-          <div className="mb-8 rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03]">
+          <div className="mb-8 rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
             <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-white/30">
               {t("dashboard.detail.details")}
             </h2>
@@ -244,7 +244,7 @@ export default async function RequestDetailPage({ params }: Props) {
 
         {/* ── Photos ── */}
         {request.photos && (request.photos as string[]).length > 0 && (
-          <div className="mb-8 rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03]">
+          <div className="mb-8 rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
             <h2 className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-white/30">
               <ImageIcon className="h-4 w-4" />
               {t("dashboard.detail.photos")}
@@ -267,7 +267,7 @@ export default async function RequestDetailPage({ params }: Props) {
         )}
 
         {/* ── Bids section ── */}
-        <div className="mb-8 rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03]">
+        <div className="mb-8 rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
           <h2 className="mb-5 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-white/30">
             <MessageSquare className="h-4 w-4" />
             {t("bidComparison.title")} ({request.bid_count ?? 0}/{request.max_bids ?? 4})
@@ -282,7 +282,7 @@ export default async function RequestDetailPage({ params }: Props) {
 
         {/* ── Review CTA ── */}
         {(status === "completed" || status === "reviewed") && (
-          <div className="mb-8 flex flex-col items-center gap-4 rounded-2xl border border-gray-200/50 bg-white/70 p-6 text-center backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03] sm:flex-row sm:text-left">
+          <div className="mb-8 flex flex-col items-center gap-4 rounded-2xl border border-gray-200/50 bg-white/70 p-6 text-center backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03] sm:flex-row sm:text-left">
             <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-amber-400/20 to-amber-500/20">
               <Star className="h-7 w-7 text-amber-400" />
             </div>

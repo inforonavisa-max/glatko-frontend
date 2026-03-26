@@ -2,9 +2,8 @@
 
 /**
  * Adapted from Aceternity Pro template `components/hero.tsx`:
- * - CollisionMechanism (lines 181–311)
- * - Explosion (lines 315–348)
- * Beam / particle colors switched from orange/yellow to teal/cyan for Glatko.
+ * Collision beam + explosion; teal/cyan palette for Glatko.
+ * Collision polling ~30fps; explosion particle count reduced for mobile GPU.
  */
 
 import React, { useEffect, useRef, useState } from "react";
@@ -26,6 +25,8 @@ type CollisionMechanismProps = {
     repeatDelay?: number;
   };
 };
+
+const COLLISION_MS = 33;
 
 export function CollisionMechanism({
   parentRef,
@@ -75,7 +76,7 @@ export function CollisionMechanism({
       }
     };
 
-    const animationInterval = setInterval(checkCollision, 50);
+    const animationInterval = setInterval(checkCollision, COLLISION_MS);
 
     return () => clearInterval(animationInterval);
   }, [cycleCollisionDetected, containerRef, parentRef]);
@@ -122,6 +123,7 @@ export function CollisionMechanism({
           delay: beamOptions.delay || 0,
           repeatDelay: beamOptions.repeatDelay || 0,
         }}
+        style={{ willChange: "transform" }}
         className={cn(
           "absolute left-96 top-20 m-auto h-14 w-px rounded-full bg-gradient-to-t from-teal-500 via-teal-400 to-transparent",
           beamOptions.className
@@ -144,8 +146,10 @@ export function CollisionMechanism({
   );
 }
 
+const PARTICLE_COUNT = 12;
+
 function Explosion({ ...props }: React.HTMLProps<HTMLDivElement>) {
-  const spans = Array.from({ length: 20 }, (_, index) => ({
+  const spans = Array.from({ length: PARTICLE_COUNT }, (_, index) => ({
     id: index,
     initialX: 0,
     initialY: 0,
@@ -160,6 +164,7 @@ function Explosion({ ...props }: React.HTMLProps<HTMLDivElement>) {
         animate={{ opacity: [0, 1, 0] }}
         exit={{ opacity: 0 }}
         transition={{ duration: 1, ease: "easeOut" }}
+        style={{ willChange: "opacity" }}
         className="absolute -inset-x-10 top-0 m-auto h-[4px] w-10 rounded-full bg-gradient-to-r from-transparent via-teal-400 to-transparent blur-sm"
       />
       {spans.map((span) => (
@@ -172,6 +177,7 @@ function Explosion({ ...props }: React.HTMLProps<HTMLDivElement>) {
             opacity: 0,
           }}
           transition={{ duration: Math.random() * 1.5 + 0.5, ease: "easeOut" }}
+          style={{ willChange: "transform, opacity" }}
           className="absolute h-1 w-1 rounded-full bg-gradient-to-b from-teal-500 to-cyan-400"
         />
       ))}

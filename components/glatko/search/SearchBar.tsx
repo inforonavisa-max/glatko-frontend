@@ -89,7 +89,7 @@ export function SearchBar({ locale, defaultValue = "", onSearch, fetchSuggestion
             onFocus={() => { if (suggestions.length > 0) setOpen(true); }}
             aria-label={t("common.search")}
             placeholder={t("search.searchPlaceholder")}
-            className="w-full rounded-2xl border border-gray-200/80 bg-white/90 py-4 pl-12 pr-4 text-sm text-gray-900 shadow-sm backdrop-blur-xl placeholder:text-gray-400 focus:border-teal-500/50 focus:outline-none focus:ring-2 focus:ring-teal-500/20 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white dark:placeholder:text-white/30 dark:focus:border-teal-500/40"
+            className="w-full rounded-2xl border border-gray-200/80 bg-white/90 py-4 pl-12 pr-4 text-sm text-gray-900 shadow-sm backdrop-blur-sm placeholder:text-gray-400 focus:border-teal-500/50 focus:outline-none focus:ring-2 focus:ring-teal-500/20 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white dark:placeholder:text-white/30 dark:focus:border-teal-500/40"
           />
           {loading && (
             <div className="absolute right-4 top-1/2 -translate-y-1/2">
@@ -105,7 +105,7 @@ export function SearchBar({ locale, defaultValue = "", onSearch, fetchSuggestion
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 4 }}
-            className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-2xl border border-gray-200/50 bg-white/95 shadow-2xl backdrop-blur-2xl dark:border-white/[0.08] dark:bg-[#0c0c0c]/95"
+            className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-2xl border border-gray-200/50 bg-white/95 shadow-2xl backdrop-blur-sm dark:border-white/[0.08] dark:bg-[#0c0c0c]/95"
           >
             {cats.length > 0 && (
               <div className="px-4 pt-3 pb-1">

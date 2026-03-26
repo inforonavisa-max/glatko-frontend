@@ -84,7 +84,7 @@ export default async function ProfessionalDetailPage({ params }: Props) {
       <div className="mt-8 grid gap-6 md:grid-cols-3">
         {/* Left: Profile info (2 cols) */}
         <div className="space-y-6 md:col-span-2">
-          <section className="rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03] md:p-8">
+          <section className="rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03] md:p-8">
             <h2 className="font-serif text-lg font-semibold text-gray-900 dark:text-white">
               {t("admin.professionals.personalInfo")}
             </h2>
@@ -128,7 +128,7 @@ export default async function ProfessionalDetailPage({ params }: Props) {
           </section>
 
           {profile.services && profile.services.length > 0 && (
-            <section className="rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03] md:p-8">
+            <section className="rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03] md:p-8">
               <h2 className="font-serif text-lg font-semibold text-gray-900 dark:text-white">
                 {t("admin.professionals.serviceAreas")}
               </h2>
@@ -157,7 +157,7 @@ export default async function ProfessionalDetailPage({ params }: Props) {
 
         {/* Right: Documents + Actions (1 col) */}
         <div className="space-y-6">
-          <section className="rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03]">
+          <section className="rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
             <h2 className="font-serif text-lg font-semibold text-gray-900 dark:text-white">
               {t("admin.professionals.documents")}
             </h2>

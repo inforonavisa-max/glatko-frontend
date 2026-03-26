@@ -42,7 +42,7 @@ function ReviewCard({
       initial={{ filter: "blur(16px)", opacity: 0, scale: 0.95 }}
       animate={{ filter: "blur(0px)", opacity: 1, scale: 1 }}
       transition={{ duration: 0.8, delay, ease: [0.25, 0.4, 0.25, 1] }}
-      className="rounded-2xl border border-gray-200/50 bg-white/80 p-6 shadow-xl backdrop-blur-2xl dark:border-white/[0.08] dark:bg-white/[0.03]"
+      className="rounded-2xl border border-gray-200/50 bg-white/80 p-6 shadow-xl backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]"
     >
       <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-teal-600 dark:text-teal-400">
         {heading}

@@ -36,7 +36,7 @@ export default async function ReviewPage({ params }: Props) {
     return (
       <PageBackground opacity={0.08}>
         <div className="mx-auto max-w-2xl px-4 pb-20 pt-28 sm:px-6">
-          <div className="rounded-2xl border border-gray-200/80 bg-white/80 p-8 text-center shadow-xl backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03]">
+          <div className="rounded-2xl border border-gray-200/80 bg-white/80 p-8 text-center shadow-xl backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
             <p className="text-lg text-gray-600 dark:text-white/50">
               {t("review.notCompleted")}
             </p>

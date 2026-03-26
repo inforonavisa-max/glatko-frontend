@@ -20,8 +20,18 @@ export function PageBackground({ children, opacity = 0.15, meshBlobs = true }: P
       </div>
       {meshBlobs && (
         <div className="pointer-events-none absolute inset-0 hidden overflow-hidden md:block" aria-hidden>
-          <div className="absolute left-1/4 top-1/4 h-[500px] w-[500px] rounded-full bg-teal-500/[0.04] blur-[80px] dark:bg-teal-500/[0.06]" />
-          <div className="absolute bottom-1/4 right-1/4 h-[400px] w-[400px] rounded-full bg-cyan-500/[0.03] blur-[80px] dark:bg-cyan-500/[0.05]" />
+          <div
+            className="absolute left-1/4 top-1/4 h-[560px] w-[560px]"
+            style={{
+              background: "radial-gradient(circle, rgba(20,184,166,0.07) 0%, transparent 72%)",
+            }}
+          />
+          <div
+            className="absolute bottom-1/4 right-1/4 h-[480px] w-[480px]"
+            style={{
+              background: "radial-gradient(circle, rgba(6,182,212,0.06) 0%, transparent 72%)",
+            }}
+          />
         </div>
       )}
       <div className="relative z-10">{children}</div>

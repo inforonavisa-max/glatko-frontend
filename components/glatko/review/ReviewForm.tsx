@@ -82,7 +82,7 @@ export function ReviewForm({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="mx-auto max-w-2xl rounded-3xl border border-gray-200/50 bg-white/80 p-8 shadow-2xl backdrop-blur-2xl dark:border-white/[0.08] dark:bg-white/[0.03] md:p-10"
+      className="mx-auto max-w-2xl rounded-3xl border border-gray-200/50 bg-white/80 p-8 shadow-2xl backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03] md:p-10"
     >
       <h1 className="font-serif text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">
         {t("review.title")}

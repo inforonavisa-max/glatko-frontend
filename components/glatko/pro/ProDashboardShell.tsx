@@ -83,7 +83,7 @@ export function ProDashboardShell({ children, profile, locale, translations }: P
       </div>
 
       {/* Desktop sidebar */}
-      <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 border-r border-gray-200/50 bg-white/80 backdrop-blur-xl dark:border-white/[0.06] dark:bg-[#080808]/80 md:block">
+      <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 border-r border-gray-200/50 bg-white/80 backdrop-blur-sm dark:border-white/[0.06] dark:bg-[#080808]/80 md:block">
         <div className="flex h-full flex-col">
           <div className="border-b border-gray-200/50 p-6 dark:border-white/[0.06]">
             <Link href={`/${locale}`} className="inline-flex items-center gap-1">
@@ -114,7 +114,7 @@ export function ProDashboardShell({ children, profile, locale, translations }: P
       </aside>
 
       {/* Mobile top bar */}
-      <div className="fixed left-0 right-0 top-0 z-40 flex h-16 items-center justify-between border-b border-gray-200/50 bg-white/80 px-4 backdrop-blur-xl dark:border-white/[0.06] dark:bg-[#080808]/80 md:hidden">
+      <div className="fixed left-0 right-0 top-0 z-40 flex h-16 items-center justify-between border-b border-gray-200/50 bg-white/80 px-4 backdrop-blur-sm dark:border-white/[0.06] dark:bg-[#080808]/80 md:hidden">
         <Link href={`/${locale}`} className="inline-flex items-center gap-1">
           <span className="text-lg font-bold text-gray-900 dark:text-white">Glatko</span>
           <span className="mt-0.5 h-1 w-1 rounded-full bg-teal-500" />

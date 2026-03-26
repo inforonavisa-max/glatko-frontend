@@ -99,7 +99,7 @@ export function GlatkoHeader({ userId, isPro = false }: GlatkoHeaderProps) {
         className={cn(
           "fixed left-0 right-0 top-0 z-50 transition-[border-color] duration-300",
           scrolled
-            ? "border-b border-black/5 backdrop-blur-xl dark:border-white/5"
+            ? "border-b border-black/5 backdrop-blur-md dark:border-white/5"
             : "border-b border-transparent"
         )}
         style={{ backgroundColor: headerBg }}

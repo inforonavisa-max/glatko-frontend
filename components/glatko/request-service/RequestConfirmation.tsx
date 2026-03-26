@@ -56,7 +56,7 @@ export function RequestConfirmation({ requestSummary, onCreateAnother, t }: Prop
       </p>
 
       {/* ── Summary card — glassmorphism ── */}
-      <div className="mt-8 w-full rounded-2xl border border-gray-200/60 bg-white/70 p-6 text-left backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03]">
+      <div className="mt-8 w-full rounded-2xl border border-gray-200/60 bg-white/70 p-6 text-left backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
         <div className="space-y-4">
           {[
             { label: t("request.confirmation.category"), value: requestSummary.category },

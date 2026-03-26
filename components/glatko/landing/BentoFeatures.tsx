@@ -35,13 +35,18 @@ export function BentoFeatures() {
             initial={reduced ? {} : { opacity: 0, y: 20 }}
             whileInView={reduced ? {} : { opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.5, delay: i * 0.1, ease: [0.25, 0.4, 0.25, 1] }}
+            transition={{
+              duration: 0.5,
+              delay: Math.min(i, 7) * 0.1,
+              ease: [0.25, 0.4, 0.25, 1],
+            }}
+            style={reduced ? undefined : { willChange: "transform, opacity" }}
             className={cn(
               "group relative overflow-hidden rounded-2xl border border-gray-200/80 bg-white/90 p-6 shadow-[0_1px_1px_rgba(0,0,0,0.05),0_4px_6px_rgba(34,42,53,0.04),0_24px_68px_rgba(47,48,55,0.05),0_2px_3px_rgba(0,0,0,0.04)] transition-all duration-300 hover:shadow-lg dark:border-white/10 dark:bg-neutral-900/85 dark:shadow-[0_1px_1px_rgba(0,0,0,0.35),0_8px_24px_rgba(0,0,0,0.25)]",
               feature.span
             )}
           >
-            <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-teal-500/5 blur-2xl transition-all duration-500 group-hover:bg-teal-500/10 dark:bg-teal-500/10 dark:group-hover:bg-teal-500/20" />
+            <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-teal-500/5 blur-sm transition-all duration-500 group-hover:bg-teal-500/10 dark:bg-teal-500/10 dark:group-hover:bg-teal-500/20" />
 
             <div className="relative">
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-teal-500/10 transition-colors group-hover:bg-teal-500/15 dark:bg-teal-500/15">

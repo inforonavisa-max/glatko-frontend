@@ -34,7 +34,7 @@ export function FilterBar({
   const t = useTranslations();
 
   return (
-    <div className="sticky top-16 z-30 -mx-4 px-4 py-3 backdrop-blur-xl bg-[#F8F6F0]/80 dark:bg-[#080808]/80 border-b border-gray-200/50 dark:border-white/[0.05]">
+    <div className="sticky top-16 z-30 -mx-4 px-4 py-3 backdrop-blur-sm bg-[#F8F6F0]/80 dark:bg-[#080808]/80 border-b border-gray-200/50 dark:border-white/[0.05]">
       <div className="flex flex-wrap items-center gap-2">
         <select
           value={category}

@@ -34,7 +34,7 @@ export function CookieConsent() {
           transition={{ type: "spring", damping: 25, stiffness: 300 }}
           className="fixed bottom-0 left-0 right-0 z-[200] p-4 sm:p-6"
         >
-          <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 rounded-2xl border border-gray-200/60 bg-white/90 px-6 py-4 shadow-xl backdrop-blur-2xl dark:border-white/[0.08] dark:bg-neutral-900/90 sm:flex-row sm:justify-between">
+          <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 rounded-2xl border border-gray-200/60 bg-white/90 px-6 py-4 shadow-xl backdrop-blur-sm dark:border-white/[0.08] dark:bg-neutral-900/90 sm:flex-row sm:justify-between">
             <p className="text-center text-sm text-gray-600 dark:text-white/60 sm:text-left">
               {t("cookie.message")}
             </p>

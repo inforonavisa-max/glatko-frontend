@@ -106,7 +106,7 @@ export function BecomeAProWizard({ categories }: Props) {
 
   return (
     <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
-      <div className="rounded-3xl border border-gray-200/80 bg-white/80 p-6 shadow-sm backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.04] dark:shadow-none md:p-10">
+      <div className="rounded-3xl border border-gray-200/80 bg-white/80 p-6 shadow-sm backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.04] dark:shadow-none md:p-10">
       <div className="mb-10 text-center">
         <h1 className="text-3xl font-semibold text-gray-900 dark:text-white">
           {t("pro.wizard.title")}

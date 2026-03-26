@@ -19,8 +19,9 @@ export function FAQ() {
         <motion.div
           initial={reduced ? {} : { opacity: 0, y: 20 }}
           whileInView={reduced ? {} : { opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.5 }}
+          style={reduced ? undefined : { willChange: "transform, opacity" }}
           className="mb-12 text-center"
         >
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white md:text-4xl">
@@ -35,7 +36,8 @@ export function FAQ() {
               initial={reduced ? {} : { opacity: 0, y: 10 }}
               whileInView={reduced ? {} : { opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-30px" }}
-              transition={{ duration: 0.4, delay: index * 0.06 }}
+              transition={{ duration: 0.4, delay: Math.min(index, 7) * 0.06 }}
+              style={reduced ? undefined : { willChange: "transform, opacity" }}
               className="overflow-hidden rounded-xl border border-gray-200/80 bg-white shadow-sm dark:border-white/10 dark:bg-neutral-900"
             >
               <button

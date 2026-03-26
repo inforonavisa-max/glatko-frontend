@@ -55,8 +55,9 @@ export function DashedGridCTA() {
         <motion.div
           initial={reduced ? {} : { opacity: 0, y: 20 }}
           whileInView={reduced ? {} : { opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.5 }}
+          style={reduced ? undefined : { willChange: "transform, opacity" }}
         >
           <h2 className="font-serif text-4xl font-bold text-gray-900 dark:text-white md:text-6xl">
             {t("landing.cta.title")}
@@ -69,8 +70,9 @@ export function DashedGridCTA() {
         <motion.div
           initial={reduced ? {} : { opacity: 0, y: 20 }}
           whileInView={reduced ? {} : { opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.5, delay: 0.15 }}
+          style={reduced ? undefined : { willChange: "transform, opacity" }}
           className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
         >
           <Link href="/request-service">

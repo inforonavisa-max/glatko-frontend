@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { Home, Anchor } from "lucide-react";
 import { AceternityHeroBackground } from "@/components/aceternity/hero-background";
 import { CollisionMechanism } from "@/components/aceternity/collision-beam";
+import { LazyAnimation } from "@/components/ui/LazyAnimation";
 import { SpotlightCard } from "@/components/landing/spotlight-card";
 import { HeroStatChip } from "@/components/landing/stat-chip";
 import {
@@ -80,7 +81,10 @@ export default function LandingPageClient() {
       >
         <AceternityHeroBackground />
         {!reduced && (
-          <div className="pointer-events-none absolute inset-0 z-[5]" aria-hidden>
+          <LazyAnimation
+            className="pointer-events-none absolute inset-0 z-[5]"
+            aria-hidden
+          >
             <CollisionMechanism
               beamOptions={{ initialX: -400, translateX: 600, duration: 7, repeatDelay: 3 }}
               containerRef={heroCollisionTargetRef}
@@ -96,7 +100,7 @@ export default function LandingPageClient() {
               containerRef={heroCollisionTargetRef}
               parentRef={heroParentRef}
             />
-          </div>
+          </LazyAnimation>
         )}
 
         <div className="relative z-10 mx-auto max-w-4xl px-4 text-center">
@@ -105,9 +109,10 @@ export default function LandingPageClient() {
               heroTitleWords.map((word, index) => (
                 <motion.span
                   key={`${word}-${index}`}
-                  initial={{ filter: "blur(10px)", opacity: 0, y: 10 }}
-                  animate={{ filter: "blur(0px)", opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: index * 0.05 }}
+                  style={{ willChange: "transform, opacity" }}
                   className="inline-block"
                 >
                   {word}
@@ -123,6 +128,7 @@ export default function LandingPageClient() {
             initial="hidden"
             animate="visible"
             custom={1}
+            style={reduced ? undefined : { willChange: "transform, opacity" }}
             className="mx-auto mt-6 max-w-2xl text-lg text-gray-600 dark:text-white/60 sm:text-xl"
           >
             {t("hero.subtitle")}
@@ -132,6 +138,7 @@ export default function LandingPageClient() {
             initial="hidden"
             animate="visible"
             custom={2}
+            style={reduced ? undefined : { willChange: "transform, opacity" }}
             className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
           >
             <Link href="/request-service">
@@ -159,6 +166,7 @@ export default function LandingPageClient() {
               initial="hidden"
               animate="visible"
               custom={3}
+              style={reduced ? undefined : { willChange: "transform, opacity" }}
               className="mt-8 text-sm text-gray-500 dark:text-white/40"
             >
               {t("hero.trustedBy")}
@@ -168,6 +176,7 @@ export default function LandingPageClient() {
               initial="hidden"
               animate="visible"
               custom={4}
+              style={reduced ? undefined : { willChange: "transform, opacity" }}
               className="mt-6 flex flex-wrap items-center justify-center gap-4 text-sm"
             >
               {heroStats.map((stat) => (

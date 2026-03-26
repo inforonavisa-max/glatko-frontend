@@ -252,7 +252,7 @@ export function RequestServiceWizard({ categories }: Props) {
       </div>
 
       {/* ── Glassmorphism container — adapted from kit pricing.tsx Card + D1 login card ── */}
-      <div className="rounded-3xl border border-gray-200/60 bg-white/80 p-6 shadow-xl backdrop-blur-2xl dark:border-white/[0.08] dark:bg-white/[0.03] dark:shadow-none md:p-10">
+      <div className="rounded-3xl border border-gray-200/60 bg-white/80 p-6 shadow-xl backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03] dark:shadow-none md:p-10">
         {error && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
