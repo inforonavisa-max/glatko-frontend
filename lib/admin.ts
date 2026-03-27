@@ -1,8 +1,7 @@
 const DEFAULT_ADMIN_EMAILS = [
-  "rohat@glatko.app",
-  "admin@glatko.app",
-  "contact@glatko.app",
+  "rohat7746@gmail.com",
   "info@ronalegal.com",
+  "hilalnazlican38@gmail.com",
 ];
 
 function parseAdminEmailsFromEnv(): Set<string> | null {
