@@ -44,7 +44,7 @@ export async function getProfessionalProfile(
 
   const { data: pro, error } = await supabase
     .from("glatko_professional_profiles")
-    .select("*, profiles:id(full_name, avatar_url)")
+    .select("*, profiles!glatko_professional_profiles_id_fkey(full_name, avatar_url)")
     .eq("id", id)
     .single();
 
@@ -86,7 +86,7 @@ export async function getProfessionalsByStatus(
 
   let query = supabase
     .from("glatko_professional_profiles")
-    .select("*, profiles:id(full_name, avatar_url)")
+    .select("*, profiles!glatko_professional_profiles_id_fkey(full_name, avatar_url)")
     .order("created_at", { ascending: false });
 
   if (status) {
@@ -139,7 +139,7 @@ export async function getProfessionalProfileAsAdmin(
 
   const { data: pro, error } = await supabase
     .from("glatko_professional_profiles")
-    .select("*, profiles:id(full_name, avatar_url)")
+    .select("*, profiles!glatko_professional_profiles_id_fkey(full_name, avatar_url)")
     .eq("id", id)
     .single();
 
