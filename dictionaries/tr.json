@@ -654,7 +654,10 @@
       "subtitle": "Hizmet taleplerinizi takip edin ve yönetin",
       "emptyDesc": "İlk hizmet talebinizi oluşturun ve profesyonellerden teklif alın",
       "bids": "teklif",
+      "total": "Toplam",
       "status": {
+        "active": "Aktif",
+        "all": "Tümü",
         "draft": "Taslak",
         "published": "Yayında",
         "bidding": "Teklifler Geliyor",

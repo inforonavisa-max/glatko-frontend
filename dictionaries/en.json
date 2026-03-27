@@ -654,7 +654,10 @@
       "subtitle": "Track and manage your service requests",
       "emptyDesc": "Create your first service request and get quotes from professionals",
       "bids": "bids",
+      "total": "Total",
       "status": {
+        "active": "Active",
+        "all": "All",
         "draft": "Draft",
         "published": "Published",
         "bidding": "Receiving Bids",

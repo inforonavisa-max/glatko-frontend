@@ -654,7 +654,10 @@
       "subtitle": "Verfolgen und verwalten Sie Ihre Serviceanfragen",
       "emptyDesc": "Erstellen Sie Ihre erste Anfrage und erhalten Sie Angebote von Profis",
       "bids": "Angebote",
+      "total": "Gesamt",
       "status": {
+        "active": "Aktiv",
+        "all": "Alle",
         "draft": "Entwurf",
         "published": "Veröffentlicht",
         "bidding": "Angebote eingehen",

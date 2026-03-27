@@ -654,7 +654,10 @@
       "subtitle": "Monitora e gestisci le tue richieste di servizio",
       "emptyDesc": "Crea la tua prima richiesta e ricevi preventivi dai professionisti",
       "bids": "preventivi",
+      "total": "Totale",
       "status": {
+        "active": "Attive",
+        "all": "Tutte",
         "draft": "Bozza",
         "published": "Pubblicata",
         "bidding": "Preventivi in Arrivo",

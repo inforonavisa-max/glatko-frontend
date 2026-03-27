@@ -654,7 +654,10 @@
       "subtitle": "Pratite i upravljajte vašim zahtevima",
       "emptyDesc": "Kreirajte prvi zahtev i dobijte ponude od profesionalaca",
       "bids": "ponuda",
+      "total": "Ukupno",
       "status": {
+        "active": "Aktivni",
+        "all": "Svi",
         "draft": "Nacrt",
         "published": "Objavljeno",
         "bidding": "Ponude pristižu",
