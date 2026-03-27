@@ -8,6 +8,7 @@ import Link from "next/link";
 import { ArrowLeft, MapPin, Clock, Calendar, DollarSign, Camera, CheckCircle, AlertCircle } from "lucide-react";
 import { submitBid } from "@/app/[locale]/pro/dashboard/requests/[id]/actions";
 import { cn } from "@/lib/utils";
+import { urgencyToStep3Key } from "@/lib/utils/urgencyI18n";
 
 interface Props {
   request: {
@@ -123,7 +124,7 @@ export function ProRequestDetail({ request, professionalId, alreadyBid, maxBidsR
                 "shrink-0 rounded-full border px-3 py-1 text-xs font-medium",
                 request.urgency === "asap" ? "bg-red-500/10 text-red-400 border-red-500/20" : "bg-amber-500/10 text-amber-400 border-amber-500/20"
               )}>
-                {t(`request.step3.urgency.${request.urgency === "asap" ? "urgent48h" : request.urgency === "this_week" ? "thisWeek" : request.urgency === "specific_date" ? "specificDate" : "flexible"}`)}
+                {t(`request.step3.urgency.${urgencyToStep3Key(request.urgency)}`)}
               </span>
             </div>
 
@@ -145,7 +146,7 @@ export function ProRequestDetail({ request, professionalId, alreadyBid, maxBidsR
                 </div>
               )}
               <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-white/50">
-                <Clock className="h-4 w-4 text-teal-400" />{t(`request.step3.urgency.${request.urgency === "asap" ? "urgent48h" : request.urgency === "this_week" ? "thisWeek" : request.urgency === "specific_date" ? "specificDate" : "flexible"}`)}
+                <Clock className="h-4 w-4 text-teal-400" />{t(`request.step3.urgency.${urgencyToStep3Key(request.urgency)}`)}
               </div>
               {request.preferred_date_start && (
                 <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-white/50">

@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { submitServiceRequest } from "@/app/[locale]/request-service/actions";
 import { cn } from "@/lib/utils";
+import { urgencyToStep3Key } from "@/lib/utils/urgencyI18n";
 import { StepCategory } from "./StepCategory";
 import { StepDetails } from "./StepDetails";
 import { StepLocation } from "./StepLocation";
@@ -145,7 +146,7 @@ export function RequestServiceWizard({ categories }: Props) {
         setSummaryData({
           category: selectedSub ? catName(selectedSub) : "",
           city: municipality,
-          urgency,
+          urgency: t(`request.step3.urgency.${urgencyToStep3Key(urgency)}`),
           budget:
             showBudget && budgetMin
               ? `${budgetMin}${budgetMax ? ` - ${budgetMax}` : "+"} EUR`

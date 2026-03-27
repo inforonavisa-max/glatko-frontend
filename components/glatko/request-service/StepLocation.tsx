@@ -46,11 +46,12 @@ const MARINA_OPTIONS = [
   "Marina Kotor",
 ] as const;
 
+/** Values must match DB + zod: asap | this_week | flexible | specific_date */
 const URGENCY_OPTIONS = [
-  { key: "urgent48h", icon: Zap },
-  { key: "thisWeek", icon: CalendarDays },
-  { key: "flexible", icon: Clock },
-  { key: "specificDate", icon: CalendarSearch },
+  { value: "asap", labelKey: "urgent48h", icon: Zap },
+  { value: "this_week", labelKey: "thisWeek", icon: CalendarDays },
+  { value: "flexible", labelKey: "flexible", icon: Clock },
+  { value: "specific_date", labelKey: "specificDate", icon: CalendarSearch },
 ] as const;
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
@@ -136,12 +137,12 @@ export function StepLocation({
           <div className="grid grid-cols-2 gap-3">
             {URGENCY_OPTIONS.map((opt) => {
               const Icon = opt.icon;
-              const isSelected = urgency === opt.key;
+              const isSelected = urgency === opt.value;
               return (
                 <motion.button
-                  key={opt.key}
+                  key={opt.value}
                   type="button"
-                  onClick={() => setUrgency(opt.key)}
+                  onClick={() => setUrgency(opt.value)}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   className={cn(
@@ -161,7 +162,7 @@ export function StepLocation({
                     "text-xs font-semibold",
                     isSelected ? "text-teal-700 dark:text-teal-300" : "text-gray-600 dark:text-white/60"
                   )}>
-                    {t(`request.step3.urgency.${opt.key}`)}
+                    {t(`request.step3.urgency.${opt.labelKey}`)}
                   </span>
                 </motion.button>
               );
@@ -170,7 +171,7 @@ export function StepLocation({
         </div>
 
         <AnimatePresence>
-          {urgency === "specificDate" && (
+          {urgency === "specific_date" && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}

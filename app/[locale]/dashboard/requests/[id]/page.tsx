@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { RequestStatus } from "@/types/glatko";
+import { urgencyToStep3Key } from "@/lib/utils/urgencyI18n";
 
 type Props = {
   params: Promise<{ locale: string; id: string }> | { locale: string; id: string };
@@ -105,7 +106,7 @@ export default async function RequestDetailPage({ params }: Props) {
     catName ? { icon: Layers, label: t("dashboard.detail.category") ?? "Category", value: catName } : null,
     request.municipality ? { icon: MapPin, label: t("dashboard.detail.location") ?? "Location", value: `${request.municipality}${request.address ? ` – ${request.address}` : ""}` } : null,
     (request.budget_min || request.budget_max) ? { icon: DollarSign, label: t("dashboard.detail.budget") ?? "Budget", value: `${request.budget_min ?? ""}${request.budget_min && request.budget_max ? " – " : ""}${request.budget_max ?? ""} EUR` } : null,
-    { icon: Clock, label: t("dashboard.detail.urgency") ?? "Urgency", value: t(`request.step3.urgency.${request.urgency}`) },
+    { icon: Clock, label: t("dashboard.detail.urgency") ?? "Urgency", value: t(`request.step3.urgency.${urgencyToStep3Key(request.urgency)}`) },
     { icon: Calendar, label: t("dashboard.detail.date") ?? "Date", value: createdDate },
     (request.details as Record<string, unknown>)?.phone ? { icon: Phone, label: t("dashboard.detail.phone") ?? "Phone", value: String((request.details as Record<string, unknown>).phone) } : null,
   ].filter(Boolean) as { icon: typeof Clock; label: string; value: string }[];
