@@ -19,9 +19,16 @@ import { StepServiceAreas } from "./StepServiceAreas";
 import { StepPortfolio } from "./StepPortfolio";
 import type { ServiceCategory } from "@/types/glatko";
 import type { Locale } from "@/i18n/routing";
+import {
+  AVATAR_REQUIRED,
+  CATEGORY_REQUIRED,
+} from "@/lib/validations/become-a-pro";
 
 interface Props {
   categories: ServiceCategory[];
+  userEmail: string;
+  displayName: string | null;
+  initialAvatarUrl: string | null;
 }
 
 const STEPS = [
@@ -30,11 +37,30 @@ const STEPS = [
   { icon: FolderOpen, key: "step3" },
 ] as const;
 
-export function BecomeAProWizard({ categories }: Props) {
+function mapSubmitError(
+  err: string | undefined,
+  t: ReturnType<typeof useTranslations>
+): string | undefined {
+  if (!err) return undefined;
+  if (err === AVATAR_REQUIRED) return t("pro.wizard.avatarRequired");
+  if (err === CATEGORY_REQUIRED) return t("pro.wizard.categoryRequired");
+  return err;
+}
+
+export function BecomeAProWizard({
+  categories,
+  userEmail,
+  displayName,
+  initialAvatarUrl,
+}: Props) {
   const t = useTranslations();
   const locale = useLocale() as Locale;
   const [step, setStep] = useState(0);
   const [isNarrow, setIsNarrow] = useState(false);
+
+  useEffect(() => {
+    setAvatarUrl(initialAvatarUrl?.trim() ?? "");
+  }, [initialAvatarUrl]);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 767px)");
@@ -52,6 +78,8 @@ export function BecomeAProWizard({ categories }: Props) {
   const [experience, setExperience] = useState("");
   const [hourlyMin, setHourlyMin] = useState("");
   const [hourlyMax, setHourlyMax] = useState("");
+
+  const [avatarUrl, setAvatarUrl] = useState(initialAvatarUrl?.trim() ?? "");
 
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
   const [primaryCategoryId, setPrimaryCategoryId] = useState("");
@@ -78,8 +106,11 @@ export function BecomeAProWizard({ categories }: Props) {
       prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]
     );
 
+  const hasAvatar = avatarUrl.trim().length > 0;
+
   const canAdvance =
-    step === 0 || (step === 1 && selectedCategoryIds.length > 0);
+    (step === 0 && hasAvatar) ||
+    (step === 1 && selectedCategoryIds.length > 0);
 
   const stepTransition = { duration: isNarrow ? 0.15 : 0.25 };
   const progressFillDuration = isNarrow ? 0.25 : 0.4;
@@ -150,7 +181,7 @@ export function BecomeAProWizard({ categories }: Props) {
 
       {state.error && (
         <div className="mb-6 rounded-xl border border-red-200 dark:border-red-500/20 bg-red-50 dark:bg-red-500/10 px-4 py-3 text-sm text-red-600 dark:text-red-400">
-          {state.error}
+          {mapSubmitError(state.error, t)}
         </div>
       )}
 
@@ -180,6 +211,10 @@ export function BecomeAProWizard({ categories }: Props) {
               setHourlyMin={setHourlyMin}
               hourlyMax={hourlyMax}
               setHourlyMax={setHourlyMax}
+              userEmail={userEmail}
+              displayName={displayName}
+              avatarUrl={avatarUrl}
+              onAvatarUrlChange={setAvatarUrl}
               t={t}
             />
           )}
@@ -237,7 +272,11 @@ export function BecomeAProWizard({ categories }: Props) {
         ) : (
           <button
             type="button"
-            disabled={isPending || selectedCategoryIds.length === 0}
+            disabled={
+              isPending ||
+              selectedCategoryIds.length === 0 ||
+              !hasAvatar
+            }
             onClick={() => {
               const fd = new FormData();
               fd.set("businessName", businessName);
@@ -247,6 +286,7 @@ export function BecomeAProWizard({ categories }: Props) {
               fd.set("yearsExperience", experience);
               fd.set("hourlyRateMin", hourlyMin);
               fd.set("hourlyRateMax", hourlyMax);
+              fd.set("avatar_url", avatarUrl.trim());
               languages.forEach((l) => fd.append("languages", l));
               selectedCategoryIds.forEach((id) => fd.append("categoryIds", id));
               fd.set("primaryCategoryId", primaryCategoryId);

@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import type { useTranslations } from "next-intl";
+import { ProWizardAvatarUpload } from "./ProWizardAvatarUpload";
 
 const CITY_SLUGS = [
   "budva",
@@ -41,6 +42,10 @@ export interface StepPersonalInfoProps {
   setHourlyMin: (v: string) => void;
   hourlyMax: string;
   setHourlyMax: (v: string) => void;
+  userEmail: string;
+  displayName: string | null;
+  avatarUrl: string;
+  onAvatarUrlChange: (url: string) => void;
   t: ReturnType<typeof useTranslations>;
 }
 
@@ -61,6 +66,10 @@ export function StepPersonalInfo({
   setHourlyMin,
   hourlyMax,
   setHourlyMax,
+  userEmail,
+  displayName,
+  avatarUrl,
+  onAvatarUrlChange,
   t,
 }: StepPersonalInfoProps) {
   return (
@@ -68,6 +77,13 @@ export function StepPersonalInfo({
       <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
         {t("pro.wizard.step1Title")}
       </h2>
+
+      <ProWizardAvatarUpload
+        displayName={displayName}
+        email={userEmail}
+        initialUrl={avatarUrl || null}
+        onUrlChange={onAvatarUrlChange}
+      />
 
       <div>
         <label className={labelCls}>{t("pro.wizard.businessName")}</label>

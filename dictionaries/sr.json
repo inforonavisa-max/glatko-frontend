@@ -378,6 +378,10 @@
       "portfolioUpload": "Portfolio fotografije",
       "documentsUpload": "Dokumenti za verifikaciju",
       "comingSoon": "Otpremanje fajlova uskoro",
+      "avatarTitle": "Profilna fotografija",
+      "avatarHint": "Obavezno — JPG, PNG ili WebP, najviše 2 MB.",
+      "avatarRequired": "Otpremite profilnu fotografiju pre nego što nastavite ili pošaljete prijavu.",
+      "categoryRequired": "Izaberite bar jednu oblast usluge.",
       "reviewNote": "Vaša prijava biće pregledana od strane našeg tima u roku od 24-48 sati."
     },
     "profile": {

@@ -30,6 +30,12 @@ export default async function BecomeAProPage({ params }: Props) {
     .eq("id", user.id)
     .single();
 
+  const { data: accountProfile } = await supabase
+    .from("profiles")
+    .select("full_name, avatar_url")
+    .eq("id", user.id)
+    .maybeSingle();
+
   const { data: categories } = await supabase
     .from("glatko_service_categories")
     .select("*")
@@ -75,6 +81,9 @@ export default async function BecomeAProPage({ params }: Props) {
           categories={
             (categories ?? []) as import("@/types/glatko").ServiceCategory[]
           }
+          userEmail={user.email ?? ""}
+          displayName={accountProfile?.full_name ?? null}
+          initialAvatarUrl={accountProfile?.avatar_url ?? null}
         />
       </div>
       <NoiseCTA

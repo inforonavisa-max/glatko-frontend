@@ -378,6 +378,10 @@
       "portfolioUpload": "صور المحفظة",
       "documentsUpload": "مستندات التحقق",
       "comingSoon": "رفع الملفات قريباً",
+      "avatarTitle": "صورة الملف الشخصي",
+      "avatarHint": "إلزامي — JPG أو PNG أو WebP، بحد أقصى 2 ميجابايت.",
+      "avatarRequired": "يرجى رفع صورة للملف الشخصي قبل المتابعة أو إرسال الطلب.",
+      "categoryRequired": "اختر مجال خدمة واحداً على الأقل.",
       "reviewNote": "سيتم مراجعة طلبك من قبل فريقنا خلال 24-48 ساعة."
     },
     "profile": {

@@ -378,6 +378,10 @@
       "portfolioUpload": "Portfolio Fotoğrafları",
       "documentsUpload": "Doğrulama Belgeleri",
       "comingSoon": "Dosya yükleme yakında",
+      "avatarTitle": "Profil fotoğrafı",
+      "avatarHint": "Zorunlu — JPG, PNG veya WebP, en fazla 2 MB.",
+      "avatarRequired": "Devam etmek ve başvuruyu göndermek için profil fotoğrafı yükleyin.",
+      "categoryRequired": "En az bir hizmet alanı seçin.",
       "reviewNote": "Başvurunuz ekibimiz tarafından 24-48 saat içinde incelenecektir."
     },
     "profile": {

@@ -378,6 +378,10 @@
       "portfolioUpload": "Foto Portfolio",
       "documentsUpload": "Documenti di Verifica",
       "comingSoon": "Caricamento file in arrivo",
+      "avatarTitle": "Foto profilo",
+      "avatarHint": "Obbligatorio — JPG, PNG o WebP, max 2 MB.",
+      "avatarRequired": "Carica una foto profilo prima di continuare o inviare la candidatura.",
+      "categoryRequired": "Seleziona almeno un'area di servizio.",
       "reviewNote": "La tua candidatura sarà esaminata dal nostro team entro 24-48 ore."
     },
     "profile": {
