@@ -9,6 +9,7 @@ import { GlatkoHeader } from "@/components/GlatkoHeader";
 import { GlatkoFooter } from "@/components/GlatkoFooter";
 import { HtmlLangSetter } from "@/components/HtmlLangSetter";
 import { createClient } from "@/supabase/server";
+import { isAdminEmail } from "@/lib/admin";
 import { CookieConsent } from "@/components/glatko/CookieConsent";
 import { HreflangLinks } from "@/components/seo/HreflangLinks";
 import type { Metadata } from "next";
@@ -78,6 +79,8 @@ export default async function LocaleLayout({ children, params }: Props) {
     isPro = !!proProfile && proProfile.verification_status === "approved";
   }
 
+  const isAdmin = user ? isAdminEmail(user.email) : false;
+
   const hreflangPath = hreflangPathForRequest(locale);
 
   return (
@@ -92,7 +95,7 @@ export default async function LocaleLayout({ children, params }: Props) {
           >
             Skip to content
           </a>
-          <GlatkoHeader userId={userId} isPro={isPro} />
+          <GlatkoHeader userId={userId} isPro={isPro} isAdmin={isAdmin} />
           <main id="main-content" className="flex-1">{children}</main>
           <GlatkoFooter />
           <CookieConsent />

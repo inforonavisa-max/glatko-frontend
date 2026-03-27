@@ -16,9 +16,14 @@ import { createClient } from "@/supabase/browser";
 interface GlatkoHeaderProps {
   userId?: string | null;
   isPro?: boolean;
+  isAdmin?: boolean;
 }
 
-export function GlatkoHeader({ userId, isPro = false }: GlatkoHeaderProps) {
+export function GlatkoHeader({
+  userId,
+  isPro = false,
+  isAdmin = false,
+}: GlatkoHeaderProps) {
   const t = useTranslations();
   const pathname = usePathname();
   const { resolvedTheme } = useTheme();
@@ -79,9 +84,20 @@ export function GlatkoHeader({ userId, isPro = false }: GlatkoHeaderProps) {
     { href: "/inbox", label: t("nav.inbox"), hasIcon: true },
   ];
 
-  const navLinks = !userId ? guestLinks : isPro ? proLinks : customerLinks;
+  const baseNavLinks = !userId ? guestLinks : isPro ? proLinks : customerLinks;
+  const navLinks =
+    userId && isAdmin
+      ? [
+          ...baseNavLinks,
+          {
+            href: "/admin/professionals",
+            label: t("nav.adminPanel"),
+            hasAdminIcon: true,
+          },
+        ]
+      : baseNavLinks;
 
-  const dropdownItems = isPro
+  const baseDropdownItems = isPro
     ? [
         { href: "/pro/dashboard", label: t("nav.proDashboard") },
         { href: "/inbox", label: t("nav.inbox") },
@@ -96,6 +112,18 @@ export function GlatkoHeader({ userId, isPro = false }: GlatkoHeaderProps) {
         { href: "/settings/profile", label: t("nav.userProfile"), icon: User },
         { href: "/settings/notifications", label: t("nav.settings") },
       ];
+
+  const dropdownItems =
+    userId && isAdmin
+      ? [
+          {
+            href: "/admin/professionals",
+            label: t("nav.adminPanel"),
+            icon: Settings,
+          },
+          ...baseDropdownItems,
+        ]
+      : baseDropdownItems;
 
   return (
     <>
@@ -136,7 +164,7 @@ export function GlatkoHeader({ userId, isPro = false }: GlatkoHeaderProps) {
                   href={l.href}
                   className={cn(
                     "rounded-md px-4 py-2 text-xs font-medium transition-colors",
-                    "hasIcon" in l
+                    "hasIcon" in l || "hasAdminIcon" in l
                       ? "flex items-center gap-1.5 text-teal-600 dark:text-teal-400"
                       : isActive
                         ? "bg-gray-100 text-gray-900 dark:bg-neutral-800 dark:text-white"
@@ -144,6 +172,7 @@ export function GlatkoHeader({ userId, isPro = false }: GlatkoHeaderProps) {
                   )}
                 >
                   {"hasIcon" in l && <Mail className="h-3.5 w-3.5" />}
+                  {"hasAdminIcon" in l && <Settings className="h-3.5 w-3.5" />}
                   {l.label}
                 </Link>
               );
@@ -262,12 +291,15 @@ export function GlatkoHeader({ userId, isPro = false }: GlatkoHeaderProps) {
                   onClick={() => setMobileOpen(false)}
                   className={cn(
                     "border-b border-gray-100 py-3 text-lg font-medium dark:border-white/5",
-                    "hasIcon" in l
+                    "hasIcon" in l || "hasAdminIcon" in l
                       ? "flex items-center gap-2 text-teal-600 dark:text-teal-400"
                       : "text-gray-900 dark:text-white"
                   )}
                 >
                   {"hasIcon" in l && <Mail className="h-5 w-5" />}
+                  {"hasAdminIcon" in l && (
+                    <Settings className="h-5 w-5 shrink-0 text-teal-600 dark:text-teal-400" />
+                  )}
                   {l.label}
                 </Link>
               ))}
