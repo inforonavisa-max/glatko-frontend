@@ -206,13 +206,16 @@ export async function getServiceRequest(requestId: string) {
     .from("glatko_service_requests")
     .select(
       `*, category:glatko_service_categories(id, slug, name, icon, parent_id),
-       bids:glatko_bids(id, price, price_type, message, status, created_at, estimated_duration_hours, available_date,
+       bids:glatko_bids!glatko_bids_service_request_id_fkey(id, price, price_type, message, status, created_at, estimated_duration_hours, available_date,
          professional:glatko_professional_profiles(id, business_name, avg_rating, total_reviews, completed_jobs, is_verified))`
     )
     .eq("id", requestId)
     .single();
 
-  if (error) return null;
+  if (error) {
+    console.error("getServiceRequest error:", error, "requestId:", requestId);
+    return null;
+  }
   return data;
 }
 
