@@ -66,6 +66,22 @@ export async function getProfessionalProfile(
 export async function getProfessionalsByStatus(
   status?: VerificationStatus
 ): Promise<ProfessionalProfile[]> {
+  const hasUrl = !!process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const hasServiceRole = !!process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  console.error("[getProfessionalsByStatus] query start", {
+    statusFilter: status ?? "(none)",
+    hasSupabaseUrl: hasUrl,
+    hasServiceRoleKey: hasServiceRole,
+  });
+
+  if (!hasUrl || !hasServiceRole) {
+    console.error(
+      "[getProfessionalsByStatus] missing env — using dummy client; query will not return real data",
+      { hasSupabaseUrl: hasUrl, hasServiceRoleKey: hasServiceRole }
+    );
+  }
+
   const supabase = createAdminClient();
 
   let query = supabase
@@ -78,7 +94,37 @@ export async function getProfessionalsByStatus(
   }
 
   const { data, error } = await query;
-  if (error || !data) return [];
+
+  console.error("[getProfessionalsByStatus] query result", {
+    rowCount: Array.isArray(data) ? data.length : data == null ? "null" : "non-array",
+    error: error
+      ? {
+          message: error.message,
+          code: error.code,
+          details: error.details,
+          hint: error.hint,
+        }
+      : null,
+  });
+
+  if (error) {
+    console.error("[getProfessionalsByStatus] Supabase error (returning empty list):", error);
+    return [];
+  }
+
+  if (!data) {
+    console.error(
+      "[getProfessionalsByStatus] data is null/undefined (returning empty list)"
+    );
+    return [];
+  }
+
+  if (data.length === 0) {
+    console.error(
+      "[getProfessionalsByStatus] zero rows — table empty for this filter or wrong Supabase project URL"
+    );
+  }
+
   return data.map((row) => ({
     ...row,
     profile: row.profiles ?? undefined,
