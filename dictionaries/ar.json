@@ -941,38 +941,100 @@
       "reviews": "التقييمات"
     },
     "profile": {
-      "title": "ملفي الشخصي",
-      "avatar": "صورة الملف الشخصي",
-      "changeAvatar": "تغيير الصورة",
-      "fullName": "الاسم الكامل",
-      "fullNameRequired": "يرجى إدخال اسمك",
-      "bioMax": "نبذة عني: 500 حرفًا كحد أقصى",
-      "email": "البريد الإلكتروني",
-      "emailHint": "يُدار البريد عبر الحساب ولا يمكن تغييره هنا.",
-      "phone": "الهاتف",
-      "phonePlaceholder": "+382 XX XXX XXX",
-      "city": "المدينة",
-      "cityPlaceholder": "اختر مدينة",
-      "cityOther": "أخرى",
-      "preferredLang": "اللغة المفضلة",
-      "bio": "نبذة عني",
-      "bioPlaceholder": "قدّم نفسك باختصار…",
-      "save": "حفظ",
-      "saving": "جارٍ الحفظ…",
-      "saved": "تم تحديث الملف الشخصي",
-      "notifications": "تفضيلات الإشعارات",
-      "notifNewBid": "عند وصول عرض جديد",
-      "notifMessage": "عند وصول رسالة",
-      "notifStatus": "عند تغيّر حالة الطلب",
-      "notifPush": "إشعارات الدفع",
-      "notifPushSoon": "قريبًا",
-      "account": "الحساب",
-      "changePassword": "تغيير كلمة المرور",
-      "deleteAccount": "حذف الحساب",
-      "deleteConfirm": "هل أنت متأكد أنك تريد حذف حسابك؟",
-      "deleteWarning": "لا يمكن التراجع عن هذا الإجراء.",
-      "deleteCancel": "إلغاء",
-      "deleteConfirmBtn": "حذف الحساب"
+      "title": "إعدادات الملف الشخصي",
+      "unsavedHint": "تغييرات غير محفوظة.",
+      "avatar": {
+        "title": "الصورة",
+        "upload": "رفع",
+        "chooseFile": "اختر ملفًا",
+        "discardPreview": "إلغاء المعاينة",
+        "remove": "إزالة الصورة",
+        "uploading": "جارٍ الرفع…",
+        "maxSize": "حتى 2MB؛ JPEG أو PNG أو WebP",
+        "uploadSuccess": "تم الرفع",
+        "uploadError": "فشل الرفع",
+        "removeSuccess": "تمت الإزالة"
+      },
+      "personal": {
+        "title": "البيانات الشخصية",
+        "fullName": "الاسم",
+        "fullNamePlaceholder": "الاسم الكامل",
+        "email": "البريد",
+        "emailHint": "لا يُغيَّر هنا",
+        "phone": "الهاتف",
+        "phonePlaceholder": "+382 XX XXX XXX",
+        "city": "المدينة",
+        "cityPlaceholder": "المدينة",
+        "cityOther": "أخرى",
+        "bio": "نبذة",
+        "bioPlaceholder": "باختصار…",
+        "bioHint": "500 حرفًا كحد أقصى",
+        "save": "حفظ",
+        "saving": "جارٍ الحفظ…",
+        "saveSuccess": "تم التحديث",
+        "saveError": "فشل الحفظ",
+        "validation": {
+          "nameMin": "حرفان على الأقل",
+          "bioMax": "500 حرفًا كحد أقصى"
+        }
+      },
+      "language": {
+        "title": "اللغة",
+        "description": "لغة الواجهة",
+        "changed": "تم تغيير اللغة",
+        "error": "خطأ"
+      },
+      "notifications": {
+        "title": "الإشعارات",
+        "saved": "تم الحفظ",
+        "error": "خطأ",
+        "email": {
+          "title": "البريد",
+          "newBid": "عرض جديد",
+          "newMessage": "رسالة جديدة",
+          "newReview": "تقييم جديد"
+        },
+        "push": {
+          "title": "دفع",
+          "soon": "قريبًا"
+        }
+      },
+      "account": {
+        "title": "الحساب",
+        "changePassword": {
+          "title": "كلمة المرور",
+          "description": "الحالية والجديدة.",
+          "button": "تغيير كلمة المرور",
+          "currentPassword": "الحالية",
+          "newPassword": "الجديدة",
+          "confirmPassword": "تأكيد",
+          "submit": "تحديث",
+          "cancel": "إلغاء",
+          "success": "تم التغيير",
+          "error": "خطأ",
+          "wrongCurrent": "غير صحيحة"
+        },
+        "deactivate": {
+          "title": "تعطيل الحساب",
+          "description": "تعطيل مؤقت.",
+          "button": "تعطيل",
+          "confirmButton": "نعم",
+          "cancel": "إلغاء",
+          "error": "خطأ"
+        },
+        "delete": {
+          "title": "حذف الحساب",
+          "description": "لا رجعة؛ تسجيل خروج.",
+          "button": "حذف",
+          "warning": "تحذير!",
+          "confirmText": "اكتب DELETE",
+          "confirmPlaceholder": "DELETE",
+          "confirmButton": "حذف نهائي",
+          "cancel": "إلغاء",
+          "invalidConfirm": "النص غير صحيح",
+          "error": "فشل"
+        }
+      }
     }
   },
   "search": {

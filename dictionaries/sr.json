@@ -941,38 +941,100 @@
       "reviews": "Ocene"
     },
     "profile": {
-      "title": "Moj profil",
-      "avatar": "Profilna fotografija",
-      "changeAvatar": "Promeni fotografiju",
-      "fullName": "Ime i prezime",
-      "fullNameRequired": "Unesite ime",
-      "bioMax": "O meni — najviše 500 karaktera",
-      "email": "Email",
-      "emailHint": "Email se upravlja nalogom i ovde se ne menja.",
-      "phone": "Telefon",
-      "phonePlaceholder": "+382 XX XXX XXX",
-      "city": "Grad",
-      "cityPlaceholder": "Izaberite grad",
-      "cityOther": "Drugo",
-      "preferredLang": "Željeni jezik",
-      "bio": "O meni",
-      "bioPlaceholder": "Ukratko se predstavite…",
-      "save": "Sačuvaj",
-      "saving": "Čuvanje…",
-      "saved": "Profil ažuriran",
-      "notifications": "Podešavanja obaveštenja",
-      "notifNewBid": "Kada stigne nova ponuda",
-      "notifMessage": "Kada stigne poruka",
-      "notifStatus": "Kada se promeni status zahteva",
-      "notifPush": "Push obaveštenja",
-      "notifPushSoon": "Uskoro",
-      "account": "Nalog",
-      "changePassword": "Promeni lozinku",
-      "deleteAccount": "Obriši nalog",
-      "deleteConfirm": "Da li zaista želite da obrišete nalog?",
-      "deleteWarning": "Ova radnja se ne može poništiti.",
-      "deleteCancel": "Otkaži",
-      "deleteConfirmBtn": "Obriši nalog"
+      "title": "Podešavanja profila",
+      "unsavedHint": "Imate nesačuvane izmene.",
+      "avatar": {
+        "title": "Fotografija",
+        "upload": "Otpremi",
+        "chooseFile": "Izaberi fajl",
+        "discardPreview": "Otkaži pregled",
+        "remove": "Ukloni foto",
+        "uploading": "Otpremanje…",
+        "maxSize": "Do 2MB; JPEG, PNG, WebP",
+        "uploadSuccess": "Otpremeno",
+        "uploadError": "Greška",
+        "removeSuccess": "Uklonjeno"
+      },
+      "personal": {
+        "title": "Lični podaci",
+        "fullName": "Ime",
+        "fullNamePlaceholder": "Ime i prezime",
+        "email": "Email",
+        "emailHint": "Ovde se ne menja",
+        "phone": "Telefon",
+        "phonePlaceholder": "+382 XX XXX XXX",
+        "city": "Grad",
+        "cityPlaceholder": "Grad",
+        "cityOther": "Drugo",
+        "bio": "O meni",
+        "bioPlaceholder": "Ukratko…",
+        "bioHint": "Do 500 karaktera",
+        "save": "Sačuvaj",
+        "saving": "Čuvanje…",
+        "saveSuccess": "Ažurirano",
+        "saveError": "Greška",
+        "validation": {
+          "nameMin": "Min. 2 karaktera",
+          "bioMax": "Maks. 500 karaktera"
+        }
+      },
+      "language": {
+        "title": "Jezik",
+        "description": "Jezik interfejsa",
+        "changed": "Jezik promenjen",
+        "error": "Greška"
+      },
+      "notifications": {
+        "title": "Obaveštenja",
+        "saved": "Sačuvano",
+        "error": "Greška",
+        "email": {
+          "title": "Email",
+          "newBid": "Nova ponuda",
+          "newMessage": "Nova poruka",
+          "newReview": "Nova ocena"
+        },
+        "push": {
+          "title": "Push",
+          "soon": "Uskoro"
+        }
+      },
+      "account": {
+        "title": "Nalog",
+        "changePassword": {
+          "title": "Lozinka",
+          "description": "Trenutna i nova lozinka.",
+          "button": "Promeni lozinku",
+          "currentPassword": "Trenutna",
+          "newPassword": "Nova",
+          "confirmPassword": "Potvrda",
+          "submit": "Ažuriraj",
+          "cancel": "Otkaži",
+          "success": "Lozinka promenjena",
+          "error": "Greška",
+          "wrongCurrent": "Pogrešna lozinka"
+        },
+        "deactivate": {
+          "title": "Deaktivacija",
+          "description": "Privremeno isključiti.",
+          "button": "Deaktiviraj",
+          "confirmButton": "Da",
+          "cancel": "Otkaži",
+          "error": "Greška"
+        },
+        "delete": {
+          "title": "Obriši nalog",
+          "description": "Bez povratka; odjava.",
+          "button": "Obriši",
+          "warning": "Pažnja!",
+          "confirmText": "Ukucajte DELETE",
+          "confirmPlaceholder": "DELETE",
+          "confirmButton": "Trajno obriši",
+          "cancel": "Otkaži",
+          "invalidConfirm": "Tekst ne odgovara",
+          "error": "Greška"
+        }
+      }
     }
   },
   "search": {

@@ -941,38 +941,100 @@
       "reviews": "Відгуки"
     },
     "profile": {
-      "title": "Мій профіль",
-      "avatar": "Фото профілю",
-      "changeAvatar": "Змінити фото",
-      "fullName": "Ім'я та прізвище",
-      "fullNameRequired": "Введіть ім'я",
-      "bioMax": "Про себе — не більше 500 символів",
-      "email": "Електронна пошта",
-      "emailHint": "Пошта керується обліковим записом і тут не змінюється.",
-      "phone": "Телефон",
-      "phonePlaceholder": "+382 XX XXX XXX",
-      "city": "Місто",
-      "cityPlaceholder": "Оберіть місто",
-      "cityOther": "Інше",
-      "preferredLang": "Бажана мова",
-      "bio": "Про себе",
-      "bioPlaceholder": "Коротко розкажіть про себе…",
-      "save": "Зберегти",
-      "saving": "Збереження…",
-      "saved": "Профіль оновлено",
-      "notifications": "Налаштування сповіщень",
-      "notifNewBid": "Коли надійде нова пропозиція",
-      "notifMessage": "Коли надійде повідомлення",
-      "notifStatus": "Коли зміниться статус запиту",
-      "notifPush": "Push-сповіщення",
-      "notifPushSoon": "Незабаром",
-      "account": "Обліковий запис",
-      "changePassword": "Змінити пароль",
-      "deleteAccount": "Видалити обліковий запис",
-      "deleteConfirm": "Ви впевнені, що хочете видалити обліковий запис?",
-      "deleteWarning": "Цю дію неможливо скасувати.",
-      "deleteCancel": "Скасувати",
-      "deleteConfirmBtn": "Видалити обліковий запис"
+      "title": "Налаштування профілю",
+      "unsavedHint": "Є незбережені зміни.",
+      "avatar": {
+        "title": "Фото",
+        "upload": "Завантажити",
+        "chooseFile": "Файл",
+        "discardPreview": "Скинути",
+        "remove": "Прибрати фото",
+        "uploading": "Завантаження…",
+        "maxSize": "До 2MB; JPEG, PNG, WebP",
+        "uploadSuccess": "Готово",
+        "uploadError": "Помилка",
+        "removeSuccess": "Фото видалено"
+      },
+      "personal": {
+        "title": "Дані",
+        "fullName": "Ім'я",
+        "fullNamePlaceholder": "Ім'я та прізвище",
+        "email": "Email",
+        "emailHint": "Тут не змінюється",
+        "phone": "Телефон",
+        "phonePlaceholder": "+382 XX XXX XXX",
+        "city": "Місто",
+        "cityPlaceholder": "Місто",
+        "cityOther": "Інше",
+        "bio": "Про себе",
+        "bioPlaceholder": "Коротко…",
+        "bioHint": "До 500 символів",
+        "save": "Зберегти",
+        "saving": "Збереження…",
+        "saveSuccess": "Оновлено",
+        "saveError": "Помилка",
+        "validation": {
+          "nameMin": "Мін. 2 символи",
+          "bioMax": "Макс. 500 символів"
+        }
+      },
+      "language": {
+        "title": "Мова",
+        "description": "Мова інтерфейсу",
+        "changed": "Мову змінено",
+        "error": "Помилка"
+      },
+      "notifications": {
+        "title": "Сповіщення",
+        "saved": "Збережено",
+        "error": "Помилка",
+        "email": {
+          "title": "Email",
+          "newBid": "Нова пропозиція",
+          "newMessage": "Нове повідомлення",
+          "newReview": "Новий відгук"
+        },
+        "push": {
+          "title": "Push",
+          "soon": "Незабаром"
+        }
+      },
+      "account": {
+        "title": "Обліковий запис",
+        "changePassword": {
+          "title": "Пароль",
+          "description": "Поточний і новий пароль.",
+          "button": "Змінити пароль",
+          "currentPassword": "Поточний",
+          "newPassword": "Новий",
+          "confirmPassword": "Підтвердження",
+          "submit": "Оновити",
+          "cancel": "Скасувати",
+          "success": "Пароль змінено",
+          "error": "Помилка",
+          "wrongCurrent": "Невірний пароль"
+        },
+        "deactivate": {
+          "title": "Деактивація",
+          "description": "Тимчасово вимкнути.",
+          "button": "Деактивувати",
+          "confirmButton": "Так",
+          "cancel": "Скасувати",
+          "error": "Помилка"
+        },
+        "delete": {
+          "title": "Видалити акаунт",
+          "description": "Без повернення; вихід.",
+          "button": "Видалити",
+          "warning": "Увага!",
+          "confirmText": "Введіть DELETE",
+          "confirmPlaceholder": "DELETE",
+          "confirmButton": "Видалити назавжди",
+          "cancel": "Скасувати",
+          "invalidConfirm": "Невірний текст",
+          "error": "Помилка"
+        }
+      }
     }
   },
   "search": {

@@ -941,38 +941,100 @@
       "reviews": "Отзывы"
     },
     "profile": {
-      "title": "Мой профиль",
-      "avatar": "Фото профиля",
-      "changeAvatar": "Сменить фото",
-      "fullName": "Имя и фамилия",
-      "fullNameRequired": "Введите имя",
-      "bioMax": "О себе — не более 500 символов",
-      "email": "Email",
-      "emailHint": "Email управляется аккаунтом и здесь не меняется.",
-      "phone": "Телефон",
-      "phonePlaceholder": "+382 XX XXX XXX",
-      "city": "Город",
-      "cityPlaceholder": "Выберите город",
-      "cityOther": "Другое",
-      "preferredLang": "Предпочитаемый язык",
-      "bio": "О себе",
-      "bioPlaceholder": "Кратко расскажите о себе…",
-      "save": "Сохранить",
-      "saving": "Сохранение…",
-      "saved": "Профиль обновлён",
-      "notifications": "Настройки уведомлений",
-      "notifNewBid": "При новом предложении",
-      "notifMessage": "При новом сообщении",
-      "notifStatus": "При изменении статуса заявки",
-      "notifPush": "Push-уведомления",
-      "notifPushSoon": "Скоро",
-      "account": "Аккаунт",
-      "changePassword": "Сменить пароль",
-      "deleteAccount": "Удалить аккаунт",
-      "deleteConfirm": "Вы уверены, что хотите удалить аккаунт?",
-      "deleteWarning": "Это действие нельзя отменить.",
-      "deleteCancel": "Отмена",
-      "deleteConfirmBtn": "Удалить аккаунт"
+      "title": "Настройки профиля",
+      "unsavedHint": "Есть несохранённые изменения.",
+      "avatar": {
+        "title": "Фото",
+        "upload": "Загрузить",
+        "chooseFile": "Файл",
+        "discardPreview": "Сбросить",
+        "remove": "Удалить фото",
+        "uploading": "Загрузка…",
+        "maxSize": "До 2MB; JPEG, PNG, WebP",
+        "uploadSuccess": "Готово",
+        "uploadError": "Ошибка загрузки",
+        "removeSuccess": "Фото удалено"
+      },
+      "personal": {
+        "title": "Данные",
+        "fullName": "Имя",
+        "fullNamePlaceholder": "Имя и фамилия",
+        "email": "Email",
+        "emailHint": "Не меняется здесь",
+        "phone": "Телефон",
+        "phonePlaceholder": "+382 XX XXX XXX",
+        "city": "Город",
+        "cityPlaceholder": "Город",
+        "cityOther": "Другое",
+        "bio": "О себе",
+        "bioPlaceholder": "Кратко…",
+        "bioHint": "До 500 символов",
+        "save": "Сохранить",
+        "saving": "Сохранение…",
+        "saveSuccess": "Обновлено",
+        "saveError": "Ошибка",
+        "validation": {
+          "nameMin": "Мин. 2 символа",
+          "bioMax": "Макс. 500 символов"
+        }
+      },
+      "language": {
+        "title": "Язык",
+        "description": "Язык интерфейса",
+        "changed": "Язык изменён",
+        "error": "Ошибка"
+      },
+      "notifications": {
+        "title": "Уведомления",
+        "saved": "Сохранено",
+        "error": "Ошибка",
+        "email": {
+          "title": "Email",
+          "newBid": "Новое предложение",
+          "newMessage": "Новое сообщение",
+          "newReview": "Новый отзыв"
+        },
+        "push": {
+          "title": "Push",
+          "soon": "Скоро"
+        }
+      },
+      "account": {
+        "title": "Аккаунт",
+        "changePassword": {
+          "title": "Пароль",
+          "description": "Текущий и новый пароль.",
+          "button": "Сменить пароль",
+          "currentPassword": "Текущий",
+          "newPassword": "Новый",
+          "confirmPassword": "Повтор",
+          "submit": "Обновить",
+          "cancel": "Отмена",
+          "success": "Пароль изменён",
+          "error": "Ошибка",
+          "wrongCurrent": "Неверный пароль"
+        },
+        "deactivate": {
+          "title": "Деактивация",
+          "description": "Временно отключить.",
+          "button": "Деактивировать",
+          "confirmButton": "Да",
+          "cancel": "Отмена",
+          "error": "Ошибка"
+        },
+        "delete": {
+          "title": "Удалить аккаунт",
+          "description": "Без отката; выход.",
+          "button": "Удалить",
+          "warning": "Внимание!",
+          "confirmText": "Введите DELETE",
+          "confirmPlaceholder": "DELETE",
+          "confirmButton": "Удалить навсегда",
+          "cancel": "Отмена",
+          "invalidConfirm": "Неверный текст",
+          "error": "Ошибка"
+        }
+      }
     }
   },
   "search": {

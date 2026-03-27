@@ -941,38 +941,100 @@
       "reviews": "Recensioni"
     },
     "profile": {
-      "title": "Il mio profilo",
-      "avatar": "Foto profilo",
-      "changeAvatar": "Cambia foto",
-      "fullName": "Nome e cognome",
-      "fullNameRequired": "Inserisci il tuo nome",
-      "bioMax": "La descrizione può contenere al massimo 500 caratteri",
-      "email": "Email",
-      "emailHint": "L’email è gestita dall’account e non può essere modificata qui.",
-      "phone": "Telefono",
-      "phonePlaceholder": "+382 XX XXX XXX",
-      "city": "Città",
-      "cityPlaceholder": "Seleziona una città",
-      "cityOther": "Altro",
-      "preferredLang": "Lingua preferita",
-      "bio": "Su di me",
-      "bioPlaceholder": "Racconta qualcosa di te…",
-      "save": "Salva",
-      "saving": "Salvataggio…",
-      "saved": "Profilo aggiornato",
-      "notifications": "Preferenze notifiche",
-      "notifNewBid": "Quando arriva una nuova offerta",
-      "notifMessage": "Quando arriva un messaggio",
-      "notifStatus": "Quando cambia lo stato della richiesta",
-      "notifPush": "Notifiche push",
-      "notifPushSoon": "Presto",
-      "account": "Account",
-      "changePassword": "Cambia password",
-      "deleteAccount": "Elimina account",
-      "deleteConfirm": "Vuoi davvero eliminare il tuo account?",
-      "deleteWarning": "Questa azione non può essere annullata.",
-      "deleteCancel": "Annulla",
-      "deleteConfirmBtn": "Elimina account"
+      "title": "Impostazioni profilo",
+      "unsavedHint": "Modifiche non salvate — salva prima di uscire.",
+      "avatar": {
+        "title": "Foto profilo",
+        "upload": "Carica",
+        "chooseFile": "Scegli file",
+        "discardPreview": "Annulla anteprima",
+        "remove": "Rimuovi foto",
+        "uploading": "Caricamento…",
+        "maxSize": "Max 2MB; JPEG, PNG o WebP",
+        "uploadSuccess": "Foto caricata",
+        "uploadError": "Caricamento fallito",
+        "removeSuccess": "Foto rimossa"
+      },
+      "personal": {
+        "title": "Dati personali",
+        "fullName": "Nome completo",
+        "fullNamePlaceholder": "Nome e cognome",
+        "email": "Email",
+        "emailHint": "Email non modificabile qui",
+        "phone": "Telefono",
+        "phonePlaceholder": "+382 XX XXX XXX",
+        "city": "Città",
+        "cityPlaceholder": "Seleziona città",
+        "cityOther": "Altro",
+        "bio": "Su di te",
+        "bioPlaceholder": "Presentati brevemente…",
+        "bioHint": "Max 500 caratteri",
+        "save": "Salva modifiche",
+        "saving": "Salvataggio…",
+        "saveSuccess": "Profilo aggiornato",
+        "saveError": "Aggiornamento fallito",
+        "validation": {
+          "nameMin": "Almeno 2 caratteri",
+          "bioMax": "Max 500 caratteri"
+        }
+      },
+      "language": {
+        "title": "Lingua",
+        "description": "Lingua interfaccia",
+        "changed": "Lingua aggiornata",
+        "error": "Errore lingua"
+      },
+      "notifications": {
+        "title": "Notifiche",
+        "saved": "Preferenze salvate",
+        "error": "Salvataggio fallito",
+        "email": {
+          "title": "Email",
+          "newBid": "Nuova offerta",
+          "newMessage": "Nuovo messaggio",
+          "newReview": "Nuova recensione"
+        },
+        "push": {
+          "title": "Push",
+          "soon": "Presto"
+        }
+      },
+      "account": {
+        "title": "Account",
+        "changePassword": {
+          "title": "Password",
+          "description": "Password attuale e nuova.",
+          "button": "Cambia password",
+          "currentPassword": "Password attuale",
+          "newPassword": "Nuova password",
+          "confirmPassword": "Conferma",
+          "submit": "Aggiorna",
+          "cancel": "Annulla",
+          "success": "Password cambiata",
+          "error": "Errore",
+          "wrongCurrent": "Password errata"
+        },
+        "deactivate": {
+          "title": "Disattiva account",
+          "description": "Disattivazione temporanea.",
+          "button": "Disattiva",
+          "confirmButton": "Sì, disattiva",
+          "cancel": "Annulla",
+          "error": "Errore"
+        },
+        "delete": {
+          "title": "Elimina account",
+          "description": "Irreversibile; disconnessione.",
+          "button": "Elimina",
+          "warning": "Attenzione: irreversibile!",
+          "confirmText": "Scrivi DELETE per confermare",
+          "confirmPlaceholder": "DELETE",
+          "confirmButton": "Elimina definitivamente",
+          "cancel": "Annulla",
+          "invalidConfirm": "Testo errato",
+          "error": "Eliminazione fallita"
+        }
+      }
     }
   },
   "search": {

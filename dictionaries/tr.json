@@ -941,38 +941,100 @@
       "reviews": "Değerlendirmeler"
     },
     "profile": {
-      "title": "Profilim",
-      "avatar": "Profil fotoğrafı",
-      "changeAvatar": "Fotoğraf Değiştir",
-      "fullName": "Ad Soyad",
-      "fullNameRequired": "Lütfen adınızı girin",
-      "bioMax": "Hakkımda en fazla 500 karakter olabilir",
-      "email": "E-posta",
-      "emailHint": "E-posta hesap ayarlarından yönetilir; buradan değiştirilemez.",
-      "phone": "Telefon",
-      "phonePlaceholder": "+382 XX XXX XXX",
-      "city": "Şehir",
-      "cityPlaceholder": "Şehir seçin",
-      "cityOther": "Diğer",
-      "preferredLang": "Tercih Edilen Dil",
-      "bio": "Hakkımda",
-      "bioPlaceholder": "Kendinizden kısaca bahsedin…",
-      "save": "Kaydet",
-      "saving": "Kaydediliyor…",
-      "saved": "Profil güncellendi",
-      "notifications": "Bildirim Tercihleri",
-      "notifNewBid": "Yeni teklif geldiğinde",
-      "notifMessage": "Mesaj geldiğinde",
-      "notifStatus": "Talep durumu değiştiğinde",
-      "notifPush": "Anlık bildirimler",
-      "notifPushSoon": "Yakında",
-      "account": "Hesap",
-      "changePassword": "Şifre Değiştir",
-      "deleteAccount": "Hesabı Sil",
-      "deleteConfirm": "Hesabınızı silmek istediğinize emin misiniz?",
-      "deleteWarning": "Bu işlem geri alınamaz.",
-      "deleteCancel": "İptal",
-      "deleteConfirmBtn": "Hesabı Sil"
+      "title": "Profil Ayarları",
+      "unsavedHint": "Kaydedilmemiş değişiklikleriniz var. Ayrılmadan önce kaydedin.",
+      "avatar": {
+        "title": "Profil fotoğrafı",
+        "upload": "Yükle",
+        "chooseFile": "Dosya seç",
+        "discardPreview": "Önizlemeyi iptal et",
+        "remove": "Fotoğrafı kaldır",
+        "uploading": "Yükleniyor...",
+        "maxSize": "En fazla 2MB; JPEG, PNG veya WebP",
+        "uploadSuccess": "Fotoğraf başarıyla yüklendi",
+        "uploadError": "Fotoğraf yüklenemedi",
+        "removeSuccess": "Fotoğraf kaldırıldı"
+      },
+      "personal": {
+        "title": "Kişisel Bilgiler",
+        "fullName": "Ad Soyad",
+        "fullNamePlaceholder": "Adınızı ve soyadınızı girin",
+        "email": "E-posta",
+        "emailHint": "E-posta değiştirilemez",
+        "phone": "Telefon",
+        "phonePlaceholder": "+382 XX XXX XXX",
+        "city": "Şehir",
+        "cityPlaceholder": "Şehrinizi seçin",
+        "cityOther": "Diğer",
+        "bio": "Hakkında",
+        "bioPlaceholder": "Kendinizi kısaca tanıtın...",
+        "bioHint": "Maksimum 500 karakter",
+        "save": "Değişiklikleri Kaydet",
+        "saving": "Kaydediliyor...",
+        "saveSuccess": "Profil güncellendi",
+        "saveError": "Profil güncellenemedi",
+        "validation": {
+          "nameMin": "Ad en az 2 karakter olmalıdır",
+          "bioMax": "Hakkında en fazla 500 karakter olabilir"
+        }
+      },
+      "language": {
+        "title": "Dil Tercihi",
+        "description": "Arayüz dilini seçin",
+        "changed": "Dil değiştirildi",
+        "error": "Dil güncellenemedi"
+      },
+      "notifications": {
+        "title": "Bildirim Tercihleri",
+        "saved": "Bildirim tercihleri kaydedildi",
+        "error": "Tercihler kaydedilemedi",
+        "email": {
+          "title": "E-posta bildirimleri",
+          "newBid": "Yeni teklif geldiğinde",
+          "newMessage": "Yeni mesaj geldiğinde",
+          "newReview": "Yeni değerlendirme geldiğinde"
+        },
+        "push": {
+          "title": "Anlık bildirimler",
+          "soon": "Yakında"
+        }
+      },
+      "account": {
+        "title": "Hesap Yönetimi",
+        "changePassword": {
+          "title": "Şifre Değiştir",
+          "description": "Mevcut şifrenizi girin ve yeni şifrenizi belirleyin.",
+          "button": "Şifreyi Değiştir",
+          "currentPassword": "Mevcut Şifre",
+          "newPassword": "Yeni Şifre",
+          "confirmPassword": "Yeni Şifre (Tekrar)",
+          "submit": "Şifreyi Güncelle",
+          "cancel": "İptal",
+          "success": "Şifre başarıyla değiştirildi",
+          "error": "Şifre değiştirilemedi",
+          "wrongCurrent": "Mevcut şifre hatalı"
+        },
+        "deactivate": {
+          "title": "Hesabı Deaktive Et",
+          "description": "Hesabınız geçici olarak devre dışı bırakılır. Tekrar giriş yaparak aktifleştirebilirsiniz.",
+          "button": "Hesabı Deaktive Et",
+          "confirmButton": "Evet, Deaktive Et",
+          "cancel": "İptal",
+          "error": "İşlem başarısız"
+        },
+        "delete": {
+          "title": "Hesabı Sil",
+          "description": "Hesabınız kalıcı olarak işaretlenecek ve oturumunuz kapanacaktır.",
+          "button": "Hesabı Sil",
+          "warning": "DİKKAT: Bu işlem geri alınamaz!",
+          "confirmText": "Onaylamak için tam olarak SİL yazın",
+          "confirmPlaceholder": "SİL",
+          "confirmButton": "Hesabı Kalıcı Olarak Sil",
+          "cancel": "İptal",
+          "invalidConfirm": "Onay metni eşleşmedi",
+          "error": "Hesap silinemedi"
+        }
+      }
     }
   },
   "search": {

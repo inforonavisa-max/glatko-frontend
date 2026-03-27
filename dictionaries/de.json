@@ -941,38 +941,100 @@
       "reviews": "Bewertungen"
     },
     "profile": {
-      "title": "Mein Profil",
-      "avatar": "Profilfoto",
-      "changeAvatar": "Foto ändern",
-      "fullName": "Vor- und Nachname",
-      "fullNameRequired": "Bitte geben Sie Ihren Namen ein",
-      "bioMax": "Über mich darf höchstens 500 Zeichen haben",
-      "email": "E-Mail",
-      "emailHint": "Die E-Mail wird über Ihr Konto verwaltet und kann hier nicht geändert werden.",
-      "phone": "Telefon",
-      "phonePlaceholder": "+382 XX XXX XXX",
-      "city": "Stadt",
-      "cityPlaceholder": "Stadt wählen",
-      "cityOther": "Sonstiges",
-      "preferredLang": "Bevorzugte Sprache",
-      "bio": "Über mich",
-      "bioPlaceholder": "Erzählen Sie kurz etwas über sich…",
-      "save": "Speichern",
-      "saving": "Wird gespeichert…",
-      "saved": "Profil aktualisiert",
-      "notifications": "Benachrichtigungseinstellungen",
-      "notifNewBid": "Bei neuem Angebot",
-      "notifMessage": "Bei neuer Nachricht",
-      "notifStatus": "Bei Statusänderung der Anfrage",
-      "notifPush": "Push-Benachrichtigungen",
-      "notifPushSoon": "Demnächst",
-      "account": "Konto",
-      "changePassword": "Passwort ändern",
-      "deleteAccount": "Konto löschen",
-      "deleteConfirm": "Möchten Sie Ihr Konto wirklich löschen?",
-      "deleteWarning": "Dieser Vorgang kann nicht rückgängig gemacht werden.",
-      "deleteCancel": "Abbrechen",
-      "deleteConfirmBtn": "Konto löschen"
+      "title": "Profileinstellungen",
+      "unsavedHint": "Ungespeicherte Änderungen — bitte speichern.",
+      "avatar": {
+        "title": "Profilfoto",
+        "upload": "Hochladen",
+        "chooseFile": "Datei wählen",
+        "discardPreview": "Vorschau verwerfen",
+        "remove": "Foto entfernen",
+        "uploading": "Wird hochgeladen…",
+        "maxSize": "Max. 2MB; JPEG, PNG oder WebP",
+        "uploadSuccess": "Foto hochgeladen",
+        "uploadError": "Upload fehlgeschlagen",
+        "removeSuccess": "Foto entfernt"
+      },
+      "personal": {
+        "title": "Persönliche Daten",
+        "fullName": "Name",
+        "fullNamePlaceholder": "Vor- und Nachname",
+        "email": "E-Mail",
+        "emailHint": "E-Mail hier nicht änderbar",
+        "phone": "Telefon",
+        "phonePlaceholder": "+382 XX XXX XXX",
+        "city": "Stadt",
+        "cityPlaceholder": "Stadt wählen",
+        "cityOther": "Sonstiges",
+        "bio": "Über mich",
+        "bioPlaceholder": "Kurz vorstellen…",
+        "bioHint": "Max. 500 Zeichen",
+        "save": "Speichern",
+        "saving": "Speichern…",
+        "saveSuccess": "Profil aktualisiert",
+        "saveError": "Update fehlgeschlagen",
+        "validation": {
+          "nameMin": "Mind. 2 Zeichen",
+          "bioMax": "Max. 500 Zeichen"
+        }
+      },
+      "language": {
+        "title": "Sprache",
+        "description": "Oberflächensprache",
+        "changed": "Sprache geändert",
+        "error": "Sprache nicht geändert"
+      },
+      "notifications": {
+        "title": "Benachrichtigungen",
+        "saved": "Gespeichert",
+        "error": "Speichern fehlgeschlagen",
+        "email": {
+          "title": "E-Mail",
+          "newBid": "Neues Angebot",
+          "newMessage": "Neue Nachricht",
+          "newReview": "Neue Bewertung"
+        },
+        "push": {
+          "title": "Push",
+          "soon": "Bald"
+        }
+      },
+      "account": {
+        "title": "Konto",
+        "changePassword": {
+          "title": "Passwort",
+          "description": "Aktuelles und neues Passwort eingeben.",
+          "button": "Passwort ändern",
+          "currentPassword": "Aktuelles Passwort",
+          "newPassword": "Neues Passwort",
+          "confirmPassword": "Bestätigen",
+          "submit": "Aktualisieren",
+          "cancel": "Abbrechen",
+          "success": "Passwort geändert",
+          "error": "Fehler",
+          "wrongCurrent": "Falsches Passwort"
+        },
+        "deactivate": {
+          "title": "Deaktivieren",
+          "description": "Konto vorübergehend deaktivieren.",
+          "button": "Deaktivieren",
+          "confirmButton": "Ja, deaktivieren",
+          "cancel": "Abbrechen",
+          "error": "Fehler"
+        },
+        "delete": {
+          "title": "Konto löschen",
+          "description": "Unwiderruflich; Sie werden abgemeldet.",
+          "button": "Löschen",
+          "warning": "Achtung: unwiderruflich!",
+          "confirmText": "DELETE eingeben",
+          "confirmPlaceholder": "DELETE",
+          "confirmButton": "Endgültig löschen",
+          "cancel": "Abbrechen",
+          "invalidConfirm": "Text stimmt nicht",
+          "error": "Löschen fehlgeschlagen"
+        }
+      }
     }
   },
   "search": {

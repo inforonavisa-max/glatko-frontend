@@ -941,38 +941,100 @@
       "reviews": "Reviews"
     },
     "profile": {
-      "title": "My profile",
-      "avatar": "Profile photo",
-      "changeAvatar": "Change photo",
-      "fullName": "Full name",
-      "fullNameRequired": "Please enter your name",
-      "bioMax": "Bio must be at most 500 characters",
-      "email": "Email",
-      "emailHint": "Email is managed by your account and cannot be changed here.",
-      "phone": "Phone",
-      "phonePlaceholder": "+382 XX XXX XXX",
-      "city": "City",
-      "cityPlaceholder": "Select a city",
-      "cityOther": "Other",
-      "preferredLang": "Preferred language",
-      "bio": "About me",
-      "bioPlaceholder": "Tell others a little about yourself…",
-      "save": "Save",
-      "saving": "Saving…",
-      "saved": "Profile updated",
-      "notifications": "Notification preferences",
-      "notifNewBid": "When a new bid arrives",
-      "notifMessage": "When a message arrives",
-      "notifStatus": "When request status changes",
-      "notifPush": "Push notifications",
-      "notifPushSoon": "Coming soon",
-      "account": "Account",
-      "changePassword": "Change password",
-      "deleteAccount": "Delete account",
-      "deleteConfirm": "Are you sure you want to delete your account?",
-      "deleteWarning": "This action cannot be undone.",
-      "deleteCancel": "Cancel",
-      "deleteConfirmBtn": "Delete account"
+      "title": "Profile settings",
+      "unsavedHint": "You have unsaved changes. Save before leaving.",
+      "avatar": {
+        "title": "Profile photo",
+        "upload": "Upload",
+        "chooseFile": "Choose file",
+        "discardPreview": "Discard preview",
+        "remove": "Remove photo",
+        "uploading": "Uploading...",
+        "maxSize": "Max 2MB; JPEG, PNG, or WebP",
+        "uploadSuccess": "Photo uploaded successfully",
+        "uploadError": "Could not upload photo",
+        "removeSuccess": "Photo removed"
+      },
+      "personal": {
+        "title": "Personal details",
+        "fullName": "Full name",
+        "fullNamePlaceholder": "Enter your first and last name",
+        "email": "Email",
+        "emailHint": "Email cannot be changed here",
+        "phone": "Phone",
+        "phonePlaceholder": "+382 XX XXX XXX",
+        "city": "City",
+        "cityPlaceholder": "Select your city",
+        "cityOther": "Other",
+        "bio": "About",
+        "bioPlaceholder": "Introduce yourself briefly…",
+        "bioHint": "Maximum 500 characters",
+        "save": "Save changes",
+        "saving": "Saving…",
+        "saveSuccess": "Profile updated",
+        "saveError": "Could not update profile",
+        "validation": {
+          "nameMin": "Name must be at least 2 characters",
+          "bioMax": "Bio must be at most 500 characters"
+        }
+      },
+      "language": {
+        "title": "Language",
+        "description": "Choose interface language",
+        "changed": "Language updated",
+        "error": "Could not update language"
+      },
+      "notifications": {
+        "title": "Notification preferences",
+        "saved": "Notification preferences saved",
+        "error": "Could not save preferences",
+        "email": {
+          "title": "Email notifications",
+          "newBid": "When a new bid arrives",
+          "newMessage": "When a new message arrives",
+          "newReview": "When a new review arrives"
+        },
+        "push": {
+          "title": "Push notifications",
+          "soon": "Coming soon"
+        }
+      },
+      "account": {
+        "title": "Account",
+        "changePassword": {
+          "title": "Change password",
+          "description": "Enter your current password and choose a new one.",
+          "button": "Change password",
+          "currentPassword": "Current password",
+          "newPassword": "New password",
+          "confirmPassword": "Confirm new password",
+          "submit": "Update password",
+          "cancel": "Cancel",
+          "success": "Password changed successfully",
+          "error": "Could not change password",
+          "wrongCurrent": "Current password is incorrect"
+        },
+        "deactivate": {
+          "title": "Deactivate account",
+          "description": "Your account is temporarily disabled. Sign in again to reactivate.",
+          "button": "Deactivate account",
+          "confirmButton": "Yes, deactivate",
+          "cancel": "Cancel",
+          "error": "Something went wrong"
+        },
+        "delete": {
+          "title": "Delete account",
+          "description": "This cannot be undone. Your account will be marked deleted and you will be signed out.",
+          "button": "Delete account",
+          "warning": "WARNING: This cannot be undone!",
+          "confirmText": "Type DELETE to confirm",
+          "confirmPlaceholder": "DELETE",
+          "confirmButton": "Permanently delete account",
+          "cancel": "Cancel",
+          "invalidConfirm": "Confirmation text does not match",
+          "error": "Could not delete account"
+        }
+      }
     }
   },
   "search": {
