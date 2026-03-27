@@ -2,8 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import {
-  getProfessionalProfile,
-  getVerificationDocuments,
+  getProfessionalProfileAsAdmin,
+  getVerificationDocumentsAsAdmin,
 } from "@/lib/supabase/glatko.server";
 import { AdminActions } from "@/components/glatko/admin/AdminActions";
 import { ArrowLeft } from "lucide-react";
@@ -46,8 +46,8 @@ export default async function ProfessionalDetailPage({ params }: Props) {
 
   const t = await getTranslations();
   const [profile, documents] = await Promise.all([
-    getProfessionalProfile(id),
-    getVerificationDocuments(id),
+    getProfessionalProfileAsAdmin(id),
+    getVerificationDocumentsAsAdmin(id),
   ]);
 
   if (!profile) {

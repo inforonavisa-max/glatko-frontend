@@ -62,10 +62,11 @@ export async function getProfessionalProfile(
   } as ProfessionalProfile;
 }
 
+/** Admin UI only — service role bypasses RLS so pending / inactive rows are visible. */
 export async function getProfessionalsByStatus(
   status?: VerificationStatus
 ): Promise<ProfessionalProfile[]> {
-  const supabase = createClient();
+  const supabase = createAdminClient();
 
   let query = supabase
     .from("glatko_professional_profiles")
@@ -82,6 +83,48 @@ export async function getProfessionalsByStatus(
     ...row,
     profile: row.profiles ?? undefined,
   })) as ProfessionalProfile[];
+}
+
+/** Admin professional detail — bypasses RLS (pending pros, other users’ profiles embed). */
+export async function getProfessionalProfileAsAdmin(
+  id: string
+): Promise<ProfessionalProfile | null> {
+  const supabase = createAdminClient();
+
+  const { data: pro, error } = await supabase
+    .from("glatko_professional_profiles")
+    .select("*, profiles:id(full_name, avatar_url)")
+    .eq("id", id)
+    .single();
+
+  if (error || !pro) return null;
+
+  const { data: services } = await supabase
+    .from("glatko_pro_services")
+    .select("*, category:category_id(id, slug, name, icon)")
+    .eq("professional_id", id);
+
+  return {
+    ...pro,
+    profile: pro.profiles ?? undefined,
+    services: (services as ProService[]) ?? [],
+  } as ProfessionalProfile;
+}
+
+/** Admin document review — bypasses RLS on glatko_verification_documents. */
+export async function getVerificationDocumentsAsAdmin(
+  professionalId: string
+): Promise<VerificationDocument[]> {
+  const supabase = createAdminClient();
+
+  const { data, error } = await supabase
+    .from("glatko_verification_documents")
+    .select("*")
+    .eq("professional_id", professionalId)
+    .order("created_at");
+
+  if (error || !data) return [];
+  return data as VerificationDocument[];
 }
 
 interface CreateProfessionalInput {
