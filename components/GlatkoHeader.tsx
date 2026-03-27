@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { Menu, X, Mail, LogOut, User, Settings, ChevronDown } from "lucide-react";
+import { Menu, X, Mail, LogOut, User, Settings, ChevronDown, Briefcase } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -69,6 +69,7 @@ export function GlatkoHeader({ userId, isPro = false }: GlatkoHeaderProps) {
     { href: "/services", label: t("nav.services") },
     { href: "/providers", label: t("search.title") },
     { href: "/dashboard/requests", label: t("nav.requests") },
+    { href: "/become-a-pro", label: t("nav.becomeAPro") },
     { href: "/inbox", label: t("nav.inbox"), hasIcon: true },
   ];
 
@@ -90,6 +91,7 @@ export function GlatkoHeader({ userId, isPro = false }: GlatkoHeaderProps) {
       ]
     : [
         { href: "/dashboard/requests", label: t("nav.requests") },
+        { href: "/become-a-pro", label: t("nav.becomeAPro"), icon: Briefcase },
         { href: "/inbox", label: t("nav.inbox") },
         { href: "/settings/profile", label: t("nav.userProfile"), icon: User },
         { href: "/settings/notifications", label: t("nav.settings") },

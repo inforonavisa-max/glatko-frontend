@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/supabase/server";
 import { setRequestLocale } from "next-intl/server";
 import { PageBackground } from "@/components/ui/PageBackground";
+import { isAdminEmail } from "@/lib/admin";
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false },
@@ -22,6 +23,10 @@ export default async function AdminLayout({ children, params }: Props) {
 
   if (!user) {
     redirect(`/${locale}/login?redirect=/admin/professionals`);
+  }
+
+  if (!isAdminEmail(user.email)) {
+    redirect(`/${locale}`);
   }
 
   return (

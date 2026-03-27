@@ -69,6 +69,13 @@ export default async function DashboardRequestsPage({ params }: Props) {
   const t = await getTranslations();
   const requests = await getCustomerRequests(user.id);
 
+  const { data: proRow } = await supabase
+    .from("glatko_professional_profiles")
+    .select("verification_status")
+    .eq("id", user.id)
+    .maybeSingle();
+  const isApprovedPro = proRow?.verification_status === "approved";
+
   const activeCount = requests.filter((r) =>
     ["published", "bidding", "assigned", "in_progress"].includes(r.status)
   ).length;
@@ -107,6 +114,25 @@ export default async function DashboardRequestsPage({ params }: Props) {
             </div>
           ))}
         </div>
+
+        {!isApprovedPro && (
+          <div className="mb-8 flex flex-col gap-4 rounded-2xl border border-teal-500/25 bg-gradient-to-r from-teal-500/10 via-teal-500/5 to-transparent px-5 py-4 dark:border-teal-500/20 dark:from-teal-500/15 dark:via-teal-500/5 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+            <div className="min-w-0">
+              <h2 className="font-serif text-base font-semibold text-gray-900 dark:text-white">
+                {t("dashboard.requests.becomeProBannerTitle")}
+              </h2>
+              <p className="mt-1 text-sm text-gray-600 dark:text-white/55">
+                {t("dashboard.requests.becomeProBannerDesc")}
+              </p>
+            </div>
+            <Link
+              href="/become-a-pro"
+              className="inline-flex shrink-0 items-center justify-center rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-teal-500/20 transition-all hover:shadow-lg hover:shadow-teal-500/30"
+            >
+              {t("nav.becomeAPro")}
+            </Link>
+          </div>
+        )}
 
         {requests.length === 0 ? (
           /* ── Empty state ── */
