@@ -4,6 +4,7 @@ import { useCallback, useRef, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { CloudUpload, X, Loader2, Image as ImageIcon } from "lucide-react";
+import { toast } from "sonner";
 import { resizeImage } from "@/lib/utils/imageResize";
 import { uploadRequestPhoto } from "@/lib/supabase/storage";
 import { cn } from "@/lib/utils";
@@ -88,8 +89,11 @@ export function StepPhotos({
           urls.push(url);
         }
         setPhotos([...photos, ...urls]);
-      } catch {
-        // Upload failed silently; user can retry
+      } catch (err) {
+        console.error(err);
+        toast.error(
+          err instanceof Error ? err.message : t("request.error.generic")
+        );
       } finally {
         setUploading(false);
       }
