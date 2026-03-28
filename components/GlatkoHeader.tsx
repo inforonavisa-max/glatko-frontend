@@ -363,9 +363,9 @@ export function GlatkoHeader({
                 )}
               </div>
 
-              <div className="mt-auto flex items-center gap-4 pt-6">
+              <div className="mt-auto flex items-center gap-4 pt-6 pb-[max(1.5rem,env(safe-area-inset-bottom))]">
                 {userId && <NotificationBell userId={userId} />}
-                <LanguageSwitcher />
+                <LanguageSwitcher dropdownPlacement="above" />
                 <ThemeToggle />
               </div>
             </nav>

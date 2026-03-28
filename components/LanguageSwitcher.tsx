@@ -21,7 +21,14 @@ export const availableLanguages: {
   { code: "sr", name: "Srpski",     flag: "SR", chooseLabel: "Izaberite jezik" },
 ];
 
-export default function LanguageSwitcher() {
+type LanguageSwitcherProps = {
+  /** Use when the trigger sits at the bottom of the viewport (e.g. mobile menu footer) so the list opens upward. */
+  dropdownPlacement?: "below" | "above";
+};
+
+export default function LanguageSwitcher({
+  dropdownPlacement = "below",
+}: LanguageSwitcherProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -73,12 +80,18 @@ export default function LanguageSwitcher() {
 
       {isOpen && (
         <div
-          className="absolute right-0 mt-2 w-52
+          className={`absolute right-0 w-52
                      bg-white dark:bg-[#1c1c1e]
                      border border-gray-200 dark:border-white/10
                      rounded-xl overflow-hidden
                      shadow-xl dark:shadow-[0_8px_32px_rgba(0,0,0,0.6)]
-                     z-50 animate-slide-down"
+                     z-[110] max-h-[min(16rem,70dvh)] flex flex-col
+                     animate-slide-down
+                     ${
+                       dropdownPlacement === "above"
+                         ? "bottom-full mb-2"
+                         : "top-full mt-2"
+                     }`}
           role="listbox"
           aria-label="Language options"
           dir="ltr"
@@ -89,7 +102,7 @@ export default function LanguageSwitcher() {
             </p>
           </div>
 
-          <ul className="max-h-64 overflow-y-auto py-1">
+          <ul className="min-h-0 flex-1 overflow-y-auto overscroll-contain py-1">
             {availableLanguages.map((l) => {
               const isActive = selectedLang.code === l.code;
               return (
