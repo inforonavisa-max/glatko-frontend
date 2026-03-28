@@ -80,7 +80,7 @@ export default function LanguageSwitcher({
 
       {isOpen && (
         <div
-          className={`absolute right-0 w-52
+          className={`absolute
                      bg-white dark:bg-[#1c1c1e]
                      border border-gray-200 dark:border-white/10
                      rounded-xl overflow-hidden
@@ -89,8 +89,9 @@ export default function LanguageSwitcher({
                      animate-slide-down
                      ${
                        dropdownPlacement === "above"
-                         ? "bottom-full mb-2"
-                         : "top-full mt-2"
+                         ? // Trigger is on the left in the mobile drawer; align panel start so it does not clip off-screen.
+                           "left-0 bottom-full mb-2 w-[min(13rem,calc(100vw-2rem))]"
+                         : "right-0 top-full mt-2 w-52"
                      }`}
           role="listbox"
           aria-label="Language options"
