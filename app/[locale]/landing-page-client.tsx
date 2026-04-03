@@ -113,7 +113,7 @@ export default function LandingPageClient() {
         )}
 
         <div className="relative z-10 mx-auto max-w-4xl px-4 text-center">
-          <motion.h1 className="bg-gradient-to-b from-gray-900 via-gray-800 to-teal-800 bg-clip-text font-serif text-5xl font-light leading-[1.1] tracking-tight text-transparent dark:from-white dark:via-white/90 dark:to-teal-200/70 sm:text-6xl md:text-7xl lg:text-8xl">
+          <motion.h1 className="font-serif text-5xl font-light leading-[1.1] tracking-tight sm:text-6xl md:text-7xl lg:text-8xl">
             {!reduced ? (
               heroTitleWords.map((word, index) => (
                 <motion.span
@@ -122,14 +122,16 @@ export default function LandingPageClient() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: index * 0.05 }}
                   style={{ willChange: "transform, opacity" }}
-                  className="inline-block"
+                  className="inline-block bg-gradient-to-b from-gray-900 via-gray-800 to-teal-800 bg-clip-text text-transparent dark:from-white dark:via-white/90 dark:to-teal-200/70"
                 >
                   {word}
                   {index < heroTitleWords.length - 1 ? "\u00A0" : ""}
                 </motion.span>
               ))
             ) : (
-              heroTitle
+              <span className="bg-gradient-to-b from-gray-900 via-gray-800 to-teal-800 bg-clip-text text-transparent dark:from-white dark:via-white/90 dark:to-teal-200/70">
+                {heroTitle}
+              </span>
             )}
           </motion.h1>
           <motion.p
