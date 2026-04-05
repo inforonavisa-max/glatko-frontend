@@ -625,6 +625,13 @@
       "next": "Weiter",
       "submit": "Serviceanfrage absenden"
     },
+    "preferredPro": {
+      "title": "Angebotsanfrage für {name}",
+      "rating": "{rating} ({count} Bewertungen)",
+      "change": "Anderen Profi wählen",
+      "loading": "Profil wird geladen…",
+      "loadError": "Dieser Profi konnte nicht geladen werden. Sie können Ihre Anfrage trotzdem fortsetzen oder zurücksetzen."
+    },
     "error": {
       "generic": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
     }
@@ -936,6 +943,10 @@
     "verificationRejected": {
       "title": "Konto abgelehnt",
       "body": "Ihre Bewerbung wurde abgelehnt"
+    },
+    "newRequestMatch": {
+      "title": "Neue Anfrage",
+      "body": "Neue passende Serviceanfrage"
     }
   },
   "settings": {

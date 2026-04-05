@@ -625,6 +625,13 @@
       "next": "Dalje",
       "submit": "Pošaljite zahtjev za uslugu"
     },
+    "preferredPro": {
+      "title": "Zahtjev za ponudu za {name}",
+      "rating": "{rating} ({count} recenzija)",
+      "change": "Odaberite drugog profesionalca",
+      "loading": "Učitavanje profesionalca…",
+      "loadError": "Nije moguće učitati ovog profesionalca. Možete nastaviti zahtjev ili početi iznova."
+    },
     "error": {
       "generic": "Došlo je do greške. Pokušajte ponovo."
     }
@@ -936,6 +943,10 @@
     "verificationRejected": {
       "title": "Nalog odbijen",
       "body": "Vaša prijava je odbijena"
+    },
+    "newRequestMatch": {
+      "title": "Novi zahtjev",
+      "body": "Novi zahtjev koji odgovara vašim uslugama"
     }
   },
   "settings": {

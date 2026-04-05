@@ -625,6 +625,13 @@
       "next": "Avanti",
       "submit": "Invia Richiesta di Servizio"
     },
+    "preferredPro": {
+      "title": "Richiesta preventivo per {name}",
+      "rating": "{rating} ({count} recensioni)",
+      "change": "Scegli un altro professionista",
+      "loading": "Caricamento professionista…",
+      "loadError": "Impossibile caricare questo professionista. Puoi comunque completare la richiesta o ricominciare."
+    },
     "error": {
       "generic": "Si è verificato un errore. Riprova."
     }
@@ -936,6 +943,10 @@
     "verificationRejected": {
       "title": "Account rifiutato",
       "body": "La tua candidatura è stata rifiutata"
+    },
+    "newRequestMatch": {
+      "title": "Nuova richiesta",
+      "body": "Nuova richiesta compatibile con i tuoi servizi"
     }
   },
   "settings": {

@@ -625,6 +625,13 @@
       "next": "İleri",
       "submit": "Hizmet Talebi Gönder"
     },
+    "preferredPro": {
+      "title": "Teklif talebi: {name}",
+      "rating": "{rating} puan ({count} değerlendirme)",
+      "change": "Farklı profesyonel seç",
+      "loading": "Profesyonel yükleniyor…",
+      "loadError": "Bu profesyonel yüklenemedi. Aşağıdan yine de talebinizi tamamlayabilir veya sıfırlamak için temizleyebilirsiniz."
+    },
     "error": {
       "generic": "Bir hata oluştu. Lütfen tekrar deneyin."
     }
@@ -936,6 +943,10 @@
     "verificationRejected": {
       "title": "Hesap Reddedildi",
       "body": "Profesyonel başvurunuz reddedildi"
+    },
+    "newRequestMatch": {
+      "title": "Yeni talep",
+      "body": "Hizmetlerinizle eşleşen yeni bir talep var"
     }
   },
   "settings": {

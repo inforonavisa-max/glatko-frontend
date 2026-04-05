@@ -322,20 +322,143 @@ interface CreateServiceRequestInput {
   preferred_date_start?: string;
   preferred_date_end?: string;
   photos: string[];
+  preferred_professional_id?: string | null;
 }
+
+export type CreatedServiceRequestRow = {
+  id: string;
+  customer_id: string;
+  category_id: string;
+  title: string;
+  municipality: string;
+  preferred_professional_id: string | null;
+};
 
 export async function createServiceRequest(
   input: CreateServiceRequestInput
-) {
+): Promise<
+  | { success: true; request: CreatedServiceRequestRow }
+  | { success: false; error: string }
+> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("glatko_service_requests")
     .insert({ ...input, status: "published" })
-    .select()
+    .select(
+      "id, customer_id, category_id, title, municipality, preferred_professional_id"
+    )
     .single();
 
   if (error) return { success: false as const, error: error.message };
-  return { success: true as const, requestId: data.id as string };
+  return {
+    success: true as const,
+    request: data as CreatedServiceRequestRow,
+  };
+}
+
+const MAX_MATCHING_PRO_NOTIFICATIONS = 10;
+
+/** Notify preferred pro (if any) and up to N other verified pros for the category + municipality. */
+export async function notifyProfessionalsOfNewRequest(params: {
+  requestId: string;
+  customerId: string;
+  categoryId: string;
+  title: string;
+  municipality: string;
+  preferredProfessionalId?: string | null;
+}): Promise<void> {
+  const admin = createAdminClient();
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) return;
+
+  const { data: cust } = await admin
+    .from("profiles")
+    .select("full_name")
+    .eq("id", params.customerId)
+    .maybeSingle();
+
+  const customerName = cust?.full_name?.trim() || "A customer";
+  const municipalityNorm = params.municipality.trim().toLowerCase();
+
+  const send = async (userId: string, isDirect: boolean) => {
+    const body = isDirect
+      ? `${customerName} requested a quote from you for "${params.title}".`
+      : `A new request in your area matches your services: "${params.title}".`;
+
+    await createNotification({
+      user_id: userId,
+      type: "new_request_match",
+      title: isDirect ? "New quote request for you" : "New matching request",
+      body,
+      data: {
+        requestId: params.requestId,
+        customer_id: params.customerId,
+        is_direct: isDirect,
+      },
+    });
+  };
+
+  const notified = new Set<string>();
+  const preferredId = params.preferredProfessionalId ?? null;
+
+  if (preferredId && preferredId !== params.customerId) {
+    const { data: prefPro } = await admin
+      .from("glatko_professional_profiles")
+      .select("id, is_active, is_verified")
+      .eq("id", preferredId)
+      .maybeSingle();
+
+    if (prefPro?.is_active && prefPro?.is_verified) {
+      try {
+        await send(preferredId, true);
+        notified.add(preferredId);
+      } catch {
+        /* ignore */
+      }
+    }
+  }
+
+  const { data: serviceRows } = await admin
+    .from("glatko_pro_services")
+    .select("professional_id")
+    .eq("category_id", params.categoryId);
+
+  const candidateIds = Array.from(
+    new Set(
+      (serviceRows || [])
+        .map((r) => r.professional_id as string)
+        .filter((pid) => pid && pid !== params.customerId)
+    )
+  );
+
+  if (candidateIds.length === 0) return;
+
+  const { data: proRows } = await admin
+    .from("glatko_professional_profiles")
+    .select("id, location_city, is_active, is_verified")
+    .in("id", candidateIds)
+    .eq("is_active", true)
+    .eq("is_verified", true);
+
+  const cityMatches = (city: string | null | undefined) => {
+    if (city == null || String(city).trim() === "") return true;
+    return city.trim().toLowerCase() === municipalityNorm;
+  };
+
+  const otherIds = (proRows || [])
+    .filter((p) => p.id !== preferredId && !notified.has(p.id as string))
+    .filter((p) => cityMatches(p.location_city as string | null))
+    .map((p) => p.id as string)
+    .slice(0, MAX_MATCHING_PRO_NOTIFICATIONS);
+
+  for (const pid of otherIds) {
+    try {
+      await send(pid, false);
+    } catch {
+      /* ignore */
+    }
+  }
 }
 
 export async function cancelServiceRequest(
@@ -830,10 +953,8 @@ export async function createNotification(data: {
   body?: string;
   data?: Record<string, unknown>;
 }) {
-  const supabase = createClient();
-  const { error } = await supabase
-    .from("glatko_notifications")
-    .insert(data);
+  const admin = createAdminClient();
+  const { error } = await admin.from("glatko_notifications").insert(data);
   if (error) throw error;
 }
 

@@ -74,6 +74,10 @@ function getNotificationLink(n: GlatkoNotification): string {
     case "verification_approved":
     case "verification_rejected":
       return "/pro/dashboard";
+    case "new_request_match":
+      return d?.requestId
+        ? `/pro/dashboard/requests/${d.requestId as string}`
+        : "/pro/dashboard/requests";
     default:
       return "/notifications";
   }
@@ -89,6 +93,7 @@ function getLocalizedTitle(type: string, t: ReturnType<typeof useTranslations>):
     review: t("notifications.reviewReceived.title"),
     verification_approved: t("notifications.verificationApproved.title"),
     verification_rejected: t("notifications.verificationRejected.title"),
+    new_request_match: t("notifications.newRequestMatch.title"),
   };
   return map[type] || type;
 }

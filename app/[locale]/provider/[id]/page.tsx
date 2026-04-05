@@ -15,6 +15,7 @@ import {
   Star,
   Eye,
 } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { PageBackground } from "@/components/ui/PageBackground";
 import type { Locale } from "@/i18n/routing";
@@ -389,14 +390,12 @@ export default async function ProviderProfilePage({ params }: PageProps) {
             {t("pro.profile.ctaDesc") ?? ""}
           </p>
           <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <button
-              type="button"
-              disabled
-              title={t("common.comingSoon")}
-              className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:shadow-xl hover:shadow-teal-500/30 disabled:cursor-not-allowed disabled:opacity-60"
+            <Link
+              href={`/request-service?pro=${id}`}
+              className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:shadow-xl hover:shadow-teal-500/30"
             >
               {t("pro.profile.requestQuote")}
-            </button>
+            </Link>
             {profile.phone && (
               <>
                 <a

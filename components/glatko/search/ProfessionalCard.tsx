@@ -180,7 +180,7 @@ export function ProfessionalCard({ pro, locale, index }: ProfessionalCardProps) 
             {t("search.card.viewProfile")}
           </Link>
           <Link
-            href="/request-service"
+            href={`/request-service?pro=${pro.id}`}
             className="flex-1 rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 py-2.5 text-center text-xs font-semibold text-white shadow-md shadow-teal-500/20 transition-all hover:shadow-teal-500/30"
           >
             {t("search.card.requestQuote")}

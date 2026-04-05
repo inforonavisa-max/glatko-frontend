@@ -1,8 +1,16 @@
 "use client";
 
-import { useState, useCallback, useTransition, useEffect } from "react";
+import {
+  useState,
+  useCallback,
+  useTransition,
+  useEffect,
+  Suspense,
+} from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import {
   Layers,
   FileText,
@@ -12,7 +20,11 @@ import {
   ChevronLeft,
   Loader2,
   Check,
+  ClipboardList,
+  Star,
+  X,
 } from "lucide-react";
+import { createClient } from "@/supabase/browser";
 import { submitServiceRequest } from "@/app/[locale]/request-service/actions";
 import { cn } from "@/lib/utils";
 import { urgencyToStep3Key } from "@/lib/utils/urgencyI18n";
@@ -35,9 +47,20 @@ const STEPS = [
   { icon: Camera, key: "photos" },
 ] as const;
 
-export function RequestServiceWizard({ categories }: Props) {
+type PreferredProSummary = {
+  id: string;
+  business_name: string | null;
+  avg_rating: number;
+  total_reviews: number;
+  categories: string[];
+};
+
+function RequestServiceWizardInner({ categories }: Props) {
   const t = useTranslations();
   const locale = useLocale() as Locale;
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const preferredProId = searchParams.get("pro");
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState(1);
   const [isNarrow, setIsNarrow] = useState(false);
@@ -79,6 +102,88 @@ export function RequestServiceWizard({ categories }: Props) {
     urgency: string;
     budget?: string;
   } | null>(null);
+
+  const [preferredPro, setPreferredPro] = useState<PreferredProSummary | null>(
+    null
+  );
+  const [preferredProLoading, setPreferredProLoading] = useState(false);
+  const [preferredProError, setPreferredProError] = useState(false);
+
+  useEffect(() => {
+    if (!preferredProId) {
+      setPreferredPro(null);
+      setPreferredProLoading(false);
+      setPreferredProError(false);
+      return;
+    }
+
+    let cancelled = false;
+    setPreferredProLoading(true);
+    setPreferredProError(false);
+
+    (async () => {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from("glatko_professional_profiles")
+        .select(
+          `
+          id,
+          business_name,
+          avg_rating,
+          total_reviews,
+          is_active,
+          is_verified,
+          services:glatko_pro_services(
+            category:glatko_service_categories(name)
+          )
+        `
+        )
+        .eq("id", preferredProId)
+        .eq("is_active", true)
+        .maybeSingle();
+
+      if (cancelled) return;
+      setPreferredProLoading(false);
+
+      if (error || !data) {
+        setPreferredPro(null);
+        setPreferredProError(true);
+        return;
+      }
+
+      const svc = data.services as
+        | { category?: { name?: Record<string, string> } | null }[]
+        | null;
+      const catLabels: string[] = [];
+      for (const s of svc || []) {
+        const n = s.category?.name;
+        if (n && typeof n === "object") {
+          const label =
+            n[locale] ?? n.en ?? Object.values(n).find((v) => typeof v === "string");
+          if (label) catLabels.push(String(label));
+        }
+      }
+      const uniqueCats = Array.from(new Set(catLabels));
+
+      setPreferredPro({
+        id: data.id as string,
+        business_name: data.business_name as string | null,
+        avg_rating: Number(data.avg_rating) || 0,
+        total_reviews: Number(data.total_reviews) || 0,
+        categories: uniqueCats,
+      });
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [preferredProId, locale]);
+
+  const clearPreferredProfessional = useCallback(() => {
+    setPreferredPro(null);
+    setPreferredProError(false);
+    router.replace("/request-service");
+  }, [router]);
 
   const parents = categories.filter((c) => !c.parent_id);
 
@@ -139,6 +244,9 @@ export function RequestServiceWizard({ categories }: Props) {
     fd.set("photos", JSON.stringify(photos));
     fd.set("phone", phone);
     fd.set("email", email);
+    if (preferredPro?.id) {
+      fd.set("preferredProfessionalId", preferredPro.id);
+    }
 
     startTransition(async () => {
       const result = await submitServiceRequest(fd);
@@ -182,6 +290,7 @@ export function RequestServiceWizard({ categories }: Props) {
     setError("");
     setSubmitted(false);
     setSummaryData(null);
+    router.replace("/request-service");
   };
 
   if (submitted && summaryData) {
@@ -262,6 +371,85 @@ export function RequestServiceWizard({ categories }: Props) {
           >
             {error}
           </motion.div>
+        )}
+
+        {step === 0 && preferredProId && (
+          <div className="mb-6">
+            {preferredProLoading && (
+              <div className="flex items-center justify-center gap-3 rounded-2xl border border-gray-200/80 bg-white/60 px-4 py-8 dark:border-white/[0.08] dark:bg-white/[0.04]">
+                <Loader2 className="h-5 w-5 animate-spin text-teal-500" />
+                <span className="text-sm text-gray-600 dark:text-white/50">
+                  {t("request.preferredPro.loading")}
+                </span>
+              </div>
+            )}
+            {!preferredProLoading && preferredProError && (
+              <div className="rounded-2xl border border-amber-200/80 bg-amber-50/90 px-4 py-4 text-sm text-amber-900 dark:border-amber-500/25 dark:bg-amber-500/10 dark:text-amber-200">
+                <p>{t("request.preferredPro.loadError")}</p>
+                <button
+                  type="button"
+                  onClick={clearPreferredProfessional}
+                  className="mt-3 text-xs font-medium text-teal-600 underline underline-offset-2 dark:text-teal-400"
+                >
+                  {t("request.preferredPro.change")}
+                </button>
+              </div>
+            )}
+            {!preferredProLoading && preferredPro && (
+              <div className="rounded-2xl border border-teal-500/20 bg-gradient-to-br from-teal-500/10 to-transparent px-4 py-4 dark:border-teal-500/15 dark:from-teal-500/15">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex min-w-0 flex-1 gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-teal-500/20 text-teal-700 dark:text-teal-300">
+                      <ClipboardList className="h-5 w-5" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                        {t("request.preferredPro.title", {
+                          name:
+                            preferredPro.business_name?.trim() ||
+                            t("pro.profile.newPro"),
+                        })}
+                      </p>
+                      <p className="mt-1 flex items-center gap-1 text-xs text-gray-600 dark:text-white/50">
+                        <Star className="h-3.5 w-3.5 shrink-0 fill-amber-400 text-amber-400" />
+                        {t("request.preferredPro.rating", {
+                          rating: preferredPro.avg_rating.toFixed(1),
+                          count: preferredPro.total_reviews,
+                        })}
+                      </p>
+                      {preferredPro.categories.length > 0 && (
+                        <div className="mt-2 flex flex-wrap gap-1.5">
+                          {preferredPro.categories.slice(0, 6).map((c) => (
+                            <span
+                              key={c}
+                              className="rounded-full bg-white/80 px-2.5 py-0.5 text-[11px] font-medium text-teal-800 shadow-sm dark:bg-white/10 dark:text-teal-200"
+                            >
+                              {c}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={clearPreferredProfessional}
+                    className="shrink-0 rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-white/10 dark:hover:text-white"
+                    aria-label={t("request.preferredPro.change")}
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  onClick={clearPreferredProfessional}
+                  className="mt-3 text-left text-xs font-medium text-teal-600 underline-offset-2 hover:underline dark:text-teal-400"
+                >
+                  {t("request.preferredPro.change")}
+                </button>
+              </div>
+            )}
+          </div>
         )}
 
         <AnimatePresence mode="wait" initial={false}>
@@ -387,5 +575,19 @@ export function RequestServiceWizard({ categories }: Props) {
         </div>
       </div>
     </div>
+  );
+}
+
+export function RequestServiceWizard({ categories }: Props) {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-[40vh] flex-col items-center justify-center gap-3">
+          <Loader2 className="h-8 w-8 animate-spin text-teal-500" />
+        </div>
+      }
+    >
+      <RequestServiceWizardInner categories={categories} />
+    </Suspense>
   );
 }

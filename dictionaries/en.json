@@ -625,6 +625,13 @@
       "next": "Next",
       "submit": "Submit Service Request"
     },
+    "preferredPro": {
+      "title": "Quote request for {name}",
+      "rating": "{rating} ({count} reviews)",
+      "change": "Choose a different professional",
+      "loading": "Loading professional…",
+      "loadError": "We couldn’t load this professional. You can still complete your request below, or clear this to start fresh."
+    },
     "error": {
       "generic": "Something went wrong. Please try again."
     }
@@ -936,6 +943,10 @@
     "verificationRejected": {
       "title": "Account Rejected",
       "body": "Your professional application was rejected"
+    },
+    "newRequestMatch": {
+      "title": "New request for you",
+      "body": "A customer posted a request that matches your services"
     }
   },
   "settings": {

@@ -2,7 +2,10 @@
 
 import { z } from "zod";
 import { createClient } from "@/supabase/server";
-import { createServiceRequest } from "@/lib/supabase/glatko.server";
+import {
+  createServiceRequest,
+  notifyProfessionalsOfNewRequest,
+} from "@/lib/supabase/glatko.server";
 
 const createRequestSchema = z.object({
   categoryId: z.string().uuid(),
@@ -91,6 +94,13 @@ export async function submitServiceRequest(
   data.details.phone = phone;
   if (emailStr) data.details.email = emailStr;
 
+  const preferredRaw = (formData.get("preferredProfessionalId") as string) || "";
+  let preferred_professional_id: string | null = null;
+  if (preferredRaw) {
+    const u = z.string().uuid().safeParse(preferredRaw.trim());
+    if (u.success) preferred_professional_id = u.data;
+  }
+
   const result = await createServiceRequest({
     customer_id: customerId,
     category_id: data.categoryId,
@@ -105,11 +115,22 @@ export async function submitServiceRequest(
     preferred_date_start: data.preferredDateStart ?? undefined,
     preferred_date_end: data.preferredDateEnd ?? undefined,
     photos: data.photos,
+    preferred_professional_id,
   });
 
   if (!result.success) {
     return { success: false, error: result.error };
   }
 
-  return { success: true, requestId: result.requestId };
+  const row = result.request;
+  await notifyProfessionalsOfNewRequest({
+    requestId: row.id,
+    customerId: row.customer_id,
+    categoryId: row.category_id,
+    title: row.title,
+    municipality: row.municipality,
+    preferredProfessionalId: row.preferred_professional_id,
+  }).catch(() => {});
+
+  return { success: true, requestId: row.id };
 }
