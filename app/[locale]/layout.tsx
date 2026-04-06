@@ -69,6 +69,25 @@ export default async function LocaleLayout({ children, params }: Props) {
   const user = data?.user ?? null;
   const userId = user?.id ?? null;
 
+  if (userId && (routing.locales as readonly string[]).includes(locale)) {
+    try {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("preferred_locale")
+        .eq("id", userId)
+        .maybeSingle();
+
+      if (profile && profile.preferred_locale !== locale) {
+        await supabase
+          .from("profiles")
+          .update({ preferred_locale: locale })
+          .eq("id", userId);
+      }
+    } catch {
+      /* never break layout for locale sync */
+    }
+  }
+
   let isPro = false;
   if (userId) {
     const { data: proProfile } = await supabase
