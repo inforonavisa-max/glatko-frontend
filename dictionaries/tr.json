@@ -925,6 +925,13 @@
     "inProgress": "İş devam ediyor",
     "completed": "İş tamamlandı"
   },
+  "onboarding": {
+    "welcomeTitle": "Glatko'ya hoş geldiniz, {name}!",
+    "welcomeTitleAnonymous": "Glatko'ya hoş geldiniz!",
+    "welcomeBody": "İlk hizmet talebinizi oluşturmak ister misiniz?",
+    "cta": "İlk talebinizi oluşturun",
+    "dismiss": "Kapat"
+  },
   "notifications": {
     "title": "Bildirimler",
     "markAllRead": "Tümünü Okundu İşaretle",

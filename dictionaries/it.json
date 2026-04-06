@@ -925,6 +925,13 @@
     "inProgress": "Lavoro in corso",
     "completed": "Lavoro completato"
   },
+  "onboarding": {
+    "welcomeTitle": "Benvenuto su Glatko, {name}!",
+    "welcomeTitleAnonymous": "Benvenuto su Glatko!",
+    "welcomeBody": "Vuoi creare la tua prima richiesta di servizio?",
+    "cta": "Crea la tua prima richiesta",
+    "dismiss": "Chiudi"
+  },
   "notifications": {
     "title": "Notifiche",
     "markAllRead": "Segna tutto come letto",

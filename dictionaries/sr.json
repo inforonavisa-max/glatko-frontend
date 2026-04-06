@@ -925,6 +925,13 @@
     "inProgress": "Posao u toku",
     "completed": "Posao završen"
   },
+  "onboarding": {
+    "welcomeTitle": "Dobrodošli na Glatko, {name}!",
+    "welcomeTitleAnonymous": "Dobrodošli na Glatko!",
+    "welcomeBody": "Želite li da kreirate prvi zahtev za uslugu?",
+    "cta": "Kreirajte prvi zahtev",
+    "dismiss": "Zatvori"
+  },
   "notifications": {
     "title": "Obaveštenja",
     "markAllRead": "Označi sve kao pročitano",

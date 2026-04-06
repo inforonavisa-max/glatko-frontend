@@ -2,23 +2,25 @@ import { createElement, type ReactElement } from "react";
 import { sendEmail } from "@/lib/email/send-email";
 import { getSiteUrl } from "@/lib/email/resend";
 import { pickLocalizedLabel } from "@/lib/i18n/pick-localized-label";
-import type { EmailLocale } from "@/lib/email/templates/translations";
 import {
+  coerceEmailLocale,
   getBidAcceptedCopy,
   getBidNotSelectedCopy,
   getNewBidReceivedCopy,
   getNewMessageEmailCopy,
   getNewRequestMatchCopy,
+  getProWelcomeEmailCopy,
   getReviewReceivedEmailCopy,
   getStatusChangeEmailCopy,
-  getVerificationApprovedEmailCopy,
   getVerificationRejectedEmailCopy,
+  type EmailLocale,
 } from "@/lib/email/templates/translations";
 import BidAcceptedEmail from "@/lib/email/templates/bid-accepted";
 import BidRejectedEmail from "@/lib/email/templates/bid-rejected";
 import NewBidReceivedEmail from "@/lib/email/templates/new-bid-received";
 import NewRequestMatchEmail from "@/lib/email/templates/new-request-match";
 import ReviewReceivedEmail from "@/lib/email/templates/review-received";
+import ProWelcomeEmail from "@/lib/email/templates/pro-welcome";
 import SimpleActionEmail from "@/lib/email/templates/simple-action-email";
 import StatusChangeEmail from "@/lib/email/templates/status-change";
 import { createAdminClient } from "@/supabase/server";
@@ -61,25 +63,6 @@ function isQuietHours(timezone: string = DEFAULT_USER_TIMEZONE): boolean {
   const hour = parseInt(hourStr, 10);
   if (Number.isNaN(hour)) return false;
   return hour >= 22 || hour < 8;
-}
-
-const EMAIL_LOCALES: readonly EmailLocale[] = [
-  "en",
-  "tr",
-  "de",
-  "ar",
-  "it",
-  "me",
-  "ru",
-  "sr",
-  "uk",
-];
-
-function coerceEmailLocale(raw: string | null | undefined): EmailLocale {
-  if (raw && (EMAIL_LOCALES as readonly string[]).includes(raw)) {
-    return raw as EmailLocale;
-  }
-  return "en";
 }
 
 function shouldSendEmailForType(
@@ -263,18 +246,15 @@ async function buildEmailForType(params: {
       };
     }
     case "verification_approved": {
-      const c = getVerificationApprovedEmailCopy(locale);
-      const extra = String(data.notificationBody ?? "").trim();
-      const body = extra ? `${c.body}\n\n${extra}` : c.body;
+      const c = getProWelcomeEmailCopy(locale);
+      const adminNote = String(data.notificationBody ?? "").trim();
       return {
         subject: c.subject,
-        react: createElement(SimpleActionEmail, {
+        react: createElement(ProWelcomeEmail, {
           recipientName,
-          preview: c.body,
-          title: c.title,
-          body,
-          ctaLabel: c.cta,
-          ctaUrl: buildLocalizedPath(locale, "/pro/dashboard"),
+          profileUrl: buildLocalizedPath(locale, "/pro/dashboard/profile"),
+          dashboardUrl: buildLocalizedPath(locale, "/pro/dashboard"),
+          adminNote: adminNote || undefined,
           locale,
         }),
       };

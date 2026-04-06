@@ -9,6 +9,25 @@ export type EmailLocale =
   | "sr"
   | "uk";
 
+const EMAIL_LOCALES: readonly EmailLocale[] = [
+  "en",
+  "tr",
+  "de",
+  "ar",
+  "it",
+  "me",
+  "ru",
+  "sr",
+  "uk",
+];
+
+export function coerceEmailLocale(raw: string | null | undefined): EmailLocale {
+  if (raw && (EMAIL_LOCALES as readonly string[]).includes(raw)) {
+    return raw as EmailLocale;
+  }
+  return "en";
+}
+
 export type EmailStrings = {
   companyName: string;
   tagline: string;
@@ -750,76 +769,13 @@ export function getNewMessageEmailCopy(locale: EmailLocale): NewMessageEmailCopy
   return newMessageEmail[locale] ?? newMessageEmail.en;
 }
 
-/* ─── verification approved ─── */
+/* ─── verification rejected ─── */
 export type VerificationSimpleCopy = {
   subject: string;
   title: string;
   body: string;
   cta: string;
 };
-
-const verificationApprovedEmail: Record<EmailLocale, VerificationSimpleCopy> = {
-  en: {
-    subject: "Your Glatko professional account is approved",
-    title: "You’re approved",
-    body: "You can now receive requests and send quotes on Glatko.",
-    cta: "Go to pro dashboard",
-  },
-  tr: {
-    subject: "Glatko profesyonel hesabınız onaylandı",
-    title: "Hesabınız onaylandı",
-    body: "Artık talepleri alabilir ve teklif gönderebilirsiniz.",
-    cta: "Pro panele git",
-  },
-  de: {
-    subject: "Ihr Glatko-Profi-Konto wurde freigeschaltet",
-    title: "Freigabe erteilt",
-    body: "Sie können jetzt Anfragen erhalten und Angebote senden.",
-    cta: "Zum Pro-Dashboard",
-  },
-  ar: {
-    subject: "تمت الموافقة على حسابك المهني في Glatko",
-    title: "تمت الموافقة",
-    body: "يمكنك الآن استلام الطلبات وإرسال العروض على Glatko.",
-    cta: "لوحة المحترفين",
-  },
-  it: {
-    subject: "Il tuo account professionale Glatko è approvato",
-    title: "Approvazione completata",
-    body: "Ora puoi ricevere richieste e inviare preventivi su Glatko.",
-    cta: "Vai alla dashboard pro",
-  },
-  me: {
-    subject: "Vaš Glatko profesionalni nalog je odobren",
-    title: "Odobreno",
-    body: "Sada možete primati zahtjeve i slati ponude na Glatko.",
-    cta: "Idi na pro kontrolnu tablu",
-  },
-  ru: {
-    subject: "Ваш профессиональный аккаунт Glatko одобрен",
-    title: "Аккаунт одобрен",
-    body: "Теперь вы можете получать заявки и отправлять предложения в Glatko.",
-    cta: "К панели профи",
-  },
-  sr: {
-    subject: "Vaš Glatko profesionalni nalog je odobren",
-    title: "Odobreno",
-    body: "Sada možete primati zahteve i slati ponude na Glatko.",
-    cta: "Idi na pro kontrolnu tablu",
-  },
-  uk: {
-    subject: "Ваш професійний акаунт Glatko схвалено",
-    title: "Обліковий запис схвалено",
-    body: "Тепер ви можете отримувати заявки та надсилати пропозиції в Glatko.",
-    cta: "До панелі профі",
-  },
-};
-
-export function getVerificationApprovedEmailCopy(
-  locale: EmailLocale,
-): VerificationSimpleCopy {
-  return verificationApprovedEmail[locale] ?? verificationApprovedEmail.en;
-}
 
 const verificationRejectedEmail: Record<EmailLocale, VerificationSimpleCopy> = {
   en: {
@@ -884,123 +840,427 @@ export function getVerificationRejectedEmailCopy(
   return verificationRejectedEmail[locale] ?? verificationRejectedEmail.en;
 }
 
-/* ─── welcome ─── */
-export type WelcomeCopy = {
+/* ─── customer welcome (post email verification) ─── */
+export type CustomerWelcomeEmailCopy = {
   subject: string;
+  preview: string;
   title: string;
-  proBody: string;
-  customerBody: string;
-  ctaPro: string;
-  ctaCustomer: string;
-  bullet1: string;
-  bullet2: string;
-  bullet3: string;
+  whatIsGlatko: string;
+  step1: string;
+  step2: string;
+  step3: string;
+  ctaPrimary: string;
+  proFooter: string;
+  proLinkLabel: string;
 };
 
-const welcome: Record<EmailLocale, WelcomeCopy> = {
+const customerWelcomeEmail: Record<EmailLocale, CustomerWelcomeEmailCopy> = {
   en: {
-    subject: "Welcome to Glatko",
-    title: "Welcome to Glatko!",
-    proBody: "Complete your profile and start finding your first customers.",
-    customerBody: "Discover verified professionals across Montenegro.",
-    ctaPro: "Complete my profile",
-    ctaCustomer: "Browse professionals",
-    bullet1: "Verified pros and transparent quotes",
-    bullet2: "Chat in-app to agree on details",
-    bullet3: "Built for homes, boats, and local services",
+    subject: "Welcome to Glatko — Find the right professional",
+    preview: "Post a request, get offers, choose your pro",
+    title: "Welcome to Glatko",
+    whatIsGlatko:
+      "Glatko is a reverse marketplace: you describe what you need, verified professionals send quotes, and you pick the best fit — all in one place.",
+    step1: "📝 Post a request",
+    step2: "💬 Receive offers",
+    step3: "✅ Choose your professional",
+    ctaPrimary: "Create your first request",
+    proFooter: "Are you a professional?",
+    proLinkLabel: "Apply to join Glatko",
   },
   tr: {
-    subject: "Glatko'ya hoş geldiniz",
-    title: "Glatko'ya hoş geldiniz!",
-    proBody: "Profilinizi tamamlayın ve ilk müşterinizi bulmaya başlayın.",
-    customerBody: "Karadağ genelinde doğrulanmış profesyonelleri keşfedin.",
-    ctaPro: "Profilimi tamamla",
-    ctaCustomer: "Profesyonel ara",
-    bullet1: "Doğrulanmış uzmanlar ve şeffaf teklifler",
-    bullet2: "Detayları netleştirmek için uygulama içi sohbet",
-    bullet3: "Ev, tekne ve yerel hizmetler için tasarlandı",
+    subject: "Glatko'ya hoş geldiniz — Doğru profesyoneli bulun",
+    preview: "Talep açın, teklifler gelsin, seçin",
+    title: "Glatko'ya hoş geldiniz",
+    whatIsGlatko:
+      "Glatko ters bir pazaryeri: ihtiyacınızı yazarsınız, doğrulanmış profesyoneller teklif gönderir, siz en uygun olanı seçersiniz — hepsi tek yerde.",
+    step1: "📝 Talep açın",
+    step2: "💬 Teklif alın",
+    step3: "✅ Profesyonelinizi seçin",
+    ctaPrimary: "İlk talebinizi oluşturun",
+    proFooter: "Profesyonel misiniz?",
+    proLinkLabel: "Buradan başvurun",
   },
   de: {
-    subject: "Willkommen bei Glatko",
-    title: "Willkommen bei Glatko!",
-    proBody: "Vervollständigen Sie Ihr Profil und finden Sie Ihre ersten Kundinnen und Kunden.",
-    customerBody: "Entdecken Sie verifizierte Profis in ganz Montenegro.",
-    ctaPro: "Profil vervollständigen",
-    ctaCustomer: "Profis entdecken",
-    bullet1: "Geprüfte Profis und transparente Angebote",
-    bullet2: "Chat in der App für alle Details",
-    bullet3: "Für Zuhause, Boot und lokale Services",
+    subject: "Willkommen bei Glatko — Den richtigen Profi finden",
+    preview: "Anfrage stellen, Angebote erhalten, auswählen",
+    title: "Willkommen bei Glatko",
+    whatIsGlatko:
+      "Glatko ist ein umgekehrter Marktplatz: Sie beschreiben Ihren Bedarf, verifizierte Profis senden Angebote, und Sie wählen — alles an einem Ort.",
+    step1: "📝 Anfrage erstellen",
+    step2: "💬 Angebote erhalten",
+    step3: "✅ Profi auswählen",
+    ctaPrimary: "Erste Anfrage erstellen",
+    proFooter: "Sind Sie Profi?",
+    proLinkLabel: "Jetzt bewerben",
   },
   ar: {
-    subject: "مرحباً بك في Glatko",
-    title: "مرحباً بك في Glatko!",
-    proBody: "أكمل ملفك الشخصي وابدأ بالعثور على أول عملائك.",
-    customerBody: "اكتشف محترفين موثوقين في جميع أنحاء الجبل الأسود.",
-    ctaPro: "إكمال ملفي",
-    ctaCustomer: "تصفح المحترفين",
-    bullet1: "محترفون موثقون وعروض واضحة",
-    bullet2: "دردشة داخل التطبيق لترتيب التفاصيل",
-    bullet3: "مناسبة للمنازل والقوارب والخدمات المحلية",
+    subject: "مرحباً بك في Glatko — اعثر على المحترف المناسب",
+    preview: "أرسل طلباً، استقبل العروض، واختر",
+    title: "مرحباً بك في Glatko",
+    whatIsGlatko:
+      "Glatko سوق معكوس: تصف احتياجك، يرسل المحترفون الموثقون عروضاً، وتختار الأنسب — كل ذلك في مكان واحد.",
+    step1: "📝 أرسل طلباً",
+    step2: "💬 استقبل العروض",
+    step3: "✅ اختر المحترف",
+    ctaPrimary: "أنشئ طلبك الأول",
+    proFooter: "هل أنت محترف؟",
+    proLinkLabel: "قدّم طلب الانضمام",
   },
   it: {
-    subject: "Benvenuto su Glatko",
-    title: "Benvenuto su Glatko!",
-    proBody: "Completa il profilo e inizia a trovare i tuoi primi clienti.",
-    customerBody: "Scopri professionisti verificati in tutto il Montenegro.",
-    ctaPro: "Completa il mio profilo",
-    ctaCustomer: "Cerca professionisti",
-    bullet1: "Professionisti verificati e preventivi chiari",
-    bullet2: "Chat in app per i dettagli",
-    bullet3: "Pensato per casa, barca e servizi locali",
+    subject: "Benvenuto su Glatko — Trova il professionista giusto",
+    preview: "Apri una richiesta, ricevi preventivi, scegli",
+    title: "Benvenuto su Glatko",
+    whatIsGlatko:
+      "Glatko è un marketplace al contrario: descrivi il bisogno, i professionisti verificati inviano preventivi e tu scegli — tutto in un unico posto.",
+    step1: "📝 Apri una richiesta",
+    step2: "💬 Ricevi offerte",
+    step3: "✅ Scegli il professionista",
+    ctaPrimary: "Crea la tua prima richiesta",
+    proFooter: "Sei un professionista?",
+    proLinkLabel: "Candidati su Glatko",
   },
   me: {
-    subject: "Dobrodošli na Glatko",
-    title: "Dobrodošli na Glatko!",
-    proBody: "Dovršite profil i počnite pronalaziti prve klijente.",
-    customerBody: "Otkrijte provjerene profesionalce širom Crne Gore.",
-    ctaPro: "Dovrši moj profil",
-    ctaCustomer: "Pretraži profesionalce",
-    bullet1: "Provjereni stručnjaci i jasne ponude",
-    bullet2: "Ćaskanje u aplikaciji za detalje",
-    bullet3: "Za dom, brod i lokalne usluge",
+    subject: "Dobrodošli na Glatko — Pronađite pravog stručnjaka",
+    preview: "Pošaljite zahtjev, dobijte ponude, izaberite",
+    title: "Dobrodošli na Glatko",
+    whatIsGlatko:
+      "Glatko je obrnuto tržište: opišete potrebu, provjereni profesionalci šalju ponude, a vi birate — sve na jednom mjestu.",
+    step1: "📝 Pošaljite zahtjev",
+    step2: "💬 Primite ponude",
+    step3: "✅ Izaberite stručnjaka",
+    ctaPrimary: "Kreirajte prvi zahtjev",
+    proFooter: "Da li ste profesionalac?",
+    proLinkLabel: "Prijavite se ovdje",
   },
   ru: {
-    subject: "Добро пожаловать в Glatko",
-    title: "Добро пожаловать в Glatko!",
-    proBody: "Заполните профиль и начните находить первых клиентов.",
-    customerBody: "Откройте для себя проверенных специалистов по всей Черногории.",
-    ctaPro: "Заполнить профиль",
-    ctaCustomer: "Найти специалистов",
-    bullet1: "Проверенные специалисты и прозрачные предложения",
-    bullet2: "Чат в приложении для согласования деталей",
-    bullet3: "Для дома, яхт и локальных услуг",
+    subject: "Добро пожаловать в Glatko — Найдите нужного специалиста",
+    preview: "Опишите задачу, получите предложения, выберите",
+    title: "Добро пожаловать в Glatko",
+    whatIsGlatko:
+      "Glatko — обратный маркетплейс: вы описываете задачу, проверенные специалисты присылают предложения, вы выбираете — всё в одном месте.",
+    step1: "📝 Создайте заявку",
+    step2: "💬 Получите предложения",
+    step3: "✅ Выберите специалиста",
+    ctaPrimary: "Создать первую заявку",
+    proFooter: "Вы специалист?",
+    proLinkLabel: "Подать заявку",
   },
   sr: {
-    subject: "Dobrodošli na Glatko",
-    title: "Dobrodošli na Glatko!",
-    proBody: "Dovršite profil i počnite da pronalazite prve klijente.",
-    customerBody: "Otkrijte proverene profesionalce širom Crne Gore.",
-    ctaPro: "Dovrši moj profil",
-    ctaCustomer: "Pretraži profesionalce",
-    bullet1: "Provereni stručnjaci i jasne ponude",
-    bullet2: "Ćaskanje u aplikaciji za detalje",
-    bullet3: "Za dom, brod i lokalne usluge",
+    subject: "Dobrodošli na Glatko — Pronađite pravog stručnjaka",
+    preview: "Pošaljite zahtev, dobijte ponude, izaberite",
+    title: "Dobrodošli na Glatko",
+    whatIsGlatko:
+      "Glatko je obrnuto tržište: opišete potrebu, provereni profesionalci šalju ponude, a vi birate — sve na jednom mestu.",
+    step1: "📝 Pošaljite zahtev",
+    step2: "💬 Primite ponude",
+    step3: "✅ Izaberite stručnjaka",
+    ctaPrimary: "Kreirajte prvi zahtev",
+    proFooter: "Da li ste profesionalac?",
+    proLinkLabel: "Prijavite se ovde",
   },
   uk: {
-    subject: "Ласкаво просимо до Glatko",
-    title: "Ласкаво просимо до Glatko!",
-    proBody: "Заповніть профіль і почніть знаходити перших клієнтів.",
-    customerBody: "Відкрийте для себе перевірених фахівців по всій Чорногорії.",
-    ctaPro: "Заповнити профіль",
-    ctaCustomer: "Знайти фахівців",
-    bullet1: "Перевірені фахівці та прозорі пропозиції",
-    bullet2: "Чат у застосунку для узгодження деталей",
-    bullet3: "Для дому, човнів і локальних послуг",
+    subject: "Ласкаво просимо до Glatko — Знайдіть потрібного фахівця",
+    preview: "Створіть заявку, отримайте пропозиції, оберіть",
+    title: "Ласкаво просимо до Glatko",
+    whatIsGlatko:
+      "Glatko — зворотний маркетплейс: ви описуєте потребу, перевірені фахівці надсилають пропозиції, ви обираєте — усе в одному місці.",
+    step1: "📝 Створіть заявку",
+    step2: "💬 Отримайте пропозиції",
+    step3: "✅ Оберіть фахівця",
+    ctaPrimary: "Створити першу заявку",
+    proFooter: "Ви фахівець?",
+    proLinkLabel: "Подати заявку",
   },
 };
 
-export function getWelcomeCopy(locale: EmailLocale): WelcomeCopy {
-  return welcome[locale] ?? welcome.en;
+export function getCustomerWelcomeEmailCopy(
+  locale: EmailLocale,
+): CustomerWelcomeEmailCopy {
+  return customerWelcomeEmail[locale] ?? customerWelcomeEmail.en;
+}
+
+/* ─── pro welcome (verification approved) ─── */
+export type ProWelcomeEmailCopy = {
+  subject: string;
+  preview: string;
+  headline: string;
+  intro: string;
+  stepMatch: string;
+  stepBid: string;
+  stepChosen: string;
+  freeBidLine: string;
+  supportLine: string;
+  ctaProfile: string;
+  adminNoteLabel: string;
+};
+
+const proWelcomeEmail: Record<EmailLocale, ProWelcomeEmailCopy> = {
+  en: {
+    subject: "Welcome to Glatko Pro — your application is approved",
+    preview: "Complete your profile and start bidding",
+    headline: "Your application is approved — welcome to Glatko!",
+    intro:
+      "You can now receive matching requests, send quotes, and get chosen by customers.",
+    stepMatch: "📬 Matching requests will appear in your dashboard",
+    stepBid: "💼 Send clear, fair quotes",
+    stepChosen: "🤝 The customer picks the best fit",
+    freeBidLine: "Your first bid on each new request is free under current platform rules.",
+    supportLine: "Questions? Reply to this email or use in-app help — we are here for you.",
+    ctaProfile: "Complete your pro profile",
+    adminNoteLabel: "Note from the team",
+  },
+  tr: {
+    subject: "Glatko Pro'ya hoş geldiniz — başvurunuz onaylandı",
+    preview: "Profilinizi tamamlayın ve teklif vermeye başlayın",
+    headline: "Başvurunuz onaylandı — Glatko'ya hoş geldiniz!",
+    intro:
+      "Artık size uygun talepleri görebilir, teklif gönderebilir ve müşterilerin sizi seçmesini sağlayabilirsiniz.",
+    stepMatch: "📬 Eşleşen talepler panonuzda görünecek",
+    stepBid: "💼 Net ve adil teklifler verin",
+    stepChosen: "🤝 Müşteri en uygun teklifi seçer",
+    freeBidLine: "Güncel kurallara göre her yeni talepte ilk teklifiniz ücretsizdir.",
+    supportLine: "Sorularınız için bu e-postayı yanıtlayın veya uygulama içi yardımı kullanın.",
+    ctaProfile: "Pro profilinizi tamamlayın",
+    adminNoteLabel: "Ekip notu",
+  },
+  de: {
+    subject: "Willkommen bei Glatko Pro — Bewerbung genehmigt",
+    preview: "Profil vervollständigen und Angebote senden",
+    headline: "Ihre Bewerbung ist genehmigt — willkommen bei Glatko!",
+    intro:
+      "Sie erhalten passende Anfragen, senden Angebote und werden von Kundinnen und Kunden ausgewählt.",
+    stepMatch: "📬 Passende Anfragen erscheinen in Ihrem Dashboard",
+    stepBid: "💼 Senden Sie klare, faire Angebote",
+    stepChosen: "🤝 Die Kundin wählt das beste Angebot",
+    freeBidLine: "Ihr erstes Angebot pro neuer Anfrage ist nach den aktuellen Regeln kostenlos.",
+    supportLine: "Fragen? Antworten Sie auf diese E-Mail oder nutzen Sie die Hilfe in der App.",
+    ctaProfile: "Profi-Profil vervollständigen",
+    adminNoteLabel: "Hinweis vom Team",
+  },
+  ar: {
+    subject: "مرحباً بك في Glatko Pro — تمت الموافقة على طلبك",
+    preview: "أكمل ملفك وابدأ بإرسال العروض",
+    headline: "تمت الموافقة على طلبك — مرحباً بك في Glatko!",
+    intro:
+      "يمكنك الآن استلام الطلبات المطابقة وإرسال العروض واختيارك من قبل العملاء.",
+    stepMatch: "📬 ستظهر الطلبات المطابقة في لوحة التحكم",
+    stepBid: "💼 أرسل عروضاً واضحة وعادلة",
+    stepChosen: "🤝 يختار العميل الأنسب",
+    freeBidLine: "عرضك الأول لكل طلب جديد مجاني وفق قواعد المنصة الحالية.",
+    supportLine: "للأسئلة رد على هذا البريد أو استخدم المساعدة داخل التطبيق.",
+    ctaProfile: "أكمل ملف المحترف",
+    adminNoteLabel: "ملاحظة من الفريق",
+  },
+  it: {
+    subject: "Benvenuto su Glatko Pro — domanda approvata",
+    preview: "Completa il profilo e inizia a fare preventivi",
+    headline: "Domanda approvata — benvenuto su Glatko!",
+    intro:
+      "Ora puoi ricevere richieste pertinenti, inviare preventivi ed essere scelto dai clienti.",
+    stepMatch: "📬 Le richieste pertinenti appariranno nella dashboard",
+    stepBid: "💼 Invia preventivi chiari ed equi",
+    stepChosen: "🤝 Il cliente sceglie l’offerta migliore",
+    freeBidLine: "La tua prima offerta su ogni nuova richiesta è gratuita secondo le regole attuali.",
+    supportLine: "Domande? Rispondi a questa email o usa l’aiuto in app.",
+    ctaProfile: "Completa il profilo professionista",
+    adminNoteLabel: "Nota dal team",
+  },
+  me: {
+    subject: "Dobrodošli na Glatko Pro — prijava odobrena",
+    preview: "Dovršite profil i počnite slati ponude",
+    headline: "Prijava odobrena — dobrodošli na Glatko!",
+    intro:
+      "Sada možete primati odgovarajuće zahtjeve, slati ponude i biti izabrani od klijenata.",
+    stepMatch: "📬 Podudarni zahtjevi pojaviće se na kontrolnoj tabli",
+    stepBid: "💼 Šaljite jasne i fer ponude",
+    stepChosen: "🤝 Klijent bira najbolju ponudu",
+    freeBidLine: "Vaša prva ponuda na svakom novom zahtjevu je besplatna prema trenutnim pravilima.",
+    supportLine: "Pitanja? Odgovorite na ovu e-poruku ili koristite pomoć u aplikaciji.",
+    ctaProfile: "Dovršite profesionalni profil",
+    adminNoteLabel: "Napomena tima",
+  },
+  ru: {
+    subject: "Добро пожаловать в Glatko Pro — заявка одобрена",
+    preview: "Заполните профиль и начните отправлять предложения",
+    headline: "Заявка одобрена — добро пожаловать в Glatko!",
+    intro:
+      "Теперь вы получаете подходящие заявки, отправляете предложения и вас выбирают клиенты.",
+    stepMatch: "📬 Подходящие заявки появятся в панели",
+    stepBid: "💼 Отправляйте понятные и честные предложения",
+    stepChosen: "🤝 Клиент выбирает лучшее",
+    freeBidLine: "Первое предложение по каждой новой заявке бесплатно по текущим правилам платформы.",
+    supportLine: "Вопросы? Ответьте на это письмо или используйте помощь в приложении.",
+    ctaProfile: "Заполнить профиль профи",
+    adminNoteLabel: "Заметка команды",
+  },
+  sr: {
+    subject: "Dobrodošli na Glatko Pro — prijava odobrena",
+    preview: "Dovršite profil i počnite da šaljete ponude",
+    headline: "Prijava odobrena — dobrodošli na Glatko!",
+    intro:
+      "Sada možete primati odgovarajuće zahteve, slati ponude i biti izabrani od klijenata.",
+    stepMatch: "📬 Podudarni zahtevi pojaviće se na kontrolnoj tabli",
+    stepBid: "💼 Šaljite jasne i fer ponude",
+    stepChosen: "🤝 Klijent bira najbolju ponudu",
+    freeBidLine: "Vaša prva ponuda na svakom novom zahtevu je besplatna prema trenutnim pravilima.",
+    supportLine: "Pitanja? Odgovorite na ovu e-poruku ili koristite pomoć u aplikaciji.",
+    ctaProfile: "Dovršite profesionalni profil",
+    adminNoteLabel: "Napomena tima",
+  },
+  uk: {
+    subject: "Ласкаво просимо до Glatko Pro — заявку схвалено",
+    preview: "Заповніть профіль і почніть надсилати пропозиції",
+    headline: "Заявку схвалено — ласкаво просимо до Glatko!",
+    intro:
+      "Тепер ви отримуєте відповідні заявки, надсилаєте пропозиції та вас обирають клієнти.",
+    stepMatch: "📬 Відповідні заявки з’являться в панелі",
+    stepBid: "💼 Надсилайте зрозумілі та чесні пропозиції",
+    stepChosen: "🤝 Клієнт обирає найкращу",
+    freeBidLine: "Перша пропозиція на кожну нову заявку безкоштовна згідно з поточними правилами.",
+    supportLine: "Питання? Відповідайте на цей лист або скористайтеся допомогою в застосунку.",
+    ctaProfile: "Заповнити профіль профі",
+    adminNoteLabel: "Примітка команди",
+  },
+};
+
+export function getProWelcomeEmailCopy(locale: EmailLocale): ProWelcomeEmailCopy {
+  return proWelcomeEmail[locale] ?? proWelcomeEmail.en;
+}
+
+/* ─── complete profile reminder (cron, not scheduled in repo) ─── */
+export type CompleteProfileReminderCopy = {
+  subject: string;
+  preview: string;
+  headline: string;
+  intro: string;
+  listTitle: string;
+  itemAvatar: string;
+  itemPhone: string;
+  itemName: string;
+  cta: string;
+};
+
+const completeProfileReminderEmail: Record<
+  EmailLocale,
+  CompleteProfileReminderCopy
+> = {
+  en: {
+    subject: "Complete your Glatko profile for better matches",
+    preview: "Add a few details so pros can reach you",
+    headline: "Complete your profile for better matches",
+    intro:
+      "A complete profile helps professionals understand you and improves your experience on Glatko.",
+    listTitle: "Still missing:",
+    itemAvatar: "Profile photo",
+    itemPhone: "Phone number",
+    itemName: "Display name",
+    cta: "Complete profile",
+  },
+  tr: {
+    subject: "Daha iyi eşleşmeler için profilinizi tamamlayın",
+    preview: "Profesyonellerin size ulaşması için birkaç bilgi ekleyin",
+    headline: "Daha iyi eşleşmeler için profilinizi tamamlayın",
+    intro:
+      "Tam profil, profesyonellerin sizi daha iyi anlamasını sağlar ve Glatko deneyiminizi iyileştirir.",
+    listTitle: "Eksik görünenler:",
+    itemAvatar: "Profil fotoğrafı",
+    itemPhone: "Telefon numarası",
+    itemName: "Görünen ad",
+    cta: "Profili tamamla",
+  },
+  de: {
+    subject: "Vervollständigen Sie Ihr Glatko-Profil für bessere Treffer",
+    preview: "Ein paar Angaben helfen Profis, Sie zu erreichen",
+    headline: "Profil vervollständigen für bessere Treffer",
+    intro:
+      "Ein vollständiges Profil hilft Profis, Sie besser zu verstehen, und verbessert Ihre Erfahrung.",
+    listTitle: "Noch offen:",
+    itemAvatar: "Profilfoto",
+    itemPhone: "Telefonnummer",
+    itemName: "Anzeigename",
+    cta: "Profil vervollständigen",
+  },
+  ar: {
+    subject: "أكمل ملفك في Glatko لتحصل على تطابق أفضل",
+    preview: "أضف بعض التفاصيل ليتمكن المحترفون من التواصل",
+    headline: "أكمل ملفك لتحصل على تطابق أفضل",
+    intro:
+      "الملف الكامل يساعد المحترفين على فهمك ويحسّن تجربتك على Glatko.",
+    listTitle: "ما زال ناقصاً:",
+    itemAvatar: "صورة الملف",
+    itemPhone: "رقم الهاتف",
+    itemName: "الاسم الظاهر",
+    cta: "إكمال الملف",
+  },
+  it: {
+    subject: "Completa il profilo Glatko per abbinamenti migliori",
+    preview: "Aggiungi alcuni dettagli così i professionisti possono contattarti",
+    headline: "Completa il profilo per abbinamenti migliori",
+    intro:
+      "Un profilo completo aiuta i professionisti a capirti e migliora la tua esperienza su Glatko.",
+    listTitle: "Manca ancora:",
+    itemAvatar: "Foto profilo",
+    itemPhone: "Numero di telefono",
+    itemName: "Nome visualizzato",
+    cta: "Completa profilo",
+  },
+  me: {
+    subject: "Dovršite Glatko profil za bolje podudaranje",
+    preview: "Dodajte nekoliko detalja kako bi vas stručnjaci lakše kontaktirali",
+    headline: "Dovršite profil za bolje podudaranje",
+    intro:
+      "Potpun profil pomaže stručnjacima da vas bolje razumiju i poboljšava iskustvo na Glatko.",
+    listTitle: "Još nedostaje:",
+    itemAvatar: "Profilna fotografija",
+    itemPhone: "Broj telefona",
+    itemName: "Prikazano ime",
+    cta: "Dovrši profil",
+  },
+  ru: {
+    subject: "Заполните профиль Glatko для лучших совпадений",
+    preview: "Добавьте данные, чтобы специалисты могли связаться с вами",
+    headline: "Заполните профиль для лучших совпадений",
+    intro:
+      "Полный профиль помогает специалистам понимать вас и улучшает опыт на Glatko.",
+    listTitle: "Пока не заполнено:",
+    itemAvatar: "Фото профиля",
+    itemPhone: "Телефон",
+    itemName: "Отображаемое имя",
+    cta: "Заполнить профиль",
+  },
+  sr: {
+    subject: "Dovršite Glatko profil za bolje podudaranje",
+    preview: "Dodajte nekoliko detalja kako bi vas stručnjaci lakše kontaktirali",
+    headline: "Dovršite profil za bolje podudaranje",
+    intro:
+      "Potpun profil pomaže stručnjacima da vas bolje razumeju i poboljšava iskustvo na Glatko.",
+    listTitle: "Još nedostaje:",
+    itemAvatar: "Profilna fotografija",
+    itemPhone: "Broj telefona",
+    itemName: "Prikazano ime",
+    cta: "Dovrši profil",
+  },
+  uk: {
+    subject: "Заповніть профіль Glatko для кращих збігів",
+    preview: "Додайте кілька деталей, щоб фахівці могли зв’язатися",
+    headline: "Заповніть профіль для кращих збігів",
+    intro:
+      "Повний профіль допомагає фахівцям краще вас зрозуміти та покращує досвід на Glatko.",
+    listTitle: "Ще бракує:",
+    itemAvatar: "Фото профілю",
+    itemPhone: "Телефон",
+    itemName: "Відображуване ім’я",
+    cta: "Заповнити профіль",
+  },
+};
+
+export function getCompleteProfileReminderCopy(
+  locale: EmailLocale,
+): CompleteProfileReminderCopy {
+  return (
+    completeProfileReminderEmail[locale] ?? completeProfileReminderEmail.en
+  );
 }
 
 export function interpolate(

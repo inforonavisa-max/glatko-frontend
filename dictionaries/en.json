@@ -925,6 +925,13 @@
     "inProgress": "Job in progress",
     "completed": "Job completed"
   },
+  "onboarding": {
+    "welcomeTitle": "Welcome to Glatko, {name}!",
+    "welcomeTitleAnonymous": "Welcome to Glatko!",
+    "welcomeBody": "Would you like to create your first service request?",
+    "cta": "Create your first request",
+    "dismiss": "Dismiss"
+  },
   "notifications": {
     "title": "Notifications",
     "markAllRead": "Mark All Read",

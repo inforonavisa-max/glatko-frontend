@@ -11,6 +11,7 @@ import { HtmlLangSetter } from "@/components/HtmlLangSetter";
 import { createClient } from "@/supabase/server";
 import { isAdminEmail } from "@/lib/admin";
 import { CookieConsent } from "@/components/glatko/CookieConsent";
+import { OnboardingWelcomeBanner } from "@/components/glatko/onboarding/OnboardingWelcomeBanner";
 import { HreflangLinks } from "@/components/seo/HreflangLinks";
 import type { Metadata } from "next";
 
@@ -69,13 +70,22 @@ export default async function LocaleLayout({ children, params }: Props) {
   const user = data?.user ?? null;
   const userId = user?.id ?? null;
 
+  type ProfileBannerRow = {
+    preferred_locale: string | null;
+    full_name: string | null;
+    onboarding_completed: boolean | null;
+  };
+  let profileBannerRow: ProfileBannerRow | null = null;
+
   if (userId && (routing.locales as readonly string[]).includes(locale)) {
     try {
       const { data: profile } = await supabase
         .from("profiles")
-        .select("preferred_locale")
+        .select("preferred_locale, full_name, onboarding_completed")
         .eq("id", userId)
         .maybeSingle();
+
+      profileBannerRow = profile;
 
       if (profile && profile.preferred_locale !== locale) {
         await supabase
@@ -98,6 +108,13 @@ export default async function LocaleLayout({ children, params }: Props) {
     isPro = !!proProfile && proProfile.verification_status === "approved";
   }
 
+  const onboardingFirstName =
+    profileBannerRow?.full_name?.trim().split(/\s+/)[0] ?? "";
+  const showOnboardingBanner =
+    !!userId &&
+    !isPro &&
+    profileBannerRow?.onboarding_completed !== true;
+
   const isAdmin = user ? isAdminEmail(user.email) : false;
 
   const hreflangPath = hreflangPathForRequest(locale);
@@ -115,6 +132,9 @@ export default async function LocaleLayout({ children, params }: Props) {
             Skip to content
           </a>
           <GlatkoHeader userId={userId} isPro={isPro} isAdmin={isAdmin} />
+          {showOnboardingBanner ? (
+            <OnboardingWelcomeBanner displayName={onboardingFirstName} />
+          ) : null}
           <main id="main-content" className="flex-1">{children}</main>
           <GlatkoFooter />
           <CookieConsent />

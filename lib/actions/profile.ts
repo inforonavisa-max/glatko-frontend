@@ -376,6 +376,32 @@ export async function changePassword(formData: FormData) {
   return { success: true as const };
 }
 
+export async function dismissOnboardingWelcome() {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { error: "unauthorized" as const };
+  }
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      onboarding_completed: true,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", user.id);
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  revalidateProfile();
+  return { success: true as const };
+}
+
 export async function deactivateAccount() {
   const supabase = createClient();
   const {

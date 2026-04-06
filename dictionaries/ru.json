@@ -925,6 +925,13 @@
     "inProgress": "Работа выполняется",
     "completed": "Работа завершена"
   },
+  "onboarding": {
+    "welcomeTitle": "Добро пожаловать в Glatko, {name}!",
+    "welcomeTitleAnonymous": "Добро пожаловать в Glatko!",
+    "welcomeBody": "Создать первую заявку на услугу?",
+    "cta": "Создать первую заявку",
+    "dismiss": "Скрыть"
+  },
   "notifications": {
     "title": "Уведомления",
     "markAllRead": "Отметить все как прочитанные",
