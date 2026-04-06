@@ -992,7 +992,30 @@
       "bidUpdates": "Angebotsaktualisierungen",
       "messages": "Nachrichten",
       "statusChanges": "Statusänderungen",
-      "reviews": "Bewertungen"
+      "reviews": "Bewertungen",
+      "subtitle": "Wählen Sie, wie wir Sie erreichen. E-Mail gilt sofort; Push folgt bald.",
+      "columnNotification": "Benachrichtigung",
+      "columnEmail": "E-Mail",
+      "columnPush": "Push",
+      "pushComingSoon": "Demnächst",
+      "customerSection": "Als Kunde",
+      "proSection": "Als Profi",
+      "saveError": "Einstellung konnte nicht gespeichert werden",
+      "emailToggleAria": "E-Mail-Benachrichtigungen: {label}",
+      "customer": {
+        "newBid": "Neues Angebot zu Ihrer Anfrage",
+        "bidUpdates": "Angebot angenommen / nicht ausgewählt",
+        "messages": "Neue Nachrichten",
+        "statusChange": "Statusaktualisierungen der Anfrage",
+        "reviews": "Neue Bewertungen"
+      },
+      "pro": {
+        "newMatch": "Neue passende Anfrage",
+        "bidUpdates": "Angebot angenommen / abgelehnt",
+        "messages": "Neue Nachrichten",
+        "reviews": "Neue Bewertungen",
+        "verification": "Verifizierungsstatus"
+      }
     },
     "profile": {
       "title": "Profileinstellungen",
@@ -1051,7 +1074,9 @@
         "push": {
           "title": "Push",
           "soon": "Bald"
-        }
+        },
+        "manageHint": "E-Mail pro Benachrichtigungstyp auf der separaten Seite einstellen.",
+        "manageLink": "Benachrichtigungseinstellungen"
       },
       "account": {
         "title": "Konto",
@@ -1311,5 +1336,20 @@
       "card4": "9 Sprachen",
       "card4Desc": "Kommunizieren Sie in vielen Sprachen"
     }
+  },
+  "validation": {
+    "required": "Dieses Feld ist erforderlich",
+    "minLength": "Mindestens {min} Zeichen",
+    "maxLength": "Höchstens {max} Zeichen",
+    "email": "Bitte eine gültige E-Mail-Adresse eingeben",
+    "phone": "Bitte eine gültige Telefonnummer eingeben",
+    "minNumber": "Mindestens {min}",
+    "maxNumber": "Höchstens {max}",
+    "invalidUrl": "Bitte eine gültige URL eingeben",
+    "invalidUuid": "Ungültige Kennung",
+    "maxItems": "Höchstens {max} Einträge",
+    "passwordMismatch": "Passwörter stimmen nicht überein",
+    "categoryRequired": "Wählen Sie mindestens eine Kategorie",
+    "avatarRequired": "Bitte fügen Sie ein Profilfoto hinzu"
   }
 }

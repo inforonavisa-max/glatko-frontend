@@ -3,10 +3,10 @@
 import { createClient } from "@/supabase/server";
 import { createProfessionalProfile } from "@/lib/supabase/glatko.server";
 import {
-  professionalApplicationSchema,
+  createProfessionalApplicationSchema,
   numOrUndef,
-  AVATAR_REQUIRED,
 } from "@/lib/validations/become-a-pro";
+import { getLocale, getTranslations } from "next-intl/server";
 
 interface FormState {
   success: boolean;
@@ -14,7 +14,7 @@ interface FormState {
 }
 
 function firstZodIssueMessage(
-  issues: { path: (string | number)[]; message: string }[]
+  issues: { path: (string | number)[]; message: string }[],
 ): string {
   const first = issues[0];
   return first?.message ?? "Validation failed";
@@ -22,7 +22,7 @@ function firstZodIssueMessage(
 
 export async function submitProfessionalApplication(
   _prev: FormState,
-  formData: FormData
+  formData: FormData,
 ): Promise<FormState> {
   const supabase = createClient();
   const {
@@ -40,9 +40,12 @@ export async function submitProfessionalApplication(
     return { success: false, error: profileErr.message };
   }
 
+  const locale = await getLocale();
+  const t = await getTranslations({ locale, namespace: "validation" });
+
   const dbAvatar = profile?.avatar_url?.trim() ?? "";
   if (!dbAvatar) {
-    return { success: false, error: AVATAR_REQUIRED };
+    return { success: false, error: t("avatarRequired") };
   }
 
   const primaryRaw = String(formData.get("primaryCategoryId") ?? "").trim();
@@ -61,6 +64,9 @@ export async function submitProfessionalApplication(
     avatar_url: String(formData.get("avatar_url") ?? "").trim(),
   };
 
+  const professionalApplicationSchema = createProfessionalApplicationSchema(
+    (key, values) => t(key, values),
+  );
   const parsed = professionalApplicationSchema.safeParse(rawPayload);
   if (!parsed.success) {
     return {
@@ -70,7 +76,7 @@ export async function submitProfessionalApplication(
   }
 
   if (parsed.data.avatar_url !== dbAvatar) {
-    return { success: false, error: AVATAR_REQUIRED };
+    return { success: false, error: t("avatarRequired") };
   }
 
   const {
@@ -88,15 +94,15 @@ export async function submitProfessionalApplication(
 
   return createProfessionalProfile({
     userId: user.id,
-    businessName: businessName || undefined,
-    bio: bio || undefined,
-    phone: phone || undefined,
-    city: city || undefined,
-    languages: languages.length > 0 ? languages : undefined,
+    businessName,
+    bio,
+    phone,
+    city,
+    languages,
     yearsExperience,
     hourlyRateMin,
     hourlyRateMax,
     categoryIds,
-    primaryCategoryId: primaryCategoryId || undefined,
+    primaryCategoryId,
   });
 }

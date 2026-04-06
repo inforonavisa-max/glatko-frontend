@@ -4,10 +4,20 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { createClient } from "@/supabase/server";
 import {
-  profileFieldsSchema,
+  createProfileFieldsSchema,
+  createPasswordSchema,
   normalizeProfilePayload,
-  passwordSchema,
 } from "@/lib/validations/profile";
+import { getLocale, getTranslations } from "next-intl/server";
+import {
+  type NotificationEmailPrefKey,
+  type NotificationPrefsRow,
+  mergeNotificationPrefs,
+  normalizeNotificationPrefs,
+  NOTIFICATION_EMAIL_PREF_KEYS,
+} from "@/lib/notifications/prefs";
+
+export type { NotificationPrefsRow } from "@/lib/notifications/prefs";
 
 const VALID_LOCALES = ["tr", "en", "de", "it", "ru", "uk", "sr", "me", "ar"] as const;
 
@@ -23,25 +33,8 @@ export type UserProfileRow = {
   bio: string | null;
   preferred_locale: string | null;
   is_active: boolean | null;
-  notification_prefs: NotificationPrefsRow | null;
+  notification_prefs: ReturnType<typeof normalizeNotificationPrefs>;
   is_deleted: boolean | null;
-};
-
-export type NotificationPrefsRow = {
-  email_new_bid?: boolean;
-  email_new_message?: boolean;
-  email_new_review?: boolean;
-  /** Pro: new matching requests / lead emails (optional; default on if unset) */
-  email_new_request_match?: boolean;
-  push_enabled?: boolean;
-};
-
-const defaultNotificationPrefs: Required<
-  Pick<NotificationPrefsRow, "email_new_bid" | "email_new_message" | "email_new_review">
-> = {
-  email_new_bid: true,
-  email_new_message: true,
-  email_new_review: true,
 };
 
 export async function getProfileSettings(): Promise<
@@ -78,9 +71,7 @@ export async function getProfileSettings(): Promise<
     bio: profile?.bio ?? null,
     preferred_locale: profile?.preferred_locale ?? "tr",
     is_active: profile?.is_active ?? true,
-    notification_prefs: (profile?.notification_prefs as NotificationPrefsRow | null) ?? {
-      ...defaultNotificationPrefs,
-    },
+    notification_prefs: normalizeNotificationPrefs(profile?.notification_prefs),
     is_deleted: profile?.is_deleted ?? false,
   };
 
@@ -116,6 +107,11 @@ export async function updateProfile(formData: FormData) {
     bio: String(formData.get("bio") ?? ""),
   };
 
+  const locale = await getLocale();
+  const t = await getTranslations({ locale, namespace: "validation" });
+  const profileFieldsSchema = createProfileFieldsSchema((key, values) =>
+    t(key, values),
+  );
   const validated = profileFieldsSchema.safeParse(rawData);
   if (!validated.success) {
     return { error: validated.error.flatten().fieldErrors };
@@ -133,7 +129,7 @@ export async function updateProfile(formData: FormData) {
     .eq("id", user.id);
 
   if (error) {
-    console.error("Profile update error:", error);
+    console.error("[GLATKO:profile] Profile update error:", error);
     return { error: error.message };
   }
 
@@ -182,7 +178,7 @@ export async function updateAvatar(formData: FormData) {
   });
 
   if (uploadError) {
-    console.error("Avatar upload error:", uploadError);
+    console.error("[GLATKO:profile] Avatar upload error:", uploadError);
     return { error: uploadError.message };
   }
 
@@ -198,7 +194,7 @@ export async function updateAvatar(formData: FormData) {
     .eq("id", user.id);
 
   if (updateError) {
-    console.error("Profile avatar_url update error:", updateError);
+    console.error("[GLATKO:profile] Profile avatar_url update error:", updateError);
     return { error: updateError.message };
   }
 
@@ -276,7 +272,7 @@ export async function updateLanguagePreference(locale: string) {
   return { success: true as const };
 }
 
-export async function updateNotificationPrefs(prefs: NotificationPrefsRow) {
+export async function updateNotificationPrefs(prefs: Partial<NotificationPrefsRow>) {
   const supabase = createClient();
   const {
     data: { user },
@@ -286,23 +282,25 @@ export async function updateNotificationPrefs(prefs: NotificationPrefsRow) {
     return { error: "unauthorized" as const };
   }
 
-  const merged = {
-    email_new_bid: prefs.email_new_bid ?? defaultNotificationPrefs.email_new_bid,
-    email_new_message:
-      prefs.email_new_message ?? defaultNotificationPrefs.email_new_message,
-    email_new_review:
-      prefs.email_new_review ?? defaultNotificationPrefs.email_new_review,
-    ...(prefs.push_enabled !== undefined ? { push_enabled: prefs.push_enabled } : {}),
-  };
+  const { data: row, error: readErr } = await supabase
+    .from("profiles")
+    .select("notification_prefs")
+    .eq("id", user.id)
+    .maybeSingle();
 
-  const { error } = await supabase.from("profiles").upsert(
-    {
-      id: user.id,
+  if (readErr) {
+    return { error: readErr.message };
+  }
+
+  const merged = mergeNotificationPrefs(row?.notification_prefs, prefs);
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({
       notification_prefs: merged,
       updated_at: new Date().toISOString(),
-    },
-    { onConflict: "id" }
-  );
+    })
+    .eq("id", user.id);
 
   if (error) {
     return { error: error.message };
@@ -310,6 +308,29 @@ export async function updateNotificationPrefs(prefs: NotificationPrefsRow) {
 
   revalidateProfile();
   return { success: true as const };
+}
+
+/** Toggle one email pref (push channel is reserved — no-op until Infobip). */
+export async function updateNotificationPreference(
+  channel: "email" | "push",
+  prefKey: string,
+  enabled: boolean,
+): Promise<{ success: true } | { error: string }> {
+  if (channel === "push") {
+    return { success: true };
+  }
+
+  if (!NOTIFICATION_EMAIL_PREF_KEYS.includes(prefKey as NotificationEmailPrefKey)) {
+    return { error: "invalid_key" };
+  }
+
+  const result = await updateNotificationPrefs({
+    [prefKey]: enabled,
+  } as Partial<NotificationPrefsRow>);
+  if ("error" in result && result.error) {
+    return { error: result.error };
+  }
+  return { success: true };
 }
 
 export async function changePassword(formData: FormData) {
@@ -322,6 +343,9 @@ export async function changePassword(formData: FormData) {
     return { error: "unauthorized" as const };
   }
 
+  const locale = await getLocale();
+  const t = await getTranslations({ locale, namespace: "validation" });
+  const passwordSchema = createPasswordSchema((key, values) => t(key, values));
   const parsed = passwordSchema.safeParse({
     current_password: formData.get("current_password"),
     new_password: formData.get("new_password"),

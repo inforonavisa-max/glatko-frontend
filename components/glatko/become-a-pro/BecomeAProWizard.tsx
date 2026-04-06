@@ -19,11 +19,6 @@ import { StepServiceAreas } from "./StepServiceAreas";
 import { StepPortfolio } from "./StepPortfolio";
 import type { ServiceCategory } from "@/types/glatko";
 import type { Locale } from "@/i18n/routing";
-import {
-  AVATAR_REQUIRED,
-  CATEGORY_REQUIRED,
-} from "@/lib/validations/become-a-pro";
-
 interface Props {
   categories: ServiceCategory[];
   userEmail: string;
@@ -36,16 +31,6 @@ const STEPS = [
   { icon: Briefcase, key: "step2" },
   { icon: FolderOpen, key: "step3" },
 ] as const;
-
-function mapSubmitError(
-  err: string | undefined,
-  t: ReturnType<typeof useTranslations>
-): string | undefined {
-  if (!err) return undefined;
-  if (err === AVATAR_REQUIRED) return t("pro.wizard.avatarRequired");
-  if (err === CATEGORY_REQUIRED) return t("pro.wizard.categoryRequired");
-  return err;
-}
 
 export function BecomeAProWizard({
   categories,
@@ -181,7 +166,7 @@ export function BecomeAProWizard({
 
       {state.error && (
         <div className="mb-6 rounded-xl border border-red-200 dark:border-red-500/20 bg-red-50 dark:bg-red-500/10 px-4 py-3 text-sm text-red-600 dark:text-red-400">
-          {mapSubmitError(state.error, t)}
+          {state.error}
         </div>
       )}
 

@@ -992,7 +992,30 @@
       "bidUpdates": "تحديثات العروض",
       "messages": "الرسائل",
       "statusChanges": "تغييرات الحالة",
-      "reviews": "التقييمات"
+      "reviews": "التقييمات",
+      "subtitle": "اختر كيف نتواصل معك. البريد فوري؛ الإشارات الفورية قريبًا.",
+      "columnNotification": "إشعار",
+      "columnEmail": "البريد",
+      "columnPush": "دفع",
+      "pushComingSoon": "قريبًا",
+      "customerSection": "كعميل",
+      "proSection": "كمحترف",
+      "saveError": "تعذر حفظ التفضيل",
+      "emailToggleAria": "إشعارات البريد: {label}",
+      "customer": {
+        "newBid": "عرض جديد على طلبك",
+        "bidUpdates": "تم قبول العرض / لم يتم اختيارك",
+        "messages": "رسائل جديدة",
+        "statusChange": "تحديثات حالة الطلب",
+        "reviews": "تقييمات جديدة"
+      },
+      "pro": {
+        "newMatch": "طلب جديد مطابق",
+        "bidUpdates": "قبول العرض / الرفض",
+        "messages": "رسائل جديدة",
+        "reviews": "تقييمات جديدة",
+        "verification": "حالة التحقق"
+      }
     },
     "profile": {
       "title": "إعدادات الملف الشخصي",
@@ -1051,7 +1074,9 @@
         "push": {
           "title": "دفع",
           "soon": "قريبًا"
-        }
+        },
+        "manageHint": "اضبط البريد حسب نوع الإشعار في الصفحة المخصصة.",
+        "manageLink": "إعدادات الإشعارات"
       },
       "account": {
         "title": "الحساب",
@@ -1311,5 +1336,20 @@
       "card4": "9 لغات",
       "card4Desc": "تواصل بعدة لغات"
     }
+  },
+  "validation": {
+    "required": "هذا الحقل مطلوب",
+    "minLength": "يجب أن يكون {min} أحرف على الأقل",
+    "maxLength": "يجب ألا يتجاوز {max} حرفًا",
+    "email": "أدخل بريدًا إلكترونيًا صالحًا",
+    "phone": "أدخل رقم هاتف صالحًا",
+    "minNumber": "يجب أن يكون على الأقل {min}",
+    "maxNumber": "يجب ألا يتجاوز {max}",
+    "invalidUrl": "أدخل عنوان URL صالحًا",
+    "invalidUuid": "معرّف غير صالح",
+    "maxItems": "يُسمح بحد أقصى {max} عناصر",
+    "passwordMismatch": "كلمتا المرور غير متطابقتين",
+    "categoryRequired": "اختر فئة واحدة على الأقل",
+    "avatarRequired": "أضف صورة ملف شخصي للمتابعة"
   }
 }

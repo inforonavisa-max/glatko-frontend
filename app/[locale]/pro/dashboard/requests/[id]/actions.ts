@@ -1,18 +1,9 @@
 "use server";
 
-import { z } from "zod";
+import { getLocale, getTranslations } from "next-intl/server";
 import { createClient } from "@/supabase/server";
 import { createBid, getProfessionalProfile, createNotification } from "@/lib/supabase/glatko.server";
-
-const bidSchema = z.object({
-  serviceRequestId: z.string().uuid(),
-  professionalId: z.string().uuid(),
-  price: z.number().positive().max(100000),
-  priceType: z.enum(["fixed", "hourly", "estimate"]),
-  message: z.string().min(10).max(2000),
-  estimatedDurationHours: z.number().positive().max(1000).optional(),
-  availableDate: z.string().optional(),
-});
+import { createProBidSchema } from "@/lib/validations/pro-bid";
 
 interface SubmitResult {
   success: boolean;
@@ -41,6 +32,9 @@ export async function submitBid(formData: FormData): Promise<SubmitResult> {
     availableDate: (formData.get("availableDate") as string) || undefined,
   };
 
+  const locale = await getLocale();
+  const t = await getTranslations({ locale, namespace: "validation" });
+  const bidSchema = createProBidSchema((key, values) => t(key, values));
   const parsed = bidSchema.safeParse(raw);
   if (!parsed.success) {
     const fieldErrors = parsed.error.flatten().fieldErrors;

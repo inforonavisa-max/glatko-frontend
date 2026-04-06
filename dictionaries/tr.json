@@ -992,7 +992,30 @@
       "bidUpdates": "Teklif Güncellemeleri",
       "messages": "Mesajlar",
       "statusChanges": "Durum Değişiklikleri",
-      "reviews": "Değerlendirmeler"
+      "reviews": "Değerlendirmeler",
+      "subtitle": "Size nasıl ulaşacağımızı seçin. E-posta hemen geçerlidir; anlık bildirim yakında.",
+      "columnNotification": "Bildirim",
+      "columnEmail": "E-posta",
+      "columnPush": "Anlık",
+      "pushComingSoon": "Yakında",
+      "customerSection": "Müşteri olarak",
+      "proSection": "Profesyonel olarak",
+      "saveError": "Tercih kaydedilemedi",
+      "emailToggleAria": "E-posta bildirimleri: {label}",
+      "customer": {
+        "newBid": "Talebinize yeni teklif",
+        "bidUpdates": "Teklif kabul / seçilmediniz (size gelen e-postalar)",
+        "messages": "Yeni mesajlar",
+        "statusChange": "Talep durumu güncellemeleri",
+        "reviews": "Yeni değerlendirmeler"
+      },
+      "pro": {
+        "newMatch": "Yeni eşleşen talep",
+        "bidUpdates": "Teklif kabul / red",
+        "messages": "Yeni mesajlar",
+        "reviews": "Yeni değerlendirme",
+        "verification": "Doğrulama durumu"
+      }
     },
     "profile": {
       "title": "Profil Ayarları",
@@ -1051,7 +1074,9 @@
         "push": {
           "title": "Anlık bildirimler",
           "soon": "Yakında"
-        }
+        },
+        "manageHint": "Bildirim türlerine göre e-posta tercihlerinizi ayrı sayfadan yönetin.",
+        "manageLink": "Bildirim ayarları"
       },
       "account": {
         "title": "Hesap Yönetimi",
@@ -1311,5 +1336,20 @@
       "card4": "9 Dil Desteği",
       "card4Desc": "Farklı dillerdeki müşterilerle iletişim kurun"
     }
+  },
+  "validation": {
+    "required": "Bu alan zorunludur",
+    "minLength": "En az {min} karakter olmalıdır",
+    "maxLength": "En fazla {max} karakter olabilir",
+    "email": "Geçerli bir e-posta adresi giriniz",
+    "phone": "Geçerli bir telefon numarası giriniz",
+    "minNumber": "En az {min} olmalıdır",
+    "maxNumber": "En fazla {max} olabilir",
+    "invalidUrl": "Geçerli bir URL giriniz",
+    "invalidUuid": "Geçersiz kimlik",
+    "maxItems": "En fazla {max} öğe",
+    "passwordMismatch": "Şifreler eşleşmiyor",
+    "categoryRequired": "En az bir kategori seçin",
+    "avatarRequired": "Devam etmek için profil fotoğrafı ekleyin"
   }
 }

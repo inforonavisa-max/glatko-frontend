@@ -992,7 +992,30 @@
       "bidUpdates": "Ažuriranja ponuda",
       "messages": "Poruke",
       "statusChanges": "Promene statusa",
-      "reviews": "Ocene"
+      "reviews": "Ocene",
+      "subtitle": "Izaberite kako da vas kontaktiramo. Email odmah; push uskoro.",
+      "columnNotification": "Obaveštenje",
+      "columnEmail": "Email",
+      "columnPush": "Push",
+      "pushComingSoon": "Uskoro",
+      "customerSection": "Kao kupac",
+      "proSection": "Kao profesionalac",
+      "saveError": "Podešavanje nije sačuvano",
+      "emailToggleAria": "Email obaveštenja: {label}",
+      "customer": {
+        "newBid": "Nova ponuda na vaš zahtev",
+        "bidUpdates": "Ponuda prihvaćena / niste izabrani",
+        "messages": "Nove poruke",
+        "statusChange": "Ažuriranja statusa zahteva",
+        "reviews": "Nove ocene"
+      },
+      "pro": {
+        "newMatch": "Novi odgovarajući zahtev",
+        "bidUpdates": "Ponuda prihvaćena / odbijena",
+        "messages": "Nove poruke",
+        "reviews": "Nove ocene",
+        "verification": "Status verifikacije"
+      }
     },
     "profile": {
       "title": "Podešavanja profila",
@@ -1051,7 +1074,9 @@
         "push": {
           "title": "Push",
           "soon": "Uskoro"
-        }
+        },
+        "manageHint": "Podesite email po tipu obaveštenja na posebnoj stranici.",
+        "manageLink": "Podešavanja obaveštenja"
       },
       "account": {
         "title": "Nalog",
@@ -1311,5 +1336,20 @@
       "card4": "9 језика",
       "card4Desc": "Комуницирајте на више језика"
     }
+  },
+  "validation": {
+    "required": "Ovo polje je obavezno",
+    "minLength": "Najmanje {min} karaktera",
+    "maxLength": "Najviše {max} karaktera",
+    "email": "Unesite važeću email adresu",
+    "phone": "Unesite važeći broj telefona",
+    "minNumber": "Najmanje {min}",
+    "maxNumber": "Najviše {max}",
+    "invalidUrl": "Unesite važeći URL",
+    "invalidUuid": "Nevažeći identifikator",
+    "maxItems": "Najviše {max} stavki",
+    "passwordMismatch": "Lozinke se ne poklapaju",
+    "categoryRequired": "Izaberite bar jednu kategoriju",
+    "avatarRequired": "Dodajte fotografiju profila da nastavite"
   }
 }

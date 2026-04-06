@@ -51,7 +51,7 @@ export async function translateMessage(
 ): Promise<TranslationResult | null> {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
-    console.warn("[TRANSLATE] OPENAI_API_KEY not set, skipping translation");
+    console.warn("[GLATKO:translate] OPENAI_API_KEY not set, skipping translation");
     return null;
   }
 
@@ -108,7 +108,7 @@ Hello, I can come tomorrow at 3 PM.`,
 
     return { translatedContent, detectedLocale };
   } catch (err) {
-    console.error("[TRANSLATE] Translation failed:", err);
+    console.error("[GLATKO:translate] Translation failed:", err);
     return null;
   }
 }

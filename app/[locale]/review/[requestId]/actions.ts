@@ -1,27 +1,21 @@
 "use server";
 
-import { z } from "zod";
+import { getLocale, getTranslations } from "next-intl/server";
 import { createClient } from "@/supabase/server";
 import { createReview, createNotification } from "@/lib/supabase/glatko.server";
+import {
+  createReviewSubmitSchema,
+  type ReviewSubmitInput,
+} from "@/lib/validations/review-submit";
 
-const reviewSchema = z.object({
-  serviceRequestId: z.string().uuid(),
-  bidId: z.string().uuid(),
-  revieweeId: z.string().uuid(),
-  reviewerRole: z.enum(["customer", "professional"]),
-  overallRating: z.number().int().min(1).max(5),
-  qualityRating: z.number().int().min(1).max(5).optional(),
-  communicationRating: z.number().int().min(1).max(5).optional(),
-  punctualityRating: z.number().int().min(1).max(5).optional(),
-  reviewText: z.string().max(1000).optional(),
-  photos: z.array(z.string().url()).max(3).default([]),
-});
-
-type ReviewInput = z.infer<typeof reviewSchema>;
+type ReviewInput = ReviewSubmitInput;
 
 export async function submitReviewAction(
   input: ReviewInput
 ): Promise<{ success: boolean; error?: string }> {
+  const locale = await getLocale();
+  const t = await getTranslations({ locale, namespace: "validation" });
+  const reviewSchema = createReviewSubmitSchema((key, values) => t(key, values));
   const parsed = reviewSchema.safeParse(input);
   if (!parsed.success) {
     return {

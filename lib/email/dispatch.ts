@@ -22,6 +22,10 @@ import ReviewReceivedEmail from "@/lib/email/templates/review-received";
 import SimpleActionEmail from "@/lib/email/templates/simple-action-email";
 import StatusChangeEmail from "@/lib/email/templates/status-change";
 import { createAdminClient } from "@/supabase/server";
+import {
+  normalizeNotificationPrefs,
+  type NotificationPrefsRow,
+} from "@/lib/notifications/prefs";
 
 export type DispatchNotificationType =
   | "new_request_match"
@@ -34,13 +38,30 @@ export type DispatchNotificationType =
   | "verification_approved"
   | "verification_rejected";
 
-type NotificationPrefsRow = {
-  email_new_bid?: boolean;
-  email_new_message?: boolean;
-  email_new_review?: boolean;
-  email_new_request_match?: boolean;
-  push_enabled?: boolean;
-};
+const CRITICAL_EMAIL_TYPES = new Set<string>([
+  "bid_accepted",
+  "verification_approved",
+  "verification_rejected",
+]);
+
+const DEFAULT_USER_TIMEZONE = "Europe/Podgorica";
+const DAILY_EMAIL_NOTIFICATION_CAP = 15;
+
+function isCriticalEmailType(type: string): boolean {
+  return CRITICAL_EMAIL_TYPES.has(type);
+}
+
+function isQuietHours(timezone: string = DEFAULT_USER_TIMEZONE): boolean {
+  const now = new Date();
+  const hourStr = new Intl.DateTimeFormat("en-GB", {
+    timeZone: timezone,
+    hour: "numeric",
+    hour12: false,
+  }).format(now);
+  const hour = parseInt(hourStr, 10);
+  if (Number.isNaN(hour)) return false;
+  return hour >= 22 || hour < 8;
+}
 
 const EMAIL_LOCALES: readonly EmailLocale[] = [
   "en",
@@ -63,27 +84,27 @@ function coerceEmailLocale(raw: string | null | undefined): EmailLocale {
 
 function shouldSendEmailForType(
   type: DispatchNotificationType,
-  prefs: NotificationPrefsRow | null,
+  rawPrefs: NotificationPrefsRow | null | undefined,
 ): boolean {
-  if (!prefs) return true;
+  const prefs = normalizeNotificationPrefs(rawPrefs ?? {});
 
   switch (type) {
     case "new_bid":
-      return prefs.email_new_bid !== false;
+      return prefs.email_new_bid;
     case "new_request_match":
-      return prefs.email_new_request_match !== false;
+      return prefs.email_new_request_match;
     case "bid_accepted":
-      return prefs.email_new_message !== false;
+    case "bid_rejected":
+      return prefs.email_pro_bid_outcome;
     case "message":
-      return prefs.email_new_message !== false;
+      return prefs.email_new_message;
     case "review":
-      return prefs.email_new_review !== false;
+      return prefs.email_new_review;
     case "status_change":
-      return prefs.email_new_bid !== false;
+      return prefs.email_status_change;
     case "verification_approved":
     case "verification_rejected":
-    case "bid_rejected":
-      return prefs.email_new_bid !== false;
+      return prefs.email_verification;
     default:
       return true;
   }
@@ -292,11 +313,6 @@ export async function dispatchNotificationEmail(params: {
   body?: string;
 }): Promise<void> {
   try {
-    console.log("[GLATKO-EMAIL] dispatch called:", {
-      userId: params.userId,
-      type: params.type,
-    });
-
     const type = params.type as DispatchNotificationType;
     const allowed: readonly string[] = [
       "new_request_match",
@@ -310,7 +326,6 @@ export async function dispatchNotificationEmail(params: {
       "verification_rejected",
     ];
     if (!allowed.includes(type)) {
-      console.log("[GLATKO-EMAIL] type not in allowed list:", type);
       return;
     }
 
@@ -319,18 +334,13 @@ export async function dispatchNotificationEmail(params: {
     const { data: authData, error: authErr } =
       await admin.auth.admin.getUserById(params.userId);
     if (authErr || !authData?.user?.email) {
-      console.error("[GLATKO-EMAIL] getUserById failed:", {
-        authErr,
-        hasUser: !!authData?.user,
-      });
+      console.error("[GLATKO:dispatch] getUserById failed:", authErr);
       return;
     }
     const to = authData.user.email.trim();
     if (!to) {
-      console.log("[GLATKO-EMAIL] recipient email empty after trim");
       return;
     }
-    console.log("[GLATKO-EMAIL] recipient email:", to);
 
     const { data: profile } = await admin
       .from("profiles")
@@ -338,17 +348,52 @@ export async function dispatchNotificationEmail(params: {
       .eq("id", params.userId)
       .maybeSingle();
 
-    const prefs = (profile?.notification_prefs as NotificationPrefsRow | null) ?? null;
+    const row = profile as {
+      full_name?: string | null;
+      preferred_locale?: string | null;
+      notification_prefs?: unknown;
+    } | null;
+
+    const prefs = row?.notification_prefs as NotificationPrefsRow | null;
     if (!shouldSendEmailForType(type, prefs)) {
-      console.log(
-        "[GLATKO-EMAIL] email disabled by user prefs for type:",
-        type,
+      return;
+    }
+
+    /** When `profiles.timezone` is added, select it above and pass here. */
+    const userTimezone = DEFAULT_USER_TIMEZONE;
+
+    if (isQuietHours(userTimezone) && !isCriticalEmailType(type)) {
+      console.warn(
+        `[GLATKO:dispatch] Quiet hours (${userTimezone}), skipping email for type ${type}`,
       );
       return;
     }
 
-    const locale = coerceEmailLocale(profile?.preferred_locale ?? undefined);
-    const recipientName = profile?.full_name?.trim() || "";
+    if (!isCriticalEmailType(type)) {
+      const since = new Date(
+        Date.now() - 24 * 60 * 60 * 1000,
+      ).toISOString();
+      const { count, error: countErr } = await admin
+        .from("glatko_notifications")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", params.userId)
+        .gte("created_at", since)
+        .neq("type", "message");
+
+      if (
+        !countErr &&
+        count != null &&
+        count > DAILY_EMAIL_NOTIFICATION_CAP
+      ) {
+        console.warn(
+          `[GLATKO:dispatch] Daily email-related notification cap (${DAILY_EMAIL_NOTIFICATION_CAP}) exceeded for user ${params.userId}`,
+        );
+        return;
+      }
+    }
+
+    const locale = coerceEmailLocale(row?.preferred_locale ?? undefined);
+    const recipientName = row?.full_name?.trim() || "";
 
     const mergedData: Record<string, unknown> = {
       ...(params.data ?? {}),
@@ -376,9 +421,6 @@ export async function dispatchNotificationEmail(params: {
           return c === convId;
         }).length;
         if (sameConvCount > 1) {
-          console.log(
-            "[GLATKO-EMAIL] message email skipped (5min flood window for conversation)",
-          );
           return;
         }
       }
@@ -392,7 +434,6 @@ export async function dispatchNotificationEmail(params: {
     });
 
     if (!emailContent) {
-      console.log("[GLATKO-EMAIL] no template for type:", type);
       return;
     }
 
@@ -402,16 +443,10 @@ export async function dispatchNotificationEmail(params: {
       react: emailContent.react,
     });
 
-    console.log("[GLATKO-EMAIL] sendEmail result:", {
-      success: result.success,
-      messageId: result.success ? result.messageId : undefined,
-      error: result.success ? undefined : result.error,
-    });
-
     if (!result.success) {
-      console.error("[GLATKO-EMAIL] sendEmail failed:", result.error);
+      console.error("[GLATKO:dispatch] sendEmail failed:", result.error);
     }
   } catch (error) {
-    console.error("[GLATKO-EMAIL] dispatchNotificationEmail failed:", error);
+    console.error("[GLATKO:dispatch] dispatchNotificationEmail failed:", error);
   }
 }

@@ -992,7 +992,30 @@
       "bidUpdates": "Bid Updates",
       "messages": "Messages",
       "statusChanges": "Status Changes",
-      "reviews": "Reviews"
+      "reviews": "Reviews",
+      "subtitle": "Choose how we reach you. Email updates apply immediately; push is coming soon.",
+      "columnNotification": "Notification",
+      "columnEmail": "Email",
+      "columnPush": "Push",
+      "pushComingSoon": "Coming soon",
+      "customerSection": "As a customer",
+      "proSection": "As a professional",
+      "saveError": "Could not save your preference",
+      "emailToggleAria": "Email notifications: {label}",
+      "customer": {
+        "newBid": "New bid on your request",
+        "bidUpdates": "Bid accepted / not selected (emails to you)",
+        "messages": "New messages",
+        "statusChange": "Request status updates",
+        "reviews": "New reviews"
+      },
+      "pro": {
+        "newMatch": "New matching request",
+        "bidUpdates": "Bid accepted / not selected",
+        "messages": "New messages",
+        "reviews": "New reviews",
+        "verification": "Verification status"
+      }
     },
     "profile": {
       "title": "Profile settings",
@@ -1051,7 +1074,9 @@
         "push": {
           "title": "Push notifications",
           "soon": "Coming soon"
-        }
+        },
+        "manageHint": "Choose email per notification type on the dedicated notifications page.",
+        "manageLink": "Notification settings"
       },
       "account": {
         "title": "Account",
@@ -1311,5 +1336,20 @@
       "card4": "9 languages",
       "card4Desc": "Connect with customers in multiple languages"
     }
+  },
+  "validation": {
+    "required": "This field is required",
+    "minLength": "Must be at least {min} characters",
+    "maxLength": "Must be at most {max} characters",
+    "email": "Enter a valid email address",
+    "phone": "Enter a valid phone number",
+    "minNumber": "Must be at least {min}",
+    "maxNumber": "Must be at most {max}",
+    "invalidUrl": "Enter a valid URL",
+    "invalidUuid": "Invalid identifier",
+    "maxItems": "At most {max} items allowed",
+    "passwordMismatch": "Passwords do not match",
+    "categoryRequired": "Select at least one category",
+    "avatarRequired": "Add a profile photo to continue"
   }
 }

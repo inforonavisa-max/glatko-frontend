@@ -9,14 +9,14 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
-  profileFieldsSchema,
+  createProfileFieldsSchema,
   type ProfileFormValues,
 } from "@/lib/validations/profile";
 import type { UserProfileRow } from "@/lib/actions/profile";
 import { updateProfile } from "@/lib/actions/profile";
 import { AvatarUpload } from "@/components/settings/AvatarUpload";
 import { LanguageSelector } from "@/components/settings/LanguageSelector";
-import { NotificationPrefs } from "@/components/settings/NotificationPrefs";
+import { Link } from "@/i18n/navigation";
 import { PasswordChangeModal } from "@/components/settings/PasswordChangeModal";
 import { DeactivateModal } from "@/components/settings/DeactivateModal";
 import { DeleteAccountModal } from "@/components/settings/DeleteAccountModal";
@@ -62,6 +62,7 @@ export function ProfileForm({ initialProfile, email }: ProfileFormProps) {
   const t = useTranslations("settings.profile");
   const tp = useTranslations("settings.profile.personal");
   const tCities = useTranslations("cities");
+  const tVal = useTranslations("validation");
   const router = useRouter();
   const [pwdOpen, setPwdOpen] = useState(false);
   const [deactivateOpen, setDeactivateOpen] = useState(false);
@@ -77,8 +78,13 @@ export function ProfileForm({ initialProfile, email }: ProfileFormProps) {
     [initialProfile]
   );
 
+  const profileSchema = useMemo(
+    () => createProfileFieldsSchema((key, values) => tVal(key, values)),
+    [tVal],
+  );
+
   const form = useForm<ProfileFormValues>({
-    resolver: zodResolver(profileFieldsSchema),
+    resolver: zodResolver(profileSchema),
     defaultValues,
   });
 
@@ -176,9 +182,7 @@ export function ProfileForm({ initialProfile, email }: ProfileFormProps) {
           />
           {form.formState.errors.full_name && (
             <p className="mt-1 text-xs text-red-600 dark:text-red-400">
-              {form.formState.errors.full_name.message === "min2"
-                ? tp("validation.nameMin")
-                : form.formState.errors.full_name.message}
+              {form.formState.errors.full_name.message}
             </p>
           )}
         </div>
@@ -251,9 +255,7 @@ export function ProfileForm({ initialProfile, email }: ProfileFormProps) {
           </div>
           {form.formState.errors.bio && (
             <p className="mt-1 text-xs text-red-600 dark:text-red-400">
-              {form.formState.errors.bio.message === "bioMax"
-                ? tp("validation.bioMax")
-                : form.formState.errors.bio.message}
+              {form.formState.errors.bio.message}
             </p>
           )}
         </div>
@@ -279,7 +281,19 @@ export function ProfileForm({ initialProfile, email }: ProfileFormProps) {
       </form>
 
       <div className={glassCard}>
-        <NotificationPrefs initial={initialProfile.notification_prefs} />
+        <h2 className="font-serif text-lg font-semibold text-gray-900 dark:text-white">
+          {t("notifications.title")}
+        </h2>
+        <div className="mt-2 h-0.5 w-16 rounded-full bg-gradient-to-r from-teal-500 to-teal-600" />
+        <p className="mt-3 text-sm text-gray-600 dark:text-white/55">
+          {t("notifications.manageHint")}
+        </p>
+        <Link
+          href="/settings/notifications"
+          className="mt-4 inline-flex items-center justify-center rounded-xl bg-teal-500/10 px-4 py-2.5 text-sm font-medium text-teal-700 transition-colors hover:bg-teal-500/15 dark:text-teal-300 dark:hover:bg-teal-500/20"
+        >
+          {t("notifications.manageLink")}
+        </Link>
       </div>
 
       <div className={glassCard}>

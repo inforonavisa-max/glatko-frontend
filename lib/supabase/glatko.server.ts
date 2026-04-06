@@ -70,16 +70,9 @@ export async function getProfessionalsByStatus(
   const hasUrl = !!process.env.NEXT_PUBLIC_SUPABASE_URL;
   const hasServiceRole = !!process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-  console.error("[getProfessionalsByStatus] query start", {
-    statusFilter: status ?? "(none)",
-    hasSupabaseUrl: hasUrl,
-    hasServiceRoleKey: hasServiceRole,
-  });
-
   if (!hasUrl || !hasServiceRole) {
-    console.error(
-      "[getProfessionalsByStatus] missing env — using dummy client; query will not return real data",
-      { hasSupabaseUrl: hasUrl, hasServiceRoleKey: hasServiceRole }
+    console.warn(
+      "[GLATKO:admin] Missing Supabase URL or service role — professionals list may be empty",
     );
   }
 
@@ -96,34 +89,13 @@ export async function getProfessionalsByStatus(
 
   const { data, error } = await query;
 
-  console.error("[getProfessionalsByStatus] query result", {
-    rowCount: Array.isArray(data) ? data.length : data == null ? "null" : "non-array",
-    error: error
-      ? {
-          message: error.message,
-          code: error.code,
-          details: error.details,
-          hint: error.hint,
-        }
-      : null,
-  });
-
   if (error) {
-    console.error("[getProfessionalsByStatus] Supabase error (returning empty list):", error);
+    console.error("[GLATKO:admin] getProfessionalsByStatus query failed:", error);
     return [];
   }
 
   if (!data) {
-    console.error(
-      "[getProfessionalsByStatus] data is null/undefined (returning empty list)"
-    );
     return [];
-  }
-
-  if (data.length === 0) {
-    console.error(
-      "[getProfessionalsByStatus] zero rows — table empty for this filter or wrong Supabase project URL"
-    );
   }
 
   return data.map((row) => ({
@@ -303,7 +275,7 @@ export async function getServiceRequest(requestId: string) {
     .single();
 
   if (error) {
-    console.error("getServiceRequest error:", error, "requestId:", requestId);
+    console.error("[GLATKO:requests] getServiceRequest failed:", error, requestId);
     return null;
   }
   return data;
@@ -508,7 +480,7 @@ export async function getMatchingRequests(professionalId: string) {
     .order("created_at", { ascending: false });
 
   if (error) {
-    console.error("[GLATKO] getMatchingRequests query failed:", error);
+    console.error("[GLATKO:pro] getMatchingRequests query failed:", error);
     return [];
   }
 
@@ -560,7 +532,7 @@ export async function getProfessionalBids(professionalId: string) {
     .order("created_at", { ascending: false });
 
   if (error) {
-    console.error("[GLATKO] getProfessionalBids query failed:", error);
+    console.error("[GLATKO:pro] getProfessionalBids query failed:", error);
     return [];
   }
   return data || [];
@@ -865,7 +837,7 @@ export async function sendMessage(data: {
           }
         }
       } catch (err) {
-        console.error("[GLATKO] translateMessage failed:", err);
+        console.error("[GLATKO:translate] translateMessage failed:", err);
       }
     }
   } else {
@@ -1172,7 +1144,7 @@ export async function createNotification(data: {
   const admin = createAdminClient();
   const { error } = await admin.from("glatko_notifications").insert(data);
   if (error) {
-    console.error("[GLATKO] createNotification insert failed:", error);
+    console.error("[GLATKO:notifications] createNotification insert failed:", error);
     return;
   }
 
@@ -1185,7 +1157,7 @@ export async function createNotification(data: {
       body: data.body,
     });
   } catch (err) {
-    console.error("[GLATKO-EMAIL] dispatch failed:", err);
+    console.error("[GLATKO:dispatch] createNotification email hook failed:", err);
   }
 }
 
@@ -1212,7 +1184,7 @@ export async function getUserNotifications(
 
   const { data, error } = await query;
   if (error) {
-    console.error("[GLATKO] getUserNotifications failed:", error);
+    console.error("[GLATKO:notifications] getUserNotifications failed:", error);
     return [];
   }
   return data || [];
@@ -1256,7 +1228,7 @@ export async function getUnreadNotificationCount(
     .eq("user_id", userId)
     .is("read_at", null);
   if (error) {
-    console.error("[GLATKO] getUnreadNotificationCount failed:", error);
+    console.error("[GLATKO:notifications] getUnreadNotificationCount failed:", error);
     return 0;
   }
   return count || 0;

@@ -1,29 +1,14 @@
 "use server";
 
 import { z } from "zod";
+import { getLocale, getTranslations } from "next-intl/server";
 import { createClient } from "@/supabase/server";
 import { pickLocalizedLabel } from "@/lib/i18n/pick-localized-label";
 import {
   createServiceRequest,
   notifyProfessionalsOfNewRequest,
 } from "@/lib/supabase/glatko.server";
-
-const createRequestSchema = z.object({
-  categoryId: z.string().uuid(),
-  title: z.string().min(3).max(200),
-  description: z.string().max(2000).optional(),
-  details: z.record(z.unknown()),
-  municipality: z.string().min(1),
-  address: z.string().max(500).optional(),
-  budgetMin: z.number().positive().optional().nullable(),
-  budgetMax: z.number().positive().optional().nullable(),
-  urgency: z.enum(["asap", "this_week", "flexible", "specific_date"]),
-  preferredDateStart: z.string().optional().nullable(),
-  preferredDateEnd: z.string().optional().nullable(),
-  photos: z.array(z.string().url()).max(5).default([]),
-  phone: z.string().min(6).max(20),
-  email: z.string().email().optional().nullable(),
-});
+import { createServiceRequestSchema } from "@/lib/validations/service-request";
 
 interface SubmitResult {
   success: boolean;
@@ -74,7 +59,11 @@ export async function submitServiceRequest(
     address: ((formData.get("address") as string) || "").trim() || undefined,
     budgetMin: budgetMinStr ? Number(budgetMinStr) : null,
     budgetMax: budgetMaxStr ? Number(budgetMaxStr) : null,
-    urgency: ((formData.get("urgency") as string) || "flexible") as z.infer<typeof createRequestSchema>["urgency"],
+    urgency: ((formData.get("urgency") as string) || "flexible") as
+      | "asap"
+      | "this_week"
+      | "flexible"
+      | "specific_date",
     preferredDateStart: (formData.get("dateStart") as string) || null,
     preferredDateEnd: (formData.get("dateEnd") as string) || null,
     photos,
@@ -82,6 +71,11 @@ export async function submitServiceRequest(
     email: emailStr || null,
   };
 
+  const locale = await getLocale();
+  const t = await getTranslations({ locale, namespace: "validation" });
+  const createRequestSchema = createServiceRequestSchema((key, values) =>
+    t(key, values),
+  );
   const parsed = createRequestSchema.safeParse(rawData);
   if (!parsed.success) {
     const fieldErrors = parsed.error.flatten().fieldErrors;

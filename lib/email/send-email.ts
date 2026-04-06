@@ -53,7 +53,7 @@ export async function sendEmail(
 ): Promise<SendEmailResult> {
   const client = getResendClient();
   if (!client) {
-    console.warn("[GLATKO-EMAIL] skip send: Resend client unavailable");
+    console.warn("[GLATKO:email] skip send: Resend client unavailable");
     return {
       success: false,
       error: "Resend not configured",
@@ -68,7 +68,7 @@ export async function sendEmail(
       const { success } = await limiter.limit(recipientKey);
       if (!success) {
         console.warn(
-          "[GLATKO-EMAIL] rate limit exceeded for recipient",
+          "[GLATKO:email] rate limit exceeded for recipient",
           recipientKey,
         );
         return {
@@ -79,7 +79,7 @@ export async function sendEmail(
       }
     } catch (err) {
       console.warn(
-        "[GLATKO-EMAIL] rate limit check failed; continuing (fail-open)",
+        "[GLATKO:email] rate limit check failed; continuing (fail-open)",
         err instanceof Error ? err.message : err,
       );
     }
@@ -105,13 +105,13 @@ export async function sendEmail(
     });
 
     if (error) {
-      console.error("[GLATKO-EMAIL] Resend API error", error);
+      console.error("[GLATKO:email] Resend API error", error);
       return { success: false, error: error.message };
     }
 
     return { success: true, messageId: data?.id };
   } catch (err) {
-    console.error("[GLATKO-EMAIL] send failed", err);
+    console.error("[GLATKO:email] send failed", err);
     return {
       success: false,
       error: err instanceof Error ? err.message : "Email send failed",

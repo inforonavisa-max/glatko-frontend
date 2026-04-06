@@ -992,7 +992,30 @@
       "bidUpdates": "Обновления предложений",
       "messages": "Сообщения",
       "statusChanges": "Изменения статуса",
-      "reviews": "Отзывы"
+      "reviews": "Отзывы",
+      "subtitle": "Выберите способ связи. Email применяется сразу; push — скоро.",
+      "columnNotification": "Уведомление",
+      "columnEmail": "Почта",
+      "columnPush": "Push",
+      "pushComingSoon": "Скоро",
+      "customerSection": "Как заказчик",
+      "proSection": "Как специалист",
+      "saveError": "Не удалось сохранить настройку",
+      "emailToggleAria": "Email-уведомления: {label}",
+      "customer": {
+        "newBid": "Новое предложение по заявке",
+        "bidUpdates": "Предложение принято / не выбраны",
+        "messages": "Новые сообщения",
+        "statusChange": "Обновления статуса заявки",
+        "reviews": "Новые отзывы"
+      },
+      "pro": {
+        "newMatch": "Новая подходящая заявка",
+        "bidUpdates": "Предложение принято / отклонено",
+        "messages": "Новые сообщения",
+        "reviews": "Новые отзывы",
+        "verification": "Статус верификации"
+      }
     },
     "profile": {
       "title": "Настройки профиля",
@@ -1051,7 +1074,9 @@
         "push": {
           "title": "Push",
           "soon": "Скоро"
-        }
+        },
+        "manageHint": "Настройте email по типам уведомлений на отдельной странице.",
+        "manageLink": "Настройки уведомлений"
       },
       "account": {
         "title": "Аккаунт",
@@ -1311,5 +1336,20 @@
       "card4": "9 языков",
       "card4Desc": "Общайтесь с клиентами на разных языках"
     }
+  },
+  "validation": {
+    "required": "Это поле обязательно",
+    "minLength": "Минимум {min} символов",
+    "maxLength": "Максимум {max} символов",
+    "email": "Введите корректный email",
+    "phone": "Введите корректный номер телефона",
+    "minNumber": "Не меньше {min}",
+    "maxNumber": "Не больше {max}",
+    "invalidUrl": "Введите корректный URL",
+    "invalidUuid": "Некорректный идентификатор",
+    "maxItems": "Не более {max} элементов",
+    "passwordMismatch": "Пароли не совпадают",
+    "categoryRequired": "Выберите хотя бы одну категорию",
+    "avatarRequired": "Добавьте фото профиля, чтобы продолжить"
   }
 }

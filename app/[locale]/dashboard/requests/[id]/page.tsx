@@ -83,7 +83,6 @@ export default async function RequestDetailPage({ params }: Props) {
   }
 
   const request = await getServiceRequest(id);
-  console.log("Request detail:", { id, found: !!request });
   if (!request) notFound();
 
   const t = await getTranslations();
