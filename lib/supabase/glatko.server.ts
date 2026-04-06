@@ -762,6 +762,11 @@ export async function sendMessage(data: {
   skipTranslation?: boolean;
   /** When skipTranslation, language code of `content` for display metadata. */
   forcedOriginalLocale?: string;
+  /** When skipTranslation: DB `original_locale` (e.g. sender language for system lines). */
+  original_locale?: string | null;
+  /** When skipTranslation: precomputed translation for the recipient (e.g. bid-accepted pro copy). */
+  translated_content?: string | null;
+  translated_locale?: string | null;
 }) {
   const supabase = createClient();
 
@@ -816,9 +821,36 @@ export async function sendMessage(data: {
   let translatedLocale: string | null = null;
 
   if (data.skipTranslation) {
-    const forced =
-      data.forcedOriginalLocale?.trim().toLowerCase().split(/[-_]/)[0] || "en";
-    originalLocale = forced.slice(0, 16);
+    const hasManualTranslation =
+      data.translated_content != null &&
+      String(data.translated_content).trim() !== "" &&
+      data.translated_locale != null &&
+      String(data.translated_locale).trim() !== "";
+
+    if (hasManualTranslation) {
+      translatedContent = String(data.translated_content).trim();
+      translatedLocale =
+        String(data.translated_locale)
+          .trim()
+          .toLowerCase()
+          .split(/[-_]/)[0]
+          ?.slice(0, 16) || recipientLocale.slice(0, 16);
+      const origParam =
+        data.original_locale?.trim() ||
+        data.forcedOriginalLocale?.trim() ||
+        senderRaw;
+      originalLocale =
+        origParam.toLowerCase().split(/[-_]/)[0]?.slice(0, 16) ||
+        senderLocale.slice(0, 16);
+    } else {
+      const forced =
+        data.original_locale?.trim().toLowerCase().split(/[-_]/)[0] ||
+        data.forcedOriginalLocale?.trim().toLowerCase().split(/[-_]/)[0] ||
+        senderLocale;
+      originalLocale = forced.slice(0, 16);
+      translatedContent = null;
+      translatedLocale = null;
+    }
   } else if (contentType === "text" && data.content.trim()) {
     originalLocale = senderLocale.slice(0, 16);
     if (senderLocale !== recipientLocale) {

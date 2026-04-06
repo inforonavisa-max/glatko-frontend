@@ -50,41 +50,56 @@ export async function acceptBidAction(
       conversationId = conversation.id;
 
       const admin = createAdminClient();
-      const { data: proProfile } = await admin
-        .from("profiles")
-        .select("preferred_locale")
-        .eq("id", bid.professional_id)
-        .maybeSingle();
-      const proLocale = proProfile?.preferred_locale ?? "en";
-      const bidAcceptedContent =
-        getBidAcceptedMessageForRecipientLocale(proLocale);
+      const [{ data: proProfile }, { data: customerRow }] = await Promise.all([
+        admin
+          .from("profiles")
+          .select("preferred_locale")
+          .eq("id", bid.professional_id)
+          .maybeSingle(),
+        admin
+          .from("profiles")
+          .select("preferred_locale, full_name")
+          .eq("id", user.id)
+          .maybeSingle(),
+      ]);
+
+      const normLocale = (l: string | null | undefined) =>
+        (l ?? "en").trim().toLowerCase().split(/[-_]/)[0]?.slice(0, 16) ||
+        "en";
+
+      const proLocaleNorm = normLocale(proProfile?.preferred_locale);
+      const customerLocaleNorm = normLocale(customerRow?.preferred_locale);
+
+      const customerContent = getBidAcceptedMessageForRecipientLocale(
+        customerRow?.preferred_locale,
+      );
+      const proContent = getBidAcceptedMessageForRecipientLocale(
+        proProfile?.preferred_locale,
+      );
 
       await sendMessage({
         conversation_id: conversation.id,
         sender_id: user.id,
-        content: bidAcceptedContent,
+        content: customerContent,
         content_type: "text",
         skipRecipientNotification: true,
         skipTranslation: true,
-        forcedOriginalLocale: proLocale,
+        ...(proLocaleNorm !== customerLocaleNorm && {
+          original_locale: customerLocaleNorm,
+          translated_content: proContent,
+          translated_locale: proLocaleNorm,
+        }),
       });
 
-      const [{ data: reqData }, { data: customerProfile }] = await Promise.all([
-        supabase
-          .from("glatko_service_requests")
-          .select("title")
-          .eq("id", requestId)
-          .single(),
-        supabase
-          .from("profiles")
-          .select("full_name")
-          .eq("id", user.id)
-          .single(),
-      ]);
+      const { data: reqData } = await supabase
+        .from("glatko_service_requests")
+        .select("title")
+        .eq("id", requestId)
+        .single();
 
       const requestTitle = reqData?.title || "a request";
       const customerName =
-        customerProfile?.full_name?.trim() || "A customer";
+        customerRow?.full_name?.trim() || "A customer";
       const priceLabel = new Intl.NumberFormat("en-US", {
         minimumFractionDigits: 0,
         maximumFractionDigits: 2,
