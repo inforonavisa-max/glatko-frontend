@@ -14,7 +14,7 @@ export async function getNotificationsAction(limit = 20, unreadOnly = false) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return [];
-  return getUserNotifications(user.id, limit, unreadOnly);
+  return getUserNotifications(user.id, limit, unreadOnly, supabase);
 }
 
 export async function markReadAction(notificationId: string) {
@@ -23,7 +23,7 @@ export async function markReadAction(notificationId: string) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return;
-  await markNotificationRead(notificationId, user.id);
+  await markNotificationRead(notificationId, user.id, supabase);
 }
 
 export async function markAllReadAction() {
@@ -32,7 +32,7 @@ export async function markAllReadAction() {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return;
-  await markAllNotificationsRead(user.id);
+  await markAllNotificationsRead(user.id, supabase);
 }
 
 export async function getUnreadCountAction() {
@@ -41,5 +41,5 @@ export async function getUnreadCountAction() {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return 0;
-  return getUnreadNotificationCount(user.id);
+  return getUnreadNotificationCount(user.id, supabase);
 }

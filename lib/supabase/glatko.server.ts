@@ -967,23 +967,29 @@ export async function createNotification(data: {
     return;
   }
 
-  void dispatchNotificationEmail({
-    userId: data.user_id,
-    type: data.type,
-    data: data.data,
-    title: data.title,
-    body: data.body,
-  }).catch((err) => {
-    console.error("[GLATKO-EMAIL] dispatch failed (non-blocking):", err);
-  });
+  try {
+    await dispatchNotificationEmail({
+      userId: data.user_id,
+      type: data.type,
+      data: data.data,
+      title: data.title,
+      body: data.body,
+    });
+  } catch (err) {
+    console.error("[GLATKO-EMAIL] dispatch failed:", err);
+  }
 }
+
+type GlatkoServerSupabase = ReturnType<typeof createClient>;
 
 export async function getUserNotifications(
   userId: string,
   limit = 20,
-  unreadOnly = false
+  unreadOnly = false,
+  /** Same request-scoped client as `auth.getUser()` so JWT refresh applies to the SELECT. */
+  supabaseArg?: GlatkoServerSupabase,
 ) {
-  const supabase = createClient();
+  const supabase = supabaseArg ?? createClient();
   let query = supabase
     .from("glatko_notifications")
     .select("*")
@@ -996,15 +1002,19 @@ export async function getUserNotifications(
   }
 
   const { data, error } = await query;
-  if (error) throw error;
+  if (error) {
+    console.error("[GLATKO] getUserNotifications failed:", error);
+    return [];
+  }
   return data || [];
 }
 
 export async function markNotificationRead(
   notificationId: string,
-  userId: string
+  userId: string,
+  supabaseArg?: GlatkoServerSupabase,
 ) {
-  const supabase = createClient();
+  const supabase = supabaseArg ?? createClient();
   const { error } = await supabase
     .from("glatko_notifications")
     .update({ read_at: new Date().toISOString() })
@@ -1013,8 +1023,11 @@ export async function markNotificationRead(
   if (error) throw error;
 }
 
-export async function markAllNotificationsRead(userId: string) {
-  const supabase = createClient();
+export async function markAllNotificationsRead(
+  userId: string,
+  supabaseArg?: GlatkoServerSupabase,
+) {
+  const supabase = supabaseArg ?? createClient();
   const { error } = await supabase
     .from("glatko_notifications")
     .update({ read_at: new Date().toISOString() })
@@ -1023,14 +1036,20 @@ export async function markAllNotificationsRead(userId: string) {
   if (error) throw error;
 }
 
-export async function getUnreadNotificationCount(userId: string) {
-  const supabase = createClient();
+export async function getUnreadNotificationCount(
+  userId: string,
+  supabaseArg?: GlatkoServerSupabase,
+) {
+  const supabase = supabaseArg ?? createClient();
   const { count, error } = await supabase
     .from("glatko_notifications")
     .select("id", { count: "exact", head: true })
     .eq("user_id", userId)
     .is("read_at", null);
-  if (error) return 0;
+  if (error) {
+    console.error("[GLATKO] getUnreadNotificationCount failed:", error);
+    return 0;
+  }
   return count || 0;
 }
 

@@ -53,7 +53,7 @@ type FilterType = "all" | "unread" | "bids" | "messages" | "status" | "reviews";
 const filterToTypes: Record<FilterType, string[] | null> = {
   all: null,
   unread: null,
-  bids: ["new_bid", "bid_accepted", "bid_rejected"],
+  bids: ["new_bid", "bid_accepted", "bid_rejected", "new_request_match"],
   messages: ["message"],
   status: ["status_change", "verification_approved", "verification_rejected"],
   reviews: ["review"],
