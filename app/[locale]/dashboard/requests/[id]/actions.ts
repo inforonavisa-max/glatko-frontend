@@ -22,14 +22,16 @@ export async function cancelRequest(requestId: string): Promise<CancelResult> {
 export async function acceptBidAction(
   bidId: string,
   requestId: string
-): Promise<{ success: boolean; error?: string }> {
+): Promise<{ success: boolean; error?: string; conversationId?: string }> {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return { success: false, error: "Not authenticated" };
 
   try {
     await acceptBid(bidId, requestId, user.id);
-    
+
+    let conversationId: string | undefined;
+
     const { data: bid } = await supabase
       .from("glatko_bids")
       .select("professional_id, price")
@@ -44,11 +46,14 @@ export async function acceptBidAction(
         professional_id: bid.professional_id,
       });
 
+      conversationId = conversation.id;
+
       await sendMessage({
         conversation_id: conversation.id,
         sender_id: user.id,
         content: "✅ Bid accepted! You can now discuss the details here.",
         content_type: "text",
+        skipRecipientNotification: true,
       });
 
       const [{ data: reqData }, { data: customerProfile }] = await Promise.all([
@@ -87,8 +92,8 @@ export async function acceptBidAction(
         },
       }).catch(() => {});
     }
-    
-    return { success: true };
+
+    return { success: true, conversationId };
   } catch (err) {
     return { success: false, error: err instanceof Error ? err.message : "Failed" };
   }

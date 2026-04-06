@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { createClient } from "@/supabase/browser";
 import { MessageSquare } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
+import { sendMessageAction } from "@/app/[locale]/inbox/[conversationId]/actions";
 import { ChatHeader } from "./ChatHeader";
 import { MessageBubble } from "./MessageBubble";
 import { ChatInput } from "./ChatInput";
@@ -76,7 +78,7 @@ export function ChatRoom({
   locale,
 }: ChatRoomProps) {
   const t = useTranslations();
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [sending, setSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -126,18 +128,9 @@ export function ChatRoom({
   const handleSend = async (content: string) => {
     setSending(true);
     try {
-      const { error } = await supabase.from("glatko_messages").insert({
-        conversation_id: conversationId,
-        sender_id: currentUserId,
-        content,
-        content_type: "text",
-      });
-
-      if (!error) {
-        await supabase
-          .from("glatko_conversations")
-          .update({ updated_at: new Date().toISOString() })
-          .eq("id", conversationId);
+      const result = await sendMessageAction(conversationId, content);
+      if (!result.success) {
+        toast.error(t("chat.sendFailed"));
       }
     } finally {
       setSending(false);

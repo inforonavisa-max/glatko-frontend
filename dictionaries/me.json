@@ -829,7 +829,11 @@
     "offline": "Posljednji put viđen",
     "today": "Danas",
     "yesterday": "Juče",
-    "you": "Vi"
+    "you": "Vi",
+    "fetchFailed": "Razgovori se nisu učitali",
+    "fetchFailedDesc": "Provjerite vezu i pokušajte ponovo.",
+    "counterpartPro": "Profesionalac",
+    "counterpartCustomer": "Klijent"
   },
   "chat": {
     "placeholder": "Unesite poruku...",
@@ -846,7 +850,8 @@
     "noMessages": "Još nema poruka — pošaljite prvu",
     "loadMore": "Učitaj starije poruke",
     "connectionLost": "Veza izgubljena — ponovo se povezuje...",
-    "connectionRestored": "Veza ponovo uspostavljena"
+    "connectionRestored": "Veza ponovo uspostavljena",
+    "sendFailed": "Poruka nije poslata. Pokušajte ponovo."
   },
   "review": {
     "title": "Ocijenite vaše iskustvo",

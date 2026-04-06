@@ -690,9 +690,26 @@ export async function getUserConversations(userId: string) {
 
   if (error) throw error;
 
-  return (data || []).map((conv) => ({
+  const rows = data || [];
+  const proIds = Array.from(
+    new Set(rows.map((c) => c.professional_id as string)),
+  );
+  const businessByPro = new Map<string, string | null>();
+  if (proIds.length > 0) {
+    const { data: proRows } = await supabase
+      .from("glatko_professional_profiles")
+      .select("id, business_name")
+      .in("id", proIds);
+    for (const p of proRows ?? []) {
+      businessByPro.set(p.id as string, (p.business_name as string | null) ?? null);
+    }
+  }
+
+  return rows.map((conv) => ({
     ...conv,
     last_message: conv.last_message?.[0] || null,
+    professional_business_name:
+      businessByPro.get(conv.professional_id as string) ?? null,
   }));
 }
 
@@ -739,6 +756,8 @@ export async function sendMessage(data: {
   content: string;
   content_type?: "text" | "image" | "file";
   file_url?: string;
+  /** System auto-replies (e.g. bid accepted line) should not notify the recipient again. */
+  skipRecipientNotification?: boolean;
 }) {
   const supabase = createClient();
 
@@ -760,6 +779,36 @@ export async function sendMessage(data: {
     .from("glatko_conversations")
     .update({ updated_at: new Date().toISOString() })
     .eq("id", data.conversation_id);
+
+  const { data: conversation } = await supabase
+    .from("glatko_conversations")
+    .select("customer_id, professional_id")
+    .eq("id", data.conversation_id)
+    .single();
+
+  if (conversation && !data.skipRecipientNotification) {
+    const recipientId =
+      conversation.customer_id === data.sender_id
+        ? conversation.professional_id
+        : conversation.customer_id;
+
+    const bodyText =
+      data.content.length > 100
+        ? `${data.content.slice(0, 100)}…`
+        : data.content;
+
+    await createNotification({
+      user_id: recipientId,
+      type: "message",
+      title: "New message",
+      body: bodyText,
+      data: {
+        conversationId: data.conversation_id,
+        conversation_id: data.conversation_id,
+        senderId: data.sender_id,
+      },
+    }).catch(() => {});
+  }
 
   return message;
 }

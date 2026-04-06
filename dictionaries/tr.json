@@ -829,7 +829,11 @@
     "offline": "Son görülme",
     "today": "Bugün",
     "yesterday": "Dün",
-    "you": "Siz"
+    "you": "Siz",
+    "fetchFailed": "Sohbetler yüklenemedi",
+    "fetchFailedDesc": "Bağlantınızı kontrol edip tekrar deneyin.",
+    "counterpartPro": "Profesyonel",
+    "counterpartCustomer": "Müşteri"
   },
   "chat": {
     "placeholder": "Mesajınızı yazın...",
@@ -846,7 +850,8 @@
     "noMessages": "Henüz mesaj yok — ilk mesajı gönderin",
     "loadMore": "Önceki mesajları yükle",
     "connectionLost": "Bağlantı koptu — yeniden bağlanılıyor...",
-    "connectionRestored": "Bağlantı yeniden kuruldu"
+    "connectionRestored": "Bağlantı yeniden kuruldu",
+    "sendFailed": "Mesaj gönderilemedi. Tekrar deneyin."
   },
   "review": {
     "title": "Deneyiminizi Değerlendirin",

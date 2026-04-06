@@ -20,10 +20,11 @@ export default async function InboxPage({
   const t = await getTranslations();
 
   let conversations: Awaited<ReturnType<typeof getUserConversations>> = [];
+  let loadError = false;
   try {
     conversations = await getUserConversations(user.id);
   } catch {
-    // empty
+    loadError = true;
   }
 
   return (
@@ -34,11 +35,28 @@ export default async function InboxPage({
         </h1>
         <div className="mt-3 h-0.5 w-12 rounded-full bg-gradient-to-r from-teal-500 to-transparent" />
         <div className="mt-8">
-          <ConversationList
-            conversations={conversations}
-            currentUserId={user.id}
-            locale={locale}
-          />
+          {loadError ? (
+            <div className="rounded-2xl border border-red-500/20 bg-red-500/[0.06] p-8 text-center dark:border-red-500/30 dark:bg-red-500/[0.08]">
+              <p className="font-medium text-gray-900 dark:text-white">
+                {t("inbox.fetchFailed")}
+              </p>
+              <p className="mt-2 text-sm text-gray-600 dark:text-white/50">
+                {t("inbox.fetchFailedDesc")}
+              </p>
+              <a
+                href={`/${locale}/inbox`}
+                className="mt-6 inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-500/25"
+              >
+                {t("common.retry")}
+              </a>
+            </div>
+          ) : (
+            <ConversationList
+              conversations={conversations}
+              currentUserId={user.id}
+              locale={locale}
+            />
+          )}
         </div>
       </main>
     </PageBackground>

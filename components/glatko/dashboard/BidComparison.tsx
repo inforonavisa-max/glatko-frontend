@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import Link from "next/link";
 import {
   Star,
@@ -55,6 +55,10 @@ export function BidComparison({ bids, requestId, requestStatus, locale }: Props)
     setAcceptingId(bidId);
     startTransition(async () => {
       const result = await acceptBidAction(bidId, requestId);
+      if (result.success && result.conversationId) {
+        router.push(`/inbox/${result.conversationId}`);
+        return;
+      }
       if (result.success) {
         setSuccess(true);
         setTimeout(() => router.refresh(), 1500);

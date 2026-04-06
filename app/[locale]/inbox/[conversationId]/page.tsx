@@ -4,6 +4,7 @@ import {
   getConversationMessages,
   markMessagesAsRead,
 } from "@/lib/supabase/glatko.server";
+import { getTranslations } from "next-intl/server";
 import { ChatRoom } from "@/components/glatko/inbox/ChatRoom";
 
 export default async function ChatPage({
@@ -35,6 +36,8 @@ export default async function ChatPage({
   if (conv.customer_id !== user.id && conv.professional_id !== user.id)
     notFound();
 
+  const t = await getTranslations();
+
   let messages: Awaited<ReturnType<typeof getConversationMessages>> = [];
   try {
     messages = await getConversationMessages(conversationId, user.id);
@@ -44,15 +47,28 @@ export default async function ChatPage({
   }
 
   const isCustomer = conv.customer_id === user.id;
+  let proBusinessName: string | null = null;
+  if (isCustomer) {
+    const { data: pp } = await supabase
+      .from("glatko_professional_profiles")
+      .select("business_name")
+      .eq("id", conv.professional_id)
+      .maybeSingle();
+    proBusinessName = pp?.business_name ?? null;
+  }
+
   const otherUser = isCustomer
     ? {
         id: conv.professional_id,
-        full_name: conv.professional?.full_name || "Professional",
+        full_name:
+          proBusinessName?.trim() ||
+          conv.professional?.full_name ||
+          t("inbox.counterpartPro"),
         avatar_url: conv.professional?.avatar_url || null,
       }
     : {
         id: conv.customer_id,
-        full_name: conv.customer?.full_name || "Customer",
+        full_name: conv.customer?.full_name || t("inbox.counterpartCustomer"),
         avatar_url: conv.customer?.avatar_url || null,
       };
 

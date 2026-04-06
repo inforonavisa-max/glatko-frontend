@@ -829,7 +829,11 @@
     "offline": "Zuletzt gesehen",
     "today": "Heute",
     "yesterday": "Gestern",
-    "you": "Sie"
+    "you": "Sie",
+    "fetchFailed": "Unterhaltungen konnten nicht geladen werden",
+    "fetchFailedDesc": "Bitte prüfen Sie Ihre Verbindung und versuchen Sie es erneut.",
+    "counterpartPro": "Profi",
+    "counterpartCustomer": "Kunde"
   },
   "chat": {
     "placeholder": "Nachricht eingeben...",
@@ -846,7 +850,8 @@
     "noMessages": "Noch keine Nachrichten — senden Sie die erste",
     "loadMore": "Ältere Nachrichten laden",
     "connectionLost": "Verbindung verloren — Verbindung wird wiederhergestellt...",
-    "connectionRestored": "Verbindung wiederhergestellt"
+    "connectionRestored": "Verbindung wiederhergestellt",
+    "sendFailed": "Nachricht konnte nicht gesendet werden. Bitte erneut versuchen."
   },
   "review": {
     "title": "Bewerten Sie Ihre Erfahrung",

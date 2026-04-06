@@ -829,7 +829,11 @@
     "offline": "آخر ظهور",
     "today": "اليوم",
     "yesterday": "أمس",
-    "you": "أنت"
+    "you": "أنت",
+    "fetchFailed": "تعذر تحميل المحادثات",
+    "fetchFailedDesc": "تحقق من اتصالك وحاول مرة أخرى.",
+    "counterpartPro": "محترف",
+    "counterpartCustomer": "عميل"
   },
   "chat": {
     "placeholder": "اكتب رسالتك...",
@@ -846,7 +850,8 @@
     "noMessages": "لا توجد رسائل بعد — أرسل الأولى",
     "loadMore": "تحميل الرسائل السابقة",
     "connectionLost": "انقطع الاتصال — جارٍ إعادة الاتصال...",
-    "connectionRestored": "تم استعادة الاتصال"
+    "connectionRestored": "تم استعادة الاتصال",
+    "sendFailed": "تعذر إرسال الرسالة. حاول مرة أخرى."
   },
   "review": {
     "title": "قيّم تجربتك",

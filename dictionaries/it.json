@@ -829,7 +829,11 @@
     "offline": "Ultimo accesso",
     "today": "Oggi",
     "yesterday": "Ieri",
-    "you": "Tu"
+    "you": "Tu",
+    "fetchFailed": "Impossibile caricare le conversazioni",
+    "fetchFailedDesc": "Controlla la connessione e riprova.",
+    "counterpartPro": "Professionista",
+    "counterpartCustomer": "Cliente"
   },
   "chat": {
     "placeholder": "Scrivi un messaggio...",
@@ -846,7 +850,8 @@
     "noMessages": "Nessun messaggio ancora — invia il primo",
     "loadMore": "Carica messaggi precedenti",
     "connectionLost": "Connessione persa — riconnessione in corso...",
-    "connectionRestored": "Connessione ristabilita"
+    "connectionRestored": "Connessione ristabilita",
+    "sendFailed": "Impossibile inviare il messaggio. Riprova."
   },
   "review": {
     "title": "Valuta la tua esperienza",

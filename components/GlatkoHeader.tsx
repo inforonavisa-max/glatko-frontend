@@ -11,6 +11,7 @@ import { useTheme } from "next-themes";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 import { NotificationBell } from "@/components/glatko/notifications/NotificationDropdown";
+import { InboxUnreadBadge } from "@/components/glatko/inbox/InboxUnreadBadge";
 import { createClient } from "@/supabase/browser";
 
 interface GlatkoHeaderProps {
@@ -174,6 +175,7 @@ export function GlatkoHeader({
                   {"hasIcon" in l && <Mail className="h-3.5 w-3.5" />}
                   {"hasAdminIcon" in l && <Settings className="h-3.5 w-3.5" />}
                   {l.label}
+                  {userId && l.href === "/inbox" ? <InboxUnreadBadge /> : null}
                 </Link>
               );
             })}
@@ -301,6 +303,7 @@ export function GlatkoHeader({
                     <Settings className="h-5 w-5 shrink-0 text-teal-600 dark:text-teal-400" />
                   )}
                   {l.label}
+                  {userId && l.href === "/inbox" ? <InboxUnreadBadge /> : null}
                 </Link>
               ))}
 

@@ -24,6 +24,7 @@ interface Conversation {
     full_name: string;
     avatar_url: string | null;
   } | null;
+  professional_business_name?: string | null;
   last_message: {
     content: string;
     content_type: string;
@@ -92,7 +93,13 @@ export function ConversationList({
       {conversations.map((conv, idx) => {
         const isCustomer = conv.customer_id === currentUserId;
         const other = isCustomer ? conv.professional : conv.customer;
-        const otherName = other?.full_name ?? "User";
+        const otherName = isCustomer
+          ? (
+              conv.professional_business_name?.trim() ||
+              other?.full_name ||
+              t("inbox.counterpartPro")
+            )
+          : (other?.full_name || t("inbox.counterpartCustomer"));
         const initial = otherName.charAt(0).toUpperCase();
 
         const isUnread =

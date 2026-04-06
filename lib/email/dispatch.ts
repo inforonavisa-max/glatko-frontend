@@ -356,6 +356,34 @@ export async function dispatchNotificationEmail(params: {
     if (params.title != null) mergedData.notificationTitle = params.title;
     if (params.body != null) mergedData.notificationBody = params.body;
 
+    if (type === "message") {
+      const convId = String(
+        mergedData.conversationId ?? mergedData.conversation_id ?? "",
+      ).trim();
+      if (convId) {
+        const since = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+        const { data: recentRows } = await admin
+          .from("glatko_notifications")
+          .select("id, data")
+          .eq("user_id", params.userId)
+          .eq("type", "message")
+          .gte("created_at", since);
+        const sameConvCount = (recentRows ?? []).filter((row) => {
+          const d = row.data as Record<string, unknown> | null;
+          const c = String(
+            d?.conversationId ?? d?.conversation_id ?? "",
+          ).trim();
+          return c === convId;
+        }).length;
+        if (sameConvCount > 1) {
+          console.log(
+            "[GLATKO-EMAIL] message email skipped (5min flood window for conversation)",
+          );
+          return;
+        }
+      }
+    }
+
     const emailContent = await buildEmailForType({
       type,
       data: mergedData,

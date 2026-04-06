@@ -829,7 +829,11 @@
     "offline": "Last seen",
     "today": "Today",
     "yesterday": "Yesterday",
-    "you": "You"
+    "you": "You",
+    "fetchFailed": "Couldn't load conversations",
+    "fetchFailedDesc": "Please check your connection and try again.",
+    "counterpartPro": "Professional",
+    "counterpartCustomer": "Customer"
   },
   "chat": {
     "placeholder": "Type your message...",
@@ -846,7 +850,8 @@
     "noMessages": "No messages yet — send the first one",
     "loadMore": "Load earlier messages",
     "connectionLost": "Connection lost — reconnecting...",
-    "connectionRestored": "Connection restored"
+    "connectionRestored": "Connection restored",
+    "sendFailed": "Could not send your message. Try again."
   },
   "review": {
     "title": "Rate Your Experience",
