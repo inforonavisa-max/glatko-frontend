@@ -66,6 +66,8 @@ function AnimatedNumber({ value }: { value: number }) {
 
 export function ProDashboardClient(props: Props) {
   const t = useTranslations();
+  const safeRating = Number(props.rating);
+  const displayRating = Number.isFinite(safeRating) ? safeRating : 0;
   const [analytics, setAnalytics] = useState<{
     totalEarnings: number;
     monthlyEarnings: { month: string; earnings: number; jobs: number }[];
@@ -77,7 +79,22 @@ export function ProDashboardClient(props: Props) {
   } | null>(null);
 
   useEffect(() => {
-    getProAnalyticsAction().then(setAnalytics).catch(() => {});
+    getProAnalyticsAction()
+      .then((raw) => {
+        if (!raw) {
+          setAnalytics(null);
+          return;
+        }
+        setAnalytics({
+          totalEarnings: raw.totalEarnings,
+          monthlyEarnings: raw.monthlyEarnings,
+          recentReviews: (raw.recentReviews ?? []).map((r) => ({
+            overall_rating: Number(r.overall_rating) || 0,
+            created_at: r.created_at,
+          })),
+        });
+      })
+      .catch(() => {});
     getProfileCompletenessAction().then(setCompleteness).catch(() => {});
   }, []);
 
@@ -101,7 +118,7 @@ export function ProDashboardClient(props: Props) {
     },
     {
       icon: Star,
-      value: props.rating,
+      value: displayRating,
       label: t("proAnalytics.avgRating"),
       suffix: ` (${analytics?.recentReviews?.length ?? 0})`,
       color: "text-amber-400",
@@ -109,7 +126,7 @@ export function ProDashboardClient(props: Props) {
     },
     {
       icon: Briefcase,
-      value: props.completedJobs,
+      value: Number(props.completedJobs) || 0,
       label: t("proAnalytics.completedJobs"),
       color: "text-green-400",
     },
@@ -172,9 +189,9 @@ export function ProDashboardClient(props: Props) {
                     <CheckCircle className="h-3 w-3" /> Verified
                   </span>
                 )}
-                {props.rating > 0 && (
+                {displayRating > 0 && (
                   <span className="text-xs text-gray-400 dark:text-white/40">
-                    ★ {props.rating.toFixed(1)}
+                    ★ {displayRating.toFixed(1)}
                   </span>
                 )}
               </div>
@@ -222,7 +239,7 @@ export function ProDashboardClient(props: Props) {
               <p className="text-3xl font-bold text-gray-900 dark:text-white">
                 {kpi.prefix || ""}
                 {kpi.isDecimal ? (
-                  props.rating.toFixed(1)
+                  displayRating.toFixed(1)
                 ) : (
                   <AnimatedNumber value={kpi.value} />
                 )}

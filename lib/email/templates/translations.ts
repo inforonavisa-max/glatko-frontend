@@ -431,6 +431,459 @@ export function getBidAcceptedCopy(locale: EmailLocale): BidAcceptedCopy {
   return bidAccepted[locale] ?? bidAccepted.en;
 }
 
+/* ─── bid not selected (pro) ─── */
+export type BidNotSelectedCopy = {
+  subject: string;
+  preview: string;
+  bodyLine: string;
+  serviceLabel: string;
+  locationLabel: string;
+  tip: string;
+  cta: string;
+  fallbackRequest: string;
+};
+
+const bidNotSelected: Record<EmailLocale, BidNotSelectedCopy> = {
+  en: {
+    subject: "Your bid was not selected",
+    preview: "Update on your Glatko quote",
+    bodyLine:
+      "The customer chose another professional for “{requestTitle}”. Thank you for taking the time to quote.",
+    serviceLabel: "Service",
+    locationLabel: "Location",
+    tip: "Keep your profile up to date to win the next match.",
+    cta: "View matching requests",
+    fallbackRequest: "this request",
+  },
+  tr: {
+    subject: "Teklifiniz seçilmedi",
+    preview: "Glatko teklif güncellemesi",
+    bodyLine:
+      "Müşteri “{requestTitle}” için başka bir profesyoneli seçti. Teklif verdiğiniz için teşekkürler.",
+    serviceLabel: "Hizmet",
+    locationLabel: "Konum",
+    tip: "Bir sonraki eşleşmeyi kazanmak için profilinizi güncel tutun.",
+    cta: "Eşleşen talepleri gör",
+    fallbackRequest: "bu talep",
+  },
+  de: {
+    subject: "Ihr Angebot wurde nicht ausgewählt",
+    preview: "Update zu Ihrem Glatko-Angebot",
+    bodyLine:
+      "Der Kunde hat für „{requestTitle}“ einen anderen Profi gewählt. Danke für Ihr Angebot.",
+    serviceLabel: "Leistung",
+    locationLabel: "Ort",
+    tip: "Halten Sie Ihr Profil aktuell, um beim nächsten Mal zu überzeugen.",
+    cta: "Passende Anfragen ansehen",
+    fallbackRequest: "diese Anfrage",
+  },
+  ar: {
+    subject: "لم يتم اختيار عرضك",
+    preview: "تحديث بخصوص عرضك على Glatko",
+    bodyLine:
+      "اختار العميل محترفًا آخر لطلب «{requestTitle}». شكرًا لوقتك في تقديم العرض.",
+    serviceLabel: "الخدمة",
+    locationLabel: "الموقع",
+    tip: "حدّث ملفك لزيادة فرصك في الطلبات القادمة.",
+    cta: "عرض الطلبات المطابقة",
+    fallbackRequest: "هذا الطلب",
+  },
+  it: {
+    subject: "Il tuo preventivo non è stato scelto",
+    preview: "Aggiornamento sul tuo preventivo Glatko",
+    bodyLine:
+      "Il cliente ha scelto un altro professionista per “{requestTitle}”. Grazie per aver inviato il preventivo.",
+    serviceLabel: "Servizio",
+    locationLabel: "Località",
+    tip: "Tieni il profilo aggiornato per la prossima opportunità.",
+    cta: "Vedi richieste in linea",
+    fallbackRequest: "questa richiesta",
+  },
+  me: {
+    subject: "Vaša ponuda nije odabrana",
+    preview: "Ažuriranje vaše Glatko ponude",
+    bodyLine:
+      "Klijent je za „{requestTitle}“ odabrao drugog profesionalca. Hvala što ste poslali ponudu.",
+    serviceLabel: "Usluga",
+    locationLabel: "Lokacija",
+    tip: "Držite profil ažuriranim da osvojite sljedeće prilike.",
+    cta: "Pogledajte odgovarajuće zahtjeve",
+    fallbackRequest: "ovaj zahtjev",
+  },
+  ru: {
+    subject: "Ваше предложение не выбрали",
+    preview: "Обновление по вашему предложению в Glatko",
+    bodyLine:
+      "Клиент выбрал другого специалиста для «{requestTitle}». Спасибо, что отправили предложение.",
+    serviceLabel: "Услуга",
+    locationLabel: "Локация",
+    tip: "Обновляйте профиль, чтобы чаще выигрывать заявки.",
+    cta: "Подходящие заявки",
+    fallbackRequest: "эта заявка",
+  },
+  sr: {
+    subject: "Vaša ponuda nije odabrana",
+    preview: "Ažuriranje vaše Glatko ponude",
+    bodyLine:
+      "Klijent je za „{requestTitle}“ izabrao drugog profesionalca. Hvala što ste poslali ponudu.",
+    serviceLabel: "Usluga",
+    locationLabel: "Lokacija",
+    tip: "Držite profil ažuriranim da osvojite sledeće prilike.",
+    cta: "Pogledajte odgovarajuće zahteve",
+    fallbackRequest: "ovaj zahtev",
+  },
+  uk: {
+    subject: "Вашу пропозицію не обрали",
+    preview: "Оновлення щодо вашої пропозиції в Glatko",
+    bodyLine:
+      "Клієнт обрав іншого фахівця для «{requestTitle}». Дякуємо, що надіслали пропозицію.",
+    serviceLabel: "Послуга",
+    locationLabel: "Локація",
+    tip: "Оновлюйте профіль, щоб частіше отримувати замовлення.",
+    cta: "Відповідні заявки",
+    fallbackRequest: "ця заявка",
+  },
+};
+
+export function getBidNotSelectedCopy(locale: EmailLocale): BidNotSelectedCopy {
+  return bidNotSelected[locale] ?? bidNotSelected.en;
+}
+
+/* ─── status change (customer) ─── */
+export type StatusChangeEmailCopy = {
+  subject: string;
+  headline: string;
+  requestLabel: string;
+  cta: string;
+};
+
+const statusChangeEmail: Record<EmailLocale, StatusChangeEmailCopy> = {
+  en: {
+    subject: "Your request status was updated",
+    headline: "Here is the latest update on Glatko.",
+    requestLabel: "Request",
+    cta: "Open request",
+  },
+  tr: {
+    subject: "Talebinizin durumu güncellendi",
+    headline: "Glatko’daki talebinizle ilgili son bilgi.",
+    requestLabel: "Talep",
+    cta: "Talebi aç",
+  },
+  de: {
+    subject: "Der Status Ihrer Anfrage wurde aktualisiert",
+    headline: "Hier ist das neueste Update zu Ihrer Anfrage auf Glatko.",
+    requestLabel: "Anfrage",
+    cta: "Anfrage öffnen",
+  },
+  ar: {
+    subject: "تم تحديث حالة طلبك",
+    headline: "إليك آخر التحديثات بخصوص طلبك على Glatko.",
+    requestLabel: "الطلب",
+    cta: "فتح الطلب",
+  },
+  it: {
+    subject: "Lo stato della richiesta è stato aggiornato",
+    headline: "Ecco l’ultimo aggiornamento sulla tua richiesta Glatko.",
+    requestLabel: "Richiesta",
+    cta: "Apri richiesta",
+  },
+  me: {
+    subject: "Status vašeg zahtjeva je ažuriran",
+    headline: "Evo najnovijeg ažuriranja o vašem zahtjevu na Glatko.",
+    requestLabel: "Zahtjev",
+    cta: "Otvori zahtjev",
+  },
+  ru: {
+    subject: "Статус вашей заявки обновлён",
+    headline: "Последнее обновление по вашей заявке в Glatko.",
+    requestLabel: "Заявка",
+    cta: "Открыть заявку",
+  },
+  sr: {
+    subject: "Status vašeg zahteva je ažuriran",
+    headline: "Evo najnovijeg ažuriranja o vašem zahtevu na Glatko.",
+    requestLabel: "Zahtev",
+    cta: "Otvori zahtev",
+  },
+  uk: {
+    subject: "Статус вашої заявки оновлено",
+    headline: "Останнє оновлення щодо вашої заявки в Glatko.",
+    requestLabel: "Заявка",
+    cta: "Відкрити заявку",
+  },
+};
+
+export function getStatusChangeEmailCopy(
+  locale: EmailLocale,
+): StatusChangeEmailCopy {
+  return statusChangeEmail[locale] ?? statusChangeEmail.en;
+}
+
+/* ─── review received (pro) ─── */
+export type ReviewReceivedEmailCopy = {
+  subject: string;
+  previewLine: string;
+  ratingLine: string;
+  cta: string;
+};
+
+const reviewReceivedEmail: Record<EmailLocale, ReviewReceivedEmailCopy> = {
+  en: {
+    subject: "You received a new review",
+    previewLine: "Someone left you a {stars}-star review on Glatko.",
+    ratingLine: "Rating: {stars} / 5",
+    cta: "Open your dashboard",
+  },
+  tr: {
+    subject: "Yeni bir değerlendirme aldınız",
+    previewLine: "Birisi size Glatko’da {stars} yıldız verdi.",
+    ratingLine: "Puan: {stars} / 5",
+    cta: "Panele git",
+  },
+  de: {
+    subject: "Sie haben eine neue Bewertung erhalten",
+    previewLine: "Jemand hat Ihnen auf Glatko {stars} Sterne gegeben.",
+    ratingLine: "Bewertung: {stars} / 5",
+    cta: "Dashboard öffnen",
+  },
+  ar: {
+    subject: "تلقيت تقييمًا جديدًا",
+    previewLine: "ترك لك أحدهم تقييمًا بـ {stars} نجوم على Glatko.",
+    ratingLine: "التقييم: {stars} / 5",
+    cta: "افتح لوحة التحكم",
+  },
+  it: {
+    subject: "Hai ricevuto una nuova recensione",
+    previewLine: "Qualcuno ti ha lasciato una recensione da {stars} stelle su Glatko.",
+    ratingLine: "Valutazione: {stars} / 5",
+    cta: "Apri la dashboard",
+  },
+  me: {
+    subject: "Primili ste novu recenziju",
+    previewLine: "Neko vam je ostavio ocenu od {stars} zvjezdica na Glatko.",
+    ratingLine: "Ocjena: {stars} / 5",
+    cta: "Otvori kontrolnu tablu",
+  },
+  ru: {
+    subject: "Вы получили новый отзыв",
+    previewLine: "Вам поставили {stars} звёзд в Glatko.",
+    ratingLine: "Оценка: {stars} / 5",
+    cta: "Открыть панель",
+  },
+  sr: {
+    subject: "Primili ste novu recenziju",
+    previewLine: "Neko vam je ostavio ocenu od {stars} zvezdica na Glatko.",
+    ratingLine: "Ocena: {stars} / 5",
+    cta: "Otvori kontrolnu tablu",
+  },
+  uk: {
+    subject: "Ви отримали новий відгук",
+    previewLine: "Хтось залишив вам оцінку {stars} зірок у Glatko.",
+    ratingLine: "Оцінка: {stars} / 5",
+    cta: "Відкрити панель",
+  },
+};
+
+export function getReviewReceivedEmailCopy(
+  locale: EmailLocale,
+): ReviewReceivedEmailCopy {
+  return reviewReceivedEmail[locale] ?? reviewReceivedEmail.en;
+}
+
+/* ─── new message ─── */
+export type NewMessageEmailCopy = {
+  subject: string;
+  title: string;
+  cta: string;
+};
+
+const newMessageEmail: Record<EmailLocale, NewMessageEmailCopy> = {
+  en: {
+    subject: "New message on Glatko",
+    title: "You have a new message",
+    cta: "Open conversation",
+  },
+  tr: {
+    subject: "Glatko’da yeni mesaj",
+    title: "Yeni bir mesajınız var",
+    cta: "Sohbeti aç",
+  },
+  de: {
+    subject: "Neue Nachricht auf Glatko",
+    title: "Sie haben eine neue Nachricht",
+    cta: "Unterhaltung öffnen",
+  },
+  ar: {
+    subject: "رسالة جديدة على Glatko",
+    title: "لديك رسالة جديدة",
+    cta: "فتح المحادثة",
+  },
+  it: {
+    subject: "Nuovo messaggio su Glatko",
+    title: "Hai un nuovo messaggio",
+    cta: "Apri la conversazione",
+  },
+  me: {
+    subject: "Nova poruka na Glatko",
+    title: "Imate novu poruku",
+    cta: "Otvori razgovor",
+  },
+  ru: {
+    subject: "Новое сообщение в Glatko",
+    title: "У вас новое сообщение",
+    cta: "Открыть чат",
+  },
+  sr: {
+    subject: "Nova poruka na Glatko",
+    title: "Imate novu poruku",
+    cta: "Otvori razgovor",
+  },
+  uk: {
+    subject: "Нове повідомлення в Glatko",
+    title: "У вас нове повідомлення",
+    cta: "Відкрити розмову",
+  },
+};
+
+export function getNewMessageEmailCopy(locale: EmailLocale): NewMessageEmailCopy {
+  return newMessageEmail[locale] ?? newMessageEmail.en;
+}
+
+/* ─── verification approved ─── */
+export type VerificationSimpleCopy = {
+  subject: string;
+  title: string;
+  body: string;
+  cta: string;
+};
+
+const verificationApprovedEmail: Record<EmailLocale, VerificationSimpleCopy> = {
+  en: {
+    subject: "Your Glatko professional account is approved",
+    title: "You’re approved",
+    body: "You can now receive requests and send quotes on Glatko.",
+    cta: "Go to pro dashboard",
+  },
+  tr: {
+    subject: "Glatko profesyonel hesabınız onaylandı",
+    title: "Hesabınız onaylandı",
+    body: "Artık talepleri alabilir ve teklif gönderebilirsiniz.",
+    cta: "Pro panele git",
+  },
+  de: {
+    subject: "Ihr Glatko-Profi-Konto wurde freigeschaltet",
+    title: "Freigabe erteilt",
+    body: "Sie können jetzt Anfragen erhalten und Angebote senden.",
+    cta: "Zum Pro-Dashboard",
+  },
+  ar: {
+    subject: "تمت الموافقة على حسابك المهني في Glatko",
+    title: "تمت الموافقة",
+    body: "يمكنك الآن استلام الطلبات وإرسال العروض على Glatko.",
+    cta: "لوحة المحترفين",
+  },
+  it: {
+    subject: "Il tuo account professionale Glatko è approvato",
+    title: "Approvazione completata",
+    body: "Ora puoi ricevere richieste e inviare preventivi su Glatko.",
+    cta: "Vai alla dashboard pro",
+  },
+  me: {
+    subject: "Vaš Glatko profesionalni nalog je odobren",
+    title: "Odobreno",
+    body: "Sada možete primati zahtjeve i slati ponude na Glatko.",
+    cta: "Idi na pro kontrolnu tablu",
+  },
+  ru: {
+    subject: "Ваш профессиональный аккаунт Glatko одобрен",
+    title: "Аккаунт одобрен",
+    body: "Теперь вы можете получать заявки и отправлять предложения в Glatko.",
+    cta: "К панели профи",
+  },
+  sr: {
+    subject: "Vaš Glatko profesionalni nalog je odobren",
+    title: "Odobreno",
+    body: "Sada možete primati zahteve i slati ponude na Glatko.",
+    cta: "Idi na pro kontrolnu tablu",
+  },
+  uk: {
+    subject: "Ваш професійний акаунт Glatko схвалено",
+    title: "Обліковий запис схвалено",
+    body: "Тепер ви можете отримувати заявки та надсилати пропозиції в Glatko.",
+    cta: "До панелі профі",
+  },
+};
+
+export function getVerificationApprovedEmailCopy(
+  locale: EmailLocale,
+): VerificationSimpleCopy {
+  return verificationApprovedEmail[locale] ?? verificationApprovedEmail.en;
+}
+
+const verificationRejectedEmail: Record<EmailLocale, VerificationSimpleCopy> = {
+  en: {
+    subject: "Update on your Glatko application",
+    title: "Application not approved",
+    body: "We could not approve your professional application. You can review your profile and try again.",
+    cta: "Review your profile",
+  },
+  tr: {
+    subject: "Glatko başvurunuz hakkında güncelleme",
+    title: "Başvuru onaylanmadı",
+    body: "Profesyonel başvurunuzu onaylayamadık. Profilinizi gözden geçirip tekrar deneyebilirsiniz.",
+    cta: "Profili incele",
+  },
+  de: {
+    subject: "Update zu Ihrer Glatko-Bewerbung",
+    title: "Bewerbung nicht genehmigt",
+    body: "Wir konnten Ihre Profi-Bewerbung nicht freigeben. Prüfen Sie Ihr Profil und versuchen Sie es erneut.",
+    cta: "Profil prüfen",
+  },
+  ar: {
+    subject: "تحديث بخصوص طلبك في Glatko",
+    title: "لم تتم الموافقة على الطلب",
+    body: "لم نتمكن من اعتماد طلبك المهني. راجع ملفك وحاول مرة أخرى.",
+    cta: "مراجعة الملف",
+  },
+  it: {
+    subject: "Aggiornamento sulla domanda Glatko",
+    title: "Domanda non approvata",
+    body: "Non abbiamo potuto approvare la tua candidatura professionale. Controlla il profilo e riprova.",
+    cta: "Rivedi profilo",
+  },
+  me: {
+    subject: "Ažuriranje vaše Glatko prijave",
+    title: "Prijava nije odobrena",
+    body: "Nismo mogli odobriti vašu profesionalnu prijavu. Pregledajte profil i pokušajte ponovo.",
+    cta: "Pregledaj profil",
+  },
+  ru: {
+    subject: "Обновление по заявке в Glatko",
+    title: "Заявка не одобрена",
+    body: "Мы не смогли одобрить вашу заявку профессионала. Проверьте профиль и попробуйте снова.",
+    cta: "Проверить профиль",
+  },
+  sr: {
+    subject: "Ažuriranje vaše Glatko prijave",
+    title: "Prijava nije odobrena",
+    body: "Nismo mogli odobriti vašu profesionalnu prijavu. Pregledajte profil i pokušajte ponovo.",
+    cta: "Pregledaj profil",
+  },
+  uk: {
+    subject: "Оновлення щодо заявки в Glatko",
+    title: "Заявку не схвалено",
+    body: "Ми не змогли схвалити вашу професійну заявку. Перевірте профіль і спробуйте знову.",
+    cta: "Переглянути профіль",
+  },
+};
+
+export function getVerificationRejectedEmailCopy(
+  locale: EmailLocale,
+): VerificationSimpleCopy {
+  return verificationRejectedEmail[locale] ?? verificationRejectedEmail.en;
+}
+
 /* ─── welcome ─── */
 export type WelcomeCopy = {
   subject: string;

@@ -40,7 +40,10 @@ export async function startJobAction(
         type: "status_change",
         title: "Job started",
         body: `The professional has started working on "${request.title || "your request"}"`,
-        data: { requestId },
+        data: {
+          requestId,
+          requestTitle: request.title ?? "",
+        },
       }).catch(() => {});
     }
 
@@ -77,7 +80,10 @@ export async function completeJobAction(
         type: "status_change",
         title: "Job completed",
         body: `The job "${request.title || "your request"}" has been completed — leave a review!`,
-        data: { requestId },
+        data: {
+          requestId,
+          requestTitle: request.title ?? "",
+        },
       }).catch(() => {});
     }
 

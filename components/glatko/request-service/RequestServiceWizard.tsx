@@ -244,6 +244,7 @@ function RequestServiceWizardInner({ categories }: Props) {
     fd.set("photos", JSON.stringify(photos));
     fd.set("phone", phone);
     fd.set("email", email);
+    fd.set("summaryLocale", locale);
     if (preferredPro?.id) {
       fd.set("preferredProfessionalId", preferredPro.id);
     }
@@ -251,8 +252,12 @@ function RequestServiceWizardInner({ categories }: Props) {
     startTransition(async () => {
       const result = await submitServiceRequest(fd);
       if (result.success) {
+        const categoryDisplay =
+          (result.categoryLabel && result.categoryLabel.trim()) ||
+          (selectedSub ? catName(selectedSub) : "") ||
+          t("request.confirmation.categoryUnknown");
         setSummaryData({
-          category: selectedSub ? catName(selectedSub) : "",
+          category: categoryDisplay,
           city: municipality,
           urgency: t(`request.step3.urgency.${urgencyToStep3Key(urgency)}`),
           budget:

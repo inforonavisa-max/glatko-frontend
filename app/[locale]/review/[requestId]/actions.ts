@@ -57,7 +57,10 @@ export async function submitReviewAction(
       type: "review",
       title: "New review received",
       body: `You received a ${d.overallRating}-star review`,
-      data: { requestId: d.serviceRequestId },
+      data: {
+        requestId: d.serviceRequestId,
+        overallRating: d.overallRating,
+      },
     }).catch(() => {});
 
     return { success: true };

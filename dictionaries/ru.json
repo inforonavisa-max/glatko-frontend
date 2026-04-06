@@ -621,7 +621,8 @@
       "category": "Категория",
       "city": "Город",
       "urgency": "Срочность",
-      "budget": "Бюджет"
+      "budget": "Бюджет",
+      "categoryUnknown": "Недоступно"
     },
     "wizard": {
       "title": "Заказать услугу",

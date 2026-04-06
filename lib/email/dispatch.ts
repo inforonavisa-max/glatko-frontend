@@ -1,15 +1,26 @@
 import { createElement, type ReactElement } from "react";
 import { sendEmail } from "@/lib/email/send-email";
 import { getSiteUrl } from "@/lib/email/resend";
+import { pickLocalizedLabel } from "@/lib/i18n/pick-localized-label";
 import type { EmailLocale } from "@/lib/email/templates/translations";
 import {
   getBidAcceptedCopy,
+  getBidNotSelectedCopy,
   getNewBidReceivedCopy,
+  getNewMessageEmailCopy,
   getNewRequestMatchCopy,
+  getReviewReceivedEmailCopy,
+  getStatusChangeEmailCopy,
+  getVerificationApprovedEmailCopy,
+  getVerificationRejectedEmailCopy,
 } from "@/lib/email/templates/translations";
 import BidAcceptedEmail from "@/lib/email/templates/bid-accepted";
+import BidRejectedEmail from "@/lib/email/templates/bid-rejected";
 import NewBidReceivedEmail from "@/lib/email/templates/new-bid-received";
 import NewRequestMatchEmail from "@/lib/email/templates/new-request-match";
+import ReviewReceivedEmail from "@/lib/email/templates/review-received";
+import SimpleActionEmail from "@/lib/email/templates/simple-action-email";
+import StatusChangeEmail from "@/lib/email/templates/status-change";
 import { createAdminClient } from "@/supabase/server";
 
 export type DispatchNotificationType =
@@ -48,20 +59,6 @@ function coerceEmailLocale(raw: string | null | undefined): EmailLocale {
     return raw as EmailLocale;
   }
   return "en";
-}
-
-function pickCategoryLabel(
-  names: Record<string, string> | undefined,
-  locale: EmailLocale,
-): string {
-  if (!names || typeof names !== "object") return "";
-  return (
-    names[locale] ??
-    names.en ??
-    names.tr ??
-    (Object.values(names).find((v) => typeof v === "string") as string) ??
-    ""
-  );
 }
 
 function shouldSendEmailForType(
@@ -108,12 +105,11 @@ async function buildEmailForType(params: {
 
   switch (type) {
     case "new_request_match": {
-      const requestId = String(data.requestId ?? "");
+      const requestId = String(data.requestId ?? data.request_id ?? "");
       if (!requestId) return null;
-      const categoryNames = data.categoryNames as
-        | Record<string, string>
-        | undefined;
-      const categoryName = pickCategoryLabel(categoryNames, locale);
+      const categoryNames =
+        (data.categoryNames as Record<string, string> | undefined) ?? {};
+      const categoryName = pickLocalizedLabel(categoryNames, locale);
       const copy = getNewRequestMatchCopy(locale);
       return {
         subject: copy.subject,
@@ -133,7 +129,7 @@ async function buildEmailForType(params: {
       };
     }
     case "new_bid": {
-      const requestId = String(data.requestId ?? "");
+      const requestId = String(data.requestId ?? data.request_id ?? "");
       if (!requestId) return null;
       const copy = getNewBidReceivedCopy(locale);
       return {
@@ -153,7 +149,9 @@ async function buildEmailForType(params: {
       };
     }
     case "bid_accepted": {
-      const conversationId = String(data.conversationId ?? "");
+      const conversationId = String(
+        data.conversationId ?? data.conversation_id ?? "",
+      );
       if (!conversationId) return null;
       const copy = getBidAcceptedCopy(locale);
       return {
@@ -167,6 +165,112 @@ async function buildEmailForType(params: {
             locale,
             `/inbox/${conversationId}`,
           ),
+          locale,
+        }),
+      };
+    }
+    case "bid_rejected": {
+      const categoryNames =
+        (data.categoryNames as Record<string, string> | undefined) ?? {};
+      const categoryName = pickLocalizedLabel(categoryNames, locale);
+      const copy = getBidNotSelectedCopy(locale);
+      return {
+        subject: copy.subject,
+        react: createElement(BidRejectedEmail, {
+          recipientName,
+          requestTitle: String(data.requestTitle ?? ""),
+          categoryName,
+          municipality: String(data.municipality ?? ""),
+          matchingUrl: buildLocalizedPath(locale, "/pro/dashboard/requests"),
+          locale,
+        }),
+      };
+    }
+    case "status_change": {
+      const detailText = String(data.notificationBody ?? "").trim();
+      if (!detailText) return null;
+      const requestId = String(data.requestId ?? data.request_id ?? "");
+      const requestTitle = String(data.requestTitle ?? "");
+      const copy = getStatusChangeEmailCopy(locale);
+      const requestUrl = requestId
+        ? buildLocalizedPath(locale, `/dashboard/requests/${requestId}`)
+        : buildLocalizedPath(locale, "/dashboard");
+      return {
+        subject: copy.subject,
+        react: createElement(StatusChangeEmail, {
+          recipientName,
+          requestTitle,
+          detailText,
+          requestUrl,
+          locale,
+        }),
+      };
+    }
+    case "review": {
+      const rating = Number(data.overallRating ?? data.rating ?? 5);
+      const copy = getReviewReceivedEmailCopy(locale);
+      return {
+        subject: copy.subject,
+        react: createElement(ReviewReceivedEmail, {
+          recipientName,
+          rating: Number.isFinite(rating) ? rating : 5,
+          proDashboardUrl: buildLocalizedPath(locale, "/pro/dashboard"),
+          locale,
+        }),
+      };
+    }
+    case "message": {
+      const conversationId = String(
+        data.conversationId ?? data.conversation_id ?? "",
+      );
+      const m = getNewMessageEmailCopy(locale);
+      const body = String(data.notificationBody ?? "").trim() || "—";
+      const ctaUrl = conversationId
+        ? buildLocalizedPath(locale, `/inbox/${conversationId}`)
+        : buildLocalizedPath(locale, "/inbox");
+      return {
+        subject: m.subject,
+        react: createElement(SimpleActionEmail, {
+          recipientName,
+          preview: body.slice(0, 100),
+          title: m.title,
+          body,
+          ctaLabel: m.cta,
+          ctaUrl,
+          locale,
+        }),
+      };
+    }
+    case "verification_approved": {
+      const c = getVerificationApprovedEmailCopy(locale);
+      const extra = String(data.notificationBody ?? "").trim();
+      const body = extra ? `${c.body}\n\n${extra}` : c.body;
+      return {
+        subject: c.subject,
+        react: createElement(SimpleActionEmail, {
+          recipientName,
+          preview: c.body,
+          title: c.title,
+          body,
+          ctaLabel: c.cta,
+          ctaUrl: buildLocalizedPath(locale, "/pro/dashboard"),
+          locale,
+        }),
+      };
+    }
+    case "verification_rejected": {
+      const c = getVerificationRejectedEmailCopy(locale);
+      const extra = String(data.notificationBody ?? "").trim();
+      const body = extra ? `${c.body}\n\n${extra}` : c.body;
+      return {
+        subject: c.subject,
+        react: createElement(SimpleActionEmail, {
+          recipientName,
+          preview: c.subject,
+          title: c.title,
+          body,
+          ctaLabel: c.cta,
+          ctaUrl: buildLocalizedPath(locale, "/pro/dashboard/profile"),
           locale,
         }),
       };

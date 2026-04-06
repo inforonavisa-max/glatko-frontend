@@ -621,7 +621,8 @@
       "category": "الفئة",
       "city": "المدينة",
       "urgency": "الاستعجال",
-      "budget": "الميزانية"
+      "budget": "الميزانية",
+      "categoryUnknown": "غير متوفر"
     },
     "wizard": {
       "title": "اطلب خدمة",

@@ -621,7 +621,8 @@
       "category": "Категорія",
       "city": "Місто",
       "urgency": "Терміновість",
-      "budget": "Бюджет"
+      "budget": "Бюджет",
+      "categoryUnknown": "Недоступно"
     },
     "wizard": {
       "title": "Замовити послугу",

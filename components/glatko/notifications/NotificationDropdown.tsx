@@ -25,6 +25,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useRouter } from "@/i18n/navigation";
 import { toast } from "sonner";
+import { getNotificationHref } from "@/lib/glatko/notification-href";
 
 interface GlatkoNotification {
   id: string;
@@ -50,30 +51,6 @@ const typeConfig: Record<string, { icon: typeof Bell; bgColor: string; iconColor
 };
 
 const defaultConfig = { icon: Bell, bgColor: "bg-gray-500/10", iconColor: "text-gray-500 dark:text-gray-400" };
-
-function getNotificationLink(n: GlatkoNotification): string {
-  const d = n.data;
-  switch (n.type) {
-    case "new_bid":
-    case "status_change":
-      return d?.requestId ? `/dashboard/requests/${d.requestId}` : "/dashboard";
-    case "bid_accepted":
-      return "/pro/dashboard/bids";
-    case "message":
-      return d?.conversationId ? `/inbox/${d.conversationId}` : "/inbox";
-    case "review":
-      return d?.requestId ? `/review/${d.requestId}` : "/dashboard";
-    case "verification_approved":
-    case "verification_rejected":
-      return "/pro/dashboard";
-    case "new_request_match":
-      return d?.requestId
-        ? `/pro/dashboard/requests/${d.requestId as string}`
-        : "/pro/dashboard/requests";
-    default:
-      return "/notifications";
-  }
-}
 
 function getLocalizedTitle(type: string, t: ReturnType<typeof useTranslations>): string {
   const map: Record<string, string> = {
@@ -201,7 +178,7 @@ export function NotificationBell({ userId }: NotificationBellProps) {
       setUnreadCount((prev) => Math.max(0, prev - 1));
     }
     setOpen(false);
-    router.push(getNotificationLink(n));
+    router.push(getNotificationHref(n));
   }
 
   return (

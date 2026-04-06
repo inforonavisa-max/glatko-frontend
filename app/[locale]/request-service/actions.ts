@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 import { createClient } from "@/supabase/server";
+import { pickLocalizedLabel } from "@/lib/i18n/pick-localized-label";
 import {
   createServiceRequest,
   notifyProfessionalsOfNewRequest,
@@ -27,6 +28,7 @@ const createRequestSchema = z.object({
 interface SubmitResult {
   success: boolean;
   requestId?: string;
+  categoryLabel?: string;
   error?: string;
 }
 
@@ -133,6 +135,8 @@ export async function submitServiceRequest(
   const categoryNames =
     (catRow?.name as Record<string, string> | null | undefined) ?? {};
 
+  const summaryLocale = ((formData.get("summaryLocale") as string) || "en").trim();
+
   await notifyProfessionalsOfNewRequest({
     requestId: row.id,
     customerId: row.customer_id,
@@ -143,5 +147,7 @@ export async function submitServiceRequest(
     categoryNames,
   }).catch(() => {});
 
-  return { success: true, requestId: row.id };
+  const categoryLabel = pickLocalizedLabel(categoryNames, summaryLocale);
+
+  return { success: true, requestId: row.id, categoryLabel };
 }

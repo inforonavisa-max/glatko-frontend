@@ -559,7 +559,10 @@ export async function getProfessionalBids(professionalId: string) {
     .eq("professional_id", professionalId)
     .order("created_at", { ascending: false });
 
-  if (error) throw error;
+  if (error) {
+    console.error("[GLATKO] getProfessionalBids query failed:", error);
+    return [];
+  }
   return data || [];
 }
 
@@ -579,6 +582,30 @@ export async function acceptBid(
   if (request?.customer_id !== customerId) {
     throw new Error("Unauthorized");
   }
+
+  const { data: rejectedBids } = await supabase
+    .from("glatko_bids")
+    .select("id, professional_id")
+    .eq("service_request_id", requestId)
+    .neq("id", bidId)
+    .eq("status", "pending");
+
+  const { data: requestDetail } = await supabase
+    .from("glatko_service_requests")
+    .select(
+      `title, municipality, category:glatko_service_categories(name)`
+    )
+    .eq("id", requestId)
+    .maybeSingle();
+
+  const categoryEmbed = requestDetail?.category as
+    | { name?: Record<string, string> }
+    | null
+    | undefined;
+  const categoryNames =
+    categoryEmbed?.name && typeof categoryEmbed.name === "object"
+      ? categoryEmbed.name
+      : {};
 
   const { error: bidError } = await supabase
     .from("glatko_bids")
@@ -606,6 +633,28 @@ export async function acceptBid(
     .eq("id", requestId);
 
   if (requestError) throw requestError;
+
+  if (rejectedBids && rejectedBids.length > 0) {
+    const requestTitle = requestDetail?.title ?? "";
+    const municipality = requestDetail?.municipality ?? "";
+    await Promise.all(
+      rejectedBids.map((rb) =>
+        createNotification({
+          user_id: rb.professional_id,
+          type: "bid_rejected",
+          title: "Your bid was not selected",
+          body: `Another professional was chosen for "${requestTitle || "this request"}".`,
+          data: {
+            requestId,
+            bidId: rb.id,
+            requestTitle,
+            municipality,
+            categoryNames,
+          },
+        })
+      )
+    );
+  }
 }
 
 export async function withdrawBid(bidId: string, professionalId: string) {

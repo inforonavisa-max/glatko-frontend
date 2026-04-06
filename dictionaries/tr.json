@@ -621,7 +621,8 @@
       "category": "Kategori",
       "city": "Şehir",
       "urgency": "Aciliyet",
-      "budget": "Bütçe"
+      "budget": "Bütçe",
+      "categoryUnknown": "Kategori bilgisi yok"
     },
     "wizard": {
       "title": "Hizmet Talep Et",

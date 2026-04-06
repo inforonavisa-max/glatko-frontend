@@ -621,7 +621,8 @@
       "category": "Kategorie",
       "city": "Stadt",
       "urgency": "Dringlichkeit",
-      "budget": "Budget"
+      "budget": "Budget",
+      "categoryUnknown": "Kategorie nicht verfügbar"
     },
     "wizard": {
       "title": "Service anfragen",

@@ -621,7 +621,8 @@
       "category": "Kategorija",
       "city": "Grad",
       "urgency": "Hitnost",
-      "budget": "Budžet"
+      "budget": "Budžet",
+      "categoryUnknown": "Nije dostupno"
     },
     "wizard": {
       "title": "Zatražite uslugu",

@@ -47,10 +47,10 @@ export default async function ProDashboardPage({ params }: Props) {
     <ProDashboardClient
       displayName={profile.business_name || profile.profile?.full_name || "Pro"}
       isVerified={profile.is_verified}
-      rating={profile.avg_rating}
+      rating={Number(profile.avg_rating ?? 0)}
       pendingBids={pendingBids}
       activeJobs={activeJobs}
-      completedJobs={profile.completed_jobs}
+      completedJobs={Number(profile.completed_jobs ?? 0)}
       matchingRequestsCount={requests.length}
       recentBidsCount={bids.length}
       locale={locale}
