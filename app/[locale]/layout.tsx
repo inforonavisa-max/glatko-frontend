@@ -153,7 +153,9 @@ export default async function LocaleLayout({ children, params }: Props) {
           </a>
           <GlatkoHeader userId={userId} isPro={isPro} isAdmin={isAdmin} />
           {showOnboardingBanner ? (
-            <OnboardingWelcomeBanner displayName={onboardingFirstName} />
+            <div className="mt-16 shrink-0">
+              <OnboardingWelcomeBanner displayName={onboardingFirstName} />
+            </div>
           ) : null}
           <main id="main-content" className="flex-1">{children}</main>
           <GlatkoFooter />
