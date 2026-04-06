@@ -175,6 +175,7 @@
     "googleError": "فشل تسجيل الدخول بحساب Google",
     "backToHome": "العودة للرئيسية",
     "backToMarketplace": "العودة للمنصة",
+    "logout": "تسجيل الخروج",
     "brandPanel": {
       "tagline": "المنصة رقم 1 في الجبل الأسود",
       "bullet1": "100+ محترف موثق",
@@ -403,7 +404,10 @@
       "rating": "التقييم",
       "location": "الموقع",
       "hourlyRate": "الأجر بالساعة",
-      "perHour": "/ ساعة"
+      "perHour": "/ ساعة",
+      "primary": "الخدمة الأساسية",
+      "ctaTitle": "هل تحتاج هذه الخدمة؟",
+      "ctaDesc": "اطلب عرض سعر من هذا المحترف"
     }
   },
   "admin": {
@@ -574,6 +578,7 @@
       "selectCity": "اختر مدينة",
       "marina": "مارينا",
       "selectMarina": "اختر مارينا",
+      "urgencyLabel": "الأولوية",
       "urgency": {
         "urgent48h": "عاجل (48 ساعة)",
         "thisWeek": "هذا الأسبوع",
@@ -696,7 +701,13 @@
       "photos": "الصور",
       "bids": "العروض",
       "noBids": "لا توجد عروض بعد — المحترفون يراجعون طلبك",
-      "anonymous": "محترف مجهول"
+      "anonymous": "محترف مجهول",
+      "category": "الفئة",
+      "location": "الموقع",
+      "urgency": "الأولوية",
+      "date": "التاريخ المفضل",
+      "phone": "الهاتف",
+      "budget": "الميزانية"
     }
   },
   "status": {
@@ -816,7 +827,8 @@
     "online": "متصل",
     "offline": "آخر ظهور",
     "today": "اليوم",
-    "yesterday": "أمس"
+    "yesterday": "أمس",
+    "you": "أنت"
   },
   "chat": {
     "placeholder": "اكتب رسالتك...",
@@ -879,7 +891,8 @@
     "distribution": "توزيع التقييمات",
     "avgQuality": "الجودة",
     "avgCommunication": "التواصل",
-    "avgPunctuality": "الالتزام بالمواعيد"
+    "avgPunctuality": "الالتزام بالمواعيد",
+    "anonymous": "مجهول"
   },
   "jobStatus": {
     "startJob": "بدء العمل",
@@ -1105,7 +1118,8 @@
     "prosInCategory": "محترفين في هذه الفئة",
     "viewAllPros": "عرض جميع المحترفين",
     "requestInCategory": "اطلب خدمة في هذه الفئة",
-    "subcategories": "الفئات الفرعية"
+    "subcategories": "الفئات الفرعية",
+    "topPros": "أفضل المحترفين"
   },
   "seo": {
     "providersTitle": "المحترفون — Glatko",

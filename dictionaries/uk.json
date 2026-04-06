@@ -175,6 +175,7 @@
     "googleError": "Вхід через Google не вдався",
     "backToHome": "Повернутися на головну",
     "backToMarketplace": "Повернутися на платформу",
+    "logout": "Вийти",
     "brandPanel": {
       "tagline": "Платформа № 1 у Чорногорії",
       "bullet1": "100+ перевірених фахівців",
@@ -403,7 +404,10 @@
       "rating": "Рейтинг",
       "location": "Місцезнаходження",
       "hourlyRate": "Погодинна ставка",
-      "perHour": "/ година"
+      "perHour": "/ година",
+      "primary": "Основна послуга",
+      "ctaTitle": "Потрібна ця послуга?",
+      "ctaDesc": "Запросіть пропозицію в цього спеціаліста"
     }
   },
   "admin": {
@@ -574,6 +578,7 @@
       "selectCity": "Оберіть місто",
       "marina": "Марина",
       "selectMarina": "Оберіть марину",
+      "urgencyLabel": "Терміновість",
       "urgency": {
         "urgent48h": "Терміново (48г)",
         "thisWeek": "Цього тижня",
@@ -696,7 +701,13 @@
       "photos": "Фотографії",
       "bids": "Пропозиції",
       "noBids": "Пропозицій поки немає — спеціалісти вивчають вашу заявку",
-      "anonymous": "Анонімний спеціаліст"
+      "anonymous": "Анонімний спеціаліст",
+      "category": "Категорія",
+      "location": "Локація",
+      "urgency": "Терміновість",
+      "date": "Бажана дата",
+      "phone": "Телефон",
+      "budget": "Бюджет"
     }
   },
   "status": {
@@ -816,7 +827,8 @@
     "online": "В мережі",
     "offline": "Був(ла) в мережі",
     "today": "Сьогодні",
-    "yesterday": "Вчора"
+    "yesterday": "Вчора",
+    "you": "Ви"
   },
   "chat": {
     "placeholder": "Введіть повідомлення...",
@@ -879,7 +891,8 @@
     "distribution": "Розподіл оцінок",
     "avgQuality": "Якість",
     "avgCommunication": "Комунікація",
-    "avgPunctuality": "Пунктуальність"
+    "avgPunctuality": "Пунктуальність",
+    "anonymous": "Анонімно"
   },
   "jobStatus": {
     "startJob": "Розпочати роботу",
@@ -1105,7 +1118,8 @@
     "prosInCategory": "фахівців у цій категорії",
     "viewAllPros": "Усі фахівці",
     "requestInCategory": "Запитати послугу в цій категорії",
-    "subcategories": "Підкатегорії"
+    "subcategories": "Підкатегорії",
+    "topPros": "Топ фахівців"
   },
   "seo": {
     "providersTitle": "Фахівці — Glatko",

@@ -13,8 +13,22 @@ export async function getNotificationsAction(limit = 20, unreadOnly = false) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return [];
-  return getUserNotifications(user.id, limit, unreadOnly, supabase);
+  if (!user) {
+    console.log("[NOTIFICATION-BELL] getNotificationsAction: no session user");
+    return [];
+  }
+  console.log(
+    "[NOTIFICATION-BELL] fetching notifications for user:",
+    user.id,
+  );
+  const rows = await getUserNotifications(
+    user.id,
+    limit,
+    unreadOnly,
+    supabase,
+  );
+  console.log("[NOTIFICATION-BELL] fetched:", { count: rows.length });
+  return rows;
 }
 
 export async function markReadAction(notificationId: string) {

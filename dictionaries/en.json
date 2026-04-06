@@ -175,6 +175,7 @@
     "googleError": "Google sign-in failed",
     "backToHome": "Back to home",
     "backToMarketplace": "Back to platform",
+    "logout": "Log Out",
     "brandPanel": {
       "tagline": "Montenegro's #1 Service Platform",
       "bullet1": "100+ Verified Professionals",
@@ -403,7 +404,10 @@
       "rating": "Rating",
       "location": "Location",
       "hourlyRate": "Hourly Rate",
-      "perHour": "/ hour"
+      "perHour": "/ hour",
+      "primary": "Primary service",
+      "ctaTitle": "Need this service?",
+      "ctaDesc": "Request a quote from this professional"
     }
   },
   "admin": {
@@ -574,6 +578,7 @@
       "selectCity": "Select a city",
       "marina": "Marina",
       "selectMarina": "Select a marina",
+      "urgencyLabel": "Urgency",
       "urgency": {
         "urgent48h": "Urgent (48h)",
         "thisWeek": "This Week",
@@ -696,7 +701,13 @@
       "photos": "Photos",
       "bids": "Bids",
       "noBids": "No bids yet — professionals are reviewing your request",
-      "anonymous": "Anonymous Professional"
+      "anonymous": "Anonymous Professional",
+      "category": "Category",
+      "location": "Location",
+      "urgency": "Urgency",
+      "date": "Preferred date",
+      "phone": "Phone",
+      "budget": "Budget"
     }
   },
   "status": {
@@ -816,7 +827,8 @@
     "online": "Online",
     "offline": "Last seen",
     "today": "Today",
-    "yesterday": "Yesterday"
+    "yesterday": "Yesterday",
+    "you": "You"
   },
   "chat": {
     "placeholder": "Type your message...",
@@ -879,7 +891,8 @@
     "distribution": "Rating Distribution",
     "avgQuality": "Quality",
     "avgCommunication": "Communication",
-    "avgPunctuality": "Punctuality"
+    "avgPunctuality": "Punctuality",
+    "anonymous": "Anonymous"
   },
   "jobStatus": {
     "startJob": "Start Job",
@@ -1105,7 +1118,8 @@
     "prosInCategory": "professionals in this category",
     "viewAllPros": "View All Professionals",
     "requestInCategory": "Request Service in This Category",
-    "subcategories": "Subcategories"
+    "subcategories": "Subcategories",
+    "topPros": "Top professionals"
   },
   "seo": {
     "providersTitle": "Professionals — Glatko",

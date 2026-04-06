@@ -175,6 +175,7 @@
     "googleError": "Accesso con Google non riuscito",
     "backToHome": "Torna alla home",
     "backToMarketplace": "Torna alla piattaforma",
+    "logout": "Esci",
     "brandPanel": {
       "tagline": "Piattaforma n. 1 del Montenegro",
       "bullet1": "100+ professionisti verificati",
@@ -403,7 +404,10 @@
       "rating": "Valutazione",
       "location": "Posizione",
       "hourlyRate": "Tariffa Oraria",
-      "perHour": "/ ora"
+      "perHour": "/ ora",
+      "primary": "Servizio principale",
+      "ctaTitle": "Ti serve questo servizio?",
+      "ctaDesc": "Richiedi un preventivo a questo professionista"
     }
   },
   "admin": {
@@ -574,6 +578,7 @@
       "selectCity": "Seleziona una città",
       "marina": "Marina",
       "selectMarina": "Seleziona una marina",
+      "urgencyLabel": "Urgenza",
       "urgency": {
         "urgent48h": "Urgente (48h)",
         "thisWeek": "Questa Settimana",
@@ -696,7 +701,13 @@
       "photos": "Foto",
       "bids": "Preventivi",
       "noBids": "Nessun preventivo ancora — i professionisti stanno valutando",
-      "anonymous": "Professionista Anonimo"
+      "anonymous": "Professionista Anonimo",
+      "category": "Categoria",
+      "location": "Posizione",
+      "urgency": "Urgenza",
+      "date": "Data preferita",
+      "phone": "Telefono",
+      "budget": "Budget"
     }
   },
   "status": {
@@ -816,7 +827,8 @@
     "online": "Online",
     "offline": "Ultimo accesso",
     "today": "Oggi",
-    "yesterday": "Ieri"
+    "yesterday": "Ieri",
+    "you": "Tu"
   },
   "chat": {
     "placeholder": "Scrivi un messaggio...",
@@ -879,7 +891,8 @@
     "distribution": "Distribuzione delle valutazioni",
     "avgQuality": "Qualità",
     "avgCommunication": "Comunicazione",
-    "avgPunctuality": "Puntualità"
+    "avgPunctuality": "Puntualità",
+    "anonymous": "Anonimo"
   },
   "jobStatus": {
     "startJob": "Inizia lavoro",
@@ -1105,7 +1118,8 @@
     "prosInCategory": "professionisti in questa categoria",
     "viewAllPros": "Vedi tutti i professionisti",
     "requestInCategory": "Richiedi servizio in questa categoria",
-    "subcategories": "Sottocategorie"
+    "subcategories": "Sottocategorie",
+    "topPros": "Professionisti in evidenza"
   },
   "seo": {
     "providersTitle": "Professionisti — Glatko",

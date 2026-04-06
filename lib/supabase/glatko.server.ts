@@ -507,7 +507,10 @@ export async function getMatchingRequests(professionalId: string) {
     .lt("bid_count", 4)
     .order("created_at", { ascending: false });
 
-  if (error) throw error;
+  if (error) {
+    console.error("[GLATKO] getMatchingRequests query failed:", error);
+    return [];
+  }
 
   const { data: existingBids } = await supabase
     .from("glatko_bids")

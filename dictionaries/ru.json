@@ -175,6 +175,7 @@
     "googleError": "Вход через Google не удался",
     "backToHome": "Вернуться на главную",
     "backToMarketplace": "Вернуться на платформу",
+    "logout": "Выйти",
     "brandPanel": {
       "tagline": "Платформа № 1 в Черногории",
       "bullet1": "100+ проверенных специалистов",
@@ -403,7 +404,10 @@
       "rating": "Рейтинг",
       "location": "Местоположение",
       "hourlyRate": "Почасовая ставка",
-      "perHour": "/ час"
+      "perHour": "/ час",
+      "primary": "Основная услуга",
+      "ctaTitle": "Нужна эта услуга?",
+      "ctaDesc": "Запросите предложение у этого специалиста"
     }
   },
   "admin": {
@@ -574,6 +578,7 @@
       "selectCity": "Выберите город",
       "marina": "Марина",
       "selectMarina": "Выберите марину",
+      "urgencyLabel": "Срочность",
       "urgency": {
         "urgent48h": "Срочно (48ч)",
         "thisWeek": "На этой неделе",
@@ -696,7 +701,13 @@
       "photos": "Фотографии",
       "bids": "Предложения",
       "noBids": "Предложений пока нет — специалисты изучают вашу заявку",
-      "anonymous": "Анонимный специалист"
+      "anonymous": "Анонимный специалист",
+      "category": "Категория",
+      "location": "Местоположение",
+      "urgency": "Срочность",
+      "date": "Предпочтительная дата",
+      "phone": "Телефон",
+      "budget": "Бюджет"
     }
   },
   "status": {
@@ -816,7 +827,8 @@
     "online": "В сети",
     "offline": "Был(а) в сети",
     "today": "Сегодня",
-    "yesterday": "Вчера"
+    "yesterday": "Вчера",
+    "you": "Вы"
   },
   "chat": {
     "placeholder": "Введите сообщение...",
@@ -879,7 +891,8 @@
     "distribution": "Распределение оценок",
     "avgQuality": "Качество",
     "avgCommunication": "Общение",
-    "avgPunctuality": "Пунктуальность"
+    "avgPunctuality": "Пунктуальность",
+    "anonymous": "Анонимно"
   },
   "jobStatus": {
     "startJob": "Начать работу",
@@ -1105,7 +1118,8 @@
     "prosInCategory": "специалистов в этой категории",
     "viewAllPros": "Все специалисты",
     "requestInCategory": "Запросить услугу в этой категории",
-    "subcategories": "Подкатегории"
+    "subcategories": "Подкатегории",
+    "topPros": "Топ специалистов"
   },
   "seo": {
     "providersTitle": "Специалисты — Glatko",

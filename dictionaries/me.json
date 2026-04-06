@@ -175,6 +175,7 @@
     "googleError": "Prijava sa Google nije uspjela",
     "backToHome": "Nazad na početnu",
     "backToMarketplace": "Nazad na platformu",
+    "logout": "Odjavi se",
     "brandPanel": {
       "tagline": "Platforma br. 1 u Crnoj Gori",
       "bullet1": "100+ verifikovanih stručnjaka",
@@ -403,7 +404,10 @@
       "rating": "Ocjena",
       "location": "Lokacija",
       "hourlyRate": "Satnica",
-      "perHour": "/ sat"
+      "perHour": "/ sat",
+      "primary": "Primarna usluga",
+      "ctaTitle": "Treba vam ova usluga?",
+      "ctaDesc": "Zatražite ponudu od ovog profesionalca"
     }
   },
   "admin": {
@@ -574,6 +578,7 @@
       "selectCity": "Izaberite grad",
       "marina": "Marina",
       "selectMarina": "Izaberite marinu",
+      "urgencyLabel": "Hitnost",
       "urgency": {
         "urgent48h": "Hitno (48h)",
         "thisWeek": "Ove nedjelje",
@@ -696,7 +701,13 @@
       "photos": "Fotografije",
       "bids": "Ponude",
       "noBids": "Još nema ponuda — profesionalci pregledaju vaš zahtjev",
-      "anonymous": "Anonimni profesionalac"
+      "anonymous": "Anonimni profesionalac",
+      "category": "Kategorija",
+      "location": "Lokacija",
+      "urgency": "Hitnost",
+      "date": "Preferirani datum",
+      "phone": "Telefon",
+      "budget": "Budžet"
     }
   },
   "status": {
@@ -816,7 +827,8 @@
     "online": "Na mreži",
     "offline": "Posljednji put viđen",
     "today": "Danas",
-    "yesterday": "Juče"
+    "yesterday": "Juče",
+    "you": "Vi"
   },
   "chat": {
     "placeholder": "Unesite poruku...",
@@ -879,7 +891,8 @@
     "distribution": "Raspored ocjena",
     "avgQuality": "Kvalitet",
     "avgCommunication": "Komunikacija",
-    "avgPunctuality": "Tačnost"
+    "avgPunctuality": "Tačnost",
+    "anonymous": "Anonimno"
   },
   "jobStatus": {
     "startJob": "Započni posao",
@@ -1105,7 +1118,8 @@
     "prosInCategory": "stručnjaka u ovoj kategoriji",
     "viewAllPros": "Svi stručnjaci",
     "requestInCategory": "Zatražite uslugu u ovoj kategoriji",
-    "subcategories": "Potkategorije"
+    "subcategories": "Potkategorije",
+    "topPros": "Istaknuti stručnjaci"
   },
   "seo": {
     "providersTitle": "Stručnjaci — Glatko",

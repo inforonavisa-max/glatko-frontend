@@ -175,6 +175,7 @@
     "googleError": "Anmeldung mit Google fehlgeschlagen",
     "backToHome": "Zurück zur Startseite",
     "backToMarketplace": "Zurück zur Plattform",
+    "logout": "Abmelden",
     "brandPanel": {
       "tagline": "Montenegros Nr. 1 Serviceplattform",
       "bullet1": "100+ verifizierte Fachleute",
@@ -403,7 +404,10 @@
       "rating": "Bewertung",
       "location": "Standort",
       "hourlyRate": "Stundensatz",
-      "perHour": "/ Stunde"
+      "perHour": "/ Stunde",
+      "primary": "Hauptleistung",
+      "ctaTitle": "Brauchen Sie diese Dienstleistung?",
+      "ctaDesc": "Fordern Sie ein Angebot von diesem Profi an"
     }
   },
   "admin": {
@@ -574,6 +578,7 @@
       "selectCity": "Stadt wählen",
       "marina": "Marina",
       "selectMarina": "Marina wählen",
+      "urgencyLabel": "Dringlichkeit",
       "urgency": {
         "urgent48h": "Dringend (48h)",
         "thisWeek": "Diese Woche",
@@ -696,7 +701,13 @@
       "photos": "Fotos",
       "bids": "Angebote",
       "noBids": "Noch keine Angebote — Profis prüfen Ihre Anfrage",
-      "anonymous": "Anonymer Profi"
+      "anonymous": "Anonymer Profi",
+      "category": "Kategorie",
+      "location": "Standort",
+      "urgency": "Dringlichkeit",
+      "date": "Wunschtermin",
+      "phone": "Telefon",
+      "budget": "Budget"
     }
   },
   "status": {
@@ -816,7 +827,8 @@
     "online": "Online",
     "offline": "Zuletzt gesehen",
     "today": "Heute",
-    "yesterday": "Gestern"
+    "yesterday": "Gestern",
+    "you": "Sie"
   },
   "chat": {
     "placeholder": "Nachricht eingeben...",
@@ -879,7 +891,8 @@
     "distribution": "Bewertungsverteilung",
     "avgQuality": "Qualität",
     "avgCommunication": "Kommunikation",
-    "avgPunctuality": "Pünktlichkeit"
+    "avgPunctuality": "Pünktlichkeit",
+    "anonymous": "Anonym"
   },
   "jobStatus": {
     "startJob": "Auftrag starten",
@@ -1105,7 +1118,8 @@
     "prosInCategory": "Fachleute in dieser Kategorie",
     "viewAllPros": "Alle Fachleute anzeigen",
     "requestInCategory": "Dienstleistung in dieser Kategorie anfordern",
-    "subcategories": "Unterkategorien"
+    "subcategories": "Unterkategorien",
+    "topPros": "Top-Fachleute"
   },
   "seo": {
     "providersTitle": "Fachleute — Glatko",

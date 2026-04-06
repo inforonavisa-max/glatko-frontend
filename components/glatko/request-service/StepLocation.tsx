@@ -133,7 +133,7 @@ export function StepLocation({
 
         {/* ── Urgency cards — glassmorphism grid adapted from kit pricing Card pattern ── */}
         <div>
-          <FieldLabel>{t("request.step3.urgency")}</FieldLabel>
+          <FieldLabel>{t("request.step3.urgencyLabel")}</FieldLabel>
           <div className="grid grid-cols-2 gap-3">
             {URGENCY_OPTIONS.map((opt) => {
               const Icon = opt.icon;

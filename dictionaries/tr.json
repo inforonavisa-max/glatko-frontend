@@ -175,6 +175,7 @@
     "googleError": "Google ile giriş başarısız",
     "backToHome": "Ana sayfaya dön",
     "backToMarketplace": "Platforma dön",
+    "logout": "Çıkış Yap",
     "brandPanel": {
       "tagline": "Karadağ'ın #1 Hizmet Platformu",
       "bullet1": "100+ Doğrulanmış Profesyonel",
@@ -403,7 +404,10 @@
       "rating": "Puan",
       "location": "Konum",
       "hourlyRate": "Saat Ücreti",
-      "perHour": "/ saat"
+      "perHour": "/ saat",
+      "primary": "Ana hizmet",
+      "ctaTitle": "Bu hizmete mi ihtiyacınız var?",
+      "ctaDesc": "Bu profesyonelden teklif isteyin"
     }
   },
   "admin": {
@@ -574,6 +578,7 @@
       "selectCity": "Şehir seçin",
       "marina": "Marina",
       "selectMarina": "Marina seçin",
+      "urgencyLabel": "Aciliyet",
       "urgency": {
         "urgent48h": "Acil (48 saat)",
         "thisWeek": "Bu Hafta",
@@ -696,7 +701,13 @@
       "photos": "Fotoğraflar",
       "bids": "Teklifler",
       "noBids": "Henüz teklif yok — profesyoneller talebinizi inceliyor",
-      "anonymous": "Anonim Profesyonel"
+      "anonymous": "Anonim Profesyonel",
+      "category": "Kategori",
+      "location": "Konum",
+      "urgency": "Aciliyet",
+      "date": "Tercih edilen tarih",
+      "phone": "Telefon",
+      "budget": "Bütçe"
     }
   },
   "status": {
@@ -816,7 +827,8 @@
     "online": "Çevrimiçi",
     "offline": "Son görülme",
     "today": "Bugün",
-    "yesterday": "Dün"
+    "yesterday": "Dün",
+    "you": "Siz"
   },
   "chat": {
     "placeholder": "Mesajınızı yazın...",
@@ -879,7 +891,8 @@
     "distribution": "Puan Dağılımı",
     "avgQuality": "Kalite",
     "avgCommunication": "İletişim",
-    "avgPunctuality": "Dakiklik"
+    "avgPunctuality": "Dakiklik",
+    "anonymous": "Anonim"
   },
   "jobStatus": {
     "startJob": "İşe Başla",
@@ -1105,7 +1118,8 @@
     "prosInCategory": "profesyonel bu kategoride",
     "viewAllPros": "Tüm Profesyonelleri Gör",
     "requestInCategory": "Bu Kategoride Hizmet Talep Et",
-    "subcategories": "Alt Kategoriler"
+    "subcategories": "Alt Kategoriler",
+    "topPros": "Öne çıkan profesyoneller"
   },
   "seo": {
     "providersTitle": "Profesyoneller — Glatko",
