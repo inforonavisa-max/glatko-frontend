@@ -82,15 +82,27 @@ export function ChatRoom({
   const supabase = useMemo(() => createClient(), []);
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [sending, setSending] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const firstScrollDoneRef = useRef(false);
 
-  const scrollToBottom = useCallback(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  const scrollMessagesToBottom = useCallback((behavior: ScrollBehavior = "smooth") => {
+    const el = messagesContainerRef.current;
+    if (!el) return;
+    el.scrollTo({ top: el.scrollHeight, behavior });
   }, []);
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages.length, scrollToBottom]);
+    firstScrollDoneRef.current = false;
+  }, [conversationId]);
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => {
+      const behavior = firstScrollDoneRef.current ? "smooth" : "auto";
+      firstScrollDoneRef.current = true;
+      scrollMessagesToBottom(behavior);
+    });
+    return () => cancelAnimationFrame(id);
+  }, [messages.length, scrollMessagesToBottom]);
 
   useEffect(() => {
     const channel = supabase
@@ -142,14 +154,17 @@ export function ChatRoom({
   const yesterdayLabel = t("inbox.yesterday");
 
   return (
-    <div className="box-border flex h-[calc(100dvh-4rem)] min-h-0 max-h-[100dvh] flex-col pt-16 sm:h-[calc(100vh-4rem)] sm:max-h-none">
+    <div className="box-border flex h-[calc(100dvh-4rem)] min-h-0 max-h-[100dvh] flex-col overflow-hidden pt-16 sm:h-[calc(100vh-4rem)] sm:max-h-none">
       <ChatHeader
         otherUser={otherUser}
         requestTitle={requestTitle}
         requestId={requestId}
       />
 
-      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-6 sm:px-6">
+      <div
+        ref={messagesContainerRef}
+        className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-6 sm:px-6"
+      >
         {messages.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center gap-3 text-center">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-100 dark:bg-white/[0.04]">
@@ -181,7 +196,6 @@ export function ChatRoom({
                 );
               })}
             </AnimatePresence>
-            <div ref={messagesEndRef} />
           </div>
         )}
       </div>
