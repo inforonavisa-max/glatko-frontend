@@ -188,6 +188,11 @@ export async function dispatchNotificationEmail(params: {
   body?: string;
 }): Promise<void> {
   try {
+    console.log("[GLATKO-EMAIL] dispatch called:", {
+      userId: params.userId,
+      type: params.type,
+    });
+
     const type = params.type as DispatchNotificationType;
     const allowed: readonly string[] = [
       "new_request_match",
@@ -200,17 +205,28 @@ export async function dispatchNotificationEmail(params: {
       "verification_approved",
       "verification_rejected",
     ];
-    if (!allowed.includes(type)) return;
+    if (!allowed.includes(type)) {
+      console.log("[GLATKO-EMAIL] type not in allowed list:", type);
+      return;
+    }
 
     const admin = createAdminClient();
 
     const { data: authData, error: authErr } =
       await admin.auth.admin.getUserById(params.userId);
     if (authErr || !authData?.user?.email) {
+      console.error("[GLATKO-EMAIL] getUserById failed:", {
+        authErr,
+        hasUser: !!authData?.user,
+      });
       return;
     }
     const to = authData.user.email.trim();
-    if (!to) return;
+    if (!to) {
+      console.log("[GLATKO-EMAIL] recipient email empty after trim");
+      return;
+    }
+    console.log("[GLATKO-EMAIL] recipient email:", to);
 
     const { data: profile } = await admin
       .from("profiles")
@@ -219,7 +235,13 @@ export async function dispatchNotificationEmail(params: {
       .maybeSingle();
 
     const prefs = (profile?.notification_prefs as NotificationPrefsRow | null) ?? null;
-    if (!shouldSendEmailForType(type, prefs)) return;
+    if (!shouldSendEmailForType(type, prefs)) {
+      console.log(
+        "[GLATKO-EMAIL] email disabled by user prefs for type:",
+        type,
+      );
+      return;
+    }
 
     const locale = coerceEmailLocale(profile?.preferred_locale ?? undefined);
     const recipientName = profile?.full_name?.trim() || "";
@@ -237,7 +259,10 @@ export async function dispatchNotificationEmail(params: {
       locale,
     });
 
-    if (!emailContent) return;
+    if (!emailContent) {
+      console.log("[GLATKO-EMAIL] no template for type:", type);
+      return;
+    }
 
     const result = await sendEmail({
       to,
@@ -245,7 +270,13 @@ export async function dispatchNotificationEmail(params: {
       react: emailContent.react,
     });
 
-    if (result.ok === false && result.skipped !== true) {
+    console.log("[GLATKO-EMAIL] sendEmail result:", {
+      success: result.success,
+      messageId: result.success ? result.messageId : undefined,
+      error: result.success ? undefined : result.error,
+    });
+
+    if (!result.success) {
       console.error("[GLATKO-EMAIL] sendEmail failed:", result.error);
     }
   } catch (error) {
