@@ -123,6 +123,16 @@ export async function submitServiceRequest(
   }
 
   const row = result.request;
+
+  const { data: catRow } = await supabase
+    .from("glatko_service_categories")
+    .select("name")
+    .eq("id", row.category_id)
+    .maybeSingle();
+
+  const categoryNames =
+    (catRow?.name as Record<string, string> | null | undefined) ?? {};
+
   await notifyProfessionalsOfNewRequest({
     requestId: row.id,
     customerId: row.customer_id,
@@ -130,6 +140,7 @@ export async function submitServiceRequest(
     title: row.title,
     municipality: row.municipality,
     preferredProfessionalId: row.preferred_professional_id,
+    categoryNames,
   }).catch(() => {});
 
   return { success: true, requestId: row.id };

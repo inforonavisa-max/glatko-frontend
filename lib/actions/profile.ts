@@ -31,6 +31,8 @@ export type NotificationPrefsRow = {
   email_new_bid?: boolean;
   email_new_message?: boolean;
   email_new_review?: boolean;
+  /** Pro: new matching requests / lead emails (optional; default on if unset) */
+  email_new_request_match?: boolean;
   push_enabled?: boolean;
 };
 

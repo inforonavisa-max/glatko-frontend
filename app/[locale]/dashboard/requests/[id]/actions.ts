@@ -32,10 +32,10 @@ export async function acceptBidAction(
     
     const { data: bid } = await supabase
       .from("glatko_bids")
-      .select("professional_id")
+      .select("professional_id, price")
       .eq("id", bidId)
       .single();
-    
+
     if (bid) {
       const conversation = await getOrCreateConversation({
         service_request_id: requestId,
@@ -43,7 +43,7 @@ export async function acceptBidAction(
         customer_id: user.id,
         professional_id: bid.professional_id,
       });
-      
+
       await sendMessage({
         conversation_id: conversation.id,
         sender_id: user.id,
@@ -51,18 +51,40 @@ export async function acceptBidAction(
         content_type: "text",
       });
 
-      const { data: reqData } = await supabase
-        .from("glatko_service_requests")
-        .select("title")
-        .eq("id", requestId)
-        .single();
+      const [{ data: reqData }, { data: customerProfile }] = await Promise.all([
+        supabase
+          .from("glatko_service_requests")
+          .select("title")
+          .eq("id", requestId)
+          .single(),
+        supabase
+          .from("profiles")
+          .select("full_name")
+          .eq("id", user.id)
+          .single(),
+      ]);
+
+      const requestTitle = reqData?.title || "a request";
+      const customerName =
+        customerProfile?.full_name?.trim() || "A customer";
+      const priceLabel = new Intl.NumberFormat("en-US", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+      }).format(Number(bid.price));
 
       await createNotification({
         user_id: bid.professional_id,
         type: "bid_accepted",
         title: "Your bid was accepted!",
-        body: `Your bid for "${reqData?.title || "a request"}" was accepted`,
-        data: { requestId, bidId, conversationId: conversation.id },
+        body: `Your bid for "${requestTitle}" was accepted`,
+        data: {
+          requestId,
+          bidId,
+          conversationId: conversation.id,
+          customerName,
+          requestTitle,
+          price: priceLabel,
+        },
       }).catch(() => {});
     }
     

@@ -1,3 +1,4 @@
+import { dispatchNotificationEmail } from "@/lib/email/dispatch";
 import { createClient, createAdminClient } from "@/supabase/server";
 import type {
   ServiceCategory,
@@ -366,6 +367,8 @@ export async function notifyProfessionalsOfNewRequest(params: {
   title: string;
   municipality: string;
   preferredProfessionalId?: string | null;
+  /** JSONB `name` from glatko_service_categories for localized email labels */
+  categoryNames?: Record<string, string>;
 }): Promise<void> {
   const admin = createAdminClient();
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -395,6 +398,10 @@ export async function notifyProfessionalsOfNewRequest(params: {
         requestId: params.requestId,
         customer_id: params.customerId,
         is_direct: isDirect,
+        requestTitle: params.title,
+        customerName,
+        municipality: params.municipality,
+        categoryNames: params.categoryNames ?? {},
       },
     });
   };
@@ -952,10 +959,23 @@ export async function createNotification(data: {
   title: string;
   body?: string;
   data?: Record<string, unknown>;
-}) {
+}): Promise<void> {
   const admin = createAdminClient();
   const { error } = await admin.from("glatko_notifications").insert(data);
-  if (error) throw error;
+  if (error) {
+    console.error("[GLATKO] createNotification insert failed:", error);
+    return;
+  }
+
+  void dispatchNotificationEmail({
+    userId: data.user_id,
+    type: data.type,
+    data: data.data,
+    title: data.title,
+    body: data.body,
+  }).catch((err) => {
+    console.error("[GLATKO-EMAIL] dispatch failed (non-blocking):", err);
+  });
 }
 
 export async function getUserNotifications(

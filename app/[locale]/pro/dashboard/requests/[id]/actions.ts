@@ -65,18 +65,30 @@ export async function submitBid(formData: FormData): Promise<SubmitResult> {
     const supabaseQ = createClient();
     const { data: request } = await supabaseQ
       .from("glatko_service_requests")
-      .select("customer_id")
+      .select("customer_id, title")
       .eq("id", parsed.data.serviceRequestId)
       .single();
 
     if (request?.customer_id) {
-      const proName = profile.business_name || profile.profile?.full_name || "A professional";
+      const proName =
+        profile.business_name || profile.profile?.full_name || "A professional";
+      const priceLabel = new Intl.NumberFormat("en-US", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+      }).format(bid.price);
       await createNotification({
         user_id: request.customer_id,
         type: "new_bid",
         title: "New bid received",
         body: `${proName} submitted a bid for your request`,
-        data: { requestId: parsed.data.serviceRequestId, bidId: bid.id },
+        data: {
+          requestId: parsed.data.serviceRequestId,
+          bidId: bid.id,
+          professionalName: proName,
+          requestTitle: request.title ?? "",
+          price: priceLabel,
+          message: parsed.data.message,
+        },
       }).catch(() => {});
     }
 
