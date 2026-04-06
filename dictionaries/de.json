@@ -851,7 +851,21 @@
     "loadMore": "Ältere Nachrichten laden",
     "connectionLost": "Verbindung verloren — Verbindung wird wiederhergestellt...",
     "connectionRestored": "Verbindung wiederhergestellt",
-    "sendFailed": "Nachricht konnte nicht gesendet werden. Bitte erneut versuchen."
+    "sendFailed": "Nachricht konnte nicht gesendet werden. Bitte erneut versuchen.",
+    "translatedFrom": "Übersetzt aus dem {language}",
+    "showOriginal": "Original anzeigen",
+    "showTranslation": "Übersetzung anzeigen"
+  },
+  "language": {
+    "en": "Englisch",
+    "tr": "Türkisch",
+    "de": "Deutsch",
+    "ru": "Russisch",
+    "sr": "Serbisch",
+    "me": "Montenegrinisch",
+    "it": "Italienisch",
+    "ar": "Arabisch",
+    "uk": "Ukrainisch"
   },
   "review": {
     "title": "Bewerten Sie Ihre Erfahrung",

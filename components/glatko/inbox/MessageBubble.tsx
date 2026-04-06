@@ -1,7 +1,30 @@
 "use client";
 
-import { Check, CheckCheck } from "lucide-react";
+import { useState } from "react";
+import { Check, CheckCheck, Languages } from "lucide-react";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
+
+const KNOWN_LANG_CODES = [
+  "en",
+  "tr",
+  "de",
+  "ru",
+  "sr",
+  "me",
+  "it",
+  "ar",
+  "uk",
+] as const;
+
+type KnownLang = (typeof KNOWN_LANG_CODES)[number];
+
+function normalizeLangCode(code: string | null | undefined): KnownLang {
+  const c = (code ?? "en").trim().toLowerCase().slice(0, 8);
+  return (KNOWN_LANG_CODES as readonly string[]).includes(c)
+    ? (c as KnownLang)
+    : "en";
+}
 
 interface MessageBubbleProps {
   message: {
@@ -11,6 +34,9 @@ interface MessageBubbleProps {
     content_type: string;
     created_at: string;
     read_at: string | null;
+    original_locale?: string | null;
+    translated_content?: string | null;
+    translated_locale?: string | null;
   };
   isOwn: boolean;
   showDate: boolean;
@@ -28,6 +54,28 @@ export function MessageBubble({
   showDate,
   dateLabel,
 }: MessageBubbleProps) {
+  const t = useTranslations();
+  const [showOriginalIncoming, setShowOriginalIncoming] = useState(false);
+
+  const hasIncomingTranslation =
+    !isOwn &&
+    message.content_type === "text" &&
+    Boolean(
+      message.translated_content?.trim() &&
+        message.translated_locale &&
+        message.translated_content !== message.content,
+    );
+
+  const sourceLangCode = normalizeLangCode(message.original_locale);
+  const sourceLangName = t(`language.${sourceLangCode}`);
+
+  const bodyText =
+    isOwn || !hasIncomingTranslation
+      ? message.content
+      : showOriginalIncoming
+        ? message.content
+        : (message.translated_content ?? message.content);
+
   return (
     <>
       {showDate && dateLabel && (
@@ -54,7 +102,7 @@ export function MessageBubble({
           }`}
         >
           <p className="whitespace-pre-wrap break-words text-sm leading-relaxed">
-            {message.content}
+            {bodyText}
           </p>
 
           <div
@@ -74,6 +122,24 @@ export function MessageBubble({
                 <Check className="h-3.5 w-3.5 text-white/50" />
               ))}
           </div>
+
+          {hasIncomingTranslation && (
+            <div className="mt-2 border-t border-gray-200/80 pt-2 dark:border-white/[0.08]">
+              <p className="flex items-center gap-1 text-[11px] text-gray-500 dark:text-white/45">
+                <Languages className="h-3 w-3 shrink-0 opacity-70" />
+                {t("chat.translatedFrom", { language: sourceLangName })}
+              </p>
+              <button
+                type="button"
+                onClick={() => setShowOriginalIncoming((v) => !v)}
+                className="mt-1 text-left text-[11px] font-medium text-teal-600 hover:text-teal-500 dark:text-teal-400 dark:hover:text-teal-300"
+              >
+                {showOriginalIncoming
+                  ? t("chat.showTranslation")
+                  : t("chat.showOriginal")}
+              </button>
+            </div>
+          )}
         </div>
       </motion.div>
     </>

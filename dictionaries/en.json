@@ -851,7 +851,21 @@
     "loadMore": "Load earlier messages",
     "connectionLost": "Connection lost — reconnecting...",
     "connectionRestored": "Connection restored",
-    "sendFailed": "Could not send your message. Try again."
+    "sendFailed": "Could not send your message. Try again.",
+    "translatedFrom": "Translated from {language}",
+    "showOriginal": "Show original",
+    "showTranslation": "Show translation"
+  },
+  "language": {
+    "en": "English",
+    "tr": "Turkish",
+    "de": "German",
+    "ru": "Russian",
+    "sr": "Serbian",
+    "me": "Montenegrin",
+    "it": "Italian",
+    "ar": "Arabic",
+    "uk": "Ukrainian"
   },
   "review": {
     "title": "Rate Your Experience",

@@ -851,7 +851,21 @@
     "loadMore": "Önceki mesajları yükle",
     "connectionLost": "Bağlantı koptu — yeniden bağlanılıyor...",
     "connectionRestored": "Bağlantı yeniden kuruldu",
-    "sendFailed": "Mesaj gönderilemedi. Tekrar deneyin."
+    "sendFailed": "Mesaj gönderilemedi. Tekrar deneyin.",
+    "translatedFrom": "{language} dilinden çevrildi",
+    "showOriginal": "Orijinali göster",
+    "showTranslation": "Çeviriyi göster"
+  },
+  "language": {
+    "en": "İngilizce",
+    "tr": "Türkçe",
+    "de": "Almanca",
+    "ru": "Rusça",
+    "sr": "Sırpça",
+    "me": "Karadağca",
+    "it": "İtalyanca",
+    "ar": "Arapça",
+    "uk": "Ukraynaca"
   },
   "review": {
     "title": "Deneyiminizi Değerlendirin",

@@ -20,6 +20,9 @@ interface Message {
   file_url: string | null;
   read_at: string | null;
   created_at: string;
+  original_locale?: string | null;
+  translated_content?: string | null;
+  translated_locale?: string | null;
 }
 
 interface ChatRoomProps {
@@ -141,7 +144,7 @@ export function ChatRoom({
   const yesterdayLabel = t("inbox.yesterday");
 
   return (
-    <div className="flex h-[100dvh] flex-col sm:h-[calc(100vh-4rem)]">
+    <div className="box-border flex h-[calc(100dvh-4rem)] flex-col pt-16 sm:h-[calc(100vh-4rem)]">
       <ChatHeader
         otherUser={otherUser}
         requestTitle={requestTitle}

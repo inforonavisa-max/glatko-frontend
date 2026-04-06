@@ -758,18 +758,104 @@ export async function sendMessage(data: {
   file_url?: string;
   /** System auto-replies (e.g. bid accepted line) should not notify the recipient again. */
   skipRecipientNotification?: boolean;
+  /** Skip OpenAI translation (content is already in the recipient's language). */
+  skipTranslation?: boolean;
+  /** When skipTranslation, language code of `content` for display metadata. */
+  forcedOriginalLocale?: string;
 }) {
   const supabase = createClient();
 
+  const { data: conv, error: convErr } = await supabase
+    .from("glatko_conversations")
+    .select("customer_id, professional_id")
+    .eq("id", data.conversation_id)
+    .single();
+
+  if (
+    convErr ||
+    !conv ||
+    (conv.customer_id !== data.sender_id &&
+      conv.professional_id !== data.sender_id)
+  ) {
+    throw new Error("Unauthorized");
+  }
+
+  const recipientId =
+    conv.customer_id === data.sender_id
+      ? conv.professional_id
+      : conv.customer_id;
+
+  const admin = createAdminClient();
+  const [senderRes, recipientRes] = await Promise.all([
+    admin
+      .from("profiles")
+      .select("preferred_locale")
+      .eq("id", data.sender_id)
+      .maybeSingle(),
+    admin
+      .from("profiles")
+      .select("preferred_locale")
+      .eq("id", recipientId)
+      .maybeSingle(),
+  ]);
+
+  const senderRaw =
+    (senderRes.data?.preferred_locale as string | null | undefined)?.trim() ||
+    "en";
+  const recipientRaw =
+    (recipientRes.data?.preferred_locale as string | null | undefined)?.trim() ||
+    "en";
+  const senderLocale =
+    senderRaw.toLowerCase().split(/[-_]/)[0]?.slice(0, 16) || "en";
+  const recipientLocale =
+    recipientRaw.toLowerCase().split(/[-_]/)[0]?.slice(0, 16) || "en";
+
+  const contentType = data.content_type || "text";
+  let originalLocale: string | null = null;
+  let translatedContent: string | null = null;
+  let translatedLocale: string | null = null;
+
+  if (data.skipTranslation) {
+    const forced =
+      data.forcedOriginalLocale?.trim().toLowerCase().split(/[-_]/)[0] || "en";
+    originalLocale = forced.slice(0, 16);
+  } else if (contentType === "text" && data.content.trim()) {
+    originalLocale = senderLocale.slice(0, 16);
+    if (senderLocale !== recipientLocale) {
+      try {
+        const { translateMessage } = await import("@/lib/ai/translate-message");
+        const result = await translateMessage(data.content, recipientLocale);
+        if (result) {
+          translatedContent = result.translatedContent;
+          translatedLocale = recipientLocale.slice(0, 16);
+          if (result.detectedLocale !== "unknown") {
+            originalLocale = result.detectedLocale.slice(0, 16);
+          }
+        }
+      } catch (err) {
+        console.error("[GLATKO] translateMessage failed:", err);
+      }
+    }
+  } else {
+    originalLocale = senderLocale.slice(0, 16);
+  }
+
+  const insertRow: Record<string, unknown> = {
+    conversation_id: data.conversation_id,
+    sender_id: data.sender_id,
+    content: data.content,
+    content_type: contentType,
+    original_locale: originalLocale,
+    translated_content: translatedContent,
+    translated_locale: translatedLocale,
+  };
+  if (data.file_url !== undefined) {
+    insertRow.file_url = data.file_url;
+  }
+
   const { data: message, error } = await supabase
     .from("glatko_messages")
-    .insert({
-      conversation_id: data.conversation_id,
-      sender_id: data.sender_id,
-      content: data.content,
-      content_type: data.content_type || "text",
-      file_url: data.file_url,
-    })
+    .insert(insertRow)
     .select()
     .single();
 
@@ -780,22 +866,12 @@ export async function sendMessage(data: {
     .update({ updated_at: new Date().toISOString() })
     .eq("id", data.conversation_id);
 
-  const { data: conversation } = await supabase
-    .from("glatko_conversations")
-    .select("customer_id, professional_id")
-    .eq("id", data.conversation_id)
-    .single();
-
-  if (conversation && !data.skipRecipientNotification) {
-    const recipientId =
-      conversation.customer_id === data.sender_id
-        ? conversation.professional_id
-        : conversation.customer_id;
-
+  if (!data.skipRecipientNotification) {
+    const previewSource = translatedContent ?? data.content;
     const bodyText =
-      data.content.length > 100
-        ? `${data.content.slice(0, 100)}…`
-        : data.content;
+      previewSource.length > 100
+        ? `${previewSource.slice(0, 100)}…`
+        : previewSource;
 
     await createNotification({
       user_id: recipientId,

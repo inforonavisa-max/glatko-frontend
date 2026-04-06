@@ -27,7 +27,7 @@ export function ChatHeader({
   const initial = otherUser.full_name.charAt(0).toUpperCase();
 
   return (
-    <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-gray-200/50 bg-white/80 px-4 py-3 backdrop-blur-sm dark:border-white/[0.06] dark:bg-[#0b1f23]/80 sm:px-6">
+    <header className="z-10 flex shrink-0 items-center gap-3 border-b border-gray-200/50 bg-white/80 px-4 py-3 backdrop-blur-sm dark:border-white/[0.06] dark:bg-[#0b1f23]/80 sm:px-6">
       <Link
         href={`/${locale}/inbox`}
         className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-gray-500 transition-colors hover:bg-gray-100 dark:text-white/60 dark:hover:bg-white/[0.06]"

@@ -1,7 +1,8 @@
 "use server";
 
-import { createClient } from "@/supabase/server";
+import { createClient, createAdminClient } from "@/supabase/server";
 import { cancelServiceRequest, acceptBid, getOrCreateConversation, sendMessage, createNotification } from "@/lib/supabase/glatko.server";
+import { getBidAcceptedMessageForRecipientLocale } from "@/lib/messages/bid-accepted-system";
 
 interface CancelResult {
   success: boolean;
@@ -48,12 +49,24 @@ export async function acceptBidAction(
 
       conversationId = conversation.id;
 
+      const admin = createAdminClient();
+      const { data: proProfile } = await admin
+        .from("profiles")
+        .select("preferred_locale")
+        .eq("id", bid.professional_id)
+        .maybeSingle();
+      const proLocale = proProfile?.preferred_locale ?? "en";
+      const bidAcceptedContent =
+        getBidAcceptedMessageForRecipientLocale(proLocale);
+
       await sendMessage({
         conversation_id: conversation.id,
         sender_id: user.id,
-        content: "✅ Bid accepted! You can now discuss the details here.",
+        content: bidAcceptedContent,
         content_type: "text",
         skipRecipientNotification: true,
+        skipTranslation: true,
+        forcedOriginalLocale: proLocale,
       });
 
       const [{ data: reqData }, { data: customerProfile }] = await Promise.all([

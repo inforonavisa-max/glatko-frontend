@@ -851,7 +851,21 @@
     "loadMore": "Carica messaggi precedenti",
     "connectionLost": "Connessione persa — riconnessione in corso...",
     "connectionRestored": "Connessione ristabilita",
-    "sendFailed": "Impossibile inviare il messaggio. Riprova."
+    "sendFailed": "Impossibile inviare il messaggio. Riprova.",
+    "translatedFrom": "Tradotto da {language}",
+    "showOriginal": "Mostra originale",
+    "showTranslation": "Mostra traduzione"
+  },
+  "language": {
+    "en": "inglese",
+    "tr": "turco",
+    "de": "tedesco",
+    "ru": "russo",
+    "sr": "serbo",
+    "me": "montenegrino",
+    "it": "italiano",
+    "ar": "arabo",
+    "uk": "ucraino"
   },
   "review": {
     "title": "Valuta la tua esperienza",

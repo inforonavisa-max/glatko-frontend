@@ -851,7 +851,21 @@
     "loadMore": "Učitaj starije poruke",
     "connectionLost": "Veza izgubljena — ponovo se povezuje...",
     "connectionRestored": "Veza ponovo uspostavljena",
-    "sendFailed": "Poruka nije poslata. Pokušajte ponovo."
+    "sendFailed": "Poruka nije poslata. Pokušajte ponovo.",
+    "translatedFrom": "Prevedeno sa {language}",
+    "showOriginal": "Prikaži original",
+    "showTranslation": "Prikaži prevod"
+  },
+  "language": {
+    "en": "engleskog",
+    "tr": "turskog",
+    "de": "nemačkog",
+    "ru": "ruskog",
+    "sr": "srpskog",
+    "me": "crnogorskog",
+    "it": "italijanskog",
+    "ar": "arapskog",
+    "uk": "ukrajinskog"
   },
   "review": {
     "title": "Ocenite vaše iskustvo",
