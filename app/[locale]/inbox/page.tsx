@@ -54,7 +54,6 @@ export default async function InboxPage({
             <ConversationList
               conversations={conversations}
               currentUserId={user.id}
-              locale={locale}
             />
           )}
         </div>

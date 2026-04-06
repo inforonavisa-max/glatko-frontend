@@ -14,14 +14,12 @@ interface ChatHeaderProps {
   };
   requestTitle: string | null;
   requestId: string | null;
-  locale: string;
 }
 
 export function ChatHeader({
   otherUser,
   requestTitle,
   requestId,
-  locale,
 }: ChatHeaderProps) {
   const t = useTranslations();
   const initial = otherUser.full_name.charAt(0).toUpperCase();
@@ -29,7 +27,7 @@ export function ChatHeader({
   return (
     <header className="z-10 flex shrink-0 items-center gap-3 border-b border-gray-200/50 bg-white/80 px-4 py-3 backdrop-blur-sm dark:border-white/[0.06] dark:bg-[#0b1f23]/80 sm:px-6">
       <Link
-        href={`/${locale}/inbox`}
+        href="/inbox"
         className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-gray-500 transition-colors hover:bg-gray-100 dark:text-white/60 dark:hover:bg-white/[0.06]"
         aria-label={t("common.back")}
       >
@@ -66,7 +64,7 @@ export function ChatHeader({
           <p className="truncate text-xs text-gray-400 dark:text-white/40">
             {requestId ? (
               <Link
-                href={`/${locale}/dashboard/requests/${requestId}`}
+                href={`/dashboard/requests/${requestId}`}
                 className="transition-colors hover:text-teal-500"
               >
                 {requestTitle} &middot; {t("chat.viewRequest")}
@@ -79,7 +77,7 @@ export function ChatHeader({
       </div>
 
       <Link
-        href={`/${locale}/provider/${otherUser.id}`}
+        href={`/provider/${otherUser.id}`}
         className="shrink-0 text-xs font-medium text-gray-400 transition-colors hover:text-teal-500 dark:text-white/40"
       >
         {t("chat.viewProfile")}

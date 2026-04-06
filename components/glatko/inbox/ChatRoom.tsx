@@ -37,7 +37,6 @@ interface ChatRoomProps {
   };
   requestTitle: string | null;
   requestId: string | null;
-  locale: string;
 }
 
 function getDateLabel(
@@ -78,7 +77,6 @@ export function ChatRoom({
   otherUser,
   requestTitle,
   requestId,
-  locale,
 }: ChatRoomProps) {
   const t = useTranslations();
   const supabase = useMemo(() => createClient(), []);
@@ -149,7 +147,6 @@ export function ChatRoom({
         otherUser={otherUser}
         requestTitle={requestTitle}
         requestId={requestId}
-        locale={locale}
       />
 
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-6 sm:px-6">

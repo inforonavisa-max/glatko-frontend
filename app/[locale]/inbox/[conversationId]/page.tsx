@@ -80,7 +80,6 @@ export default async function ChatPage({
       otherUser={otherUser}
       requestTitle={conv.service_request?.title || null}
       requestId={conv.service_request?.id || null}
-      locale={locale}
     />
   );
 }
