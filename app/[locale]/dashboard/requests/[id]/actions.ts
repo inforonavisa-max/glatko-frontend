@@ -1,5 +1,6 @@
 "use server";
 
+import { glatkoCaptureException } from "@/lib/sentry/glatko-capture";
 import { createClient, createAdminClient } from "@/supabase/server";
 import { cancelServiceRequest, acceptBid, getOrCreateConversation, sendMessage, createNotification } from "@/lib/supabase/glatko.server";
 import { getBidAcceptedMessageForRecipientLocale } from "@/lib/messages/bid-accepted-system";
@@ -123,6 +124,7 @@ export async function acceptBidAction(
 
     return { success: true, conversationId };
   } catch (err) {
+    glatkoCaptureException(err, { module: "accept-bid-action" });
     return { success: false, error: err instanceof Error ? err.message : "Failed" };
   }
 }

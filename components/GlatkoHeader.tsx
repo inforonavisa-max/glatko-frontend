@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import { NotificationBell } from "@/components/glatko/notifications/NotificationDropdown";
 import { InboxUnreadBadge } from "@/components/glatko/inbox/InboxUnreadBadge";
 import { createClient } from "@/supabase/browser";
+import * as Sentry from "@sentry/nextjs";
 
 interface GlatkoHeaderProps {
   userId?: string | null;
@@ -51,6 +52,9 @@ export function GlatkoHeader({
   useEffect(() => { setMobileOpen(false); setAvatarOpen(false); }, [pathname]);
 
   const handleLogout = useCallback(async () => {
+    if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
+      Sentry.setUser(null);
+    }
     const supabase = createClient();
     await supabase.auth.signOut();
     window.location.href = "/";

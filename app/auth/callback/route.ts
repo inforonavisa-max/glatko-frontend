@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import { createAdminClient } from '@/supabase/server';
 import { trySendCustomerWelcomeEmail } from '@/lib/email/customer-welcome';
+import { glatkoCaptureException } from '@/lib/sentry/glatko-capture';
 import { defaultLocale } from '@/i18n/routing';
 
 function resolveBaseUrl(request: NextRequest): string {
@@ -59,8 +60,8 @@ export async function GET(request: NextRequest) {
           });
           await trySendCustomerWelcomeEmail(user.id);
         }
-      } catch {
-        // Non-blocking
+      } catch (err) {
+        glatkoCaptureException(err, { module: "auth-callback-profile" });
       }
       return response;
     }

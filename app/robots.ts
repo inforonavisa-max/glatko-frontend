@@ -5,8 +5,14 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/admin/", "/dashboard/", "/pro/dashboard/",
-                 "/inbox/", "/api/"],
+      disallow: [
+        "/admin/",
+        "/dashboard/",
+        "/pro/dashboard/",
+        "/inbox/",
+        "/settings/",
+        "/api/",
+      ],
     },
     sitemap: "https://glatko.app/sitemap.xml",
   };

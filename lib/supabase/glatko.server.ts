@@ -1,4 +1,5 @@
 import { dispatchNotificationEmail } from "@/lib/email/dispatch";
+import { glatkoCaptureException } from "@/lib/sentry/glatko-capture";
 import { checkMessageSendRateLimit } from "@/lib/ratelimit/message-rate-limit";
 import { createClient, createAdminClient } from "@/supabase/server";
 
@@ -907,6 +908,7 @@ export async function sendMessage(data: {
         }
       } catch (err) {
         console.error("[GLATKO:translate] translateMessage failed:", err);
+        glatkoCaptureException(err, { module: "messaging-translate" });
       }
     }
   } else {
@@ -1253,6 +1255,7 @@ export async function createNotification(data: {
     });
   } catch (err) {
     console.error("[GLATKO:dispatch] createNotification email hook failed:", err);
+    glatkoCaptureException(err, { module: "create-notification-email" });
   }
 }
 

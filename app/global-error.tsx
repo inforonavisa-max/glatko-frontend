@@ -1,11 +1,23 @@
 "use client";
 
+import * as Sentry from "@sentry/nextjs";
+import { useEffect } from "react";
+
 export default function GlobalError({
+  error,
   reset,
 }: {
-  error: Error;
+  error: Error & { digest?: string };
   reset: () => void;
 }) {
+  useEffect(() => {
+    try {
+      Sentry.captureException(error);
+    } catch {
+      /* optional dependency */
+    }
+  }, [error]);
+
   return (
     <html lang="en">
       <body className="min-h-screen bg-[#F8F6F0] text-gray-900 dark:bg-[#0b1f23] dark:text-white flex items-center justify-center">

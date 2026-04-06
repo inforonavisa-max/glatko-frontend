@@ -1,5 +1,6 @@
 "use server";
 
+import { glatkoCaptureException } from "@/lib/sentry/glatko-capture";
 import { createClient } from "@/supabase/server";
 import { sendMessage } from "@/lib/supabase/glatko.server";
 
@@ -31,6 +32,7 @@ export async function sendMessageAction(
 
     return { success: true };
   } catch (err) {
+    glatkoCaptureException(err, { module: "send-message-action" });
     return {
       success: false,
       error: err instanceof Error ? err.message : "Failed",

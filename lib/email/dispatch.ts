@@ -23,6 +23,7 @@ import ReviewReceivedEmail from "@/lib/email/templates/review-received";
 import ProWelcomeEmail from "@/lib/email/templates/pro-welcome";
 import SimpleActionEmail from "@/lib/email/templates/simple-action-email";
 import StatusChangeEmail from "@/lib/email/templates/status-change";
+import { glatkoCaptureException } from "@/lib/sentry/glatko-capture";
 import { createAdminClient } from "@/supabase/server";
 import {
   normalizeNotificationPrefs,
@@ -428,5 +429,6 @@ export async function dispatchNotificationEmail(params: {
     }
   } catch (error) {
     console.error("[GLATKO:dispatch] dispatchNotificationEmail failed:", error);
+    glatkoCaptureException(error, { module: "dispatch-email" });
   }
 }

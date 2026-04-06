@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import { glatkoCaptureException } from "@/lib/sentry/glatko-capture";
 
 export interface TranslationResult {
   translatedContent: string;
@@ -127,6 +128,7 @@ export async function translateMessage(
     ]);
   } catch (err) {
     console.error("[GLATKO:translate] Translation failed:", err);
+    glatkoCaptureException(err, { module: "translate-message" });
     return null;
   }
 }

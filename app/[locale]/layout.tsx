@@ -13,6 +13,7 @@ import { isAdminEmail } from "@/lib/admin";
 import { CookieConsent } from "@/components/glatko/CookieConsent";
 import { OnboardingWelcomeBanner } from "@/components/glatko/onboarding/OnboardingWelcomeBanner";
 import { HreflangLinks } from "@/components/seo/HreflangLinks";
+import { SentryUserScope } from "@/components/monitoring/SentryUserScope";
 import type { Metadata } from "next";
 
 /** Path segment after `/${locale}` for hreflang URLs (set by middleware `x-pathname`). */
@@ -37,16 +38,34 @@ export async function generateMetadata({
   const { locale } = await Promise.resolve(params);
   if (!hasLocale(routing.locales, locale)) return {};
   const t = await getTranslations({ locale });
+  const title = t("seo.landingTitle");
+  const description = t("seo.landingDesc");
   return {
-    title: t("seo.landingTitle"),
-    description: t("seo.landingDesc"),
+    metadataBase: new URL("https://glatko.app"),
+    title: {
+      default: title,
+      template: "%s | Glatko",
+    },
+    description,
+    alternates: {
+      canonical: `/${locale}`,
+    },
     openGraph: {
-      title: t("seo.landingTitle"),
-      description: t("seo.landingDesc"),
+      title,
+      description,
       url: `https://glatko.app/${locale}`,
       siteName: "Glatko",
       locale,
       type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
+    robots: {
+      index: true,
+      follow: true,
     },
   };
 }
@@ -124,6 +143,7 @@ export default async function LocaleLayout({ children, params }: Props) {
       <NuqsAdapter>
         <HreflangLinks locale={locale} path={hreflangPath} />
         <HtmlLangSetter lang={locale} dir={dir} />
+        <SentryUserScope userId={userId} email={user?.email} />
         <div className="flex min-h-screen flex-col" dir={dir}>
           <a
             href="#main-content"

@@ -1,29 +1,28 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/supabase/server";
+import { createAdminClient } from "@/supabase/server";
+
+export const runtime = "edge";
 
 export async function GET() {
-  const checks: Record<string, string> = {
-    status: "ok",
-    timestamp: new Date().toISOString(),
-    version: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) || "dev",
-    environment: process.env.VERCEL_ENV || process.env.NODE_ENV || "unknown",
-  };
+  const checks: Record<string, "ok" | "error"> = {};
 
   try {
-    const supabase = createClient();
-    const { error } = await supabase
-      .from("glatko_service_categories")
-      .select("id")
-      .limit(1);
+    const admin = createAdminClient();
+    const { error } = await admin.from("profiles").select("id").limit(1);
     checks.database = error ? "error" : "ok";
-    if (error) checks.databaseError = error.message;
-  } catch (err) {
+  } catch {
     checks.database = "error";
-    checks.databaseError = err instanceof Error ? err.message : "unknown";
   }
 
-  checks.upstash = process.env.UPSTASH_REDIS_REST_URL ? "configured" : "not_configured";
+  const allOk = Object.values(checks).every((v) => v === "ok");
 
-  const allOk = checks.database !== "error";
-  return NextResponse.json(checks, { status: allOk ? 200 : 503 });
+  return NextResponse.json(
+    {
+      status: allOk ? "healthy" : "degraded",
+      checks,
+      timestamp: new Date().toISOString(),
+      commit: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ?? "dev",
+    },
+    { status: allOk ? 200 : 503 },
+  );
 }

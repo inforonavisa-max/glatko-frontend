@@ -1,6 +1,7 @@
 "use server";
 
 import { getLocale, getTranslations } from "next-intl/server";
+import { glatkoCaptureException } from "@/lib/sentry/glatko-capture";
 import { createClient } from "@/supabase/server";
 import { createBid, getProfessionalProfile, createNotification } from "@/lib/supabase/glatko.server";
 import { createProBidSchema } from "@/lib/validations/pro-bid";
@@ -122,6 +123,7 @@ export async function submitBid(formData: FormData): Promise<SubmitResult> {
 
     return { success: true };
   } catch (err) {
+    glatkoCaptureException(err, { module: "submit-bid-action" });
     const msg = err instanceof Error ? err.message : String(err);
     const lower = msg.toLowerCase();
     if (
