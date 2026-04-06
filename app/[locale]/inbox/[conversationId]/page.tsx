@@ -23,7 +23,7 @@ export default async function ChatPage({
     .select(
       `
       *,
-      service_request:glatko_service_requests(id, title),
+      service_request:glatko_service_requests!glatko_conversations_service_request_id_fkey(id, title),
       customer:profiles!customer_id(id, full_name, avatar_url),
       professional:profiles!professional_id(id, full_name, avatar_url)
     `

@@ -549,7 +549,7 @@ export async function getProfessionalBids(professionalId: string) {
   const { data, error } = await supabase
     .from("glatko_bids")
     .select(
-      `*, service_request:glatko_service_requests(
+      `*, service_request:glatko_service_requests!glatko_bids_service_request_id_fkey(
         id, title, status, municipality, urgency,
         budget_min, budget_max, created_at, photos,
         category:glatko_service_categories(id, slug, name, icon),
@@ -628,7 +628,7 @@ export async function getUserConversations(userId: string) {
     .from("glatko_conversations")
     .select(`
       *,
-      service_request:glatko_service_requests(id, title, status,
+      service_request:glatko_service_requests!glatko_conversations_service_request_id_fkey(id, title, status,
         category:glatko_service_categories(name, icon)),
       customer:profiles!customer_id(id, full_name, avatar_url),
       professional:profiles!professional_id(id, full_name, avatar_url),
@@ -904,7 +904,7 @@ export async function getPublishedReviews(
     .select(
       `*,
       reviewer:profiles!reviewer_id(full_name, avatar_url),
-      service_request:glatko_service_requests(
+      service_request:glatko_service_requests!glatko_reviews_service_request_id_fkey(
         title,
         category:glatko_service_categories(name, icon)
       )`,
