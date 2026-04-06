@@ -144,7 +144,7 @@ export function ChatRoom({
   const yesterdayLabel = t("inbox.yesterday");
 
   return (
-    <div className="box-border flex h-[calc(100dvh-4rem)] flex-col pt-16 sm:h-[calc(100vh-4rem)]">
+    <div className="box-border flex h-[calc(100dvh-4rem)] min-h-0 max-h-[100dvh] flex-col pt-16 sm:h-[calc(100vh-4rem)] sm:max-h-none">
       <ChatHeader
         otherUser={otherUser}
         requestTitle={requestTitle}
@@ -152,7 +152,7 @@ export function ChatRoom({
         locale={locale}
       />
 
-      <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-6 sm:px-6">
         {messages.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center gap-3 text-center">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-100 dark:bg-white/[0.04]">

@@ -817,7 +817,8 @@
     "duration": "Estimated duration",
     "assignedSuccess": "Professional successfully assigned!",
     "hours": "hours",
-    "messageButton": "Send Message"
+    "messageButton": "Send Message",
+    "acceptError": "Could not accept this bid. It may have been withdrawn or the request may no longer be open."
   },
   "inbox": {
     "title": "Messages",
@@ -931,6 +932,11 @@
     "welcomeBody": "Would you like to create your first service request?",
     "cta": "Create your first request",
     "dismiss": "Dismiss"
+  },
+  "errors": {
+    "title": "Something went wrong",
+    "description": "Please try again. If the problem continues, contact support.",
+    "retry": "Try again"
   },
   "notifications": {
     "title": "Notifications",

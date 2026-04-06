@@ -1,5 +1,8 @@
 import { dispatchNotificationEmail } from "@/lib/email/dispatch";
+import { checkMessageSendRateLimit } from "@/lib/ratelimit/message-rate-limit";
 import { createClient, createAdminClient } from "@/supabase/server";
+
+const MAX_CHAT_MESSAGE_LENGTH = 8000;
 import type {
   ServiceCategory,
   ProfessionalProfile,
@@ -545,14 +548,34 @@ export async function acceptBid(
 ) {
   const supabase = createClient();
 
-  const { data: request } = await supabase
+  const { data: reqRow, error: reqErr } = await supabase
     .from("glatko_service_requests")
-    .select("customer_id")
+    .select("customer_id, status")
     .eq("id", requestId)
     .single();
 
-  if (request?.customer_id !== customerId) {
+  if (reqErr || !reqRow || reqRow.customer_id !== customerId) {
     throw new Error("Unauthorized");
+  }
+
+  const previousStatus = String(reqRow.status ?? "");
+  if (previousStatus !== "published" && previousStatus !== "bidding") {
+    throw new Error("Request is no longer open for acceptance");
+  }
+
+  const { data: bidRow, error: bidReadErr } = await supabase
+    .from("glatko_bids")
+    .select("id, status, service_request_id")
+    .eq("id", bidId)
+    .single();
+
+  if (
+    bidReadErr ||
+    !bidRow ||
+    bidRow.service_request_id !== requestId ||
+    bidRow.status !== "pending"
+  ) {
+    throw new Error("This bid is no longer available");
   }
 
   const { data: rejectedBids } = await supabase
@@ -579,12 +602,47 @@ export async function acceptBid(
       ? categoryEmbed.name
       : {};
 
-  const { error: bidError } = await supabase
+  const { data: lockedRequest, error: lockErr } = await supabase
+    .from("glatko_service_requests")
+    .update({
+      status: "assigned",
+      assigned_bid_id: bidId,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", requestId)
+    .eq("customer_id", customerId)
+    .in("status", ["published", "bidding"])
+    .select("id")
+    .maybeSingle();
+
+  if (lockErr) throw lockErr;
+  if (!lockedRequest?.id) {
+    throw new Error("Request is no longer open for acceptance");
+  }
+
+  const { data: acceptedBid, error: acceptBidErr } = await supabase
     .from("glatko_bids")
     .update({ status: "accepted", updated_at: new Date().toISOString() })
-    .eq("id", bidId);
+    .eq("id", bidId)
+    .eq("service_request_id", requestId)
+    .eq("status", "pending")
+    .select("id")
+    .maybeSingle();
 
-  if (bidError) throw bidError;
+  if (acceptBidErr) throw acceptBidErr;
+
+  if (!acceptedBid?.id) {
+    await supabase
+      .from("glatko_service_requests")
+      .update({
+        status: previousStatus,
+        assigned_bid_id: null,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", requestId)
+      .eq("customer_id", customerId);
+    throw new Error("This bid is no longer available");
+  }
 
   const { error: rejectError } = await supabase
     .from("glatko_bids")
@@ -594,17 +652,6 @@ export async function acceptBid(
     .eq("status", "pending");
 
   if (rejectError) throw rejectError;
-
-  const { error: requestError } = await supabase
-    .from("glatko_service_requests")
-    .update({
-      status: "assigned",
-      assigned_bid_id: bidId,
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", requestId);
-
-  if (requestError) throw requestError;
 
   if (rejectedBids && rejectedBids.length > 0) {
     const requestTitle = requestDetail?.title ?? "";
@@ -762,6 +809,13 @@ export async function sendMessage(data: {
       ? conv.professional_id
       : conv.customer_id;
 
+  const rate = await checkMessageSendRateLimit(data.sender_id);
+  if (!rate.ok) {
+    throw new Error(
+      "You are sending messages too quickly. Please wait a moment.",
+    );
+  }
+
   const admin = createAdminClient();
   const [senderRes, recipientRes] = await Promise.all([
     admin
@@ -788,6 +842,21 @@ export async function sendMessage(data: {
     recipientRaw.toLowerCase().split(/[-_]/)[0]?.slice(0, 16) || "en";
 
   const contentType = data.content_type || "text";
+  let outgoingContent =
+    typeof data.content === "string" ? data.content : "";
+
+  if (contentType === "text") {
+    outgoingContent = outgoingContent.trim();
+    if (!outgoingContent) {
+      throw new Error("Message cannot be empty");
+    }
+    if (outgoingContent.length > MAX_CHAT_MESSAGE_LENGTH) {
+      outgoingContent = outgoingContent.slice(0, MAX_CHAT_MESSAGE_LENGTH);
+    }
+  } else if (outgoingContent.length > MAX_CHAT_MESSAGE_LENGTH) {
+    outgoingContent = outgoingContent.slice(0, MAX_CHAT_MESSAGE_LENGTH);
+  }
+
   let originalLocale: string | null = null;
   let translatedContent: string | null = null;
   let translatedLocale: string | null = null;
@@ -823,12 +892,12 @@ export async function sendMessage(data: {
       translatedContent = null;
       translatedLocale = null;
     }
-  } else if (contentType === "text" && data.content.trim()) {
+  } else if (contentType === "text" && outgoingContent) {
     originalLocale = senderLocale.slice(0, 16);
     if (senderLocale !== recipientLocale) {
       try {
         const { translateMessage } = await import("@/lib/ai/translate-message");
-        const result = await translateMessage(data.content, recipientLocale);
+        const result = await translateMessage(outgoingContent, recipientLocale);
         if (result) {
           translatedContent = result.translatedContent;
           translatedLocale = recipientLocale.slice(0, 16);
@@ -847,7 +916,7 @@ export async function sendMessage(data: {
   const insertRow: Record<string, unknown> = {
     conversation_id: data.conversation_id,
     sender_id: data.sender_id,
-    content: data.content,
+    content: outgoingContent,
     content_type: contentType,
     original_locale: originalLocale,
     translated_content: translatedContent,
@@ -871,7 +940,7 @@ export async function sendMessage(data: {
     .eq("id", data.conversation_id);
 
   if (!data.skipRecipientNotification) {
-    const previewSource = translatedContent ?? data.content;
+    const previewSource = translatedContent ?? outgoingContent;
     const bodyText =
       previewSource.length > 100
         ? `${previewSource.slice(0, 100)}…`
@@ -1142,6 +1211,32 @@ export async function createNotification(data: {
   data?: Record<string, unknown>;
 }): Promise<void> {
   const admin = createAdminClient();
+
+  const { data: recipient, error: profileErr } = await admin
+    .from("profiles")
+    .select("id, is_active, is_deleted")
+    .eq("id", data.user_id)
+    .maybeSingle();
+
+  if (profileErr) {
+    console.error(
+      "[GLATKO:notifications] recipient profile lookup failed:",
+      profileErr.message,
+    );
+    return;
+  }
+  if (
+    !recipient ||
+    recipient.is_deleted === true ||
+    recipient.is_active === false
+  ) {
+    console.warn(
+      "[GLATKO:notifications] skip notification for missing/inactive/deleted user",
+      data.user_id,
+    );
+    return;
+  }
+
   const { error } = await admin.from("glatko_notifications").insert(data);
   if (error) {
     console.error("[GLATKO:notifications] createNotification insert failed:", error);

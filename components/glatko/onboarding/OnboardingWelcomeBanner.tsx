@@ -26,7 +26,7 @@ export function OnboardingWelcomeBanner({ displayName }: Props) {
 
   return (
     <div
-      className="border-b border-teal-200/80 bg-gradient-to-r from-teal-50 to-cyan-50 px-4 py-3 text-slate-800 shadow-sm"
+      className="border-b border-teal-200/80 bg-gradient-to-r from-teal-50 to-cyan-50 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] text-slate-800 shadow-sm"
       role="region"
       aria-label={title}
     >

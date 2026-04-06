@@ -136,8 +136,13 @@ function PrefsTable({
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
+      className="w-full max-w-full"
     >
-      <GlassmorphCard hover={false} className="overflow-hidden p-0">
+      <div className="max-w-full overflow-x-auto [-webkit-overflow-scrolling:touch]">
+        <GlassmorphCard
+          hover={false}
+          className="min-w-[min(100%,18rem)] overflow-hidden p-0 sm:min-w-0"
+        >
         <div className="flex items-center gap-2 border-b border-gray-100 px-5 py-4 dark:border-white/[0.06]">
           <Bell className="h-5 w-5 text-teal-600 dark:text-teal-400" />
           <h2 className="font-serif text-base font-semibold text-gray-900 dark:text-white">
@@ -197,7 +202,8 @@ function PrefsTable({
             </div>
           </div>
         ))}
-      </GlassmorphCard>
+        </GlassmorphCard>
+      </div>
     </motion.div>
   );
 }

@@ -97,18 +97,10 @@ export function NotificationBell({ userId }: NotificationBellProps) {
   const loadNotifications = useCallback(async () => {
     setLoading(true);
     try {
-      console.log(
-        "[NOTIFICATION-BELL] loadNotifications client, header userId:",
-        userId,
-      );
       const [data, count] = await Promise.all([
         getNotificationsAction(20, false),
         getUnreadCountAction(),
       ]);
-      console.log("[NOTIFICATION-BELL] client received:", {
-        count: (data as GlatkoNotification[]).length,
-        unread: count,
-      });
       setNotifications(data as GlatkoNotification[]);
       setUnreadCount(count);
     } catch (err) {
@@ -116,7 +108,7 @@ export function NotificationBell({ userId }: NotificationBellProps) {
     } finally {
       setLoading(false);
     }
-  }, [userId]);
+  }, []);
 
   useEffect(() => {
     loadNotifications();

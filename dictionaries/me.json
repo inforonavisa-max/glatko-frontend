@@ -817,7 +817,8 @@
     "duration": "Procenjeno trajanje",
     "assignedSuccess": "Profesionalac uspešno dodeljen!",
     "hours": "sati",
-    "messageButton": "Pošalji poruku"
+    "messageButton": "Pošalji poruku",
+    "acceptError": "Nije moguće prihvatiti ovu ponudu. Možda je povučena ili zahtjev više nije otvoren."
   },
   "inbox": {
     "title": "Poruke",
@@ -931,6 +932,11 @@
     "welcomeBody": "Želite li kreirati prvi zahtjev za uslugu?",
     "cta": "Kreirajte prvi zahtjev",
     "dismiss": "Zatvori"
+  },
+  "errors": {
+    "title": "Nešto je pošlo po zlu",
+    "description": "Pokušajte ponovo. Ako se problem nastavi, kontaktirajte podršku.",
+    "retry": "Pokušaj ponovo"
   },
   "notifications": {
     "title": "Obavještenja",

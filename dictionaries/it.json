@@ -817,7 +817,8 @@
     "duration": "Durata stimata",
     "assignedSuccess": "Professionista assegnato con successo!",
     "hours": "ore",
-    "messageButton": "Invia Messaggio"
+    "messageButton": "Invia Messaggio",
+    "acceptError": "Impossibile accettare questa offerta. Potrebbe essere stata ritirata o la richiesta non è più aperta."
   },
   "inbox": {
     "title": "Messaggi",
@@ -931,6 +932,11 @@
     "welcomeBody": "Vuoi creare la tua prima richiesta di servizio?",
     "cta": "Crea la tua prima richiesta",
     "dismiss": "Chiudi"
+  },
+  "errors": {
+    "title": "Qualcosa è andato storto",
+    "description": "Riprova. Se il problema persiste, contatta l’assistenza.",
+    "retry": "Riprova"
   },
   "notifications": {
     "title": "Notifiche",

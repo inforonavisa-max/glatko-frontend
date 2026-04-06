@@ -98,7 +98,7 @@ export function StepPhotos({
         setUploading(false);
       }
     },
-    [photos, setPhotos]
+    [photos, setPhotos, t]
   );
 
   const removePhoto = (index: number) => {

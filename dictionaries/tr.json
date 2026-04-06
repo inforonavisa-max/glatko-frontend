@@ -817,7 +817,8 @@
     "duration": "Tahmini süre",
     "assignedSuccess": "Profesyonel başarıyla atandı!",
     "hours": "saat",
-    "messageButton": "Mesaj Gönder"
+    "messageButton": "Mesaj Gönder",
+    "acceptError": "Bu teklif kabul edilemedi. Teklif geri çekilmiş veya talep artık açık olmayabilir."
   },
   "inbox": {
     "title": "Mesajlar",
@@ -931,6 +932,11 @@
     "welcomeBody": "İlk hizmet talebinizi oluşturmak ister misiniz?",
     "cta": "İlk talebinizi oluşturun",
     "dismiss": "Kapat"
+  },
+  "errors": {
+    "title": "Bir şeyler ters gitti",
+    "description": "Lütfen tekrar deneyin. Sorun sürerse destek ile iletişime geçin.",
+    "retry": "Tekrar dene"
   },
   "notifications": {
     "title": "Bildirimler",

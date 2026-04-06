@@ -45,6 +45,40 @@ export async function submitBid(formData: FormData): Promise<SubmitResult> {
     return { success: false, error: firstMsg };
   }
 
+  if (parsed.data.professionalId !== user.id) {
+    return { success: false, error: "Invalid professional account" };
+  }
+
+  const { data: requestRow, error: reqLookupErr } = await supabase
+    .from("glatko_service_requests")
+    .select("customer_id, status, expires_at")
+    .eq("id", parsed.data.serviceRequestId)
+    .single();
+
+  if (reqLookupErr || !requestRow) {
+    return { success: false, error: "Request not found" };
+  }
+
+  if (requestRow.customer_id === user.id) {
+    return { success: false, error: "You cannot bid on your own request" };
+  }
+
+  const requestStatus = String(requestRow.status ?? "");
+  if (requestStatus !== "published" && requestStatus !== "bidding") {
+    return {
+      success: false,
+      error: "This request is no longer accepting bids",
+    };
+  }
+
+  const expiresRaw = requestRow.expires_at as string | null | undefined;
+  if (expiresRaw) {
+    const expMs = new Date(expiresRaw).getTime();
+    if (!Number.isNaN(expMs) && expMs < Date.now()) {
+      return { success: false, error: "This request has expired" };
+    }
+  }
+
   try {
     const bid = await createBid({
       service_request_id: parsed.data.serviceRequestId,
@@ -88,7 +122,18 @@ export async function submitBid(formData: FormData): Promise<SubmitResult> {
 
     return { success: true };
   } catch (err) {
-    const msg = err instanceof Error ? err.message : "Failed to create bid";
-    return { success: false, error: msg };
+    const msg = err instanceof Error ? err.message : String(err);
+    const lower = msg.toLowerCase();
+    if (
+      lower.includes("duplicate") ||
+      lower.includes("unique") ||
+      lower.includes("23505")
+    ) {
+      return {
+        success: false,
+        error: "You have already submitted a bid for this request",
+      };
+    }
+    return { success: false, error: msg || "Failed to create bid" };
   }
 }

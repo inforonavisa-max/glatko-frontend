@@ -817,7 +817,8 @@
     "duration": "Geschätzte Dauer",
     "assignedSuccess": "Fachmann erfolgreich zugewiesen!",
     "hours": "Stunden",
-    "messageButton": "Nachricht senden"
+    "messageButton": "Nachricht senden",
+    "acceptError": "Dieses Angebot konnte nicht akzeptiert werden. Es wurde möglicherweise zurückgezogen oder die Anfrage ist nicht mehr offen."
   },
   "inbox": {
     "title": "Nachrichten",
@@ -931,6 +932,11 @@
     "welcomeBody": "Möchten Sie Ihre erste Serviceanfrage erstellen?",
     "cta": "Erste Anfrage erstellen",
     "dismiss": "Schließen"
+  },
+  "errors": {
+    "title": "Etwas ist schiefgelaufen",
+    "description": "Bitte versuchen Sie es erneut. Wenn das Problem bleibt, kontaktieren Sie den Support.",
+    "retry": "Erneut versuchen"
   },
   "notifications": {
     "title": "Benachrichtigungen",

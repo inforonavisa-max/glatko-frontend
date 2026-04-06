@@ -13,11 +13,20 @@ export async function sendMessageAction(
   } = await supabase.auth.getUser();
   if (!user) return { success: false, error: "Not authenticated" };
 
+  const trimmed = content.trim();
+  if (!trimmed) {
+    return { success: false, error: "Empty message" };
+  }
+  const MAX_LEN = 8000;
+  if (trimmed.length > MAX_LEN) {
+    return { success: false, error: "Message too long" };
+  }
+
   try {
     await sendMessage({
       conversation_id: conversationId,
       sender_id: user.id,
-      content,
+      content: trimmed,
     });
 
     return { success: true };

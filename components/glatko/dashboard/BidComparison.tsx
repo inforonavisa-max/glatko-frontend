@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { acceptBidAction } from "@/app/[locale]/dashboard/requests/[id]/actions";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 interface BidData {
   id: string;
@@ -54,14 +55,20 @@ export function BidComparison({ bids, requestId, requestStatus, locale }: Props)
     if (!window.confirm(t("bidComparison.acceptConfirm") + "\n\n" + t("bidComparison.acceptConfirmDesc"))) return;
     setAcceptingId(bidId);
     startTransition(async () => {
-      const result = await acceptBidAction(bidId, requestId);
-      if (result.success && result.conversationId) {
-        router.push(`/inbox/${result.conversationId}`);
-        return;
-      }
-      if (result.success) {
-        setSuccess(true);
-        setTimeout(() => router.refresh(), 1500);
+      try {
+        const result = await acceptBidAction(bidId, requestId);
+        if (result.success && result.conversationId) {
+          router.push(`/inbox/${result.conversationId}`);
+          return;
+        }
+        if (result.success) {
+          setSuccess(true);
+          setTimeout(() => router.refresh(), 1500);
+          return;
+        }
+        toast.error(result.error ?? t("bidComparison.acceptError"));
+      } finally {
+        setAcceptingId(null);
       }
     });
   }
@@ -84,7 +91,7 @@ export function BidComparison({ bids, requestId, requestStatus, locale }: Props)
   const canAccept = ["published", "bidding"].includes(requestStatus);
 
   return (
-    <div className="grid gap-4 md:grid-cols-2">
+    <div className="grid min-w-0 max-w-full gap-4 md:grid-cols-2">
       <AnimatePresence>
         {success && (
           <motion.div
@@ -111,7 +118,7 @@ export function BidComparison({ bids, requestId, requestStatus, locale }: Props)
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: i * 0.08 }}
             className={cn(
-              "rounded-2xl border p-5 transition-all duration-300",
+              "min-w-0 rounded-2xl border p-5 transition-all duration-300",
               isAccepted
                 ? "border-teal-500/40 bg-teal-500/[0.04] dark:bg-teal-500/[0.06]"
                 : isRejected
@@ -191,7 +198,7 @@ export function BidComparison({ bids, requestId, requestStatus, locale }: Props)
 
             {/* Message */}
             {bid.message && (
-              <p className="mt-4 rounded-xl bg-gray-50 p-3 text-sm italic text-gray-600 dark:bg-white/[0.02] dark:text-white/50">
+              <p className="mt-4 break-words rounded-xl bg-gray-50 p-3 text-sm italic text-gray-600 dark:bg-white/[0.02] dark:text-white/50">
                 &ldquo;{bid.message}&rdquo;
               </p>
             )}
