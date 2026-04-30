@@ -10,6 +10,10 @@ const nextConfig = {
       { protocol: "https", hostname: "cjqappdfyxgytdyeytwv.supabase.co" },
       { protocol: "https", hostname: "images.unsplash.com" },
     ],
+    formats: ["image/avif", "image/webp"],
+    // Compensate for Supabase Storage's `cache-control: no-cache` default —
+    // hero images are immutable and OK to cache aggressively at the Next layer.
+    minimumCacheTTL: 31536000,
   },
   async headers() {
     return [

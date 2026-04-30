@@ -79,7 +79,10 @@
       "moving-transport": "Trasloco e trasporto",
       "automotive": "Servizi auto",
       "airbnb-management": "Gestione Airbnb"
-    }
+    },
+    "view": "Vedi servizi",
+    "allHeading": "Tutti i servizi",
+    "allSubheading": "10 categorie di servizio essenziali con professionisti verificati"
   },
   "howItWorks": {
     "title": "Come Funziona",
@@ -1376,5 +1379,13 @@
     "passwordMismatch": "Le password non coincidono",
     "categoryRequired": "Seleziona almeno una categoria",
     "avatarRequired": "Aggiungi una foto del profilo per continuare"
+  },
+  "seasonal": {
+    "active": "In Stagione",
+    "off": "Fuori Stagione"
+  },
+  "pros": {
+    "activeCount": "{count} professionisti attivi",
+    "headline": "Professionisti"
   }
 }

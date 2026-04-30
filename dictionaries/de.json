@@ -79,7 +79,10 @@
       "moving-transport": "Umzug & Transport",
       "automotive": "Kfz-Service",
       "airbnb-management": "Airbnb-Verwaltung"
-    }
+    },
+    "view": "Dienste ansehen",
+    "allHeading": "Alle Dienstleistungen",
+    "allSubheading": "10 wesentliche Servicekategorien mit verifizierten Fachkräften"
   },
   "howItWorks": {
     "title": "So funktioniert's",
@@ -1376,5 +1379,13 @@
     "passwordMismatch": "Passwörter stimmen nicht überein",
     "categoryRequired": "Wählen Sie mindestens eine Kategorie",
     "avatarRequired": "Bitte fügen Sie ein Profilfoto hinzu"
+  },
+  "seasonal": {
+    "active": "Saison",
+    "off": "Außer Saison"
+  },
+  "pros": {
+    "activeCount": "{count} aktive Fachkräfte",
+    "headline": "Fachkräfte"
   }
 }

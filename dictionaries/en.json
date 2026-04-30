@@ -79,7 +79,10 @@
       "moving-transport": "Moving & Transport",
       "automotive": "Automotive",
       "airbnb-management": "Airbnb Management"
-    }
+    },
+    "view": "View services",
+    "allHeading": "All services",
+    "allSubheading": "10 essential service categories with verified professionals"
   },
   "howItWorks": {
     "title": "How It Works",
@@ -1376,5 +1379,13 @@
     "passwordMismatch": "Passwords do not match",
     "categoryRequired": "Select at least one category",
     "avatarRequired": "Add a profile photo to continue"
+  },
+  "seasonal": {
+    "active": "In Season",
+    "off": "Off Season"
+  },
+  "pros": {
+    "activeCount": "{count} active professionals",
+    "headline": "Professionals"
   }
 }

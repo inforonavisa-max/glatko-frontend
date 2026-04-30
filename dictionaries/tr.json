@@ -79,7 +79,10 @@
       "moving-transport": "Nakliye & Transport",
       "automotive": "Otomotiv",
       "airbnb-management": "Airbnb İşletme"
-    }
+    },
+    "view": "Hizmetleri gör",
+    "allHeading": "Tüm hizmetler",
+    "allSubheading": "Doğrulanmış profesyonellerle 10 temel hizmet kategorisi"
   },
   "howItWorks": {
     "title": "Nasıl Çalışır?",
@@ -1376,5 +1379,13 @@
     "passwordMismatch": "Şifreler eşleşmiyor",
     "categoryRequired": "En az bir kategori seçin",
     "avatarRequired": "Devam etmek için profil fotoğrafı ekleyin"
+  },
+  "seasonal": {
+    "active": "Sezonda",
+    "off": "Sezon Dışı"
+  },
+  "pros": {
+    "activeCount": "{count} aktif profesyonel",
+    "headline": "Profesyoneller"
   }
 }

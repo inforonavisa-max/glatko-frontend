@@ -79,7 +79,10 @@
       "moving-transport": "Selidbe i transport",
       "automotive": "Auto servis",
       "airbnb-management": "Airbnb upravljanje"
-    }
+    },
+    "view": "Pogledaj usluge",
+    "allHeading": "Sve usluge",
+    "allSubheading": "10 ključnih kategorija usluga sa provjerenim profesionalcima"
   },
   "howItWorks": {
     "title": "Kako funkcioniše",
@@ -1376,5 +1379,13 @@
     "passwordMismatch": "Lozinke se ne poklapaju",
     "categoryRequired": "Izaberite bar jednu kategoriju",
     "avatarRequired": "Dodajte fotografiju profila da nastavite"
+  },
+  "seasonal": {
+    "active": "U sezoni",
+    "off": "Van sezone"
+  },
+  "pros": {
+    "activeCount": "{count} aktivnih profesionalaca",
+    "headline": "Profesionalci"
   }
 }

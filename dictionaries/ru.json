@@ -79,7 +79,10 @@
       "moving-transport": "Переезд и транспорт",
       "automotive": "Автосервис",
       "airbnb-management": "Управление Airbnb"
-    }
+    },
+    "view": "Смотреть услуги",
+    "allHeading": "Все услуги",
+    "allSubheading": "10 ключевых категорий услуг с проверенными специалистами"
   },
   "howItWorks": {
     "title": "Как это работает",
@@ -1376,5 +1379,13 @@
     "passwordMismatch": "Пароли не совпадают",
     "categoryRequired": "Выберите хотя бы одну категорию",
     "avatarRequired": "Добавьте фото профиля, чтобы продолжить"
+  },
+  "seasonal": {
+    "active": "В сезоне",
+    "off": "Вне сезона"
+  },
+  "pros": {
+    "activeCount": "{count} активных специалистов",
+    "headline": "Специалисты"
   }
 }

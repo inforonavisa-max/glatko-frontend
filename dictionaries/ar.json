@@ -79,7 +79,10 @@
       "moving-transport": "نقل وانتقال",
       "automotive": "خدمات السيارات",
       "airbnb-management": "إدارة Airbnb"
-    }
+    },
+    "view": "عرض الخدمات",
+    "allHeading": "جميع الخدمات",
+    "allSubheading": "10 فئات خدمة أساسية مع محترفين موثقين"
   },
   "howItWorks": {
     "title": "كيف يعمل",
@@ -1376,5 +1379,13 @@
     "passwordMismatch": "كلمتا المرور غير متطابقتين",
     "categoryRequired": "اختر فئة واحدة على الأقل",
     "avatarRequired": "أضف صورة ملف شخصي للمتابعة"
+  },
+  "seasonal": {
+    "active": "في الموسم",
+    "off": "خارج الموسم"
+  },
+  "pros": {
+    "activeCount": "{count} محترفون نشطون",
+    "headline": "محترفون"
   }
 }
