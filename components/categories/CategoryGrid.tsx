@@ -86,8 +86,8 @@ export function CategoryGrid({ cards }: { cards: P0CategoryCard[] }) {
             )}
           >
             <CardContainer
-              containerClassName="!p-0 motion-reduce:[transform:none]"
-              className="motion-reduce:[transform:none] motion-reduce:transition-none"
+              containerClassName="!p-0 w-full motion-reduce:[transform:none]"
+              className="w-full motion-reduce:[transform:none] motion-reduce:transition-none"
             >
               <CardBody className="relative w-full">
                 <div
