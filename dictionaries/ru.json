@@ -67,7 +67,19 @@
       "emergencyRepair": "Аварийный ремонт",
       "haulOut": "Подъём и транспортировка"
     },
-    "getQuote": "Получить предложение"
+    "getQuote": "Получить предложение",
+    "p0Roots": {
+      "boat-services": "Услуги для лодок",
+      "home-cleaning": "Уборка дома",
+      "renovation-construction": "Ремонт и стройка",
+      "beauty-wellness": "Красота и уход",
+      "catering-food": "Кейтеринг и еда",
+      "tutoring-education": "Репетиторство",
+      "childcare-family": "Дети и семья",
+      "moving-transport": "Переезд и транспорт",
+      "automotive": "Автосервис",
+      "airbnb-management": "Управление Airbnb"
+    }
   },
   "howItWorks": {
     "title": "Как это работает",

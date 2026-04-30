@@ -67,7 +67,19 @@
       "emergencyRepair": "Notfallreparatur",
       "haulOut": "Kranen & Transport"
     },
-    "getQuote": "Angebot einholen"
+    "getQuote": "Angebot einholen",
+    "p0Roots": {
+      "boat-services": "Bootsdienste",
+      "home-cleaning": "Haushaltsreinigung",
+      "renovation-construction": "Renovierung & Bau",
+      "beauty-wellness": "Beauty & Wellness",
+      "catering-food": "Catering & Essen",
+      "tutoring-education": "Nachhilfe & Bildung",
+      "childcare-family": "Kinderbetreuung",
+      "moving-transport": "Umzug & Transport",
+      "automotive": "Kfz-Service",
+      "airbnb-management": "Airbnb-Verwaltung"
+    }
   },
   "howItWorks": {
     "title": "So funktioniert's",

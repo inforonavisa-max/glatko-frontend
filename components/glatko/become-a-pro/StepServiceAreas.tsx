@@ -1,54 +1,12 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  AlertTriangle,
-  Anchor,
-  Briefcase,
-  Brush,
-  Clipboard,
-  Droplets,
-  Hammer,
-  Home,
-  Paintbrush,
-  Settings,
-  Snowflake,
-  Sofa,
-  Sparkles,
-  Thermometer,
-  Trees,
-  Truck,
-  User,
-  Waves,
-  Zap,
-  type LucideIcon,
-} from "lucide-react";
 import { SpotlightCard } from "@/components/landing/spotlight-card";
 import { cn } from "@/lib/utils";
+import { resolveIcon } from "@/lib/utils/categoryIcon";
 import type { ServiceCategory, MultiLangText } from "@/types/glatko";
 import type { Locale } from "@/i18n/routing";
 import type { useTranslations } from "next-intl";
-
-const CATEGORY_ICON_MAP: Record<string, LucideIcon> = {
-  "alert-triangle": AlertTriangle,
-  anchor: Anchor,
-  brush: Brush,
-  clipboard: Clipboard,
-  droplets: Droplets,
-  hammer: Hammer,
-  home: Home,
-  paintbrush: Paintbrush,
-  settings: Settings,
-  snowflake: Snowflake,
-  sofa: Sofa,
-  sparkles: Sparkles,
-  thermometer: Thermometer,
-  trees: Trees,
-  truck: Truck,
-  user: User,
-  waves: Waves,
-  zap: Zap,
-};
 
 function categoryLabel(cat: ServiceCategory, locale: Locale): string {
   const n = cat.name as MultiLangText;
@@ -125,21 +83,9 @@ export function StepServiceAreas({
               >
                 <div className="flex items-center gap-3">
                   {(() => {
-                    const Icon = cat.icon
-                      ? CATEGORY_ICON_MAP[cat.icon]
-                      : undefined;
-                    if (
-                      !Icon &&
-                      cat.icon &&
-                      process.env.NODE_ENV !== "production"
-                    ) {
-                      console.warn(
-                        `[StepServiceAreas] Unknown category icon: ${cat.icon}`,
-                      );
-                    }
-                    const FinalIcon = Icon ?? Briefcase;
+                    const Icon = resolveIcon(cat.icon);
                     return (
-                      <FinalIcon
+                      <Icon
                         className="h-5 w-5 shrink-0 text-teal-500"
                         aria-hidden
                       />

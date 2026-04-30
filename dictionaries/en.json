@@ -67,7 +67,19 @@
       "emergencyRepair": "Emergency Repair",
       "haulOut": "Haul-Out & Transport"
     },
-    "getQuote": "Get a Quote"
+    "getQuote": "Get a Quote",
+    "p0Roots": {
+      "boat-services": "Boat Services",
+      "home-cleaning": "Home Cleaning",
+      "renovation-construction": "Renovation & Construction",
+      "beauty-wellness": "Beauty & Wellness",
+      "catering-food": "Catering & Food",
+      "tutoring-education": "Tutoring & Education",
+      "childcare-family": "Childcare & Family",
+      "moving-transport": "Moving & Transport",
+      "automotive": "Automotive",
+      "airbnb-management": "Airbnb Management"
+    }
   },
   "howItWorks": {
     "title": "How It Works",

@@ -67,7 +67,19 @@
       "emergencyRepair": "Hitna popravka",
       "haulOut": "Izvlačenje i transport"
     },
-    "getQuote": "Zatražite ponudu"
+    "getQuote": "Zatražite ponudu",
+    "p0Roots": {
+      "boat-services": "Usluge za plovila",
+      "home-cleaning": "Čišćenje kuća",
+      "renovation-construction": "Renoviranje i gradnja",
+      "beauty-wellness": "Lepota i nega",
+      "catering-food": "Catering i hrana",
+      "tutoring-education": "Privatne instrukcije",
+      "childcare-family": "Briga o djeci",
+      "moving-transport": "Selidbe i transport",
+      "automotive": "Auto servis",
+      "airbnb-management": "Airbnb upravljanje"
+    }
   },
   "howItWorks": {
     "title": "Kako funkcioniše",

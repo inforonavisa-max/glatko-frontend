@@ -1,8 +1,9 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Home, Anchor, Check } from "lucide-react";
+import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { resolveIcon } from "@/lib/utils/categoryIcon";
 import type { ServiceCategory } from "@/types/glatko";
 import type { Locale } from "@/i18n/routing";
 
@@ -15,11 +16,6 @@ interface Props {
   locale: Locale;
   t: (key: string) => string;
 }
-
-const PARENT_ICONS: Record<string, typeof Home> = {
-  "home-services": Home,
-  "boat-services": Anchor,
-};
 
 function catName(cat: ServiceCategory, locale: Locale): string {
   return cat.name[locale] ?? cat.name.en ?? cat.slug;
@@ -51,7 +47,7 @@ export function StepCategory({
       {/* ── Bento category cards — adapted from kit bento-grid-with-skeletons.tsx Card pattern ── */}
       <div className="grid gap-4 sm:grid-cols-2">
         {parents.map((parent) => {
-          const Icon = PARENT_ICONS[parent.slug] ?? Home;
+          const Icon = resolveIcon(parent.icon);
           const isSelected = selectedMainId === parent.id;
           return (
             <motion.button

@@ -11,11 +11,10 @@ import {
   XCircle,
   Inbox,
   ClipboardList,
-  Home,
-  Anchor,
   ChevronRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { resolveIcon } from "@/lib/utils/categoryIcon";
 import type { RequestStatus } from "@/types/glatko";
 
 type Props = {
@@ -46,11 +45,6 @@ const STATUS_ICONS: Record<string, typeof Clock> = {
   in_progress: AlertCircle,
   cancelled: XCircle,
   expired: XCircle,
-};
-
-const CATEGORY_ICONS: Record<string, typeof Home> = {
-  "home-services": Home,
-  "boat-services": Anchor,
 };
 
 export default async function DashboardRequestsPage({ params }: Props) {
@@ -160,8 +154,9 @@ export default async function DashboardRequestsPage({ params }: Props) {
               const status = (req.status as RequestStatus) ?? "draft";
               const cfg = STATUS_CONFIG[status] ?? STATUS_CONFIG.draft;
               const StatusIcon = STATUS_ICONS[status] ?? Clock;
-              const catSlug = req.category?.slug ?? "";
-              const CatIcon = CATEGORY_ICONS[catSlug] ?? Inbox;
+              const CatIcon = req.category?.icon
+                ? resolveIcon(req.category.icon)
+                : Inbox;
               const catName =
                 req.category?.name?.[locale as keyof typeof req.category.name] ??
                 req.category?.name?.en ??

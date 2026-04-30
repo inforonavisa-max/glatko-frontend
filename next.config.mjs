@@ -31,6 +31,22 @@ const nextConfig = {
       },
     ];
   },
+  async redirects() {
+    const localePattern = "/:locale(me|en|tr|sr|de|it|ru|ar|uk)";
+    const renames = [
+      { from: "general-cleaning", to: "regular-cleaning" },
+      { from: "villa-airbnb", to: "villa-cleaning" },
+      { from: "engine-service", to: "boat-engine-service" },
+      { from: "captain-hire", to: "captain-daily" },
+      { from: "winterization", to: "winter-storage" },
+      { from: "charter-prep", to: "charter-cleaning" },
+    ];
+    return renames.map(({ from, to }) => ({
+      source: `${localePattern}/services/${from}`,
+      destination: `/:locale/services/${to}`,
+      permanent: true,
+    }));
+  },
 };
 
 const withIntl = withNextIntl(nextConfig);
