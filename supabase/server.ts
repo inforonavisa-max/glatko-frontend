@@ -13,6 +13,7 @@ export function mergeSessionCookieOptions(options: CookieOptions): CookieOptions
     ...options,
     path: options.path ?? '/',
     sameSite: options.sameSite ?? 'lax',
+    secure: options.secure ?? process.env.NODE_ENV === 'production',
     maxAge,
   }
 }
