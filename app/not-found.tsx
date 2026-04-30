@@ -16,9 +16,14 @@ export default async function NotFound() {
   const h = await headers();
   const locale = pickLocale(h.get("x-pathname"));
   const t = NOT_FOUND_COPY[locale] ?? NOT_FOUND_COPY.en;
+  const dir = locale === "ar" ? "rtl" : "ltr";
 
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#F8F6F0] px-4 dark:bg-[#0b1f23]">
+    <div
+      lang={locale}
+      dir={dir}
+      className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#F8F6F0] px-4 dark:bg-[#0b1f23]"
+    >
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(20,184,166,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(20,184,166,0.03)_1px,transparent_1px)] bg-[size:60px_60px]" />
         <div className="absolute left-1/4 top-1/4 h-[500px] w-[500px] rounded-full bg-teal-500/[0.04] blur-[120px] dark:bg-teal-500/[0.06]" />
