@@ -67,7 +67,19 @@
       "emergencyRepair": "إصلاح طارئ",
       "haulOut": "سحب ونقل القارب"
     },
-    "getQuote": "اطلب عرض سعر"
+    "getQuote": "اطلب عرض سعر",
+    "p0Roots": {
+      "boat-services": "خدمات القوارب",
+      "home-cleaning": "تنظيف المنازل",
+      "renovation-construction": "تجديد وبناء",
+      "beauty-wellness": "جمال وعناية",
+      "catering-food": "تموين وطعام",
+      "tutoring-education": "دروس خصوصية",
+      "childcare-family": "رعاية الأطفال",
+      "moving-transport": "نقل وانتقال",
+      "automotive": "خدمات السيارات",
+      "airbnb-management": "إدارة Airbnb"
+    }
   },
   "howItWorks": {
     "title": "كيف يعمل",

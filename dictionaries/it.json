@@ -67,7 +67,19 @@
       "emergencyRepair": "Riparazione d'Emergenza",
       "haulOut": "Alaggio & Trasporto"
     },
-    "getQuote": "Richiedi Preventivo"
+    "getQuote": "Richiedi Preventivo",
+    "p0Roots": {
+      "boat-services": "Servizi nautici",
+      "home-cleaning": "Pulizia casa",
+      "renovation-construction": "Ristrutturazione",
+      "beauty-wellness": "Bellezza e benessere",
+      "catering-food": "Catering e cibo",
+      "tutoring-education": "Lezioni private",
+      "childcare-family": "Bambini e famiglia",
+      "moving-transport": "Trasloco e trasporto",
+      "automotive": "Servizi auto",
+      "airbnb-management": "Gestione Airbnb"
+    }
   },
   "howItWorks": {
     "title": "Come Funziona",

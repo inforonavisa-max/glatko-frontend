@@ -67,7 +67,19 @@
       "emergencyRepair": "Acil Onarım",
       "haulOut": "Karaya Çıkarma & Transport"
     },
-    "getQuote": "Teklif Al"
+    "getQuote": "Teklif Al",
+    "p0Roots": {
+      "boat-services": "Tekne Hizmetleri",
+      "home-cleaning": "Ev Temizlik",
+      "renovation-construction": "Tadilat & İnşaat",
+      "beauty-wellness": "Güzellik & Bakım",
+      "catering-food": "Yemek & Catering",
+      "tutoring-education": "Eğitim & Ders",
+      "childcare-family": "Çocuk & Aile",
+      "moving-transport": "Nakliye & Transport",
+      "automotive": "Otomotiv",
+      "airbnb-management": "Airbnb İşletme"
+    }
   },
   "howItWorks": {
     "title": "Nasıl Çalışır?",
