@@ -1436,5 +1436,13 @@
   "pros": {
     "activeCount": "{count} professionisti attivi",
     "headline": "Professionisti"
+  },
+  "emailPreferences": {
+    "title": "Preferenze email",
+    "transactional": "Stai ricevendo email transazionali (accesso, reimpostazione password, verifica account) — sono necessarie per la sicurezza dell'account e non possono essere disattivate singolarmente.",
+    "deleteAccount": "Se non vuoi più ricevere alcuna email, puoi eliminare il tuo account da Impostazioni → Account.",
+    "goToSettings": "Apri impostazioni",
+    "noteHeader": "Nota",
+    "supportNote": "Per domande, contatta l'assistenza rispondendo a questa email."
   }
 }

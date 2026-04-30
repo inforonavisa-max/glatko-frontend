@@ -1436,5 +1436,13 @@
   "pros": {
     "activeCount": "{count} aktif profesyonel",
     "headline": "Profesyoneller"
+  },
+  "emailPreferences": {
+    "title": "E-posta tercihleri",
+    "transactional": "İşlem amaçlı e-postalar alıyorsunuz (giriş, şifre sıfırlama, hesap doğrulama) — bunlar hesap güvenliğiniz için zorunludur ve tek tek kapatılamaz.",
+    "deleteAccount": "Hiçbir e-posta almak istemiyorsanız Ayarlar → Hesap'tan hesabınızı silebilirsiniz.",
+    "goToSettings": "Ayarları aç",
+    "noteHeader": "Not",
+    "supportNote": "Sorularınız için bu e-postayı yanıtlayarak destek ile iletişime geçebilirsiniz."
   }
 }

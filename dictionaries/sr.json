@@ -1436,5 +1436,13 @@
   "pros": {
     "activeCount": "{count} активних професионалаца",
     "headline": "Професионалци"
+  },
+  "emailPreferences": {
+    "title": "Email preferencije",
+    "transactional": "Primate transakcione e-poruke (prijava, resetovanje lozinke, potvrda naloga) — neophodne su za bezbednost naloga i ne mogu se isključiti pojedinačno.",
+    "deleteAccount": "Ako ne želite više nijedan email, možete obrisati nalog u Podešavanja → Nalog.",
+    "goToSettings": "Otvori podešavanja",
+    "noteHeader": "Napomena",
+    "supportNote": "Za pitanja, odgovorite na ovaj email i podrška će vam pomoći."
   }
 }

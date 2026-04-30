@@ -53,6 +53,8 @@ export type BuiltAuthEmail = {
   text: string;
   /** The resolved email_action_type (so the route can tag analytics). */
   type: AuthEmailType;
+  /** One-click unsubscribe URL (List-Unsubscribe header + plain-text footer). */
+  unsubscribeUrl: string;
 };
 
 const SUPPORTED_TYPES: readonly AuthEmailType[] = [
@@ -122,6 +124,8 @@ function buildConfirmationUrl(
 }
 
 function renderPlainText(parts: {
+  companyName: string;
+  tagline: string;
   heading: string;
   greeting: string;
   intro: string;
@@ -134,13 +138,27 @@ function renderPlainText(parts: {
   signature: string;
   footerHelp: string;
   footerCopyright: string;
+  unsubscribeLabel: string;
+  unsubscribeUrl: string;
 }): string {
+  // Rich plain-text fallback: even/dense divider lines balance the HTML/text
+  // ratio (SpamAssassin lifts on text-heavy + HTML-heavy mixes), and clear
+  // structure helps Apple Mail "View as plain text" mode and screen readers.
+  const heavy = "═══════════════════════════════════════";
+  const light = "──────────────────────────────────────";
   const lines = [
+    heavy,
+    parts.companyName.toUpperCase(),
+    parts.tagline,
+    heavy,
+    "",
     parts.heading,
     "",
     parts.greeting,
     "",
     parts.intro,
+    "",
+    light,
     "",
   ];
   if (parts.code) {
@@ -148,7 +166,10 @@ function renderPlainText(parts: {
     lines.push(parts.code);
     lines.push("");
   }
-  lines.push(`${parts.cta}: ${parts.ctaUrl}`);
+  lines.push(`${parts.cta}:`);
+  lines.push(parts.ctaUrl);
+  lines.push("");
+  lines.push(light);
   lines.push("");
   lines.push(parts.expiry);
   lines.push("");
@@ -156,9 +177,13 @@ function renderPlainText(parts: {
   lines.push("");
   lines.push(parts.signature);
   lines.push("");
-  lines.push("---");
+  lines.push(heavy);
   lines.push(parts.footerHelp);
+  lines.push("");
   lines.push(parts.footerCopyright);
+  lines.push("");
+  lines.push(`${parts.unsubscribeLabel}: ${parts.unsubscribeUrl}`);
+  lines.push(heavy);
   return lines.join("\n").trim();
 }
 
@@ -209,7 +234,12 @@ export function buildAuthEmail(input: BuildAuthEmailInput): BuiltAuthEmail {
     signature: copy.signature,
   });
 
+  const baseUrl = getSiteUrl();
+  const unsubscribeUrl = `${baseUrl}/${locale}/email-preferences?token=${user.id}`;
+
   const text = renderPlainText({
+    companyName: baseStrings.companyName,
+    tagline: baseStrings.tagline,
     heading: copy.heading,
     greeting,
     intro,
@@ -225,7 +255,9 @@ export function buildAuthEmail(input: BuildAuthEmailInput): BuiltAuthEmail {
       "YEAR",
       String(new Date().getFullYear()),
     ),
+    unsubscribeLabel: baseStrings.unsubscribeLabel,
+    unsubscribeUrl,
   });
 
-  return { subject: copy.subject, react, text, type };
+  return { subject: copy.subject, react, text, type, unsubscribeUrl };
 }
