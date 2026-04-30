@@ -42,6 +42,17 @@ export type SendEmailOptions = {
   to: string;
   subject: string;
   react: ReactElement;
+  /** Optional plain-text fallback (improves deliverability + accessibility). */
+  text?: string;
+  /** Optional Resend tags for analytics filtering (e.g. category=auth, type=recovery). */
+  tags?: { name: string; value: string }[];
+  /**
+   * Skip the Upstash 10/recipient/hour rate limiter. Use for system-critical
+   * flows (auth password reset, signup confirmation) where dropping a mail
+   * is worse than letting an attacker burn the bucket — Supabase's own
+   * minimum-interval setting acts as the upstream limiter for those.
+   */
+  skipRateLimit?: boolean;
 };
 
 /**
@@ -61,7 +72,7 @@ export async function sendEmail(
     };
   }
 
-  const limiter = getEmailOutboundLimiter();
+  const limiter = options.skipRateLimit ? null : getEmailOutboundLimiter();
   if (limiter) {
     try {
       const recipientKey = options.to.toLowerCase().trim();
@@ -102,6 +113,8 @@ export async function sendEmail(
       to: options.to,
       subject: options.subject,
       html,
+      ...(options.text ? { text: options.text } : {}),
+      ...(options.tags && options.tags.length > 0 ? { tags: options.tags } : {}),
     });
 
     if (error) {
