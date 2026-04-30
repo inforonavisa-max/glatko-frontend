@@ -376,6 +376,71 @@ export async function changePassword(formData: FormData) {
   return { success: true as const };
 }
 
+/**
+ * G-AUTH-2: Set a password for an OAuth-only user (no current password).
+ * Refuses if the user already has a password — that flow must use changePassword.
+ */
+export async function setPassword(formData: FormData) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user?.email) {
+    return { error: "unauthorized" as const };
+  }
+
+  const newPassword = String(formData.get("new_password") ?? "");
+  const confirmPassword = String(formData.get("confirm_password") ?? "");
+
+  if (newPassword.length < 8) {
+    return { error: "password_too_short" as const };
+  }
+  if (newPassword !== confirmPassword) {
+    return { error: "password_mismatch" as const };
+  }
+
+  const { data: methods } = await supabase
+    .rpc("get_auth_methods", { p_email: user.email })
+    .maybeSingle<{ has_password: boolean; oauth_providers: string[] | null }>();
+
+  if (methods?.has_password) {
+    return { error: "already_has_password" as const };
+  }
+
+  const { error } = await supabase.auth.updateUser({
+    password: newPassword,
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return { success: true as const };
+}
+
+/**
+ * G-AUTH-2: Revoke ALL refresh tokens for the current user across every device,
+ * then clear the local session. Used by /settings/security "Sign out everywhere".
+ */
+export async function signOutEverywhere() {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { error: "unauthorized" as const };
+  }
+
+  const { error } = await supabase.auth.signOut({ scope: "global" });
+  if (error) {
+    return { error: error.message };
+  }
+
+  return { success: true as const };
+}
+
 export async function dismissOnboardingWelcome() {
   const supabase = createClient();
   const {

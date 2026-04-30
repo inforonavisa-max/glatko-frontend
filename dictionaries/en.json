@@ -200,6 +200,11 @@
       "quote": "Amazing platform — found everything from villa cleaning to boat maintenance.",
       "quoteAuthor": "Mehmet Y.",
       "quoteCity": "Budva"
+    },
+    "accountLink": {
+      "title": "Your account uses {provider}",
+      "description": "This account doesn't have a password — sign in with {provider}.",
+      "cta": "Continue with {provider}"
     }
   },
   "common": {
@@ -1142,6 +1147,49 @@
           "invalidConfirm": "Confirmation text does not match",
           "error": "Could not delete account"
         }
+      }
+    },
+    "tabs": {
+      "profile": "Profile",
+      "notifications": "Notifications",
+      "security": "Security",
+      "ariaLabel": "Settings sections"
+    },
+    "security": {
+      "title": "Security",
+      "subtitle": "Manage your password, linked accounts, and sessions.",
+      "password": {
+        "title": "Password",
+        "hasPassword": "You have a password set. You can change it at any time.",
+        "noPassword": "You don't have a password yet. Set one so you can sign in without a social account.",
+        "change": "Change password",
+        "set": "Set a password"
+      },
+      "providers": {
+        "title": "Linked accounts",
+        "description": "These accounts can sign you in to Glatko.",
+        "linked": "Connected"
+      },
+      "signOut": {
+        "title": "Sign out everywhere",
+        "description": "Sign out of every device where you're currently logged in.",
+        "cta": "Sign out everywhere",
+        "confirm": "Are you sure? You'll need to sign in again on every device.",
+        "success": "Signed out everywhere",
+        "error": "Could not sign out everywhere"
+      },
+      "setPassword": {
+        "title": "Set a password",
+        "description": "Add a password to {email} so you can sign in without a social account.",
+        "newPassword": "New password",
+        "confirmPassword": "Confirm password",
+        "submit": "Set password",
+        "cancel": "Cancel",
+        "success": "Password set",
+        "error": "Could not set password",
+        "passwordTooShort": "Password must be at least 8 characters",
+        "passwordMismatch": "Passwords do not match",
+        "alreadyHasPassword": "You already have a password. Use Change password instead."
       }
     }
   },
