@@ -1,11 +1,10 @@
-import { getTranslations, setRequestLocale } from "next-intl/server";
-import { hasLocale } from "next-intl";
-import { notFound } from "next/navigation";
-import { routing } from "@/i18n/routing";
-import { Link } from "@/i18n/navigation";
-import { PageBackground } from "@/components/ui/PageBackground";
-import { TabbedServiceHero } from "@/components/glatko/services/TabbedServiceHero";
 import type { Metadata } from "next";
+import { hasLocale } from "next-intl";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { notFound } from "next/navigation";
+import { createClient } from "@/supabase/server";
+import { routing, type Locale } from "@/i18n/routing";
+import { CategoryGrid, type P0CategoryCard } from "@/components/categories/CategoryGrid";
 
 type Props = {
   params: Promise<{ locale: string }> | { locale: string };
@@ -15,83 +14,176 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await Promise.resolve(params);
   if (!hasLocale(routing.locales, locale)) return {};
   const t = await getTranslations({ locale });
+  const title = t("seo.servicesTitle");
+  const description = t("seo.servicesDesc");
   return {
-    title: t("seo.servicesTitle"),
-    description: t("seo.servicesDesc"),
+    title,
+    description,
+    alternates: { canonical: `/${locale}/services` },
     openGraph: {
-      title: t("seo.servicesTitle"),
-      description: t("seo.servicesDesc"),
+      title,
+      description,
       url: `https://glatko.app/${locale}/services`,
       siteName: "Glatko",
       locale,
       type: "website",
     },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
     robots: { index: true, follow: true },
   };
 }
 
-export const revalidate = 3600;
+const ORGANIZATION_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Glatko",
+  url: "https://glatko.app",
+  description:
+    "Montenegro's digital marketplace to post service requests, receive bids from verified professionals, and choose the best fit.",
+  areaServed: { "@type": "Country", name: "Montenegro" },
+} as const;
 
-const homeSubcategories = [
-  { key: "generalCleaning", slug: "general-cleaning" },
-  { key: "deepCleaning", slug: "deep-cleaning" },
-  { key: "villaAirbnb", slug: "villa-airbnb" },
-  { key: "renovation", slug: "renovation" },
-  { key: "painting", slug: "painting" },
-  { key: "electrical", slug: "electrical" },
-  { key: "plumbing", slug: "plumbing" },
-  { key: "acHeating", slug: "ac-heating" },
-  { key: "furnitureAssembly", slug: "furniture-assembly" },
-  { key: "garden", slug: "garden" },
-  { key: "pool", slug: "pool" },
-] as const;
+type RootRow = {
+  id: string;
+  slug: string;
+  name: Record<string, string>;
+  icon: string | null;
+  hero_image_url: string | null;
+  seasonal: string | null;
+  active_months: number[] | null;
+  badge_priority: number | null;
+};
 
-const boatSubcategories = [
-  { key: "captainHire", slug: "captain-hire" },
-  { key: "antifouling", slug: "antifouling" },
-  { key: "engineService", slug: "engine-service" },
-  { key: "hullCleaning", slug: "hull-cleaning" },
-  { key: "winterization", slug: "winterization" },
-  { key: "charterPrep", slug: "charter-prep" },
-  { key: "emergencyRepair", slug: "emergency-repair" },
-  { key: "haulOut", slug: "haul-out" },
-] as const;
+type SubRow = {
+  id: string;
+  parent_id: string;
+  slug: string;
+  name: Record<string, string>;
+  sort_order: number | null;
+};
+
+type ProServiceRow = {
+  professional_id: string;
+  category_id: string;
+};
+
+function pickName(name: Record<string, string>, locale: Locale): string {
+  return name[locale] ?? name.en ?? Object.values(name)[0] ?? "";
+}
 
 export default async function ServicesPage({ params }: Props) {
   const { locale } = await Promise.resolve(params);
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
+
+  const supabase = createClient();
   const t = await getTranslations();
 
-  return (
-    <PageBackground opacity={0.1}>
-      <div className="mx-auto max-w-5xl px-4 pb-20 pt-28 sm:px-6 lg:px-8">
-        <TabbedServiceHero
-          homeItems={[...homeSubcategories]}
-          boatItems={[...boatSubcategories]}
-        />
+  const { data: roots } = await supabase
+    .from("glatko_service_categories")
+    .select(
+      "id, slug, name, icon, hero_image_url, seasonal, active_months, badge_priority",
+    )
+    .eq("is_p0", true)
+    .is("parent_id", null)
+    .eq("is_active", true)
+    .order("badge_priority", { ascending: true });
 
-        {/* CTA */}
-        <div className="mt-16 rounded-2xl border border-gray-200/50 bg-white/70 p-8 text-center backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
-          <p className="font-serif text-lg font-semibold text-gray-900 dark:text-white">
-            {t("services.requestInCategory")}
-          </p>
-          <div className="mt-4 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-            <Link
-              href="/request-service"
-              className="inline-block rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:shadow-xl hover:shadow-teal-500/30"
-            >
-              {t("services.requestInCategory")}
-            </Link>
-            <Link
-              href="/become-a-pro"
-              className="inline-block rounded-xl border border-gray-200 px-6 py-3 text-sm font-medium text-gray-600 transition-all hover:border-teal-500/30 hover:text-teal-600 dark:border-white/[0.1] dark:text-white/60 dark:hover:text-teal-400"
-            >
-              {t("pro.wizard.title")}
-            </Link>
-          </div>
-        </div>
-      </div>
-    </PageBackground>
+  const rootRows = (roots ?? []) as RootRow[];
+  const rootIds = rootRows.map((r) => r.id);
+
+  const { data: subs } = rootIds.length
+    ? await supabase
+        .from("glatko_service_categories")
+        .select("id, parent_id, slug, name, sort_order")
+        .in("parent_id", rootIds)
+        .eq("is_active", true)
+        .order("sort_order", { ascending: true })
+    : { data: [] as SubRow[] };
+
+  const subRows = (subs ?? []) as SubRow[];
+
+  const { data: proServices } = rootIds.length
+    ? await supabase
+        .from("glatko_pro_services")
+        .select("professional_id, category_id")
+        .in(
+          "category_id",
+          [...rootIds, ...subRows.map((s) => s.id)],
+        )
+    : { data: [] as ProServiceRow[] };
+
+  const proRows = (proServices ?? []) as ProServiceRow[];
+
+  // Aggregate distinct pros per root (subs roll up to their parent root).
+  const subToRoot = new Map<string, string>();
+  for (const sub of subRows) subToRoot.set(sub.id, sub.parent_id);
+  const proSetByRoot = new Map<string, Set<string>>();
+  for (const ps of proRows) {
+    const rootId = subToRoot.get(ps.category_id) ?? ps.category_id;
+    if (!rootIds.includes(rootId)) continue;
+    let bag = proSetByRoot.get(rootId);
+    if (!bag) {
+      bag = new Set();
+      proSetByRoot.set(rootId, bag);
+    }
+    bag.add(ps.professional_id);
+  }
+
+  // First 3 subs per root (already ordered by sort_order ASC).
+  const subsByRoot = new Map<string, SubRow[]>();
+  for (const sub of subRows) {
+    const arr = subsByRoot.get(sub.parent_id) ?? [];
+    if (arr.length < 3) arr.push(sub);
+    subsByRoot.set(sub.parent_id, arr);
+  }
+
+  const cards: P0CategoryCard[] = rootRows.map((r) => ({
+    id: r.id,
+    slug: r.slug,
+    title: pickName(r.name, locale as Locale),
+    src: r.hero_image_url ?? "",
+    icon: r.icon ?? "Tag",
+    seasonal: r.seasonal,
+    active_months: r.active_months,
+    pro_count: proSetByRoot.get(r.id)?.size ?? 0,
+    subs: (subsByRoot.get(r.id) ?? []).map((s) => ({
+      slug: s.slug,
+      label: pickName(s.name, locale as Locale),
+    })),
+  }));
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(ORGANIZATION_JSON_LD),
+        }}
+      />
+      <main className="min-h-screen bg-[#F8F6F0] dark:bg-[#0b1f23]">
+        <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-24 pb-12">
+          <header className="mx-auto max-w-3xl text-center mb-10 md:mb-14">
+            <h1 className="font-serif text-3xl md:text-5xl font-semibold text-gray-900 dark:text-white tracking-tight">
+              {t("categories.allHeading")}
+            </h1>
+            <p className="mt-4 text-base md:text-lg text-gray-600 dark:text-white/60">
+              {t("categories.allSubheading")}
+            </p>
+          </header>
+          {cards.length > 0 ? (
+            <CategoryGrid cards={cards} />
+          ) : (
+            <div className="text-center py-20 text-gray-500 dark:text-white/50">
+              {t("categories.allSubheading")}
+            </div>
+          )}
+        </section>
+      </main>
+    </>
   );
 }
