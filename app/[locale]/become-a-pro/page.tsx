@@ -28,7 +28,7 @@ export default async function BecomeAProPage({ params }: Props) {
     .from("glatko_professional_profiles")
     .select("id, verification_status")
     .eq("id", user.id)
-    .single();
+    .maybeSingle();
 
   const { data: accountProfile } = await supabase
     .from("profiles")
