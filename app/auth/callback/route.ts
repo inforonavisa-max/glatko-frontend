@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
-import { createAdminClient } from '@/supabase/server';
+import { createAdminClient, mergeSessionCookieOptions } from '@/supabase/server';
 import { trySendCustomerWelcomeEmail } from '@/lib/email/customer-welcome';
 import { glatkoCaptureException } from '@/lib/sentry/glatko-capture';
 import { defaultLocale } from '@/i18n/routing';
@@ -36,7 +36,10 @@ export async function GET(request: NextRequest) {
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value, options }) => {
-            response.cookies.set(name, value, options);
+            // Defense in depth: enforce the same 30-day minimum maxAge
+            // that middleware/server already use, so OAuth first-login
+            // cookies aren't session-only.
+            response.cookies.set(name, value, mergeSessionCookieOptions(options));
           });
         },
       },
