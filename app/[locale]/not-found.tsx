@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import { getLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -64,6 +65,9 @@ const COPY: Record<
 };
 
 export default async function LocaleNotFound() {
+  // Force dynamic rendering so the response is built per-request and
+  // Next.js applies the 404 status set by notFound().
+  await headers();
   const locale = (await getLocale()) as Locale;
   const t = COPY[locale] ?? COPY.en;
 
