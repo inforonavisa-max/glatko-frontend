@@ -79,7 +79,7 @@ export function CategoryGrid({ cards }: { cards: P0CategoryCard[] }) {
           <Link
             key={card.id}
             href={`/services/${card.slug}`}
-            aria-label={`${card.title}, ${card.subs.length} ${t("pros.headline").toLowerCase()}, ${card.pro_count} ${t("pros.activeCount", { count: card.pro_count })}`}
+            aria-label={`${card.title}, ${t("categories.subCount", { count: card.subs.length })}, ${t("pros.activeCount", { count: card.pro_count })}`}
             className={cn(
               "group block rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-4 focus-visible:ring-offset-[#F8F6F0] dark:focus-visible:ring-offset-[#0b1f23]",
               "motion-reduce:transition-none",
@@ -94,7 +94,7 @@ export function CategoryGrid({ cards }: { cards: P0CategoryCard[] }) {
                   onMouseEnter={() => setHovered(index)}
                   onMouseLeave={() => setHovered(null)}
                   className={cn(
-                    "relative overflow-hidden rounded-2xl bg-gray-100 dark:bg-neutral-900 h-72 md:h-80",
+                    "relative overflow-hidden rounded-2xl bg-gray-100 dark:bg-neutral-900 h-72 md:h-80 w-full",
                     "transition-[filter,transform] duration-300 ease-out",
                     "motion-reduce:transition-none",
                     isOtherHovered &&

@@ -82,7 +82,8 @@
     },
     "view": "Pogledaj usluge",
     "allHeading": "Sve usluge",
-    "allSubheading": "10 ključnih kategorija usluga sa provjerenim profesionalcima"
+    "allSubheading": "10 ključnih kategorija usluga sa provjerenim profesionalcima",
+    "subCount": "{count, plural, =0 {nema podkategorija} one {# podkategorija} other {# podkategorija}}"
   },
   "howItWorks": {
     "title": "Kako funkcioniše",
