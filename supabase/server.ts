@@ -2,9 +2,9 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 
-const MIN_SESSION_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
+const MIN_SESSION_COOKIE_MAX_AGE = 60 * 60 * 24 * 30
 
-function mergeSessionCookieOptions(options: CookieOptions): CookieOptions {
+export function mergeSessionCookieOptions(options: CookieOptions): CookieOptions {
   const maxAge =
     options.maxAge != null
       ? Math.max(options.maxAge, MIN_SESSION_COOKIE_MAX_AGE)
@@ -13,6 +13,7 @@ function mergeSessionCookieOptions(options: CookieOptions): CookieOptions {
     ...options,
     path: options.path ?? '/',
     sameSite: options.sameSite ?? 'lax',
+    secure: options.secure ?? process.env.NODE_ENV === 'production',
     maxAge,
   }
 }

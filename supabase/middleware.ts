@@ -2,7 +2,7 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 import { locales } from '@/i18n/routing'
 
-const MIN_SESSION_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
+const MIN_SESSION_COOKIE_MAX_AGE = 60 * 60 * 24 * 30
 
 function mergeSessionCookieOptions(options: CookieOptions): CookieOptions {
   const maxAge =
@@ -13,6 +13,7 @@ function mergeSessionCookieOptions(options: CookieOptions): CookieOptions {
     ...options,
     path: options.path ?? '/',
     sameSite: options.sameSite ?? 'lax',
+    secure: options.secure ?? process.env.NODE_ENV === 'production',
     maxAge,
   }
 }
