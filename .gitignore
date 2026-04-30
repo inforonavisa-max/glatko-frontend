@@ -31,6 +31,10 @@ yarn-error.log*
 # vercel
 .vercel
 
+# Local-only staging area for category hero images before Storage upload.
+# Storage bucket `category-images` is the single source of truth.
+public/temp-categories/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
