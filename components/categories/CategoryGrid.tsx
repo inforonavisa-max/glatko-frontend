@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -8,15 +9,31 @@ import {
   CardContainer,
   CardItem,
 } from "@/components/aceternity/3d-card";
-import {
-  AnimatedTooltip,
-  type TooltipItem,
-} from "@/components/aceternity/animated-tooltip";
 import { FocusCards, type FocusCard } from "@/components/aceternity/focus-cards";
-import { HoverBorderGradient } from "@/components/aceternity/hover-border-gradient";
+import type { TooltipItem } from "@/components/aceternity/animated-tooltip";
 import { resolveIcon } from "@/lib/utils/categoryIcon";
 import { getSeasonalBadge } from "@/lib/utils/seasonalBadge";
 import { cn } from "@/lib/utils";
+
+// Hover-only kit components — defer their framer-motion weight off the
+// initial /[locale] bundle. ssr:false so they don't render server-side
+// (the badges would only flash for a frame anyway), and loading:null
+// keeps the spot blank until hover triggers the chunk fetch.
+const AnimatedTooltip = dynamic(
+  () =>
+    import("@/components/aceternity/animated-tooltip").then((m) => ({
+      default: m.AnimatedTooltip,
+    })),
+  { ssr: false, loading: () => null },
+);
+
+const HoverBorderGradient = dynamic(
+  () =>
+    import("@/components/aceternity/hover-border-gradient").then((m) => ({
+      default: m.HoverBorderGradient,
+    })),
+  { ssr: false, loading: () => null },
+);
 
 export type P0CategoryCard = FocusCard & {
   id: string;
