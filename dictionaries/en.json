@@ -1436,5 +1436,13 @@
   "pros": {
     "activeCount": "{count} active professionals",
     "headline": "Professionals"
+  },
+  "emailPreferences": {
+    "title": "Email preferences",
+    "transactional": "You are receiving transactional emails (sign-in, password reset, account verification) — these are required for account security and cannot be disabled individually.",
+    "deleteAccount": "If you don't want to receive any emails at all, you can delete your account from Settings → Account.",
+    "goToSettings": "Open settings",
+    "noteHeader": "Note",
+    "supportNote": "For questions, contact support by replying to this email."
   }
 }

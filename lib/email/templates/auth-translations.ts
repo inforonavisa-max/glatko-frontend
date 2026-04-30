@@ -1,9 +1,12 @@
 /**
- * G-AUTH-3: Localized copy for the 5 transactional auth emails.
+ * G-AUTH-3 / G-DELIVERABILITY-1: Localized copy for the 5 transactional auth emails.
  *
  * Each namespace shares the same shape. Variables:
  *   - {firstName} — substituted from user_metadata.first_name (fallback: email local part)
  *   - {code}      — substituted from email_data.token (only used by reauthentication.intro)
+ *
+ * Subject lines use a "Glatko:" brand prefix across every locale to lift Gmail
+ * trust signals and resolve the "no brand identity" SpamAssassin flag.
  *
  * No English fallback — every locale is fully translated.
  */
@@ -39,7 +42,7 @@ export type AuthTranslations = Record<AuthEmailType, AuthEmailCopy> & {
 export const authTranslations: Record<EmailLocale, AuthTranslations> = {
   me: {
     recovery: {
-      subject: "Resetujte svoju lozinku",
+      subject: "Glatko: Resetujte svoju lozinku",
       preheader: "Kliknite na link u nastavku da resetujete vašu Glatko lozinku.",
       heading: "Resetujte svoju lozinku",
       intro:
@@ -51,7 +54,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "Glatko tim",
     },
     signup: {
-      subject: "Potvrdite vaš email — Glatko",
+      subject: "Glatko: Potvrdite vaš email",
       preheader: "Jedan korak do aktivacije vašeg Glatko naloga.",
       heading: "Dobrodošli na Glatko",
       intro:
@@ -63,7 +66,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "Glatko tim",
     },
     magiclink: {
-      subject: "Vaš Glatko link za prijavu",
+      subject: "Glatko: Vaš link za prijavu",
       preheader: "Kliknite za sigurnu prijavu bez lozinke.",
       heading: "Prijavite se na Glatko",
       intro:
@@ -75,7 +78,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "Glatko tim",
     },
     email_change: {
-      subject: "Potvrdite promjenu email adrese",
+      subject: "Glatko: Potvrdite promjenu email adrese",
       preheader: "Potvrdite vašu novu email adresu za Glatko nalog.",
       heading: "Potvrdite novu email adresu",
       intro:
@@ -87,7 +90,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "Glatko tim",
     },
     reauthentication: {
-      subject: "Potvrdite vaš identitet — Glatko",
+      subject: "Glatko: Potvrdite vaš identitet",
       preheader: "Sigurnosna potvrda za nastavak osjetljive radnje.",
       heading: "Potvrdite identitet",
       intro:
@@ -103,7 +106,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
 
   sr: {
     recovery: {
-      subject: "Resetujte svoju lozinku",
+      subject: "Glatko: Resetujte svoju lozinku",
       preheader: "Kliknite na link ispod da resetujete vašu Glatko lozinku.",
       heading: "Resetujte svoju lozinku",
       intro:
@@ -115,7 +118,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "Glatko tim",
     },
     signup: {
-      subject: "Potvrdite vaš email — Glatko",
+      subject: "Glatko: Potvrdite vaš email",
       preheader: "Jedan korak do aktivacije vašeg Glatko naloga.",
       heading: "Dobrodošli na Glatko",
       intro:
@@ -126,7 +129,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "Glatko tim",
     },
     magiclink: {
-      subject: "Vaš Glatko link za prijavu",
+      subject: "Glatko: Vaš link za prijavu",
       preheader: "Bezbedna prijava bez lozinke.",
       heading: "Prijavite se na Glatko",
       intro:
@@ -137,7 +140,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "Glatko tim",
     },
     email_change: {
-      subject: "Potvrdite promenu email adrese",
+      subject: "Glatko: Potvrdite promenu email adrese",
       preheader: "Potvrdite vašu novu email adresu.",
       heading: "Potvrdite novu email adresu",
       intro:
@@ -148,7 +151,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "Glatko tim",
     },
     reauthentication: {
-      subject: "Potvrdite identitet — Glatko",
+      subject: "Glatko: Potvrdite identitet",
       preheader: "Bezbednosna potvrda za nastavak.",
       heading: "Potvrdite identitet",
       intro:
@@ -164,7 +167,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
 
   en: {
     recovery: {
-      subject: "Reset your password",
+      subject: "Glatko: Reset your password",
       preheader: "Click the link below to reset your Glatko password.",
       heading: "Reset your password",
       intro:
@@ -176,7 +179,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "The Glatko team",
     },
     signup: {
-      subject: "Confirm your email — Glatko",
+      subject: "Glatko: Confirm your email",
       preheader: "One step away from activating your Glatko account.",
       heading: "Welcome to Glatko",
       intro:
@@ -188,7 +191,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "The Glatko team",
     },
     magiclink: {
-      subject: "Your Glatko sign-in link",
+      subject: "Glatko: Your sign-in link",
       preheader: "Click to sign in securely without a password.",
       heading: "Sign in to Glatko",
       intro:
@@ -200,7 +203,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "The Glatko team",
     },
     email_change: {
-      subject: "Confirm your new email address",
+      subject: "Glatko: Confirm new email address",
       preheader: "Confirm your new email for your Glatko account.",
       heading: "Confirm new email address",
       intro:
@@ -212,7 +215,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "The Glatko team",
     },
     reauthentication: {
-      subject: "Confirm your identity — Glatko",
+      subject: "Glatko: Confirm your identity",
       preheader: "Security verification to continue.",
       heading: "Confirm identity",
       intro:
@@ -228,7 +231,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
 
   tr: {
     recovery: {
-      subject: "Şifrenizi sıfırlayın",
+      subject: "Glatko: Şifrenizi sıfırlayın",
       preheader: "Glatko şifrenizi sıfırlamak için aşağıdaki bağlantıya tıklayın.",
       heading: "Şifrenizi sıfırlayın",
       intro:
@@ -240,7 +243,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "Glatko ekibi",
     },
     signup: {
-      subject: "E-posta adresinizi doğrulayın — Glatko",
+      subject: "Glatko: Email adresinizi doğrulayın",
       preheader: "Glatko hesabınızı aktifleştirmek için bir adım kaldı.",
       heading: "Glatko'ya hoş geldiniz",
       intro:
@@ -252,7 +255,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "Glatko ekibi",
     },
     magiclink: {
-      subject: "Glatko giriş bağlantınız",
+      subject: "Glatko: Giriş bağlantınız",
       preheader: "Şifresiz güvenli giriş için tıklayın.",
       heading: "Glatko'ya giriş yap",
       intro:
@@ -264,7 +267,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "Glatko ekibi",
     },
     email_change: {
-      subject: "Yeni e-posta adresinizi doğrulayın",
+      subject: "Glatko: Yeni email adresinizi doğrulayın",
       preheader: "Glatko hesabınız için yeni e-posta adresinizi doğrulayın.",
       heading: "Yeni e-posta adresini doğrula",
       intro:
@@ -276,7 +279,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "Glatko ekibi",
     },
     reauthentication: {
-      subject: "Kimliğinizi doğrulayın — Glatko",
+      subject: "Glatko: Kimliğinizi doğrulayın",
       preheader: "Devam etmek için güvenlik doğrulaması.",
       heading: "Kimliğinizi doğrulayın",
       intro:
@@ -292,7 +295,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
 
   de: {
     recovery: {
-      subject: "Passwort zurücksetzen",
+      subject: "Glatko: Passwort zurücksetzen",
       preheader: "Klicken Sie auf den Link, um Ihr Glatko-Passwort zurückzusetzen.",
       heading: "Passwort zurücksetzen",
       intro:
@@ -304,7 +307,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "Ihr Glatko-Team",
     },
     signup: {
-      subject: "Bestätigen Sie Ihre E-Mail — Glatko",
+      subject: "Glatko: E-Mail bestätigen",
       preheader: "Ein Schritt fehlt zur Aktivierung Ihres Glatko-Kontos.",
       heading: "Willkommen bei Glatko",
       intro:
@@ -316,7 +319,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "Ihr Glatko-Team",
     },
     magiclink: {
-      subject: "Ihr Glatko-Anmeldelink",
+      subject: "Glatko: Ihr Anmeldelink",
       preheader: "Klicken Sie für eine sichere Anmeldung ohne Passwort.",
       heading: "Bei Glatko anmelden",
       intro:
@@ -328,7 +331,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "Ihr Glatko-Team",
     },
     email_change: {
-      subject: "Bestätigen Sie Ihre neue E-Mail-Adresse",
+      subject: "Glatko: Neue E-Mail-Adresse bestätigen",
       preheader: "Bestätigen Sie Ihre neue E-Mail-Adresse für Ihr Glatko-Konto.",
       heading: "Neue E-Mail-Adresse bestätigen",
       intro:
@@ -340,7 +343,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "Ihr Glatko-Team",
     },
     reauthentication: {
-      subject: "Identität bestätigen — Glatko",
+      subject: "Glatko: Identität bestätigen",
       preheader: "Sicherheitsprüfung zum Fortfahren.",
       heading: "Identität bestätigen",
       intro:
@@ -356,7 +359,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
 
   it: {
     recovery: {
-      subject: "Reimposta la tua password",
+      subject: "Glatko: Reimposta la password",
       preheader: "Clicca il link qui sotto per reimpostare la password Glatko.",
       heading: "Reimposta la tua password",
       intro:
@@ -368,7 +371,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "Il team Glatko",
     },
     signup: {
-      subject: "Conferma la tua email — Glatko",
+      subject: "Glatko: Conferma la tua email",
       preheader: "Un passo per attivare il tuo account Glatko.",
       heading: "Benvenuto su Glatko",
       intro:
@@ -379,7 +382,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "Il team Glatko",
     },
     magiclink: {
-      subject: "Il tuo link di accesso Glatko",
+      subject: "Glatko: Il tuo link di accesso",
       preheader: "Clicca per accedere in modo sicuro senza password.",
       heading: "Accedi a Glatko",
       intro:
@@ -391,7 +394,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "Il team Glatko",
     },
     email_change: {
-      subject: "Conferma il tuo nuovo indirizzo email",
+      subject: "Glatko: Conferma il nuovo indirizzo email",
       preheader: "Conferma il tuo nuovo indirizzo per l'account Glatko.",
       heading: "Conferma nuovo indirizzo email",
       intro:
@@ -403,7 +406,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "Il team Glatko",
     },
     reauthentication: {
-      subject: "Conferma la tua identità — Glatko",
+      subject: "Glatko: Conferma la tua identità",
       preheader: "Verifica di sicurezza per continuare.",
       heading: "Conferma identità",
       intro:
@@ -419,7 +422,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
 
   ru: {
     recovery: {
-      subject: "Сброс пароля",
+      subject: "Glatko: Сбросьте пароль",
       preheader: "Нажмите на ссылку ниже, чтобы сбросить пароль Glatko.",
       heading: "Сброс пароля",
       intro:
@@ -431,7 +434,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "Команда Glatko",
     },
     signup: {
-      subject: "Подтвердите email — Glatko",
+      subject: "Glatko: Подтвердите email",
       preheader: "Один шаг до активации вашего аккаунта Glatko.",
       heading: "Добро пожаловать в Glatko",
       intro:
@@ -443,7 +446,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "Команда Glatko",
     },
     magiclink: {
-      subject: "Ваша ссылка для входа в Glatko",
+      subject: "Glatko: Ваша ссылка для входа",
       preheader: "Нажмите для безопасного входа без пароля.",
       heading: "Войти в Glatko",
       intro:
@@ -455,7 +458,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "Команда Glatko",
     },
     email_change: {
-      subject: "Подтвердите новый email адрес",
+      subject: "Glatko: Подтвердите новый email",
       preheader: "Подтвердите новый email вашего аккаунта Glatko.",
       heading: "Подтвердите новый email",
       intro:
@@ -467,7 +470,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "Команда Glatko",
     },
     reauthentication: {
-      subject: "Подтвердите личность — Glatko",
+      subject: "Glatko: Подтвердите личность",
       preheader: "Проверка безопасности для продолжения.",
       heading: "Подтвердите личность",
       intro:
@@ -483,7 +486,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
 
   ar: {
     recovery: {
-      subject: "إعادة تعيين كلمة المرور",
+      subject: "Glatko: إعادة تعيين كلمة المرور",
       preheader: "اضغط على الرابط أدناه لإعادة تعيين كلمة مرور Glatko الخاصة بك.",
       heading: "إعادة تعيين كلمة المرور",
       intro:
@@ -495,7 +498,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "فريق Glatko",
     },
     signup: {
-      subject: "تأكيد البريد الإلكتروني — Glatko",
+      subject: "Glatko: تأكيد بريدك الإلكتروني",
       preheader: "خطوة واحدة لتفعيل حسابك في Glatko.",
       heading: "أهلاً بك في Glatko",
       intro:
@@ -507,7 +510,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "فريق Glatko",
     },
     magiclink: {
-      subject: "رابط تسجيل الدخول إلى Glatko",
+      subject: "Glatko: رابط تسجيل الدخول",
       preheader: "اضغط لتسجيل الدخول بأمان بدون كلمة مرور.",
       heading: "تسجيل الدخول إلى Glatko",
       intro:
@@ -519,7 +522,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "فريق Glatko",
     },
     email_change: {
-      subject: "تأكيد عنوان البريد الإلكتروني الجديد",
+      subject: "Glatko: تأكيد البريد الإلكتروني الجديد",
       preheader: "أكّد عنوان بريدك الإلكتروني الجديد لحساب Glatko.",
       heading: "تأكيد عنوان البريد الإلكتروني الجديد",
       intro:
@@ -531,7 +534,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "فريق Glatko",
     },
     reauthentication: {
-      subject: "تأكيد هويتك — Glatko",
+      subject: "Glatko: تأكيد هويتك",
       preheader: "تحقّق أمني للمتابعة.",
       heading: "تأكيد الهوية",
       intro:
@@ -547,7 +550,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
 
   uk: {
     recovery: {
-      subject: "Скидання пароля",
+      subject: "Glatko: Скиньте пароль",
       preheader: "Натисніть посилання нижче, щоб скинути пароль Glatko.",
       heading: "Скидання пароля",
       intro:
@@ -559,7 +562,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "Команда Glatko",
     },
     signup: {
-      subject: "Підтвердіть email — Glatko",
+      subject: "Glatko: Підтвердіть email",
       preheader: "Один крок до активації вашого облікового запису Glatko.",
       heading: "Ласкаво просимо до Glatko",
       intro:
@@ -571,7 +574,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "Команда Glatko",
     },
     magiclink: {
-      subject: "Ваше посилання для входу в Glatko",
+      subject: "Glatko: Ваше посилання для входу",
       preheader: "Натисніть для безпечного входу без пароля.",
       heading: "Вхід у Glatko",
       intro:
@@ -583,8 +586,8 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "Команда Glatko",
     },
     email_change: {
-      subject: "Підтвердіть нову email адресу",
-      preheader: "Підтвердіть нову email адресу для облікового запису Glatko.",
+      subject: "Glatko: Підтвердіть нову email-адресу",
+      preheader: "Підтвердіть нову email-адресу для облікового запису Glatko.",
       heading: "Підтвердіть нову email адресу",
       intro:
         "Вітаємо, {firstName}. Ми отримали запит на зміну email адреси вашого облікового запису Glatko. Натисніть нижче, щоб підтвердити нову адресу.",
@@ -595,7 +598,7 @@ export const authTranslations: Record<EmailLocale, AuthTranslations> = {
       signature: "Команда Glatko",
     },
     reauthentication: {
-      subject: "Підтвердіть особу — Glatko",
+      subject: "Glatko: Підтвердіть особу",
       preheader: "Перевірка безпеки для продовження.",
       heading: "Підтвердіть особу",
       intro:

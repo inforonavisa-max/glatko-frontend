@@ -127,6 +127,14 @@ export async function POST(request: NextRequest) {
       { name: "type", value: built.type },
       { name: "locale", value: locale },
     ],
+    // RFC 8058 one-click unsubscribe + Gmail per-user threading. List-Unsub
+    // is technically optional for transactional mail but materially lifts
+    // Gmail "Promotions tab" / spam scoring on new domains.
+    headers: {
+      "List-Unsubscribe": `<${built.unsubscribeUrl}>, <mailto:noreply@glatko.app?subject=unsubscribe>`,
+      "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+      "X-Entity-Ref-ID": payload.user.id,
+    },
   });
 
   if (!result.success) {

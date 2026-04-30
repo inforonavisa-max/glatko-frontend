@@ -1436,5 +1436,13 @@
   "pros": {
     "activeCount": "{count} aktive Fachkräfte",
     "headline": "Fachkräfte"
+  },
+  "emailPreferences": {
+    "title": "E-Mail-Einstellungen",
+    "transactional": "Sie erhalten transaktionale E-Mails (Anmeldung, Passwort zurücksetzen, Kontobestätigung) — diese sind für die Kontosicherheit erforderlich und können nicht einzeln deaktiviert werden.",
+    "deleteAccount": "Wenn Sie überhaupt keine E-Mails mehr erhalten möchten, können Sie Ihr Konto unter Einstellungen → Konto löschen.",
+    "goToSettings": "Einstellungen öffnen",
+    "noteHeader": "Hinweis",
+    "supportNote": "Bei Fragen antworten Sie auf diese E-Mail, um den Support zu erreichen."
   }
 }

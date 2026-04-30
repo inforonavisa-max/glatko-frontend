@@ -3,9 +3,55 @@ import { render } from "@react-email/render";
 import { Redis } from "@upstash/redis/cloudflare";
 import { Ratelimit } from "@upstash/ratelimit";
 import { getResendClient, EMAIL_FROM } from "@/lib/email/resend";
+import { createAdminClient } from "@/supabase/server";
 
 const EMAIL_RATE_PREFIX = "glatko:email-outbound";
 const EMAIL_PER_RECIPIENT_PER_HOUR = 10;
+
+/**
+ * Hard-bounce / complaint short-circuit. Resend webhooks land in
+ * public.email_events; sending to a recipient that previously hard-bounced
+ * or filed a spam complaint hurts domain reputation, so we drop the send
+ * without ever calling Resend.
+ *
+ * Soft bounces (mailbox full, transient) are NOT in this check — they self-
+ * resolve and we want to keep retrying.
+ *
+ * Fail-open on lookup error: a missing Supabase or table is bad infra, but
+ * blocking auth emails because of it is worse than the deliverability hit.
+ */
+async function isRecipientBlocked(recipient: string): Promise<{
+  blocked: boolean;
+  reason?: string;
+}> {
+  try {
+    const supabase = createAdminClient();
+    const { data, error } = await supabase
+      .from("email_events")
+      .select("event_type, bounce_type")
+      .eq("recipient", recipient.toLowerCase().trim())
+      .in("event_type", ["bounced", "complained"])
+      .limit(20);
+
+    if (error) {
+      // Migration may not be applied yet in some environments; fail open.
+      return { blocked: false };
+    }
+    if (!data || data.length === 0) return { blocked: false };
+
+    for (const row of data) {
+      if (row.event_type === "complained") {
+        return { blocked: true, reason: "previous spam complaint" };
+      }
+      if (row.event_type === "bounced" && row.bounce_type === "hard") {
+        return { blocked: true, reason: "previous hard bounce" };
+      }
+    }
+    return { blocked: false };
+  } catch {
+    return { blocked: false };
+  }
+}
 
 let emailOutboundLimiter: Ratelimit | null | undefined;
 
@@ -47,6 +93,12 @@ export type SendEmailOptions = {
   /** Optional Resend tags for analytics filtering (e.g. category=auth, type=recovery). */
   tags?: { name: string; value: string }[];
   /**
+   * Optional custom SMTP headers passed through to Resend. Used for
+   * List-Unsubscribe + List-Unsubscribe-Post (RFC 8058 one-click) and
+   * X-Entity-Ref-ID (per-recipient grouping in Gmail).
+   */
+  headers?: Record<string, string>;
+  /**
    * Skip the Upstash 10/recipient/hour rate limiter. Use for system-critical
    * flows (auth password reset, signup confirmation) where dropping a mail
    * is worse than letting an attacker burn the bucket — Supabase's own
@@ -68,6 +120,23 @@ export async function sendEmail(
     return {
       success: false,
       error: "Resend not configured",
+      skipped: true,
+    };
+  }
+
+  // Hard-bounce / complaint check (G-DELIVERABILITY-1). Runs even for
+  // skipRateLimit auth flows — sending to a known-dead address is a
+  // reputation hit even when the user "needs" the email.
+  const blocked = await isRecipientBlocked(options.to);
+  if (blocked.blocked) {
+    console.warn(
+      "[GLATKO:email] skip send: recipient flagged",
+      options.to,
+      blocked.reason,
+    );
+    return {
+      success: false,
+      error: `Recipient blocked: ${blocked.reason}`,
       skipped: true,
     };
   }
@@ -115,6 +184,9 @@ export async function sendEmail(
       html,
       ...(options.text ? { text: options.text } : {}),
       ...(options.tags && options.tags.length > 0 ? { tags: options.tags } : {}),
+      ...(options.headers && Object.keys(options.headers).length > 0
+        ? { headers: options.headers }
+        : {}),
     });
 
     if (error) {
