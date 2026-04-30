@@ -125,7 +125,10 @@ export const CardItem = ({
   return (
     <div
       ref={ref}
-      className={cn("w-fit transition duration-200 ease-linear", className)}
+      // No default `w-fit` — it conflicts with `absolute inset-0` callers
+      // (the layer collapses to 0 width and any child <img fill> goes invisible).
+      // Each caller decides its own sizing via className.
+      className={cn("transition duration-200 ease-linear", className)}
       {...rest}
     >
       {children}
