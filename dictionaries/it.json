@@ -200,6 +200,11 @@
       "quote": "Piattaforma fantastica — trovato tutto dalla pulizia villa alla manutenzione barca.",
       "quoteAuthor": "Mehmet Y.",
       "quoteCity": "Budva"
+    },
+    "accountLink": {
+      "title": "Il tuo account usa {provider}",
+      "description": "Questo account non ha una password — accedi con {provider}.",
+      "cta": "Continua con {provider}"
     }
   },
   "common": {
@@ -1142,6 +1147,49 @@
           "invalidConfirm": "Testo errato",
           "error": "Eliminazione fallita"
         }
+      }
+    },
+    "tabs": {
+      "profile": "Profilo",
+      "notifications": "Notifiche",
+      "security": "Sicurezza",
+      "ariaLabel": "Sezioni delle impostazioni"
+    },
+    "security": {
+      "title": "Sicurezza",
+      "subtitle": "Gestisci la tua password, gli account collegati e le sessioni.",
+      "password": {
+        "title": "Password",
+        "hasPassword": "Hai impostato una password. Puoi cambiarla in qualsiasi momento.",
+        "noPassword": "Non hai ancora una password. Impostane una per accedere senza un account social.",
+        "change": "Cambia password",
+        "set": "Imposta una password"
+      },
+      "providers": {
+        "title": "Account collegati",
+        "description": "Questi account possono accedere a Glatko.",
+        "linked": "Collegato"
+      },
+      "signOut": {
+        "title": "Disconnetti da tutti i dispositivi",
+        "description": "Disconnetti da ogni dispositivo in cui hai effettuato l'accesso.",
+        "cta": "Disconnetti ovunque",
+        "confirm": "Sei sicuro? Dovrai accedere di nuovo su ogni dispositivo.",
+        "success": "Disconnesso ovunque",
+        "error": "Impossibile disconnettere"
+      },
+      "setPassword": {
+        "title": "Imposta una password",
+        "description": "Aggiungi una password a {email} per accedere senza un account social.",
+        "newPassword": "Nuova password",
+        "confirmPassword": "Conferma password",
+        "submit": "Salva password",
+        "cancel": "Annulla",
+        "success": "Password impostata",
+        "error": "Impossibile impostare la password",
+        "passwordTooShort": "La password deve contenere almeno 8 caratteri",
+        "passwordMismatch": "Le password non corrispondono",
+        "alreadyHasPassword": "Hai già una password. Usa invece Cambia password."
       }
     }
   },

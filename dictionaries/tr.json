@@ -200,6 +200,11 @@
       "quote": "Harika bir platform — villa temizliğinden tekne bakımına her şeyi buldum.",
       "quoteAuthor": "Mehmet Y.",
       "quoteCity": "Budva"
+    },
+    "accountLink": {
+      "title": "Hesabın {provider} ile bağlı",
+      "description": "Bu hesapta şifre yok — {provider} ile giriş yap.",
+      "cta": "{provider} ile giriş yap"
     }
   },
   "common": {
@@ -1142,6 +1147,49 @@
           "invalidConfirm": "Onay metni eşleşmedi",
           "error": "Hesap silinemedi"
         }
+      }
+    },
+    "tabs": {
+      "profile": "Profil",
+      "notifications": "Bildirimler",
+      "security": "Güvenlik",
+      "ariaLabel": "Ayarlar bölümleri"
+    },
+    "security": {
+      "title": "Güvenlik",
+      "subtitle": "Şifreni, bağlı hesaplarını ve oturumlarını yönet.",
+      "password": {
+        "title": "Şifre",
+        "hasPassword": "Şifren ayarlı. İstediğin zaman değiştirebilirsin.",
+        "noPassword": "Henüz şifren yok. Sosyal hesap olmadan da giriş yapmak için bir şifre belirle.",
+        "change": "Şifre değiştir",
+        "set": "Şifre belirle"
+      },
+      "providers": {
+        "title": "Bağlı hesaplar",
+        "description": "Bu hesaplarla Glatko'ya giriş yapabilirsin.",
+        "linked": "Bağlı"
+      },
+      "signOut": {
+        "title": "Tüm cihazlardan çıkış yap",
+        "description": "Hesabına giriş yapmış olduğun her cihazdan çıkış yap.",
+        "cta": "Her yerden çıkış yap",
+        "confirm": "Emin misin? Her cihazda yeniden giriş yapman gerekecek.",
+        "success": "Her yerden çıkış yapıldı",
+        "error": "Çıkış yapılamadı"
+      },
+      "setPassword": {
+        "title": "Şifre belirle",
+        "description": "{email} için bir şifre ekle, böylece sosyal hesap olmadan da giriş yapabilirsin.",
+        "newPassword": "Yeni şifre",
+        "confirmPassword": "Şifreyi tekrarla",
+        "submit": "Şifreyi kaydet",
+        "cancel": "İptal",
+        "success": "Şifre belirlendi",
+        "error": "Şifre belirlenemedi",
+        "passwordTooShort": "Şifre en az 8 karakter olmalı",
+        "passwordMismatch": "Şifreler eşleşmiyor",
+        "alreadyHasPassword": "Zaten bir şifren var. Bunun yerine Şifre değiştir kullan."
       }
     }
   },

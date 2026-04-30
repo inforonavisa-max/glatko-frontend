@@ -200,6 +200,11 @@
       "quote": "Одлична платформа — пронашао све од чишћења виле до одржавања брода.",
       "quoteAuthor": "Мехмет Ј.",
       "quoteCity": "Будва"
+    },
+    "accountLink": {
+      "title": "Tvoj nalog koristi {provider}",
+      "description": "Ovaj nalog nema lozinku — prijavi se preko {provider}.",
+      "cta": "Prijavi se preko {provider}"
     }
   },
   "common": {
@@ -1142,6 +1147,49 @@
           "invalidConfirm": "Tekst ne odgovara",
           "error": "Greška"
         }
+      }
+    },
+    "tabs": {
+      "profile": "Profil",
+      "notifications": "Obaveštenja",
+      "security": "Bezbednost",
+      "ariaLabel": "Sekcije podešavanja"
+    },
+    "security": {
+      "title": "Bezbednost",
+      "subtitle": "Upravljaj lozinkom, povezanim nalozima i sesijama.",
+      "password": {
+        "title": "Lozinka",
+        "hasPassword": "Imaš postavljenu lozinku. Možeš je promeniti u bilo kom trenutku.",
+        "noPassword": "Još nemaš lozinku. Postavi je da bi se prijavljivao bez društvenog naloga.",
+        "change": "Promeni lozinku",
+        "set": "Postavi lozinku"
+      },
+      "providers": {
+        "title": "Povezani nalozi",
+        "description": "Sa ovim nalozima možeš da se prijaviš na Glatko.",
+        "linked": "Povezano"
+      },
+      "signOut": {
+        "title": "Odjavi se sa svih uređaja",
+        "description": "Odjavi se sa svakog uređaja na kome si trenutno prijavljen.",
+        "cta": "Odjavi se svuda",
+        "confirm": "Sigurno? Moraćeš ponovo da se prijaviš na svakom uređaju.",
+        "success": "Odjavljen svuda",
+        "error": "Odjava nije uspela"
+      },
+      "setPassword": {
+        "title": "Postavi lozinku",
+        "description": "Dodaj lozinku za {email} da bi mogao da se prijaviš bez društvenog naloga.",
+        "newPassword": "Nova lozinka",
+        "confirmPassword": "Potvrdi lozinku",
+        "submit": "Sačuvaj lozinku",
+        "cancel": "Otkaži",
+        "success": "Lozinka postavljena",
+        "error": "Nije uspelo postavljanje lozinke",
+        "passwordTooShort": "Lozinka mora imati najmanje 8 karaktera",
+        "passwordMismatch": "Lozinke se ne podudaraju",
+        "alreadyHasPassword": "Već imaš lozinku. Umesto toga koristi Promeni lozinku."
       }
     }
   },

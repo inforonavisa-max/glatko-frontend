@@ -8,6 +8,8 @@ import { Loader2 } from "lucide-react";
 import { createClient } from "@/supabase/browser";
 import { useRouter } from "@/i18n/navigation";
 import { AuthBrandPanel } from "@/components/glatko/auth/AuthBrandPanel";
+import { AccountLinkAlert } from "@/components/auth/AccountLinkAlert";
+import { lookupAuthMethods } from "@/lib/actions/auth-methods";
 import { cn } from "@/lib/utils";
 
 const inputCls = cn(
@@ -24,28 +26,48 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [oauthOnlyProviders, setOauthOnlyProviders] = useState<string[]>([]);
+
+  function isInvalidCredentialsError(err: { code?: string; message?: string }) {
+    if (err.code === "invalid_credentials") return true;
+    const msg = (err.message ?? "").toLowerCase();
+    return msg.includes("invalid login") || msg.includes("invalid credentials");
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError("");
+    setOauthOnlyProviders([]);
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) {
-      setError(error.message);
+    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+    if (signInError) {
+      if (isInvalidCredentialsError(signInError)) {
+        const methods = await lookupAuthMethods(email);
+        if (!methods.hasPassword && methods.oauthProviders.length > 0) {
+          setOauthOnlyProviders(methods.oauthProviders);
+          setLoading(false);
+          return;
+        }
+      }
+      setError(signInError.message);
       setLoading(false);
-    } else {
-      router.push("/");
-      router.refresh();
+      return;
     }
+    router.push("/");
+    router.refresh();
   }
 
-  async function handleGoogleLogin() {
+  async function handleOAuthLogin(provider: string) {
     const supabase = createClient();
     await supabase.auth.signInWithOAuth({
-      provider: "google",
+      provider: provider as "google",
       options: { redirectTo: `${window.location.origin}/auth/callback` },
     });
+  }
+
+  function handleGoogleLogin() {
+    return handleOAuthLogin("google");
   }
 
   return (
@@ -134,14 +156,21 @@ export default function LoginPage() {
                 />
               </div>
 
-              {error && (
-                <motion.p
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-600 dark:border-red-500/20 dark:bg-red-500/10 dark:text-red-400"
-                >
-                  {error}
-                </motion.p>
+              {oauthOnlyProviders.length > 0 ? (
+                <AccountLinkAlert
+                  providers={oauthOnlyProviders}
+                  onUseProvider={handleOAuthLogin}
+                />
+              ) : (
+                error && (
+                  <motion.p
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-600 dark:border-red-500/20 dark:bg-red-500/10 dark:text-red-400"
+                  >
+                    {error}
+                  </motion.p>
+                )
               )}
 
               <motion.button

@@ -41,3 +41,6 @@ next-env.d.ts
 .env.local
 .env.local.backup*
 .claude/
+
+# supabase CLI link metadata (per-developer, not source-of-truth)
+supabase/.temp/
