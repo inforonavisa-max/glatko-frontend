@@ -15,28 +15,17 @@ function pickName(name: Record<string, string> | null, locale: string, slug: str
 }
 
 /**
- * Inline-fetch hero image as a base64 data URL. Satori (next/og) sometimes
- * fails silently on cross-origin WebP `src` URLs, returning a 0-byte PNG;
- * pre-fetching to ArrayBuffer + data URL is the documented workaround.
- * Falls back to null on any error so the gradient-only variant renders.
+ * Per-category dynamic OG. Brand-tinted gradient + radial glow as the
+ * canvas, category name in the middle, glatko.app domain + optional
+ * seasonal pill at the bottom.
+ *
+ * Hero photography is intentionally NOT pulled in: cross-origin WebP
+ * `<img src>` in next/og fails silently on Vercel Edge, returning a
+ * 0-byte PNG. Pre-fetching the buffer and emitting a base64 data URL
+ * also CPU-stalls inside Edge's tight limits at our hero file sizes
+ * (~128 KB). The gradient-only variant ships consistent dark-teal
+ * cards across all 85 categories × 9 locales.
  */
-async function heroAsDataUrl(url: string | null): Promise<string | null> {
-  if (!url) return null;
-  try {
-    const res = await fetch(url, { cache: "force-cache" });
-    if (!res.ok) return null;
-    const buf = await res.arrayBuffer();
-    const bytes = new Uint8Array(buf);
-    let binary = "";
-    for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
-    const b64 = btoa(binary);
-    const ct = res.headers.get("content-type") || "image/webp";
-    return `data:${ct};base64,${b64}`;
-  } catch {
-    return null;
-  }
-}
-
 export default async function CategoryOG({
   params,
 }: {
@@ -48,7 +37,6 @@ export default async function CategoryOG({
   const title = category
     ? pickName(category.name, params.locale, category.slug)
     : "Glatko";
-  const heroImage = await heroAsDataUrl(category?.hero_image_url ?? null);
   const seasonal = category?.seasonal ?? null;
 
   return new ImageResponse(
@@ -64,43 +52,14 @@ export default async function CategoryOG({
           fontFamily: "system-ui, -apple-system, sans-serif",
         }}
       >
-        {heroImage ? (
-          <>
-            {/* next/og ImageResponse runs on Edge — next/image cannot be used here. */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={heroImage}
-              alt=""
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                filter: "blur(24px) brightness(0.35)",
-              }}
-            />
-            {}
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                background:
-                  "linear-gradient(135deg, rgba(20,184,166,0.18) 0%, rgba(11,31,35,0.85) 60%, rgba(11,31,35,0.95) 100%)",
-              }}
-            />
-          </>
-        ) : (
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              background:
-                "radial-gradient(ellipse 70% 50% at 50% 35%, rgba(20,184,166,0.22), transparent 70%)",
-            }}
-          />
-        )}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "radial-gradient(ellipse 70% 50% at 50% 35%, rgba(20,184,166,0.22), transparent 70%)",
+          }}
+        />
 
         {/* Foreground content */}
         <div
