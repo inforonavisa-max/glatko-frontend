@@ -3,8 +3,10 @@
 import {
   useState,
   useCallback,
+  useMemo,
   useTransition,
   useEffect,
+  useRef,
   Suspense,
 } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -28,6 +30,7 @@ import { createClient } from "@/supabase/browser";
 import { submitServiceRequest } from "@/app/[locale]/request-service/actions";
 import { cn } from "@/lib/utils";
 import { urgencyToStep3Key } from "@/lib/utils/urgencyI18n";
+import { useFormPersistence } from "@/lib/hooks/useFormPersistence";
 import { StepCategory } from "./StepCategory";
 import { StepDetails } from "./StepDetails";
 import { StepLocation } from "./StepLocation";
@@ -38,6 +41,13 @@ import type { Locale } from "@/i18n/routing";
 
 interface Props {
   categories: ServiceCategory[];
+  /**
+   * Auth user id from the server page. `null` triggers the anonymous
+   * flow: required email, localStorage draft persistence, and a different
+   * submit-screen helper hint. The server action re-reads cookies for
+   * authorization, so this is purely UX state.
+   */
+  userId: string | null;
 }
 
 const STEPS = [
@@ -55,7 +65,8 @@ type PreferredProSummary = {
   categories: string[];
 };
 
-function RequestServiceWizardInner({ categories }: Props) {
+function RequestServiceWizardInner({ categories, userId }: Props) {
+  const isAnonymous = !userId;
   const t = useTranslations();
   const locale = useLocale() as Locale;
   const router = useRouter();
@@ -92,6 +103,86 @@ function RequestServiceWizardInner({ categories }: Props) {
   const [email, setEmail] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+
+  // G-REQ-1: validateRef lets the DB-driven StepDetails own its
+  // per-question validation. Parent calls .current?.() on advance.
+  const detailsValidateRef = useRef<(() => boolean) | null>(null);
+
+  // G-REQ-1 Faz 5: localStorage draft persistence (anonymous users only).
+  // We snapshot every wizard state slice into a single shape so the hook
+  // can serialize/restore atomically. Login users get nothing — their
+  // server-side request history is the source of truth.
+  const draftSnapshot = useMemo(
+    () => ({
+      selectedMainId,
+      selectedSubId,
+      details,
+      municipality,
+      address,
+      marina,
+      urgency,
+      dateStart,
+      dateEnd,
+      photos,
+      budgetMin,
+      budgetMax,
+      showBudget,
+      phone,
+      email,
+      title,
+      description,
+    }),
+    [
+      selectedMainId,
+      selectedSubId,
+      details,
+      municipality,
+      address,
+      marina,
+      urgency,
+      dateStart,
+      dateEnd,
+      photos,
+      budgetMin,
+      budgetMax,
+      showBudget,
+      phone,
+      email,
+      title,
+      description,
+    ],
+  );
+
+  type DraftShape = typeof draftSnapshot;
+
+  const restoreDraft = useCallback((s: DraftShape) => {
+    if (s.selectedMainId) setSelectedMainId(s.selectedMainId);
+    if (s.selectedSubId) setSelectedSubId(s.selectedSubId);
+    if (s.details) setDetails(s.details);
+    if (s.municipality) setMunicipality(s.municipality);
+    if (s.address) setAddress(s.address);
+    if (s.marina) setMarina(s.marina);
+    if (s.urgency) setUrgency(s.urgency);
+    if (s.dateStart) setDateStart(s.dateStart);
+    if (s.dateEnd) setDateEnd(s.dateEnd);
+    if (s.photos) setPhotos(s.photos);
+    if (s.budgetMin) setBudgetMin(s.budgetMin);
+    if (s.budgetMax) setBudgetMax(s.budgetMax);
+    if (typeof s.showBudget === "boolean") setShowBudget(s.showBudget);
+    if (s.phone) setPhone(s.phone);
+    if (s.email) setEmail(s.email);
+    if (s.title) setTitle(s.title);
+    if (s.description) setDescription(s.description);
+  }, []);
+
+  const { clearDraft, restored: draftRestored } = useFormPersistence<DraftShape>({
+    key: "wizard-v1",
+    enabled: isAnonymous,
+    snapshot: draftSnapshot,
+    restore: restoreDraft,
+  });
+
+  const [draftBannerDismissed, setDraftBannerDismissed] = useState(false);
 
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState("");
@@ -218,6 +309,12 @@ function RequestServiceWizardInner({ categories }: Props) {
   };
 
   const goNext = () => {
+    // Step 1 (details) is DB-driven; defer to its own validate() before
+    // advancing so missing required answers surface inline rather than
+    // hiding behind a server-side reject.
+    if (step === 1 && detailsValidateRef.current) {
+      if (!detailsValidateRef.current()) return;
+    }
     setDirection(1);
     setStep((s) => s + 1);
   };
@@ -229,6 +326,19 @@ function RequestServiceWizardInner({ categories }: Props) {
 
   const handleSubmit = () => {
     setError("");
+    // G-REQ-1 anonim flow: email is required so the admin moderation
+    // queue (and approve/reject mailers) have a way to reach the user.
+    if (isAnonymous) {
+      const trimmed = email.trim();
+      if (!trimmed) {
+        setError(t("request.anonymous.emailRequired"));
+        return;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+        setError(t("request.anonymous.emailInvalid"));
+        return;
+      }
+    }
     const fd = new FormData();
     fd.set("categoryId", selectedSubId);
     fd.set("title", title || autoTitle);
@@ -244,6 +354,7 @@ function RequestServiceWizardInner({ categories }: Props) {
     fd.set("photos", JSON.stringify(photos));
     fd.set("phone", phone);
     fd.set("email", email);
+    fd.set("locale", locale);
     fd.set("summaryLocale", locale);
     if (preferredPro?.id) {
       fd.set("preferredProfessionalId", preferredPro.id);
@@ -266,6 +377,7 @@ function RequestServiceWizardInner({ categories }: Props) {
               : undefined,
         });
         setSubmitted(true);
+        clearDraft();
       } else {
         setError(result.error ?? t("request.error.generic"));
       }
@@ -295,6 +407,8 @@ function RequestServiceWizardInner({ categories }: Props) {
     setError("");
     setSubmitted(false);
     setSummaryData(null);
+    clearDraft();
+    setDraftBannerDismissed(false);
     router.replace("/request-service");
   };
 
@@ -312,6 +426,32 @@ function RequestServiceWizardInner({ categories }: Props) {
 
   return (
     <div className="mx-auto max-w-3xl">
+      {draftRestored && !draftBannerDismissed ? (
+        <div className="mb-6 flex items-center justify-between gap-4 rounded-xl border border-teal-500/20 bg-teal-500/10 px-4 py-3 text-sm text-teal-800 dark:border-teal-500/30 dark:bg-teal-500/15 dark:text-teal-200">
+          <span>{t("request.draftRestored")}</span>
+          <div className="flex shrink-0 items-center gap-3">
+            <button
+              type="button"
+              onClick={() => {
+                clearDraft();
+                if (typeof window !== "undefined") window.location.reload();
+              }}
+              className="font-medium underline underline-offset-2 hover:text-teal-700 dark:hover:text-teal-100"
+            >
+              {t("request.startFresh")}
+            </button>
+            <button
+              type="button"
+              onClick={() => setDraftBannerDismissed(true)}
+              className="rounded-md p-1 text-teal-700/70 transition hover:bg-teal-500/15 hover:text-teal-900 dark:text-teal-200/70 dark:hover:text-teal-100"
+              aria-label={t("common.close")}
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      ) : null}
+
       <div className="mb-10 text-center">
         <h1 className="font-serif text-3xl font-semibold text-gray-900 dark:text-white">
           {t("request.wizard.title")}
@@ -484,7 +624,9 @@ function RequestServiceWizardInner({ categories }: Props) {
                 details={details}
                 setDetails={setDetails}
                 selectedSubSlug={selectedSubSlug}
+                locale={locale}
                 t={t}
+                validateRef={detailsValidateRef}
               />
             )}
             {step === 2 && (
@@ -527,6 +669,7 @@ function RequestServiceWizardInner({ categories }: Props) {
                 isSubmitting={isPending}
                 autoTitle={autoTitle}
                 t={t}
+                isAnonymous={isAnonymous}
               />
             )}
           </motion.div>
@@ -583,7 +726,7 @@ function RequestServiceWizardInner({ categories }: Props) {
   );
 }
 
-export function RequestServiceWizard({ categories }: Props) {
+export function RequestServiceWizard({ categories, userId }: Props) {
   return (
     <Suspense
       fallback={
@@ -592,7 +735,7 @@ export function RequestServiceWizard({ categories }: Props) {
         </div>
       }
     >
-      <RequestServiceWizardInner categories={categories} />
+      <RequestServiceWizardInner categories={categories} userId={userId} />
     </Suspense>
   );
 }

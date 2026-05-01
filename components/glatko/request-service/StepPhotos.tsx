@@ -30,6 +30,8 @@ interface Props {
   isSubmitting: boolean;
   autoTitle: string;
   t: (key: string) => string;
+  /** When true, email is required (Airbnb anon-then-link pattern). */
+  isAnonymous?: boolean;
 }
 
 const inputCls = cn(
@@ -66,6 +68,7 @@ export function StepPhotos({
   setDescription,
   autoTitle,
   t,
+  isAnonymous = false,
 }: Props) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
@@ -221,8 +224,25 @@ export function StepPhotos({
         </div>
 
         <div>
-          <FieldLabel>{t("request.step4.email")}</FieldLabel>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder={t("request.step4.emailPlaceholder")} className={inputCls} />
+          <FieldLabel>
+            {t("request.step4.email")}
+            {isAnonymous ? (
+              <span className="ml-1 text-teal-500" aria-hidden="true">*</span>
+            ) : null}
+          </FieldLabel>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder={t("request.step4.emailPlaceholder")}
+            required={isAnonymous}
+            className={inputCls}
+          />
+          {isAnonymous ? (
+            <p className="mt-1 text-xs text-gray-500 dark:text-white/40">
+              {t("request.anonymous.emailHint")}
+            </p>
+          ) : null}
         </div>
 
         <div>

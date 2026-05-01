@@ -1269,3 +1269,376 @@ export function interpolate(
 ): string {
   return template.replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? `{${k}}`);
 }
+
+/* ─── G-REQ-1: admin pending-request notification ─── */
+export type AdminPendingRequestCopy = {
+  subject: string;
+  preview: string;
+  heading: string;
+  intro: string;
+  categoryLabel: string;
+  cityLabel: string;
+  requestorLabel: string;
+  budgetLabel: string;
+  dateLabel: string;
+  cta: string;
+  footer: string;
+};
+
+const adminPendingRequest: Record<EmailLocale, AdminPendingRequestCopy> = {
+  en: {
+    subject: "New request awaiting moderation",
+    preview: "A new service request needs review",
+    heading: "New request waiting for review",
+    intro:
+      "A new service request has landed in the moderation queue. Open the admin panel to approve or reject it.",
+    categoryLabel: "Category",
+    cityLabel: "City",
+    requestorLabel: "Requestor",
+    budgetLabel: "Budget",
+    dateLabel: "Preferred date",
+    cta: "Open admin panel",
+    footer: "Glatko admin notification",
+  },
+  tr: {
+    subject: "Yeni talep moderasyon bekliyor",
+    preview: "Yeni bir hizmet talebi inceleme bekliyor",
+    heading: "Yeni talep moderasyonda",
+    intro:
+      "Yeni bir hizmet talebi moderasyon kuyruğuna düştü. Onaylamak veya reddetmek için admin panelini aç.",
+    categoryLabel: "Kategori",
+    cityLabel: "Şehir",
+    requestorLabel: "Talep eden",
+    budgetLabel: "Bütçe",
+    dateLabel: "Tercih edilen tarih",
+    cta: "Admin paneli aç",
+    footer: "Glatko admin bildirimi",
+  },
+  de: {
+    subject: "Neue Anfrage zur Moderation",
+    preview: "Eine neue Service-Anfrage benötigt Prüfung",
+    heading: "Neue Anfrage zur Prüfung",
+    intro:
+      "Eine neue Service-Anfrage ist in der Moderationsschlange. Öffnen Sie das Admin-Panel, um sie freizugeben oder abzulehnen.",
+    categoryLabel: "Kategorie",
+    cityLabel: "Stadt",
+    requestorLabel: "Anfragende:r",
+    budgetLabel: "Budget",
+    dateLabel: "Wunschtermin",
+    cta: "Admin-Panel öffnen",
+    footer: "Glatko Admin-Benachrichtigung",
+  },
+  ar: {
+    subject: "طلب جديد بانتظار المراجعة",
+    preview: "طلب خدمة جديد يحتاج إلى مراجعة",
+    heading: "طلب جديد بانتظار المراجعة",
+    intro:
+      "وصل طلب خدمة جديد إلى قائمة المراجعة. افتح لوحة الإدارة للموافقة أو الرفض.",
+    categoryLabel: "الفئة",
+    cityLabel: "المدينة",
+    requestorLabel: "مقدم الطلب",
+    budgetLabel: "الميزانية",
+    dateLabel: "التاريخ المفضل",
+    cta: "افتح لوحة الإدارة",
+    footer: "إشعار إدارة Glatko",
+  },
+  it: {
+    subject: "Nuova richiesta in attesa di moderazione",
+    preview: "Una nuova richiesta di servizio richiede revisione",
+    heading: "Nuova richiesta in attesa",
+    intro:
+      "Una nuova richiesta di servizio è arrivata in coda di moderazione. Apri il pannello admin per approvarla o rifiutarla.",
+    categoryLabel: "Categoria",
+    cityLabel: "Città",
+    requestorLabel: "Richiedente",
+    budgetLabel: "Budget",
+    dateLabel: "Data preferita",
+    cta: "Apri pannello admin",
+    footer: "Notifica admin Glatko",
+  },
+  me: {
+    subject: "Novi zahtjev čeka moderaciju",
+    preview: "Novi zahtjev za uslugu čeka pregled",
+    heading: "Novi zahtjev na čekanju",
+    intro:
+      "Novi zahtjev za uslugu je u redu za moderaciju. Otvori admin panel da odobriš ili odbiješ.",
+    categoryLabel: "Kategorija",
+    cityLabel: "Grad",
+    requestorLabel: "Podnosilac",
+    budgetLabel: "Budžet",
+    dateLabel: "Željeni datum",
+    cta: "Otvori admin panel",
+    footer: "Glatko admin obavještenje",
+  },
+  ru: {
+    subject: "Новая заявка ждёт модерации",
+    preview: "Новая заявка требует проверки",
+    heading: "Новая заявка на модерации",
+    intro:
+      "Новая заявка попала в очередь модерации. Откройте админ-панель, чтобы одобрить или отклонить.",
+    categoryLabel: "Категория",
+    cityLabel: "Город",
+    requestorLabel: "Заявитель",
+    budgetLabel: "Бюджет",
+    dateLabel: "Желаемая дата",
+    cta: "Открыть админ-панель",
+    footer: "Glatko уведомление администратора",
+  },
+  sr: {
+    subject: "Novi zahtev čeka moderaciju",
+    preview: "Novi zahtev za uslugu čeka pregled",
+    heading: "Novi zahtev na čekanju",
+    intro:
+      "Novi zahtev za uslugu je u redu za moderaciju. Otvori admin panel da odobriš ili odbiješ.",
+    categoryLabel: "Kategorija",
+    cityLabel: "Grad",
+    requestorLabel: "Podnosilac",
+    budgetLabel: "Budžet",
+    dateLabel: "Željeni datum",
+    cta: "Otvori admin panel",
+    footer: "Glatko admin obaveštenje",
+  },
+  uk: {
+    subject: "Нова заявка очікує модерації",
+    preview: "Нова заявка потребує перевірки",
+    heading: "Нова заявка на модерації",
+    intro:
+      "Нова заявка на послугу потрапила в чергу модерації. Відкрийте адмін-панель для схвалення чи відхилення.",
+    categoryLabel: "Категорія",
+    cityLabel: "Місто",
+    requestorLabel: "Заявник",
+    budgetLabel: "Бюджет",
+    dateLabel: "Бажана дата",
+    cta: "Відкрити адмін-панель",
+    footer: "Сповіщення адміністратора Glatko",
+  },
+};
+
+export function getAdminPendingRequestCopy(
+  locale: EmailLocale,
+): AdminPendingRequestCopy {
+  return adminPendingRequest[locale] ?? adminPendingRequest.en;
+}
+
+/* ─── G-REQ-1: user request approved ─── */
+export type RequestApprovedCopy = {
+  subject: string;
+  preview: string;
+  heading: string;
+  body: string;
+  proCountSingular: string;
+  proCountPlural: string;
+  noProsHint: string;
+  cta: string;
+};
+
+const requestApproved: Record<EmailLocale, RequestApprovedCopy> = {
+  en: {
+    subject: "Your request has been approved",
+    preview: "Pros are now seeing your request",
+    heading: "Your request is live",
+    body: 'Your "{category}" request in {city} has been approved. {proLine}',
+    proCountSingular: "1 verified pro can now bid on it.",
+    proCountPlural: "{count} verified pros can now bid on it.",
+    noProsHint:
+      "We will notify you as soon as a pro picks it up — your request is visible to qualifying professionals.",
+    cta: "View your requests",
+  },
+  tr: {
+    subject: "Talebiniz onaylandı",
+    preview: "Profesyoneller artık talebinizi görüyor",
+    heading: "Talebiniz yayında",
+    body: "{city} için \"{category}\" talebiniz onaylandı. {proLine}",
+    proCountSingular: "1 doğrulanmış profesyonel artık teklif verebilir.",
+    proCountPlural: "{count} doğrulanmış profesyonel artık teklif verebilir.",
+    noProsHint:
+      "Talebiniz uygun profesyonellere açıldı; ilk teklif geldiğinde size haber veririz.",
+    cta: "Taleplerimi görüntüle",
+  },
+  de: {
+    subject: "Ihre Anfrage wurde freigegeben",
+    preview: "Profis sehen jetzt Ihre Anfrage",
+    heading: "Ihre Anfrage ist live",
+    body: 'Ihre "{category}"-Anfrage in {city} wurde freigegeben. {proLine}',
+    proCountSingular: "1 verifizierter Profi kann jetzt ein Angebot abgeben.",
+    proCountPlural: "{count} verifizierte Profis können jetzt Angebote abgeben.",
+    noProsHint:
+      "Wir benachrichtigen Sie, sobald ein Profi reagiert — Ihre Anfrage ist für qualifizierte Profis sichtbar.",
+    cta: "Meine Anfragen ansehen",
+  },
+  ar: {
+    subject: "تمت الموافقة على طلبك",
+    preview: "يرى المحترفون الآن طلبك",
+    heading: "طلبك مباشر",
+    body: "تمت الموافقة على طلبك \"{category}\" في {city}. {proLine}",
+    proCountSingular: "محترف موثوق واحد يمكنه الآن تقديم عرض.",
+    proCountPlural: "{count} محترفًا موثوقًا يمكنهم الآن تقديم عروض.",
+    noProsHint:
+      "سنخبرك بمجرد رد أحد المحترفين — طلبك ظاهر للمحترفين المؤهلين.",
+    cta: "عرض طلباتي",
+  },
+  it: {
+    subject: "La tua richiesta è stata approvata",
+    preview: "I professionisti vedono ora la tua richiesta",
+    heading: "La tua richiesta è online",
+    body: 'La tua richiesta "{category}" a {city} è stata approvata. {proLine}',
+    proCountSingular: "1 professionista verificato può ora fare un’offerta.",
+    proCountPlural:
+      "{count} professionisti verificati possono ora fare un’offerta.",
+    noProsHint:
+      "Ti avviseremo non appena un professionista risponde — la tua richiesta è visibile ai pro idonei.",
+    cta: "Vedi le mie richieste",
+  },
+  me: {
+    subject: "Vaš zahtjev je odobren",
+    preview: "Profesionalci sada vide vaš zahtjev",
+    heading: "Vaš zahtjev je aktivan",
+    body: 'Vaš zahtjev "{category}" u gradu {city} je odobren. {proLine}',
+    proCountSingular: "1 provjereni profesionalac sada može dati ponudu.",
+    proCountPlural:
+      "{count} provjerenih profesionalaca sada može dati ponudu.",
+    noProsHint:
+      "Javićemo vam čim neki profesionalac odgovori — zahtjev je vidljiv kvalifikovanim profesionalcima.",
+    cta: "Pregledaj moje zahtjeve",
+  },
+  ru: {
+    subject: "Ваш запрос одобрен",
+    preview: "Специалисты теперь видят ваш запрос",
+    heading: "Ваш запрос опубликован",
+    body: "Ваш запрос «{category}» в {city} одобрен. {proLine}",
+    proCountSingular: "1 проверенный специалист теперь может оставить ставку.",
+    proCountPlural:
+      "{count} проверенных специалистов теперь могут оставить ставки.",
+    noProsHint:
+      "Мы сообщим, как только один из специалистов откликнется — ваш запрос виден подходящим мастерам.",
+    cta: "Мои запросы",
+  },
+  sr: {
+    subject: "Vaš zahtev je odobren",
+    preview: "Profesionalci sada vide vaš zahtev",
+    heading: "Vaš zahtev je aktivan",
+    body: 'Vaš zahtev "{category}" u gradu {city} je odobren. {proLine}',
+    proCountSingular: "1 verifikovan profesionalac sada može poslati ponudu.",
+    proCountPlural:
+      "{count} verifikovanih profesionalaca sada može poslati ponudu.",
+    noProsHint:
+      "Javićemo vam čim neko od profesionalaca odgovori — zahtev je vidljiv kvalifikovanim majstorima.",
+    cta: "Pregledaj moje zahteve",
+  },
+  uk: {
+    subject: "Ваш запит схвалено",
+    preview: "Фахівці тепер бачать ваш запит",
+    heading: "Ваш запит активний",
+    body: 'Ваш запит "{category}" у місті {city} схвалено. {proLine}',
+    proCountSingular: "1 перевірений фахівець може зробити пропозицію.",
+    proCountPlural:
+      "{count} перевірених фахівців можуть зробити пропозиції.",
+    noProsHint:
+      "Сповістимо вас, щойно фахівець відгукнеться — ваш запит видно кваліфікованим спеціалістам.",
+    cta: "Переглянути мої запити",
+  },
+};
+
+export function getRequestApprovedCopy(locale: EmailLocale): RequestApprovedCopy {
+  return requestApproved[locale] ?? requestApproved.en;
+}
+
+/* ─── G-REQ-1: user request rejected ─── */
+export type RequestRejectedCopy = {
+  subject: string;
+  preview: string;
+  heading: string;
+  intro: string;
+  reasonLabel: string;
+  outro: string;
+  cta: string;
+};
+
+const requestRejected: Record<EmailLocale, RequestRejectedCopy> = {
+  en: {
+    subject: "Your request was not approved",
+    preview: "Update on your Glatko request",
+    heading: "We could not approve your request",
+    intro: 'Your "{category}" request in {city} was not approved.',
+    reasonLabel: "Reason",
+    outro: "You can submit a new request once the issue is resolved.",
+    cta: "Create a new request",
+  },
+  tr: {
+    subject: "Talebiniz onaylanmadı",
+    preview: "Glatko talebinizle ilgili güncelleme",
+    heading: "Talebinizi onaylayamadık",
+    intro: "{city} için \"{category}\" talebiniz onaylanmadı.",
+    reasonLabel: "Sebep",
+    outro: "Sorunu çözdükten sonra yeni bir talep oluşturabilirsiniz.",
+    cta: "Yeni talep oluştur",
+  },
+  de: {
+    subject: "Ihre Anfrage wurde nicht genehmigt",
+    preview: "Update zu Ihrer Glatko-Anfrage",
+    heading: "Wir konnten Ihre Anfrage nicht freigeben",
+    intro: 'Ihre "{category}"-Anfrage in {city} wurde nicht genehmigt.',
+    reasonLabel: "Grund",
+    outro:
+      "Sie können nach Behebung des Problems eine neue Anfrage einreichen.",
+    cta: "Neue Anfrage erstellen",
+  },
+  ar: {
+    subject: "لم تتم الموافقة على طلبك",
+    preview: "تحديث بشأن طلبك في Glatko",
+    heading: "لم نتمكن من الموافقة على طلبك",
+    intro: "لم تتم الموافقة على طلبك \"{category}\" في {city}.",
+    reasonLabel: "السبب",
+    outro: "يمكنك تقديم طلب جديد بعد معالجة المشكلة.",
+    cta: "إنشاء طلب جديد",
+  },
+  it: {
+    subject: "La tua richiesta non è stata approvata",
+    preview: "Aggiornamento sulla tua richiesta Glatko",
+    heading: "Non possiamo approvare la tua richiesta",
+    intro: 'La tua richiesta "{category}" a {city} non è stata approvata.',
+    reasonLabel: "Motivo",
+    outro: "Puoi inviare una nuova richiesta dopo aver risolto il problema.",
+    cta: "Crea nuova richiesta",
+  },
+  me: {
+    subject: "Vaš zahtjev nije odobren",
+    preview: "Ažuriranje vašeg Glatko zahtjeva",
+    heading: "Nismo mogli odobriti vaš zahtjev",
+    intro: 'Vaš zahtjev "{category}" u gradu {city} nije odobren.',
+    reasonLabel: "Razlog",
+    outro: "Možete podnijeti novi zahtjev nakon što riješite problem.",
+    cta: "Kreiraj novi zahtjev",
+  },
+  ru: {
+    subject: "Ваш запрос не одобрен",
+    preview: "Обновление по запросу Glatko",
+    heading: "Мы не смогли одобрить ваш запрос",
+    intro: "Ваш запрос «{category}» в {city} не одобрен.",
+    reasonLabel: "Причина",
+    outro: "После устранения проблемы вы можете отправить новый запрос.",
+    cta: "Создать новый запрос",
+  },
+  sr: {
+    subject: "Vaš zahtev nije odobren",
+    preview: "Ažuriranje vašeg Glatko zahteva",
+    heading: "Nismo mogli da odobrimo vaš zahtev",
+    intro: 'Vaš zahtev "{category}" u gradu {city} nije odobren.',
+    reasonLabel: "Razlog",
+    outro: "Možete podneti novi zahtev nakon što rešite problem.",
+    cta: "Kreiraj novi zahtev",
+  },
+  uk: {
+    subject: "Ваш запит не схвалено",
+    preview: "Оновлення щодо вашого запиту Glatko",
+    heading: "Ми не змогли схвалити ваш запит",
+    intro: 'Ваш запит "{category}" у місті {city} не схвалено.',
+    reasonLabel: "Причина",
+    outro: "Ви можете подати новий запит після усунення проблеми.",
+    cta: "Створити новий запит",
+  },
+};
+
+export function getRequestRejectedCopy(locale: EmailLocale): RequestRejectedCopy {
+  return requestRejected[locale] ?? requestRejected.en;
+}

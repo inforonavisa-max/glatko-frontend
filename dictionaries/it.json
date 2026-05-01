@@ -458,6 +458,24 @@
       "confirmReject": "Sei sicuro di voler rifiutare questa candidatura?",
       "approved_success": "Professionista approvato con successo",
       "rejected_success": "Candidatura rifiutata"
+    },
+    "requests": {
+      "title": "Moderazione richieste",
+      "subtitle": "Verifica e approva le richieste in arrivo",
+      "pending": "in attesa",
+      "queueEmpty": "Tutte le richieste sono state elaborate",
+      "loadError": "Impossibile caricare le richieste",
+      "signedInUser": "Utente registrato",
+      "unknownUser": "Utente sconosciuto",
+      "answers": "Risposte",
+      "photos": "Foto",
+      "phone": "Telefono",
+      "approve": "Approva e notifica i pro",
+      "reject": "Rifiuta",
+      "confirmReject": "Conferma rifiuto",
+      "rejectReasonRequired": "Motivo del rifiuto richiesto",
+      "rejectReasonPlaceholder": "Motivo del rifiuto…",
+      "processing": "Elaborazione in corso…"
     }
   },
   "cities": {
@@ -661,6 +679,23 @@
     },
     "error": {
       "generic": "Si è verificato un errore. Riprova."
+    },
+    "anonymous": {
+      "emailRequired": "L'email è richiesta se non sei registrato",
+      "emailHint": "Inviamo conferma e aggiornamenti a questo indirizzo",
+      "emailInvalid": "Inserisci un indirizzo email valido",
+      "emailPlaceholder": "you@example.com"
+    },
+    "draftRestored": "La tua bozza precedente è stata ripristinata",
+    "startFresh": "Ricomincia",
+    "errors": {
+      "required": "Questo campo è obbligatorio",
+      "min": "Valore minimo: {min}",
+      "max": "Valore massimo: {max}",
+      "minLength": "Minimo {min} caratteri",
+      "maxLength": "Massimo {max} caratteri",
+      "pattern": "Formato non valido",
+      "minSelected": "Selezionane almeno {min}"
     }
   },
   "dashboard": {

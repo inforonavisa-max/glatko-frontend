@@ -458,6 +458,24 @@
       "confirmReject": "Jeste li sigurni da želite da odbijete ovu prijavu?",
       "approved_success": "Profesionalac uspješno odobren",
       "rejected_success": "Prijava odbijena"
+    },
+    "requests": {
+      "title": "Moderacija zahtjeva",
+      "subtitle": "Pregledajte i odobrite pristigle zahtjeve",
+      "pending": "na čekanju",
+      "queueEmpty": "Svi zahtjevi su obrađeni",
+      "loadError": "Učitavanje zahtjeva nije uspjelo",
+      "signedInUser": "Prijavljeni korisnik",
+      "unknownUser": "Nepoznat korisnik",
+      "answers": "Odgovori",
+      "photos": "Fotografije",
+      "phone": "Telefon",
+      "approve": "Odobri i pošalji profesionalcima",
+      "reject": "Odbij",
+      "confirmReject": "Potvrdi odbijanje",
+      "rejectReasonRequired": "Razlog odbijanja je obavezan",
+      "rejectReasonPlaceholder": "Razlog odbijanja…",
+      "processing": "Obrađujemo…"
     }
   },
   "cities": {
@@ -661,6 +679,23 @@
     },
     "error": {
       "generic": "Došlo je do greške. Pokušajte ponovo."
+    },
+    "anonymous": {
+      "emailRequired": "Email adresa je obavezna za neulogovane korisnike",
+      "emailHint": "Šaljemo potvrdu i obavještenja o vašem zahtjevu na ovu adresu",
+      "emailInvalid": "Unesite ispravnu email adresu",
+      "emailPlaceholder": "you@example.com"
+    },
+    "draftRestored": "Vaš prethodni nacrt je vraćen",
+    "startFresh": "Počni iznova",
+    "errors": {
+      "required": "Ovo polje je obavezno",
+      "min": "Minimum vrijednost: {min}",
+      "max": "Maksimum vrijednost: {max}",
+      "minLength": "Minimum {min} karaktera",
+      "maxLength": "Maksimum {max} karaktera",
+      "pattern": "Neispravan format",
+      "minSelected": "Izaberite najmanje {min}"
     }
   },
   "dashboard": {

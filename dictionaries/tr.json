@@ -458,6 +458,24 @@
       "confirmReject": "Bu başvuruyu reddetmek istediğinizden emin misiniz?",
       "approved_success": "Profesyonel başarıyla onaylandı",
       "rejected_success": "Başvuru reddedildi"
+    },
+    "requests": {
+      "title": "Talep moderasyonu",
+      "subtitle": "Gelen hizmet taleplerini incele ve onayla",
+      "pending": "beklemede",
+      "queueEmpty": "Tüm talepler işlendi",
+      "loadError": "Talepler yüklenemedi",
+      "signedInUser": "Giriş yapmış kullanıcı",
+      "unknownUser": "Bilinmeyen kullanıcı",
+      "answers": "Yanıtlar",
+      "photos": "Fotoğraflar",
+      "phone": "Telefon",
+      "approve": "Onayla ve uzmanlara bildir",
+      "reject": "Reddet",
+      "confirmReject": "Reddi onayla",
+      "rejectReasonRequired": "Reddetme nedeni zorunlu",
+      "rejectReasonPlaceholder": "Reddetme nedeni…",
+      "processing": "İşleniyor…"
     }
   },
   "cities": {
@@ -661,6 +679,23 @@
     },
     "error": {
       "generic": "Bir hata oluştu. Lütfen tekrar deneyin."
+    },
+    "anonymous": {
+      "emailRequired": "Giriş yapmadan istek için email zorunludur",
+      "emailHint": "Onay ve güncellemeleri bu adrese gönderiyoruz",
+      "emailInvalid": "Geçerli bir email adresi girin",
+      "emailPlaceholder": "you@example.com"
+    },
+    "draftRestored": "Önceki taslağınız geri yüklendi",
+    "startFresh": "Yeni başla",
+    "errors": {
+      "required": "Bu alan zorunludur",
+      "min": "Minimum değer: {min}",
+      "max": "Maksimum değer: {max}",
+      "minLength": "En az {min} karakter",
+      "maxLength": "En fazla {max} karakter",
+      "pattern": "Geçersiz format",
+      "minSelected": "En az {min} seçin"
     }
   },
   "dashboard": {

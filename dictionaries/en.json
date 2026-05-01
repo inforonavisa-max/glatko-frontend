@@ -458,6 +458,24 @@
       "confirmReject": "Are you sure you want to reject this application?",
       "approved_success": "Professional approved successfully",
       "rejected_success": "Application rejected"
+    },
+    "requests": {
+      "title": "Request moderation",
+      "subtitle": "Review and approve incoming service requests",
+      "pending": "pending",
+      "queueEmpty": "All requests processed",
+      "loadError": "Failed to load requests",
+      "signedInUser": "Signed-in user",
+      "unknownUser": "Unknown user",
+      "answers": "Answers",
+      "photos": "Photos",
+      "phone": "Phone",
+      "approve": "Approve & notify pros",
+      "reject": "Reject",
+      "confirmReject": "Confirm reject",
+      "rejectReasonRequired": "Reject reason required",
+      "rejectReasonPlaceholder": "Reject reason…",
+      "processing": "Processing…"
     }
   },
   "cities": {
@@ -661,6 +679,23 @@
     },
     "error": {
       "generic": "Something went wrong. Please try again."
+    },
+    "anonymous": {
+      "emailRequired": "Email is required when not signed in",
+      "emailHint": "We send confirmation and updates about your request to this address",
+      "emailInvalid": "Please enter a valid email address",
+      "emailPlaceholder": "you@example.com"
+    },
+    "draftRestored": "Your previous draft was restored",
+    "startFresh": "Start fresh",
+    "errors": {
+      "required": "This field is required",
+      "min": "Minimum value: {min}",
+      "max": "Maximum value: {max}",
+      "minLength": "Minimum {min} characters",
+      "maxLength": "Maximum {max} characters",
+      "pattern": "Invalid format",
+      "minSelected": "Select at least {min}"
     }
   },
   "dashboard": {

@@ -2,13 +2,11 @@
 
 import { z } from "zod";
 import { getLocale, getTranslations } from "next-intl/server";
+
 import { createClient } from "@/supabase/server";
 import { pickLocalizedLabel } from "@/lib/i18n/pick-localized-label";
-import {
-  createServiceRequest,
-  notifyProfessionalsOfNewRequest,
-} from "@/lib/supabase/glatko.server";
 import { createServiceRequestSchema } from "@/lib/validations/service-request";
+import { sendAdminPendingRequestEmail } from "@/lib/email/request-emails";
 
 interface SubmitResult {
   success: boolean;
@@ -17,13 +15,45 @@ interface SubmitResult {
   error?: string;
 }
 
+const SUPPORTED_LOCALES = [
+  "me",
+  "sr",
+  "en",
+  "tr",
+  "de",
+  "it",
+  "ru",
+  "ar",
+  "uk",
+] as const;
+
+type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
+
+function normalizeLocale(value: string | null): SupportedLocale {
+  if (!value) return "me";
+  return (SUPPORTED_LOCALES as readonly string[]).includes(value)
+    ? (value as SupportedLocale)
+    : "me";
+}
+
+/**
+ * G-REQ-1 anonim flow.
+ *
+ * - Logged-in user: `customer_id` set from auth cookie.
+ * - Anonymous user: `customer_id` left null, `anonymous_email` collected
+ *   in the wizard's last step (Airbnb pattern).
+ *
+ * New requests land with `status = 'pending_moderation'`. Admin approval
+ * (Faz 8) flips them to `'active'` and triggers
+ * `notifyProfessionalsOfNewRequest` — that step is intentionally NOT
+ * called here, so unreviewed requests never reach pros.
+ */
 export async function submitServiceRequest(
-  formData: FormData
+  formData: FormData,
 ): Promise<SubmitResult> {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { success: false, error: "Authentication required." };
-  const customerId = user.id;
+  const customerId = user?.id ?? null;
 
   let details: Record<string, unknown> = {};
   const detailsRaw = formData.get("details") as string | null;
@@ -47,16 +77,21 @@ export async function submitServiceRequest(
 
   const budgetMinStr = formData.get("budgetMin") as string | null;
   const budgetMaxStr = formData.get("budgetMax") as string | null;
-  const emailStr = (formData.get("email") as string) || "";
-  const phone = (formData.get("phone") as string) || "";
+  const emailStr = ((formData.get("email") as string) || "").trim();
+  const phone = ((formData.get("phone") as string) || "").trim();
+  const submittedLocale = normalizeLocale(
+    (formData.get("locale") as string) || (formData.get("summaryLocale") as string),
+  );
 
   const rawData = {
     categoryId: (formData.get("categoryId") as string) || "",
     title: ((formData.get("title") as string) || "").trim(),
-    description: ((formData.get("description") as string) || "").trim() || undefined,
+    description:
+      ((formData.get("description") as string) || "").trim() || undefined,
     details,
     municipality: (formData.get("municipality") as string) || "",
-    address: ((formData.get("address") as string) || "").trim() || undefined,
+    address:
+      ((formData.get("address") as string) || "").trim() || undefined,
     budgetMin: budgetMinStr ? Number(budgetMinStr) : null,
     budgetMax: budgetMaxStr ? Number(budgetMaxStr) : null,
     urgency: ((formData.get("urgency") as string) || "flexible") as
@@ -71,8 +106,10 @@ export async function submitServiceRequest(
     email: emailStr || null,
   };
 
-  const locale = await getLocale();
-  const t = await getTranslations({ locale, namespace: "validation" });
+  const t = await getTranslations({
+    locale: await getLocale(),
+    namespace: "validation",
+  });
   const createRequestSchema = createServiceRequestSchema((key, values) =>
     t(key, values),
   );
@@ -87,6 +124,17 @@ export async function submitServiceRequest(
   }
 
   const data = parsed.data;
+
+  // Anonymous flow gate: an anon user must supply an email so the admin
+  // moderation queue (and subsequent approve/reject mail) can reach them.
+  const anonymousEmail = !customerId ? data.email : null;
+  if (!customerId && !anonymousEmail) {
+    return {
+      success: false,
+      error: "Email is required for anonymous requests.",
+    };
+  }
+
   data.details.phone = phone;
   if (emailStr) data.details.email = emailStr;
 
@@ -97,28 +145,42 @@ export async function submitServiceRequest(
     if (u.success) preferred_professional_id = u.data;
   }
 
-  const result = await createServiceRequest({
+  // Direct insert (bypassing createServiceRequest helper) so we can set
+  // status='pending_moderation' + write the new anonymous_email + locale
+  // columns. Skipping notifyProfessionalsOfNewRequest is intentional —
+  // pros only see requests after admin approval (Faz 8).
+  const insertPayload = {
     customer_id: customerId,
+    anonymous_email: anonymousEmail,
     category_id: data.categoryId,
     title: data.title,
-    description: data.description,
+    description: data.description ?? null,
     details: data.details,
     municipality: data.municipality,
-    address: data.address,
-    budget_min: data.budgetMin ?? undefined,
-    budget_max: data.budgetMax ?? undefined,
+    address: data.address ?? null,
+    budget_min: data.budgetMin ?? null,
+    budget_max: data.budgetMax ?? null,
     urgency: data.urgency,
-    preferred_date_start: data.preferredDateStart ?? undefined,
-    preferred_date_end: data.preferredDateEnd ?? undefined,
+    preferred_date_start: data.preferredDateStart ?? null,
+    preferred_date_end: data.preferredDateEnd ?? null,
     photos: data.photos,
     preferred_professional_id,
-  });
+    locale: submittedLocale,
+    status: "pending_moderation",
+  };
 
-  if (!result.success) {
-    return { success: false, error: result.error };
+  const { data: row, error } = await supabase
+    .from("glatko_service_requests")
+    .insert(insertPayload)
+    .select("id, category_id, title, municipality")
+    .single();
+
+  if (error || !row) {
+    return {
+      success: false,
+      error: error?.message ?? "Failed to submit request.",
+    };
   }
-
-  const row = result.request;
 
   const { data: catRow } = await supabase
     .from("glatko_service_categories")
@@ -130,18 +192,22 @@ export async function submitServiceRequest(
     (catRow?.name as Record<string, string> | null | undefined) ?? {};
 
   const summaryLocale = ((formData.get("summaryLocale") as string) || "en").trim();
-
-  await notifyProfessionalsOfNewRequest({
-    requestId: row.id,
-    customerId: row.customer_id,
-    categoryId: row.category_id,
-    title: row.title,
-    municipality: row.municipality,
-    preferredProfessionalId: row.preferred_professional_id,
-    categoryNames,
-  }).catch(() => {});
-
   const categoryLabel = pickLocalizedLabel(categoryNames, summaryLocale);
 
-  return { success: true, requestId: row.id, categoryLabel };
+  // Fire-and-forget admin notification (English copy; ops mailbox).
+  // Never blocks the submit success path — the moderation queue is the
+  // canonical surface, mail is just a heads-up.
+  void sendAdminPendingRequestEmail({
+    requestId: row.id as string,
+    categoryName: pickLocalizedLabel(categoryNames, "en") || "Unknown",
+    city: row.municipality as string,
+    requestorEmail: user?.email || anonymousEmail || "anonymous",
+    budgetMin: data.budgetMin ?? null,
+    budgetMax: data.budgetMax ?? null,
+    preferredDate: data.preferredDateStart ?? null,
+  }).catch(() => {
+    /* glatkoCaptureException already wraps inside the helper */
+  });
+
+  return { success: true, requestId: row.id as string, categoryLabel };
 }
