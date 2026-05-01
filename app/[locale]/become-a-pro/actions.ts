@@ -1,25 +1,58 @@
 "use server";
 
-import { createClient } from "@/supabase/server";
-import { createProfessionalProfile } from "@/lib/supabase/glatko.server";
-import {
-  createProfessionalApplicationSchema,
-  numOrUndef,
-} from "@/lib/validations/become-a-pro";
-import { getLocale, getTranslations } from "next-intl/server";
+import { z } from "zod";
+
+import { createClient, createAdminClient } from "@/supabase/server";
+import { sendAdminProApplicationEmail } from "@/lib/email/pro-emails";
+import { glatkoCaptureException } from "@/lib/sentry/glatko-capture";
 
 interface FormState {
   success: boolean;
   error?: string;
 }
 
-function firstZodIssueMessage(
-  issues: { path: (string | number)[]; message: string }[],
-): string {
-  const first = issues[0];
-  return first?.message ?? "Validation failed";
+const PROFILE_BASE_FIELDS = z.object({
+  businessName: z.string().min(1).max(120),
+  bio: z.string().max(2000).optional(),
+  phone: z.string().min(4).max(40),
+  city: z.string().min(1).max(80),
+  yearsExperience: z.coerce.number().min(0).max(80).optional(),
+  hourlyRateMin: z.coerce.number().min(0).max(10000).optional(),
+  hourlyRateMax: z.coerce.number().min(0).max(10000).optional(),
+  serviceRadiusKm: z.coerce.number().min(5).max(100).default(25),
+  insuranceStatus: z
+    .enum(["none", "private", "business", "professional"])
+    .default("none"),
+  introductionVideoUrl: z.string().url().optional().or(z.literal("")),
+});
+
+interface PortfolioInput {
+  url: string;
+  type: string;
+  name: string;
+  uploaded_at: string;
+  path: string;
 }
 
+interface PricingInput {
+  type: "hourly" | "fixed" | "per_unit";
+  baseRate: string;
+  currency: "EUR";
+}
+
+/**
+ * G-PRO-1 Faz 6 — Pro onboarding submission.
+ *
+ * Writes:
+ *   1. glatko_professional_profiles (upsert with new columns)
+ *   2. glatko_pro_services (one per category, primary flag)
+ *   3. glatko_pro_application_answers (one row per root category slug)
+ *   4. profile_completion_score (RPC, persisted on profile)
+ *
+ * Fires admin notification email post-success (best-effort, never blocks
+ * the success path). User-facing approve/reject mailers fire from
+ * /admin/professionals/actions.ts when admin moderates.
+ */
 export async function submitProfessionalApplication(
   _prev: FormState,
   formData: FormData,
@@ -30,9 +63,11 @@ export async function submitProfessionalApplication(
   } = await supabase.auth.getUser();
   if (!user) return { success: false, error: "Authentication required" };
 
+  // Anti-tamper: re-read avatar from DB; the client cannot trick us into
+  // accepting a foreign avatar URL by passing it via formData.
   const { data: profile, error: profileErr } = await supabase
     .from("profiles")
-    .select("avatar_url")
+    .select("avatar_url, full_name")
     .eq("id", user.id)
     .maybeSingle();
 
@@ -40,69 +75,223 @@ export async function submitProfessionalApplication(
     return { success: false, error: profileErr.message };
   }
 
-  const locale = await getLocale();
-  const t = await getTranslations({ locale, namespace: "validation" });
-
   const dbAvatar = profile?.avatar_url?.trim() ?? "";
   if (!dbAvatar) {
-    return { success: false, error: t("avatarRequired") };
+    return { success: false, error: "Avatar required" };
   }
 
-  const primaryRaw = String(formData.get("primaryCategoryId") ?? "").trim();
+  const submittedAvatar = String(formData.get("avatar_url") ?? "").trim();
+  if (submittedAvatar !== dbAvatar) {
+    return { success: false, error: "Avatar mismatch — please re-upload" };
+  }
 
-  const rawPayload = {
-    businessName: String(formData.get("businessName") ?? "") || undefined,
-    bio: String(formData.get("bio") ?? "") || undefined,
-    phone: String(formData.get("phone") ?? "") || undefined,
-    city: String(formData.get("city") ?? "") || undefined,
-    languages: formData.getAll("languages") as string[],
-    yearsExperience: numOrUndef(formData.get("yearsExperience")),
-    hourlyRateMin: numOrUndef(formData.get("hourlyRateMin")),
-    hourlyRateMax: numOrUndef(formData.get("hourlyRateMax")),
-    categoryIds: formData.getAll("categoryIds") as string[],
-    primaryCategoryId: primaryRaw || undefined,
-    avatar_url: String(formData.get("avatar_url") ?? "").trim(),
+  // Parse + validate base profile fields
+  const baseRaw = {
+    businessName: String(formData.get("businessName") ?? "").trim(),
+    bio: (String(formData.get("bio") ?? "") || undefined) ?? undefined,
+    phone: String(formData.get("phone") ?? "").trim(),
+    city: String(formData.get("city") ?? "").trim(),
+    yearsExperience:
+      formData.get("yearsExperience") === ""
+        ? undefined
+        : formData.get("yearsExperience"),
+    hourlyRateMin:
+      formData.get("hourlyRateMin") === ""
+        ? undefined
+        : formData.get("hourlyRateMin"),
+    hourlyRateMax:
+      formData.get("hourlyRateMax") === ""
+        ? undefined
+        : formData.get("hourlyRateMax"),
+    serviceRadiusKm: formData.get("serviceRadiusKm"),
+    insuranceStatus: formData.get("insuranceStatus") || "none",
+    introductionVideoUrl: String(formData.get("introductionVideoUrl") ?? ""),
   };
-
-  const professionalApplicationSchema = createProfessionalApplicationSchema(
-    (key, values) => t(key, values),
-  );
-  const parsed = professionalApplicationSchema.safeParse(rawPayload);
+  const parsed = PROFILE_BASE_FIELDS.safeParse(baseRaw);
   if (!parsed.success) {
     return {
       success: false,
-      error: firstZodIssueMessage(parsed.error.issues),
+      error:
+        parsed.error.issues[0]?.message ??
+        "Validation failed",
     };
   }
 
-  if (parsed.data.avatar_url !== dbAvatar) {
-    return { success: false, error: t("avatarRequired") };
+  const languages = formData.getAll("languages") as string[];
+  const categoryIds = formData.getAll("categoryIds") as string[];
+  const primaryCategoryId = String(
+    formData.get("primaryCategoryId") ?? "",
+  ).trim();
+
+  if (categoryIds.length === 0) {
+    return { success: false, error: "Select at least one service" };
+  }
+  if (!primaryCategoryId || !categoryIds.includes(primaryCategoryId)) {
+    return { success: false, error: "Pick a primary service" };
   }
 
-  const {
-    businessName,
-    bio,
-    phone,
-    city,
-    languages,
-    yearsExperience,
-    hourlyRateMin,
-    hourlyRateMax,
-    categoryIds,
-    primaryCategoryId,
-  } = parsed.data;
+  // JSON fields: applicationAnswers, portfolioImages, pricingModel,
+  // companyDocuments. All optional; default to empty.
+  let applicationAnswers: Record<string, Record<string, unknown>> = {};
+  try {
+    const raw = String(formData.get("applicationAnswers") ?? "{}");
+    applicationAnswers = JSON.parse(raw);
+  } catch {
+    applicationAnswers = {};
+  }
 
-  return createProfessionalProfile({
-    userId: user.id,
-    businessName,
-    bio,
-    phone,
-    city,
-    languages,
-    yearsExperience,
-    hourlyRateMin,
-    hourlyRateMax,
-    categoryIds,
-    primaryCategoryId,
+  let portfolioImages: string[] = [];
+  try {
+    const raw = String(formData.get("portfolioImages") ?? "[]");
+    portfolioImages = JSON.parse(raw) as string[];
+  } catch {
+    portfolioImages = [];
+  }
+  if (!Array.isArray(portfolioImages)) portfolioImages = [];
+
+  let pricingModel: PricingInput | null = null;
+  try {
+    const raw = String(formData.get("pricingModel") ?? "");
+    if (raw) {
+      const p = JSON.parse(raw) as PricingInput;
+      if (p && p.type && p.baseRate) {
+        pricingModel = p;
+      }
+    }
+  } catch {
+    pricingModel = null;
+  }
+
+  let companyDocuments: PortfolioInput[] = [];
+  try {
+    const raw = String(formData.get("companyDocuments") ?? "[]");
+    companyDocuments = JSON.parse(raw) as PortfolioInput[];
+  } catch {
+    companyDocuments = [];
+  }
+  if (!Array.isArray(companyDocuments)) companyDocuments = [];
+
+  // Use admin client for the writes — RLS would force us to write through
+  // owner-match policies which work fine, but admin client lets us also
+  // set is_active=true and manage child tables in one go without
+  // surprising policy interactions.
+  const admin = createAdminClient();
+
+  const profilePayload: Record<string, unknown> = {
+    id: user.id,
+    business_name: parsed.data.businessName,
+    bio: parsed.data.bio ?? null,
+    phone: parsed.data.phone,
+    location_city: parsed.data.city,
+    languages: languages.length > 0 ? languages : ["en"],
+    years_experience: parsed.data.yearsExperience ?? null,
+    hourly_rate_min: parsed.data.hourlyRateMin ?? null,
+    hourly_rate_max: parsed.data.hourlyRateMax ?? null,
+    service_radius_km: parsed.data.serviceRadiusKm ?? 25,
+    insurance_status: parsed.data.insuranceStatus,
+    introduction_video_url:
+      parsed.data.introductionVideoUrl &&
+      parsed.data.introductionVideoUrl.length > 0
+        ? parsed.data.introductionVideoUrl
+        : null,
+    portfolio_images: portfolioImages,
+    company_documents: companyDocuments,
+    pricing_model: pricingModel,
+    verification_status: "pending",
+    is_active: true,
+    is_verified: false,
+  };
+
+  const { error: profileWriteErr } = await admin
+    .from("glatko_professional_profiles")
+    .upsert(profilePayload, { onConflict: "id" });
+
+  if (profileWriteErr) {
+    return { success: false, error: profileWriteErr.message };
+  }
+
+  // Replace pro_services rows for this user (full overwrite — wizard
+  // submit is the canonical state of the pro's category selections).
+  await admin
+    .from("glatko_pro_services")
+    .delete()
+    .eq("professional_id", user.id);
+
+  if (categoryIds.length > 0) {
+    const serviceRows = categoryIds.map((catId) => ({
+      professional_id: user.id,
+      category_id: catId,
+      is_primary: catId === primaryCategoryId,
+    }));
+    const { error: servicesErr } = await admin
+      .from("glatko_pro_services")
+      .insert(serviceRows);
+    if (servicesErr) {
+      return { success: false, error: servicesErr.message };
+    }
+  }
+
+  // Replace application_answers rows for this user
+  await admin
+    .from("glatko_pro_application_answers")
+    .delete()
+    .eq("professional_id", user.id);
+
+  const answerRows = Object.entries(applicationAnswers)
+    .filter(([, ans]) => ans && Object.keys(ans).length > 0)
+    .map(([slug, ans]) => ({
+      professional_id: user.id,
+      category_slug: slug,
+      answers: ans,
+    }));
+  if (answerRows.length > 0) {
+    const { error: answersErr } = await admin
+      .from("glatko_pro_application_answers")
+      .insert(answerRows);
+    if (answersErr) {
+      return { success: false, error: answersErr.message };
+    }
+  }
+
+  // Compute profile completion score via RPC and persist on the row.
+  const { data: scoreData } = await admin.rpc(
+    "glatko_calculate_profile_completion",
+    { p_professional_id: user.id },
+  );
+  const score = typeof scoreData === "number" ? scoreData : 0;
+  await admin
+    .from("glatko_professional_profiles")
+    .update({ profile_completion_score: score })
+    .eq("id", user.id);
+
+  // Resolve service labels for the admin email
+  let serviceLabels: string[] = [];
+  if (categoryIds.length > 0) {
+    const { data: cats } = await admin
+      .from("glatko_service_categories")
+      .select("id, name")
+      .in("id", categoryIds);
+    serviceLabels = (cats ?? []).map((c) => {
+      const n = c.name as Record<string, string> | null | undefined;
+      return n?.en ?? n?.me ?? "(unnamed)";
+    });
+  }
+
+  // Fire-and-forget admin notification email
+  void sendAdminProApplicationEmail({
+    professionalId: user.id,
+    professionalName: parsed.data.businessName,
+    professionalEmail: user.email ?? "(no email)",
+    city: parsed.data.city,
+    serviceLabels,
+    completionScore: score,
+  }).catch((err) => {
+    glatkoCaptureException(err, {
+      module: "become-a-pro/actions",
+      op: "admin_pending_email",
+      professionalId: user.id,
+    });
   });
+
+  return { success: true };
 }
