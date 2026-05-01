@@ -15,11 +15,15 @@
 const fontCache = new Map<string, ArrayBuffer>();
 
 function originForFontFetch(): string {
-  if (process.env.NEXT_PUBLIC_APP_URL) {
-    return process.env.NEXT_PUBLIC_APP_URL.replace(/\/$/, "");
-  }
+  // VERCEL_URL points at the *current* deployment (preview-aware), so the
+  // font asset is always reachable on the same deploy that's serving the
+  // OG handler. NEXT_PUBLIC_APP_URL is the production canonical and would
+  // 404 if the preview branch hasn't shipped to prod yet.
   if (process.env.VERCEL_URL) {
     return `https://${process.env.VERCEL_URL}`;
+  }
+  if (process.env.NEXT_PUBLIC_APP_URL) {
+    return process.env.NEXT_PUBLIC_APP_URL.replace(/\/$/, "");
   }
   return "http://localhost:3000";
 }
