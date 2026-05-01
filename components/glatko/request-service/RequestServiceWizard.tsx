@@ -5,6 +5,7 @@ import {
   useCallback,
   useTransition,
   useEffect,
+  useRef,
   Suspense,
 } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -92,6 +93,10 @@ function RequestServiceWizardInner({ categories }: Props) {
   const [email, setEmail] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+
+  // G-REQ-1: validateRef lets the DB-driven StepDetails own its
+  // per-question validation. Parent calls .current?.() on advance.
+  const detailsValidateRef = useRef<(() => boolean) | null>(null);
 
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState("");
@@ -218,6 +223,12 @@ function RequestServiceWizardInner({ categories }: Props) {
   };
 
   const goNext = () => {
+    // Step 1 (details) is DB-driven; defer to its own validate() before
+    // advancing so missing required answers surface inline rather than
+    // hiding behind a server-side reject.
+    if (step === 1 && detailsValidateRef.current) {
+      if (!detailsValidateRef.current()) return;
+    }
     setDirection(1);
     setStep((s) => s + 1);
   };
@@ -484,7 +495,9 @@ function RequestServiceWizardInner({ categories }: Props) {
                 details={details}
                 setDetails={setDetails}
                 selectedSubSlug={selectedSubSlug}
+                locale={locale}
                 t={t}
+                validateRef={detailsValidateRef}
               />
             )}
             {step === 2 && (
