@@ -4,38 +4,89 @@ import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { Link } from "@/i18n/navigation";
 import { ArrowRight, Users, Star } from "lucide-react";
-import { PageBackground } from "@/components/ui/PageBackground";
-import { getCategoryWithStats, searchProfessionals } from "@/lib/supabase/glatko.server";
-import type { Locale } from "@/i18n/routing";
 import type { Metadata } from "next";
+
+import { PageBackground } from "@/components/ui/PageBackground";
+import { Breadcrumb, type BreadcrumbCrumb } from "@/components/seo/Breadcrumb";
+import {
+  getCategoryBySlug,
+  getCategoryWithStats,
+  getCitiesServingCategory,
+  getSubCategories,
+  searchProfessionals,
+} from "@/lib/supabase/glatko.server";
+import { SEO_BASE, SEO_LOCALES, hreflangForLocale } from "@/lib/seo";
+import {
+  generateBreadcrumbSchema,
+  generateCategoryLocalBusinessSchema,
+  generateItemListSchema,
+  generateServiceSchema,
+  jsonLdScriptProps,
+  type BreadcrumbItem as JsonLdBreadcrumbItem,
+} from "@/lib/seo/jsonld";
+import type { Locale } from "@/i18n/routing";
 import type { MultiLangText } from "@/types/glatko";
 
 type Props = {
-  params: Promise<{ locale: string; slug: string }> | { locale: string; slug: string };
+  params:
+    | Promise<{ locale: string; slug: string }>
+    | { locale: string; slug: string };
 };
+
+export const revalidate = 3600;
+
+function pickLocalized(
+  obj: Record<string, string> | null | undefined,
+  locale: string,
+  fallback: string,
+): string {
+  if (!obj) return fallback;
+  return obj[locale] || obj.en || fallback;
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await Promise.resolve(params);
   if (!hasLocale(routing.locales, locale)) return {};
-  const category = await getCategoryWithStats(slug);
-  if (!category) return {};
-  const nameObj = category.name as MultiLangText;
-  const name = nameObj?.[locale as Locale] || nameObj?.en || slug;
+  const category = await getCategoryBySlug(slug);
+  if (!category) return { robots: { index: false } };
+
+  const t = await getTranslations({ locale });
+  const name = pickLocalized(category.name, locale, slug);
+  const description =
+    pickLocalized(category.description, locale, "") ||
+    t("services.metaDescription", { name });
+
+  // 9-locale hreflang (memory item 25 — every page; layout-level
+  // <HreflangLinks> is a defensive duplicate that crawlers tolerate).
+  const languages: Record<string, string> = {};
+  for (const l of SEO_LOCALES) {
+    languages[hreflangForLocale(l)] = `${SEO_BASE}/${l}/services/${slug}`;
+  }
+  languages["x-default"] = `${SEO_BASE}/en/services/${slug}`;
+
   return {
     title: `${name} — Glatko`,
-    description: `${name} professionals in Montenegro. Get verified quotes on Glatko.`,
+    description,
+    alternates: {
+      canonical: `${SEO_BASE}/${locale}/services/${slug}`,
+      languages,
+    },
     openGraph: {
       title: `${name} — Glatko`,
-      description: `${name} professionals in Montenegro. Get verified quotes on Glatko.`,
-      url: `https://glatko.app/${locale}/services/${slug}`,
+      description,
+      url: `${SEO_BASE}/${locale}/services/${slug}`,
       siteName: "Glatko",
       locale,
       type: "website",
     },
+    twitter: {
+      card: "summary_large_image",
+      title: `${name} — Glatko`,
+      description,
+    },
+    robots: { index: true, follow: true },
   };
 }
-
-export const revalidate = 3600;
 
 export default async function CategoryDetailPage({ params }: Props) {
   const { locale: localeParam, slug } = await Promise.resolve(params);
@@ -44,36 +95,99 @@ export default async function CategoryDetailPage({ params }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations();
 
-  const category = await getCategoryWithStats(slug);
+  const category = await getCategoryBySlug(slug);
   if (!category) notFound();
 
-  const nameObj = category.name as MultiLangText;
-  const categoryName = nameObj?.[locale] || nameObj?.en || slug;
-  const descObj = category.description as MultiLangText | null;
-  const categoryDesc = descObj?.[locale] || descObj?.en || "";
+  // Parallel: sub-categories, pro count, cities for areaServed, top pros.
+  const [subCategories, stats, citiesFromPros, { professionals }] =
+    await Promise.all([
+      getSubCategories(category.id),
+      getCategoryWithStats(slug),
+      getCitiesServingCategory(category.id),
+      searchProfessionals({
+        locale,
+        categorySlug: slug,
+        sortBy: "rating",
+        limit: 6,
+      }),
+    ]);
+  const proCount = stats?.proCount ?? 0;
 
-  const { professionals } = await searchProfessionals({
+  const categoryName = pickLocalized(category.name, locale, slug);
+  const categoryDesc = pickLocalized(category.description, locale, "");
+
+  // ── JSON-LD schemas ────────────────────────────────────────────────────
+  const serviceSchema = generateServiceSchema(category, locale, citiesFromPros);
+  const localBusinessSchema = generateCategoryLocalBusinessSchema(
+    category,
     locale,
-    categorySlug: slug,
-    sortBy: "rating",
-    limit: 6,
+    citiesFromPros,
+  );
+  const itemListSchema =
+    subCategories.length > 0
+      ? generateItemListSchema(
+          subCategories.map((s) => ({
+            slug: s.slug as string,
+            name: s.name as Record<string, string>,
+          })),
+          locale,
+          "/services",
+        )
+      : null;
+
+  // ── Breadcrumbs (DOM + JSON-LD share the crumb list) ───────────────────
+  const homeLabel = "Glatko";
+  const servicesLabel = t("nav.services");
+  const breadcrumbCrumbs: BreadcrumbCrumb[] = [
+    { name: homeLabel, href: "/" },
+    { name: servicesLabel, href: "/services" },
+  ];
+  if (category.parent_slug) {
+    const parentName = pickLocalized(
+      category.parent_name,
+      locale,
+      category.parent_slug,
+    );
+    breadcrumbCrumbs.push({
+      name: parentName,
+      href: `/services/${category.parent_slug}`,
+    });
+  }
+  breadcrumbCrumbs.push({
+    name: categoryName,
+    href: `/services/${slug}`,
   });
+
+  const breadcrumbSchemaItems: JsonLdBreadcrumbItem[] = [
+    { name: homeLabel, url: `${SEO_BASE}/${locale}` },
+    { name: servicesLabel, url: `${SEO_BASE}/${locale}/services` },
+  ];
+  if (category.parent_slug) {
+    breadcrumbSchemaItems.push({
+      name: pickLocalized(
+        category.parent_name,
+        locale,
+        category.parent_slug,
+      ),
+      url: `${SEO_BASE}/${locale}/services/${category.parent_slug}`,
+    });
+  }
+  breadcrumbSchemaItems.push({
+    name: categoryName,
+    url: `${SEO_BASE}/${locale}/services/${slug}`,
+  });
+  const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbSchemaItems);
 
   return (
     <PageBackground opacity={0.1}>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Service",
-            name: categoryName,
-            description: categoryDesc || `${categoryName} professionals in Montenegro`,
-            provider: { "@type": "Organization", name: "Glatko", url: "https://glatko.app" },
-            areaServed: { "@type": "Country", name: "Montenegro" },
-          }),
-        }}
-      />
+      <script {...jsonLdScriptProps(serviceSchema)} />
+      <script {...jsonLdScriptProps(localBusinessSchema)} />
+      {itemListSchema ? (
+        <script {...jsonLdScriptProps(itemListSchema)} />
+      ) : null}
+      <script {...jsonLdScriptProps(breadcrumbSchema)} />
+
+      <Breadcrumb items={breadcrumbCrumbs} />
 
       {/* Hero */}
       <div className="bg-gradient-to-b from-teal-600/[0.12] via-teal-500/[0.05] to-transparent py-16 md:py-20">
@@ -89,32 +203,40 @@ export default async function CategoryDetailPage({ params }: Props) {
           )}
           <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-teal-500/20 bg-teal-500/5 px-4 py-1.5 text-sm text-teal-700 dark:text-teal-300">
             <Users className="h-4 w-4" />
-            {category.proCount} {t("services.prosInCategory")}
+            {proCount} {t("services.prosInCategory")}
           </div>
         </div>
       </div>
 
       <div className="mx-auto max-w-5xl px-4 pb-20 sm:px-6 lg:px-8">
         {/* Sub-categories */}
-        {category.children.length > 0 && (
+        {subCategories.length > 0 && (
           <div className="mb-12">
             <h2 className="mb-4 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-white/30">
               {t("services.subcategories")}
             </h2>
             <div className="flex flex-wrap gap-3">
-              {category.children.map((child: { id: string; slug: string; name: unknown }) => {
-                const childName = (child.name as MultiLangText)?.[locale] ||
-                  (child.name as MultiLangText)?.en || child.slug;
-                return (
-                  <Link
-                    key={child.id}
-                    href={`/providers?category=${child.slug}`}
-                    className="rounded-full border border-gray-200/50 bg-white/70 px-5 py-2.5 text-sm text-gray-700 backdrop-blur-sm transition-all duration-200 hover:border-teal-500/30 hover:bg-teal-500/5 hover:text-teal-700 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white/60 dark:hover:border-teal-500/20 dark:hover:text-teal-400"
-                  >
-                    {childName}
-                  </Link>
-                );
-              })}
+              {subCategories.map(
+                (child: {
+                  id: string;
+                  slug: string;
+                  name: unknown;
+                }) => {
+                  const childName =
+                    (child.name as MultiLangText)?.[locale] ||
+                    (child.name as MultiLangText)?.en ||
+                    child.slug;
+                  return (
+                    <Link
+                      key={child.id}
+                      href={`/services/${child.slug}`}
+                      className="rounded-full border border-gray-200/50 bg-white/70 px-5 py-2.5 text-sm text-gray-700 backdrop-blur-sm transition-all duration-200 hover:border-teal-500/30 hover:bg-teal-500/5 hover:text-teal-700 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white/60 dark:hover:border-teal-500/20 dark:hover:text-teal-400"
+                    >
+                      {childName}
+                    </Link>
+                  );
+                },
+              )}
             </div>
           </div>
         )}
@@ -137,11 +259,13 @@ export default async function CategoryDetailPage({ params }: Props) {
                   is_verified: boolean;
                   profile?: { full_name: string | null; avatar_url: string | null } | null;
                 };
-                const displayName = p.business_name || p.profile?.full_name || "Professional";
+                const displayName =
+                  p.business_name || p.profile?.full_name || "Professional";
                 const initials = displayName.trim().split(/\s+/).filter(Boolean);
-                const ini = initials.length >= 2
-                  ? (initials[0][0] + initials[1][0]).toUpperCase()
-                  : (initials[0] || "?").slice(0, 2).toUpperCase();
+                const ini =
+                  initials.length >= 2
+                    ? (initials[0][0] + initials[1][0]).toUpperCase()
+                    : (initials[0] || "?").slice(0, 2).toUpperCase();
                 const fullStars = Math.min(5, Math.round(p.avg_rating));
                 return (
                   <Link
@@ -154,7 +278,9 @@ export default async function CategoryDetailPage({ params }: Props) {
                         {ini}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="truncate font-semibold text-gray-900 dark:text-white">{displayName}</p>
+                        <p className="truncate font-semibold text-gray-900 dark:text-white">
+                          {displayName}
+                        </p>
                         <div className="mt-0.5 flex items-center gap-1">
                           {Array.from({ length: 5 }, (_, i) => (
                             <Star
@@ -181,7 +307,7 @@ export default async function CategoryDetailPage({ params }: Props) {
         {/* CTAs */}
         <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
           <Link
-            href={`/providers?category=${slug}`}
+            href="/services?openSearch=1"
             className="inline-flex items-center gap-1.5 rounded-xl border border-teal-500/30 px-6 py-3 text-sm font-medium text-teal-700 transition-all hover:border-teal-500/50 hover:bg-teal-500/5 dark:text-teal-300"
           >
             {t("services.viewAllPros")} <ArrowRight className="h-4 w-4" />

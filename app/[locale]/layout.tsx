@@ -16,6 +16,10 @@ import { HreflangLinks } from "@/components/seo/HreflangLinks";
 import { SentryUserScope } from "@/components/monitoring/SentryUserScope";
 import { SearchModalProvider } from "@/components/glatko/search/SearchModalContext";
 import { SearchModal } from "@/components/glatko/search/SearchModal";
+import {
+  generateOrganizationSchema,
+  jsonLdScriptProps,
+} from "@/lib/seo/jsonld";
 import type { Metadata } from "next";
 
 /** Path segment after `/${locale}` for hreflang URLs (set by middleware `x-pathname`). */
@@ -144,6 +148,7 @@ export default async function LocaleLayout({ children, params }: Props) {
     <NextIntlClientProvider messages={messages}>
       <NuqsAdapter>
         <SearchModalProvider>
+          <script {...jsonLdScriptProps(generateOrganizationSchema(locale))} />
           <HreflangLinks locale={locale} path={hreflangPath} />
           <HtmlLangSetter lang={locale} dir={dir} />
           <SentryUserScope userId={userId} email={user?.email} />
