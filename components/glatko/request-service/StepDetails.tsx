@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import { Loader2 } from "lucide-react";
 
 import {
-  formatAnswerError,
   shouldShowQuestion,
   validateAnswer,
 } from "@/lib/utils/question-visibility";
@@ -110,14 +109,31 @@ export function StepDetails({
 
   // Expose a validate() function to the parent. Returns true when every
   // visible required question passes; false when at least one fails (and
-  // populates inline error messages).
+  // populates inline error messages). Error keys + params come from
+  // validateAnswer; we localize via the parent's `t` here so the strings
+  // live in the dictionaries and never duplicate inside the validator.
   useEffect(() => {
     if (!validateRef) return;
     validateRef.current = () => {
       const next: Record<string, string> = {};
       for (const q of visibleQuestions) {
-        const err = validateAnswer(q, (answers[q.question_key] ?? null) as AnswerValue);
-        if (err) next[q.question_key] = formatAnswerError(err, locale);
+        const err = validateAnswer(
+          q,
+          (answers[q.question_key] ?? null) as AnswerValue,
+        );
+        if (err) {
+          // `t(key, values)` from next-intl handles ICU placeholders; the
+          // params shape from validateAnswer is already named
+          // (`{min}`, `{max}`). next-intl's typed messages narrow the
+          // first arg to a literal, but the validator emits dynamic
+          // keys, so we cast at the call site.
+          const params = (err.params ?? {}) as Record<string, string | number>;
+          const translate = t as unknown as (
+            key: string,
+            values?: Record<string, string | number>,
+          ) => string;
+          next[q.question_key] = translate(err.key, params);
+        }
       }
       setErrors(next);
       return Object.keys(next).length === 0;
@@ -125,7 +141,7 @@ export function StepDetails({
     return () => {
       if (validateRef.current) validateRef.current = null;
     };
-  }, [validateRef, visibleQuestions, answers, locale]);
+  }, [validateRef, visibleQuestions, answers, locale, t]);
 
   if (loading) {
     return (

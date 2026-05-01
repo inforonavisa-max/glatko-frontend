@@ -687,7 +687,16 @@
       "emailPlaceholder": "you@example.com"
     },
     "draftRestored": "Your previous draft was restored",
-    "startFresh": "Start fresh"
+    "startFresh": "Start fresh",
+    "errors": {
+      "required": "This field is required",
+      "min": "Minimum value: {min}",
+      "max": "Maximum value: {max}",
+      "minLength": "Minimum {min} characters",
+      "maxLength": "Maximum {max} characters",
+      "pattern": "Invalid format",
+      "minSelected": "Select at least {min}"
+    }
   },
   "dashboard": {
     "title": "Dashboard",

@@ -687,7 +687,16 @@
       "emailPlaceholder": "you@example.com"
     },
     "draftRestored": "Vaš prethodni nacrt je vraćen",
-    "startFresh": "Počni iznova"
+    "startFresh": "Počni iznova",
+    "errors": {
+      "required": "Ovo polje je obavezno",
+      "min": "Minimalna vrednost: {min}",
+      "max": "Maksimalna vrednost: {max}",
+      "minLength": "Najmanje {min} karaktera",
+      "maxLength": "Najviše {max} karaktera",
+      "pattern": "Neispravan format",
+      "minSelected": "Izaberite najmanje {min}"
+    }
   },
   "dashboard": {
     "title": "Panel",

@@ -687,7 +687,16 @@
       "emailPlaceholder": "you@example.com"
     },
     "draftRestored": "Вашу попередню чернетку відновлено",
-    "startFresh": "Почати заново"
+    "startFresh": "Почати заново",
+    "errors": {
+      "required": "Це поле обов'язкове",
+      "min": "Мінімальне значення: {min}",
+      "max": "Максимальне значення: {max}",
+      "minLength": "Щонайменше {min} символів",
+      "maxLength": "Щонайбільше {max} символів",
+      "pattern": "Невірний формат",
+      "minSelected": "Виберіть щонайменше {min}"
+    }
   },
   "dashboard": {
     "title": "Панель",

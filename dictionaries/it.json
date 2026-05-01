@@ -687,7 +687,16 @@
       "emailPlaceholder": "you@example.com"
     },
     "draftRestored": "La tua bozza precedente è stata ripristinata",
-    "startFresh": "Ricomincia"
+    "startFresh": "Ricomincia",
+    "errors": {
+      "required": "Questo campo è obbligatorio",
+      "min": "Valore minimo: {min}",
+      "max": "Valore massimo: {max}",
+      "minLength": "Minimo {min} caratteri",
+      "maxLength": "Massimo {max} caratteri",
+      "pattern": "Formato non valido",
+      "minSelected": "Selezionane almeno {min}"
+    }
   },
   "dashboard": {
     "title": "Pannello",

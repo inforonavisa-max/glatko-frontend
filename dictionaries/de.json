@@ -687,7 +687,16 @@
       "emailPlaceholder": "you@example.com"
     },
     "draftRestored": "Ihr vorheriger Entwurf wurde wiederhergestellt",
-    "startFresh": "Neu beginnen"
+    "startFresh": "Neu beginnen",
+    "errors": {
+      "required": "Dieses Feld ist erforderlich",
+      "min": "Mindestwert: {min}",
+      "max": "Höchstwert: {max}",
+      "minLength": "Mindestens {min} Zeichen",
+      "maxLength": "Maximal {max} Zeichen",
+      "pattern": "Ungültiges Format",
+      "minSelected": "Mindestens {min} auswählen"
+    }
   },
   "dashboard": {
     "title": "Dashboard",

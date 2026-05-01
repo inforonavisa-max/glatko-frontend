@@ -687,7 +687,16 @@
       "emailPlaceholder": "you@example.com"
     },
     "draftRestored": "Ваш предыдущий черновик восстановлен",
-    "startFresh": "Начать заново"
+    "startFresh": "Начать заново",
+    "errors": {
+      "required": "Это поле обязательно",
+      "min": "Минимальное значение: {min}",
+      "max": "Максимальное значение: {max}",
+      "minLength": "Минимум {min} символов",
+      "maxLength": "Максимум {max} символов",
+      "pattern": "Неверный формат",
+      "minSelected": "Выберите минимум {min}"
+    }
   },
   "dashboard": {
     "title": "Панель",
