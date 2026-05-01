@@ -248,30 +248,30 @@ export function SearchModal({ locale, isAuthenticated = false }: SearchModalProp
           exit={{ opacity: 0, y: -8, scale: 0.98 }}
           transition={{ duration: 0.14, ease: "easeOut" }}
           className={cn(
-            "relative z-10 mt-0 flex h-screen w-screen flex-col bg-background text-foreground",
-            "sm:mt-24 sm:h-auto sm:w-full sm:max-w-2xl sm:rounded-2xl sm:shadow-2xl sm:ring-1 sm:ring-foreground/10",
+            "relative z-10 mt-0 flex h-screen w-screen flex-col bg-white text-gray-900 dark:bg-neutral-950 dark:text-white",
+            "sm:mt-24 sm:h-auto sm:w-full sm:max-w-2xl sm:rounded-2xl sm:border sm:border-gray-200 sm:shadow-2xl dark:sm:border-neutral-800",
           )}
         >
           {/* Search input */}
-          <div className="flex items-center gap-3 border-b border-foreground/10 px-4 py-3">
-            <Search className="h-5 w-5 shrink-0 text-foreground/50" aria-hidden="true" />
+          <div className="flex items-center gap-3 border-b border-gray-200 dark:border-neutral-800 px-4 py-3">
+            <Search className="h-5 w-5 shrink-0 text-gray-500 dark:text-neutral-400" aria-hidden="true" />
             <input
               ref={inputRef}
               type="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={t("placeholder")}
-              className="w-full bg-transparent text-base outline-none placeholder:text-foreground/40"
+              className="w-full bg-transparent text-base outline-none placeholder:text-gray-400 dark:placeholder:text-neutral-500"
               autoFocus
               aria-label={t("placeholder")}
             />
             {loading && (
-              <Loader2 className="h-4 w-4 shrink-0 animate-spin text-foreground/50" aria-hidden="true" />
+              <Loader2 className="h-4 w-4 shrink-0 animate-spin text-gray-500 dark:text-neutral-400" aria-hidden="true" />
             )}
             <button
               type="button"
               onClick={closeAndReset}
-              className="rounded-md p-1 text-foreground/50 transition hover:bg-foreground/10 hover:text-foreground"
+              className="rounded-md p-1 text-gray-500 dark:text-neutral-400 transition hover:bg-gray-200 dark:hover:bg-neutral-700 hover:text-gray-900 dark:hover:text-white"
               aria-label={t("close")}
             >
               <X className="h-4 w-4" aria-hidden="true" />
@@ -296,11 +296,11 @@ export function SearchModal({ locale, isAuthenticated = false }: SearchModalProp
 
             {showNoResults && (
               <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
-                <div className="rounded-full bg-foreground/5 p-3">
-                  <Search className="h-6 w-6 text-foreground/40" aria-hidden="true" />
+                <div className="rounded-full bg-gray-100 dark:bg-neutral-800 p-3">
+                  <Search className="h-6 w-6 text-gray-400 dark:text-neutral-500" aria-hidden="true" />
                 </div>
                 <p className="mt-4 text-sm font-medium">{t("noResults")}</p>
-                <p className="mt-1 text-xs text-foreground/60">{t("noResultsDesc")}</p>
+                <p className="mt-1 text-xs text-gray-600 dark:text-neutral-300">{t("noResultsDesc")}</p>
               </div>
             )}
 
@@ -317,7 +317,7 @@ export function SearchModal({ locale, isAuthenticated = false }: SearchModalProp
           </div>
 
           {/* Footer keyboard hints (desktop only) */}
-          <div className="hidden border-t border-foreground/10 px-4 py-2 text-[11px] text-foreground/50 sm:flex sm:items-center sm:gap-4">
+          <div className="hidden border-t border-gray-200 dark:border-neutral-800 px-4 py-2 text-[11px] text-gray-500 dark:text-neutral-400 sm:flex sm:items-center sm:gap-4">
             <span className="inline-flex items-center gap-1">
               <Kbd>↑</Kbd>
               <Kbd>↓</Kbd>
@@ -342,7 +342,7 @@ export function SearchModal({ locale, isAuthenticated = false }: SearchModalProp
 
 function Kbd({ children }: { children: React.ReactNode }) {
   return (
-    <kbd className="rounded border border-foreground/15 bg-foreground/5 px-1.5 py-0.5 font-mono text-[10px] uppercase">
+    <kbd className="rounded border border-gray-300 dark:border-neutral-700 bg-gray-100 dark:bg-neutral-800 px-1.5 py-0.5 font-mono text-[10px] uppercase">
       {children}
     </kbd>
   );
@@ -382,7 +382,7 @@ function EmptyState({
               <button
                 type="button"
                 onClick={onClearRecents}
-                className="text-[11px] font-medium text-foreground/50 transition hover:text-foreground"
+                className="text-[11px] font-medium text-gray-500 dark:text-neutral-400 transition hover:text-gray-900 dark:hover:text-white"
               >
                 {t("empty.recentClear")}
               </button>
@@ -398,7 +398,7 @@ function EmptyState({
                   <div
                     className={cn(
                       "group flex items-center gap-3 rounded-md px-2 py-2",
-                      isActive && "bg-foreground/5",
+                      isActive && "bg-gray-100 dark:bg-neutral-800",
                     )}
                   >
                     <button
@@ -406,7 +406,7 @@ function EmptyState({
                       onClick={() => item && onSelect(item)}
                       className="flex flex-1 items-center gap-3 text-left"
                     >
-                      <Clock className="h-4 w-4 shrink-0 text-foreground/40" aria-hidden="true" />
+                      <Clock className="h-4 w-4 shrink-0 text-gray-400 dark:text-neutral-500" aria-hidden="true" />
                       <span className="truncate text-sm">{r.query}</span>
                     </button>
                     <button
@@ -415,7 +415,7 @@ function EmptyState({
                       className="opacity-0 transition group-hover:opacity-100"
                       aria-label={t("empty.recentRemove")}
                     >
-                      <Trash2 className="h-3.5 w-3.5 text-foreground/40 hover:text-foreground" aria-hidden="true" />
+                      <Trash2 className="h-3.5 w-3.5 text-gray-400 dark:text-neutral-500 hover:text-gray-900 dark:hover:text-white" aria-hidden="true" />
                     </button>
                   </div>
                 </li>
@@ -443,12 +443,12 @@ function EmptyState({
                     onClick={() => item && onSelect(item)}
                     className={cn(
                       "flex w-full items-center gap-3 rounded-md px-2 py-2 text-left transition",
-                      isActive && "bg-foreground/5",
-                      "hover:bg-foreground/5",
+                      isActive && "bg-gray-100 dark:bg-neutral-800",
+                      "hover:bg-gray-100 dark:hover:bg-neutral-800",
                     )}
                   >
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-foreground/5">
-                      <Layers className="h-4 w-4 text-foreground/60" aria-hidden="true" />
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-gray-100 dark:bg-neutral-800">
+                      <Layers className="h-4 w-4 text-gray-600 dark:text-neutral-300" aria-hidden="true" />
                     </div>
                     <span className="flex-1 truncate text-sm font-medium">{c.title}</span>
                   </button>
@@ -498,17 +498,17 @@ function ResultsList({
                     onClick={() => item && onSelect(item)}
                     className={cn(
                       "flex w-full items-center gap-3 rounded-md px-2 py-2 text-left transition",
-                      isActive && "bg-foreground/5",
-                      "hover:bg-foreground/5",
+                      isActive && "bg-gray-100 dark:bg-neutral-800",
+                      "hover:bg-gray-100 dark:hover:bg-neutral-800",
                     )}
                   >
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-foreground/5">
-                      <Layers className="h-4 w-4 text-foreground/60" aria-hidden="true" />
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-gray-100 dark:bg-neutral-800">
+                      <Layers className="h-4 w-4 text-gray-600 dark:text-neutral-300" aria-hidden="true" />
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium">{c.title}</p>
                       {c.subtitle && (
-                        <p className="truncate text-xs text-foreground/60">{c.subtitle}</p>
+                        <p className="truncate text-xs text-gray-600 dark:text-neutral-300">{c.subtitle}</p>
                       )}
                     </div>
                   </button>
@@ -537,16 +537,16 @@ function ResultsList({
                     onClick={() => item && onSelect(item)}
                     className={cn(
                       "flex w-full items-center gap-3 rounded-md px-2 py-2 text-left transition",
-                      isActive && "bg-foreground/5",
-                      "hover:bg-foreground/5",
+                      isActive && "bg-gray-100 dark:bg-neutral-800",
+                      "hover:bg-gray-100 dark:hover:bg-neutral-800",
                     )}
                   >
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-foreground/5">
-                      <User className="h-4 w-4 text-foreground/60" aria-hidden="true" />
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-gray-100 dark:bg-neutral-800">
+                      <User className="h-4 w-4 text-gray-600 dark:text-neutral-300" aria-hidden="true" />
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium">{p.title}</p>
-                      <div className="flex items-center gap-2 text-xs text-foreground/60">
+                      <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-neutral-300">
                         {typeof p.rating === "number" && p.rating > 0 && (
                           <span className="inline-flex items-center gap-0.5">
                             <Star className="h-3 w-3 fill-current" aria-hidden="true" />
@@ -579,7 +579,7 @@ function SectionHeader({
 }) {
   return (
     <div className="flex items-center justify-between px-2 pb-1">
-      <div className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-foreground/50">
+      <div className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-gray-500 dark:text-neutral-400">
         {icon}
         <span>{label}</span>
       </div>
