@@ -1,6 +1,6 @@
 {
   "framework": "nextjs",
-  "ignoreCommand": "git diff --quiet HEAD^ HEAD ':!**/*.md' ':!docs/**' ':!.github/**' ':!supabase/migrations/**' ':!CLAUDE.md' ':!README.md'",
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD -- ':!**/*.md' ':!docs/**' ':!.github/**' ':!supabase/migrations/**'",
   "crons": [
     {
       "path": "/api/cron/expire-requests",
