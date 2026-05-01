@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { getFontsForLocale } from "@/lib/seo/og-fonts";
 
 export const runtime = "edge";
 export const alt = "Glatko Services";
@@ -38,11 +39,12 @@ export default async function ServicesOG({
   params: { locale: string };
 }) {
   const isRTL = params.locale === "ar";
-  // Satori's bundled font is Latin-only; ar headings need the English fallback
-  // until a Noto Sans Arabic load is plumbed in. Sub headings already match.
-  const safeLocale = params.locale === "ar" ? "en" : params.locale;
-  const heading = HEADINGS[safeLocale] || HEADINGS.en;
-  const subline = SUBLINES[safeLocale] || SUBLINES.en;
+  const heading = HEADINGS[params.locale] || HEADINGS.en;
+  const subline = SUBLINES[params.locale] || SUBLINES.en;
+  const fonts = await getFontsForLocale(params.locale);
+  const localizedFontFamily = isRTL
+    ? '"Noto Sans Arabic"'
+    : "system-ui, sans-serif";
 
   return new ImageResponse(
     (
@@ -85,6 +87,7 @@ export default async function ServicesOG({
                 fontSize: 44,
                 fontWeight: 700,
                 letterSpacing: -1,
+                fontFamily: "system-ui, sans-serif",
               }}
             >
               Glatko
@@ -108,7 +111,8 @@ export default async function ServicesOG({
                 fontSize: 96,
                 fontWeight: 700,
                 lineHeight: 1.05,
-                letterSpacing: -2,
+                letterSpacing: isRTL ? 0 : -2,
+                fontFamily: localizedFontFamily,
               }}
             >
               {heading}
@@ -121,6 +125,7 @@ export default async function ServicesOG({
                 fontWeight: 500,
                 letterSpacing: 0.2,
                 maxWidth: 880,
+                fontFamily: localizedFontFamily,
               }}
             >
               {subline}
@@ -133,6 +138,7 @@ export default async function ServicesOG({
               fontSize: 28,
               fontWeight: 500,
               letterSpacing: 0.2,
+              fontFamily: "system-ui, sans-serif",
             }}
           >
             glatko.app
@@ -140,6 +146,6 @@ export default async function ServicesOG({
         </div>
       </div>
     ),
-    { ...size },
+    { ...size, fonts },
   );
 }

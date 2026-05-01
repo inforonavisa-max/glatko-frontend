@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 import { getCategoryBySlug } from "@/lib/supabase/glatko.server";
+import { getFontsForLocale } from "@/lib/seo/og-fonts";
 
 export const runtime = "edge";
 export const alt = "Glatko Service Category";
@@ -16,15 +17,12 @@ function pickName(name: Record<string, string> | null, locale: string, slug: str
 
 /**
  * Per-category dynamic OG. Brand-tinted gradient + radial glow as the
- * canvas, category name in the middle, glatko.app domain + optional
- * seasonal pill at the bottom.
+ * canvas, category name in the user's locale, glatko.app domain +
+ * optional seasonal pill at the bottom.
  *
- * Hero photography is intentionally NOT pulled in: cross-origin WebP
- * `<img src>` in next/og fails silently on Vercel Edge, returning a
- * 0-byte PNG. Pre-fetching the buffer and emitting a base64 data URL
- * also CPU-stalls inside Edge's tight limits at our hero file sizes
- * (~128 KB). The gradient-only variant ships consistent dark-teal
- * cards across all 85 categories × 9 locales.
+ * Latin + Cyrillic locales render with Satori's default font. The ar
+ * locale gets a Noto Sans Arabic buffer loaded via getFontsForLocale —
+ * no English fallback (memory item 25: 9 dil eksiksiz).
  */
 export default async function CategoryOG({
   params,
@@ -34,14 +32,14 @@ export default async function CategoryOG({
   const category = await getCategoryBySlug(params.slug);
   const isRTL = params.locale === "ar";
 
-  // Satori's bundled font is Latin-only; rendering Arabic glyphs without a
-  // custom font load produces a 0-byte PNG. Fall back to the English name
-  // on ar locale until a Noto Sans Arabic load is plumbed through.
-  const titleLocale = params.locale === "ar" ? "en" : params.locale;
   const title = category
-    ? pickName(category.name, titleLocale, category.slug)
+    ? pickName(category.name, params.locale, category.slug)
     : "Glatko";
   const seasonal = category?.seasonal ?? null;
+  const fonts = await getFontsForLocale(params.locale);
+  const titleFontFamily = isRTL
+    ? '"Noto Sans Arabic"'
+    : "system-ui, sans-serif";
 
   return new ImageResponse(
     (
@@ -79,7 +77,7 @@ export default async function CategoryOG({
             direction: isRTL ? "rtl" : "ltr",
           }}
         >
-          {/* Top: Glatko brand */}
+          {/* Top: Glatko brand (always Latin) */}
           <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
             <span
               style={{
@@ -87,6 +85,7 @@ export default async function CategoryOG({
                 fontSize: 44,
                 fontWeight: 700,
                 letterSpacing: -1,
+                fontFamily: "system-ui, sans-serif",
               }}
             >
               Glatko
@@ -102,7 +101,7 @@ export default async function CategoryOG({
             />
           </div>
 
-          {/* Middle: category name */}
+          {/* Middle: localized category name (Arabic font when ar) */}
           <div
             style={{
               display: "flex",
@@ -110,15 +109,16 @@ export default async function CategoryOG({
               fontSize: 92,
               fontWeight: 700,
               lineHeight: 1.05,
-              letterSpacing: -1.5,
+              letterSpacing: isRTL ? 0 : -1.5,
               maxWidth: 980,
               textShadow: "0 4px 32px rgba(0,0,0,0.6)",
+              fontFamily: titleFontFamily,
             }}
           >
             {title}
           </div>
 
-          {/* Bottom: domain + seasonal pill */}
+          {/* Bottom: domain (Latin) + seasonal pill */}
           <div
             style={{
               display: "flex",
@@ -132,6 +132,7 @@ export default async function CategoryOG({
                 fontSize: 28,
                 fontWeight: 500,
                 letterSpacing: 0.2,
+                fontFamily: "system-ui, sans-serif",
               }}
             >
               glatko.app
@@ -148,6 +149,7 @@ export default async function CategoryOG({
                   fontSize: 22,
                   fontWeight: 600,
                   letterSpacing: 0.4,
+                  fontFamily: "system-ui, sans-serif",
                 }}
               >
                 {seasonal === "summer" ? "🌊" : seasonal === "winter" ? "❄️" : "•"}{" "}
@@ -158,6 +160,6 @@ export default async function CategoryOG({
         </div>
       </div>
     ),
-    { ...size },
+    { ...size, fonts },
   );
 }
