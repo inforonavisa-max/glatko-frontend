@@ -28,3 +28,27 @@ export async function fetchCategoryQuestions(
 
   return (data ?? []) as RequestQuestion[];
 }
+
+/**
+ * G-PRO-1: counterpart for pro application questions. Same shape as
+ * glatko_request_questions; fetched via the parallel RPC. Returns [] on
+ * error so wizard renders an empty state.
+ */
+export async function fetchProApplicationQuestions(
+  categorySlug: string,
+): Promise<RequestQuestion[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase.rpc(
+    "glatko_get_pro_application_questions",
+    { p_category_slug: categorySlug },
+  );
+
+  if (error) {
+    if (typeof window !== "undefined" && process.env.NODE_ENV !== "production") {
+      console.error("[fetchProApplicationQuestions] RPC error:", error);
+    }
+    return [];
+  }
+
+  return (data ?? []) as RequestQuestion[];
+}
