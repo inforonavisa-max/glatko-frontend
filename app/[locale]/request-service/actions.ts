@@ -6,6 +6,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { createClient } from "@/supabase/server";
 import { pickLocalizedLabel } from "@/lib/i18n/pick-localized-label";
 import { createServiceRequestSchema } from "@/lib/validations/service-request";
+import { sendAdminPendingRequestEmail } from "@/lib/email/request-emails";
 
 interface SubmitResult {
   success: boolean;
@@ -192,6 +193,21 @@ export async function submitServiceRequest(
 
   const summaryLocale = ((formData.get("summaryLocale") as string) || "en").trim();
   const categoryLabel = pickLocalizedLabel(categoryNames, summaryLocale);
+
+  // Fire-and-forget admin notification (English copy; ops mailbox).
+  // Never blocks the submit success path — the moderation queue is the
+  // canonical surface, mail is just a heads-up.
+  void sendAdminPendingRequestEmail({
+    requestId: row.id as string,
+    categoryName: pickLocalizedLabel(categoryNames, "en") || "Unknown",
+    city: row.municipality as string,
+    requestorEmail: user?.email || anonymousEmail || "anonymous",
+    budgetMin: data.budgetMin ?? null,
+    budgetMax: data.budgetMax ?? null,
+    preferredDate: data.preferredDateStart ?? null,
+  }).catch(() => {
+    /* glatkoCaptureException already wraps inside the helper */
+  });
 
   return { success: true, requestId: row.id as string, categoryLabel };
 }

@@ -5,6 +5,31 @@ import { revalidatePath } from "next/cache";
 import { createClient, createAdminClient } from "@/supabase/server";
 import { isAdminEmail } from "@/lib/admin";
 import { notifyProfessionalsOfNewRequest } from "@/lib/supabase/glatko.server";
+import {
+  sendRequestApprovedEmail,
+  sendRequestRejectedEmail,
+} from "@/lib/email/request-emails";
+
+/**
+ * Look up an email for the request's owner. Logged-in users come from
+ * `auth.users` via the admin API; anonymous submissions store their
+ * email directly on the row.
+ */
+async function lookupRequestorEmail(
+  customerId: string | null,
+  anonymousEmail: string | null,
+): Promise<string | null> {
+  if (anonymousEmail) return anonymousEmail;
+  if (!customerId) return null;
+  try {
+    const admin = createAdminClient();
+    const { data, error } = await admin.auth.admin.getUserById(customerId);
+    if (error) return null;
+    return data.user?.email ?? null;
+  } catch {
+    return null;
+  }
+}
 
 interface ActionResult {
   success: boolean;
@@ -42,7 +67,7 @@ export async function approveRequest(requestId: string): Promise<ActionResult> {
     .eq("id", requestId)
     .eq("status", "pending_moderation")
     .select(
-      "id, category_id, customer_id, title, municipality, preferred_professional_id",
+      "id, category_id, customer_id, anonymous_email, locale, title, municipality, preferred_professional_id",
     )
     .single();
 
@@ -79,6 +104,32 @@ export async function approveRequest(requestId: string): Promise<ActionResult> {
     });
   }
 
+  // User mailer: localized "your request is live" with verified-pro count.
+  const userEmail = await lookupRequestorEmail(
+    (row.customer_id as string | null) ?? null,
+    (row.anonymous_email as string | null) ?? null,
+  );
+  if (userEmail) {
+    const userLocale = (row.locale as string | null) ?? "en";
+    const categoryName =
+      categoryNames[userLocale] ?? categoryNames.en ?? row.title;
+
+    const { count: proCount } = await admin
+      .from("glatko_pro_services")
+      .select("id", { count: "exact", head: true })
+      .eq("category_id", row.category_id as string);
+
+    void sendRequestApprovedEmail({
+      to: userEmail,
+      locale: userLocale,
+      categoryName: categoryName as string,
+      city: row.municipality as string,
+      proCount: proCount ?? 0,
+    }).catch(() => {
+      /* helper logs to Sentry */
+    });
+  }
+
   revalidatePath("/[locale]/admin/requests", "page");
   return { success: true };
 }
@@ -105,7 +156,7 @@ export async function rejectRequest(
   if (!auth.ok) return { success: false, error: auth.error };
 
   const admin = createAdminClient();
-  const { error } = await admin
+  const { data: row, error } = await admin
     .from("glatko_service_requests")
     .update({
       status: "rejected",
@@ -114,10 +165,45 @@ export async function rejectRequest(
       moderation_reason: trimmed,
     })
     .eq("id", requestId)
-    .eq("status", "pending_moderation");
+    .eq("status", "pending_moderation")
+    .select(
+      "id, category_id, customer_id, anonymous_email, locale, municipality, title",
+    )
+    .single();
 
-  if (error) {
-    return { success: false, error: error.message };
+  if (error || !row) {
+    return {
+      success: false,
+      error: error?.message ?? "Reject failed (row not in pending state).",
+    };
+  }
+
+  const { data: catRow } = await admin
+    .from("glatko_service_categories")
+    .select("name")
+    .eq("id", row.category_id as string)
+    .maybeSingle();
+  const categoryNames =
+    (catRow?.name as Record<string, string> | null | undefined) ?? {};
+
+  const userEmail = await lookupRequestorEmail(
+    (row.customer_id as string | null) ?? null,
+    (row.anonymous_email as string | null) ?? null,
+  );
+  if (userEmail) {
+    const userLocale = (row.locale as string | null) ?? "en";
+    const categoryName =
+      categoryNames[userLocale] ?? categoryNames.en ?? row.title;
+
+    void sendRequestRejectedEmail({
+      to: userEmail,
+      locale: userLocale,
+      categoryName: categoryName as string,
+      city: row.municipality as string,
+      rejectReason: trimmed,
+    }).catch(() => {
+      /* helper logs to Sentry */
+    });
   }
 
   revalidatePath("/[locale]/admin/requests", "page");
