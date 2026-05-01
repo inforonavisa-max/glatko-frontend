@@ -1232,6 +1232,29 @@
     "suggestions": {
       "categories": "Kategoriler",
       "professionals": "Profesyoneller"
+    },
+    "modal": {
+      "placeholder": "Kategori veya profesyonel ara…",
+      "triggerLabel": "Aramayı aç",
+      "triggerPlaceholder": "Ara…",
+      "close": "Aramayı kapat",
+      "noResults": "Sonuç bulunamadı",
+      "noResultsDesc": "Farklı bir kelime deneyin veya aşağıdaki kategorilere göz atın.",
+      "empty": {
+        "popularTitle": "Popüler kategoriler",
+        "recentTitle": "Son aramalar",
+        "recentClear": "Tümünü temizle",
+        "recentRemove": "Kaldır"
+      },
+      "results": {
+        "categoriesTitle": "Kategoriler",
+        "professionalsTitle": "Profesyoneller"
+      },
+      "hints": {
+        "navigate": "gezin",
+        "select": "seç",
+        "close": "kapat"
+      }
     }
   },
   "services": {

@@ -12,6 +12,7 @@ import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
 import { NotificationBell } from "@/components/glatko/notifications/NotificationDropdown";
 import { InboxUnreadBadge } from "@/components/glatko/inbox/InboxUnreadBadge";
+import { SearchTrigger } from "@/components/glatko/search/SearchTrigger";
 import { createClient } from "@/supabase/browser";
 import * as Sentry from "@sentry/nextjs";
 
@@ -70,14 +71,12 @@ export function GlatkoHeader({
 
   const guestLinks = [
     { href: "/services", label: t("nav.services") },
-    { href: "/providers", label: t("search.title") },
     { href: "/#how-it-works", label: t("nav.howItWorks"), isAnchor: true },
     { href: "/become-a-pro", label: t("nav.becomeAPro") },
   ];
 
   const customerLinks = [
     { href: "/services", label: t("nav.services") },
-    { href: "/providers", label: t("search.title") },
     { href: "/dashboard/requests", label: t("nav.requests") },
     { href: "/become-a-pro", label: t("nav.becomeAPro") },
     { href: "/inbox", label: t("nav.inbox"), hasIcon: true },
@@ -186,6 +185,7 @@ export function GlatkoHeader({
           </nav>
 
           <div className="hidden items-center gap-3 md:flex">
+            <SearchTrigger className="w-40 lg:w-56" />
             {userId && <NotificationBell userId={userId} />}
             <LanguageSwitcher />
             <ThemeToggle />
@@ -255,13 +255,16 @@ export function GlatkoHeader({
             )}
           </div>
 
-          <button
-            className="p-2 text-gray-700 md:hidden dark:text-white"
-            onClick={() => setMobileOpen(true)}
-            aria-label={t("nav.menu")}
-          >
-            <Menu className="h-5 w-5" />
-          </button>
+          <div className="flex items-center gap-1 md:hidden">
+            <SearchTrigger variant="icon" />
+            <button
+              className="p-2 text-gray-700 dark:text-white"
+              onClick={() => setMobileOpen(true)}
+              aria-label={t("nav.menu")}
+            >
+              <Menu className="h-5 w-5" />
+            </button>
+          </div>
         </div>
       </header>
 

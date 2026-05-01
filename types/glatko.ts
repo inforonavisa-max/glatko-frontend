@@ -154,3 +154,46 @@ export interface GlatkoNotification {
   read_at: string | null;
   created_at: string;
 }
+
+// G-CAT-3: Premium hybrid search
+
+export type SearchResultType = "category" | "professional";
+export type SearchMatchType = "direct" | "synonym";
+
+export interface SearchResult {
+  type: SearchResultType;
+  id: string;
+  slug: string;
+  title: string;
+  subtitle: string;
+  heroImageUrl: string | null;
+  rating: number | null;
+  reviewCount: number | null;
+  city: string | null;
+  similarityScore: number;
+  matchType: SearchMatchType;
+}
+
+export interface SearchResponse {
+  categories: SearchResult[];
+  professionals: SearchResult[];
+}
+
+export interface TrendingCategory {
+  id: string;
+  slug: string;
+  title: string;
+  heroImageUrl: string | null;
+  badgePriority: number | null;
+}
+
+export type RecentSearchClickType = SearchResultType;
+
+export interface RecentSearch {
+  id: string;
+  query: string;
+  locale: string;
+  resultClicked: RecentSearchClickType | null;
+  resultSlug: string | null;
+  searchedAt: string;
+}

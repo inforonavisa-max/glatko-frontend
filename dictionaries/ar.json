@@ -1232,6 +1232,29 @@
     "suggestions": {
       "categories": "الفئات",
       "professionals": "المحترفون"
+    },
+    "modal": {
+      "placeholder": "ابحث في الفئات أو المحترفين…",
+      "triggerLabel": "افتح البحث",
+      "triggerPlaceholder": "ابحث…",
+      "close": "إغلاق البحث",
+      "noResults": "لا توجد نتائج",
+      "noResultsDesc": "جرّب كلمة أخرى أو تصفّح الفئات بالأسفل.",
+      "empty": {
+        "popularTitle": "فئات شائعة",
+        "recentTitle": "عمليات بحث حديثة",
+        "recentClear": "مسح الكل",
+        "recentRemove": "إزالة"
+      },
+      "results": {
+        "categoriesTitle": "الفئات",
+        "professionalsTitle": "المحترفون"
+      },
+      "hints": {
+        "navigate": "تنقّل",
+        "select": "اختيار",
+        "close": "إغلاق"
+      }
     }
   },
   "services": {

@@ -1232,6 +1232,29 @@
     "suggestions": {
       "categories": "Kategorije",
       "professionals": "Stručnjaci"
+    },
+    "modal": {
+      "placeholder": "Pretraži kategorije ili profesionalce…",
+      "triggerLabel": "Otvori pretragu",
+      "triggerPlaceholder": "Pretraga…",
+      "close": "Zatvori pretragu",
+      "noResults": "Nema rezultata",
+      "noResultsDesc": "Pokušaj drugu reč ili pogledaj kategorije ispod.",
+      "empty": {
+        "popularTitle": "Popularne kategorije",
+        "recentTitle": "Nedavne pretrage",
+        "recentClear": "Obriši sve",
+        "recentRemove": "Ukloni"
+      },
+      "results": {
+        "categoriesTitle": "Kategorije",
+        "professionalsTitle": "Stručnjaci"
+      },
+      "hints": {
+        "navigate": "kretanje",
+        "select": "izaberi",
+        "close": "zatvori"
+      }
     }
   },
   "services": {

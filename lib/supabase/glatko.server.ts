@@ -10,6 +10,11 @@ import type {
   VerificationStatus,
   VerificationDocument,
   ProService,
+  SearchResult,
+  SearchResponse,
+  TrendingCategory,
+  RecentSearch,
+  RecentSearchClickType,
 } from "@/types/glatko";
 export async function getServiceCategories(): Promise<ServiceCategory[]> {
   const supabase = createClient();
@@ -1495,6 +1500,173 @@ export async function getSearchSuggestions(searchQuery: string, locale: string) 
   }
 
   return results.slice(0, 8);
+}
+
+// ─── G-CAT-3: Premium hybrid search (RPC) ───
+
+interface GlatkoSearchRow {
+  result_type: "category" | "professional";
+  result_id: string;
+  slug: string;
+  title: string;
+  subtitle: string | null;
+  hero_image_url: string | null;
+  rating: number | null;
+  review_count: number | null;
+  city: string | null;
+  similarity_score: number;
+  match_type: "direct" | "synonym";
+}
+
+function mapSearchRow(row: GlatkoSearchRow): SearchResult {
+  return {
+    type: row.result_type,
+    id: row.result_id,
+    slug: row.slug,
+    title: row.title,
+    subtitle: row.subtitle ?? "",
+    heroImageUrl: row.hero_image_url,
+    rating: row.rating,
+    reviewCount: row.review_count,
+    city: row.city,
+    similarityScore: row.similarity_score,
+    matchType: row.match_type,
+  };
+}
+
+/**
+ * Premium hybrid search via 016 RPC (trgm fuzzy + 9-lang synonyms).
+ * Returns categories and professionals interleaved by relevance, split here
+ * for the UI grouping. q < 2 chars returns empty.
+ */
+export async function glatkoSearch(
+  q: string,
+  locale: string,
+  maxCategories = 5,
+  maxProfessionals = 5,
+): Promise<SearchResponse> {
+  if (!q || q.trim().length < 2) {
+    return { categories: [], professionals: [] };
+  }
+  const supabase = createClient();
+  const { data, error } = await supabase.rpc("glatko_search", {
+    q,
+    loc: locale,
+    max_categories: maxCategories,
+    max_professionals: maxProfessionals,
+  });
+  if (error || !data) return { categories: [], professionals: [] };
+
+  const rows = data as GlatkoSearchRow[];
+  const categories: SearchResult[] = [];
+  const professionals: SearchResult[] = [];
+  for (const r of rows) {
+    const mapped = mapSearchRow(r);
+    if (r.result_type === "category") categories.push(mapped);
+    else professionals.push(mapped);
+  }
+  return { categories, professionals };
+}
+
+interface GlatkoTrendingRow {
+  result_id: string;
+  slug: string;
+  title: string;
+  hero_image_url: string | null;
+  badge_priority: number | null;
+}
+
+/** Top P0 root categories for empty-state. */
+export async function glatkoTrendingCategories(
+  locale: string,
+  maxResults = 8,
+): Promise<TrendingCategory[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase.rpc("glatko_trending_categories", {
+    loc: locale,
+    max_results: maxResults,
+  });
+  if (error || !data) return [];
+  return (data as GlatkoTrendingRow[]).map((r) => ({
+    id: r.result_id,
+    slug: r.slug,
+    title: r.title,
+    heroImageUrl: r.hero_image_url,
+    badgePriority: r.badge_priority,
+  }));
+}
+
+// ─── G-CAT-3: Recent searches (logged-in users) ───
+
+interface RecentSearchRow {
+  id: string;
+  query: string;
+  locale: string;
+  result_clicked: RecentSearchClickType | null;
+  result_slug: string | null;
+  searched_at: string;
+}
+
+/** Read current user's recent searches (RLS owner-only). */
+export async function glatkoGetRecentSearches(
+  limit = 8,
+): Promise<RecentSearch[]> {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return [];
+
+  const { data, error } = await supabase
+    .from("glatko_user_recent_searches")
+    .select("id, query, locale, result_clicked, result_slug, searched_at")
+    .eq("user_id", user.id)
+    .order("searched_at", { ascending: false })
+    .limit(limit);
+  if (error || !data) return [];
+
+  return (data as RecentSearchRow[]).map((r) => ({
+    id: r.id,
+    query: r.query,
+    locale: r.locale,
+    resultClicked: r.result_clicked,
+    resultSlug: r.result_slug,
+    searchedAt: r.searched_at,
+  }));
+}
+
+/** Insert a recent search row for current user. Anonymous => no-op. */
+export async function glatkoLogRecentSearch(input: {
+  query: string;
+  locale: string;
+  resultClicked?: RecentSearchClickType | null;
+  resultSlug?: string | null;
+}): Promise<void> {
+  const trimmed = input.query.trim();
+  if (trimmed.length < 2) return;
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+
+  await supabase.from("glatko_user_recent_searches").insert({
+    user_id: user.id,
+    query: trimmed,
+    locale: input.locale,
+    result_clicked: input.resultClicked ?? null,
+    result_slug: input.resultSlug ?? null,
+  });
+}
+
+/** Delete one recent search entry (owner-only via RLS). */
+export async function glatkoDeleteRecentSearch(id: string): Promise<void> {
+  const supabase = createClient();
+  await supabase.from("glatko_user_recent_searches").delete().eq("id", id);
+}
+
+/** Clear all recent searches for current user. */
+export async function glatkoClearRecentSearches(): Promise<void> {
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return;
+  await supabase.from("glatko_user_recent_searches").delete().eq("user_id", user.id);
 }
 
 // ─── G8: Pro Dashboard Analytics ───

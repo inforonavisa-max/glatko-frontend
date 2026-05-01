@@ -45,11 +45,25 @@ const nextConfig = {
       { from: "winterization", to: "winter-storage" },
       { from: "charter-prep", to: "charter-cleaning" },
     ];
-    return renames.map(({ from, to }) => ({
+    const slugRenames = renames.map(({ from, to }) => ({
       source: `${localePattern}/services/${from}`,
       destination: `/:locale/services/${to}`,
       permanent: true,
     }));
+    // G-CAT-3: /providers retired in favour of /services + premium search
+    const providersRetired = [
+      {
+        source: `${localePattern}/providers`,
+        destination: "/:locale/services?openSearch=1",
+        permanent: true,
+      },
+      {
+        source: `${localePattern}/providers/:path*`,
+        destination: "/:locale/services?openSearch=1",
+        permanent: true,
+      },
+    ];
+    return [...providersRetired, ...slugRenames];
   },
 };
 
