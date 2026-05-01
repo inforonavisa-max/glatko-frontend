@@ -14,28 +14,13 @@
 
 const fontCache = new Map<string, ArrayBuffer>();
 
-function originForFontFetch(): string {
-  // VERCEL_URL points at the *current* deployment (preview-aware), so the
-  // font asset is always reachable on the same deploy that's serving the
-  // OG handler. NEXT_PUBLIC_APP_URL is the production canonical and would
-  // 404 if the preview branch hasn't shipped to prod yet.
-  if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL}`;
-  }
-  if (process.env.NEXT_PUBLIC_APP_URL) {
-    return process.env.NEXT_PUBLIC_APP_URL.replace(/\/$/, "");
-  }
-  return "http://localhost:3000";
-}
-
 async function fetchAndCache(
   cacheKey: string,
-  path: string,
+  url: string,
 ): Promise<ArrayBuffer> {
   const cached = fontCache.get(cacheKey);
   if (cached) return cached;
 
-  const url = `${originForFontFetch()}${path}`;
   const res = await fetch(url, { cache: "force-cache" });
   if (!res.ok) {
     throw new Error(`Font fetch failed (${cacheKey}): ${res.status} ${url}`);
@@ -45,9 +30,16 @@ async function fetchAndCache(
   return buf;
 }
 
-/** Noto Naskh Arabic for ar OG cards (variable font, default wght axis). */
+/**
+ * Noto Naskh Arabic variable font, fetched from jsDelivr's GitHub mirror.
+ * Same-origin fetch via VERCEL_URL was unreliable (silent 0-byte from
+ * Satori on Edge); jsDelivr's CDN is publicly cacheable and stable.
+ */
+const NOTO_NASKH_ARABIC_URL =
+  "https://cdn.jsdelivr.net/gh/google/fonts@main/ofl/notonaskharabic/NotoNaskhArabic%5Bwght%5D.ttf";
+
 export async function getNotoSansArabic(): Promise<ArrayBuffer> {
-  return fetchAndCache("noto-naskh-arabic", "/fonts/NotoSansArabic.ttf");
+  return fetchAndCache("noto-naskh-arabic", NOTO_NASKH_ARABIC_URL);
 }
 
 export interface OgFont {
