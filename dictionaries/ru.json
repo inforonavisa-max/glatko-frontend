@@ -458,6 +458,24 @@
       "confirmReject": "Вы уверены, что хотите отклонить эту заявку?",
       "approved_success": "Профессионал успешно одобрен",
       "rejected_success": "Заявка отклонена"
+    },
+    "requests": {
+      "title": "Модерация заявок",
+      "subtitle": "Проверяйте и одобряйте поступающие заявки",
+      "pending": "в ожидании",
+      "queueEmpty": "Все заявки обработаны",
+      "loadError": "Не удалось загрузить заявки",
+      "signedInUser": "Авторизованный пользователь",
+      "unknownUser": "Неизвестный пользователь",
+      "answers": "Ответы",
+      "photos": "Фото",
+      "phone": "Телефон",
+      "approve": "Одобрить и уведомить специалистов",
+      "reject": "Отклонить",
+      "confirmReject": "Подтвердить отклонение",
+      "rejectReasonRequired": "Нужна причина отклонения",
+      "rejectReasonPlaceholder": "Причина отклонения…",
+      "processing": "Обработка…"
     }
   },
   "cities": {
@@ -661,7 +679,15 @@
     },
     "error": {
       "generic": "Произошла ошибка. Попробуйте ещё раз."
-    }
+    },
+    "anonymous": {
+      "emailRequired": "Email обязателен для незарегистрированных пользователей",
+      "emailHint": "Подтверждение и обновления отправляем на этот адрес",
+      "emailInvalid": "Введите корректный email",
+      "emailPlaceholder": "you@example.com"
+    },
+    "draftRestored": "Ваш предыдущий черновик восстановлен",
+    "startFresh": "Начать заново"
   },
   "dashboard": {
     "title": "Панель",

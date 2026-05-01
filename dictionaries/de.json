@@ -458,6 +458,24 @@
       "confirmReject": "Möchten Sie diese Bewerbung wirklich ablehnen?",
       "approved_success": "Profi erfolgreich genehmigt",
       "rejected_success": "Bewerbung abgelehnt"
+    },
+    "requests": {
+      "title": "Anfragen-Moderation",
+      "subtitle": "Eingehende Service-Anfragen prüfen und freigeben",
+      "pending": "ausstehend",
+      "queueEmpty": "Alle Anfragen bearbeitet",
+      "loadError": "Anfragen konnten nicht geladen werden",
+      "signedInUser": "Angemeldete:r Nutzer:in",
+      "unknownUser": "Unbekannte:r Nutzer:in",
+      "answers": "Antworten",
+      "photos": "Fotos",
+      "phone": "Telefon",
+      "approve": "Freigeben & Profis benachrichtigen",
+      "reject": "Ablehnen",
+      "confirmReject": "Ablehnung bestätigen",
+      "rejectReasonRequired": "Ablehnungsgrund erforderlich",
+      "rejectReasonPlaceholder": "Ablehnungsgrund…",
+      "processing": "Wird verarbeitet…"
     }
   },
   "cities": {
@@ -661,7 +679,15 @@
     },
     "error": {
       "generic": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
-    }
+    },
+    "anonymous": {
+      "emailRequired": "E-Mail ist erforderlich, wenn nicht angemeldet",
+      "emailHint": "Bestätigung und Updates senden wir an diese Adresse",
+      "emailInvalid": "Bitte eine gültige E-Mail-Adresse eingeben",
+      "emailPlaceholder": "you@example.com"
+    },
+    "draftRestored": "Ihr vorheriger Entwurf wurde wiederhergestellt",
+    "startFresh": "Neu beginnen"
   },
   "dashboard": {
     "title": "Dashboard",

@@ -458,6 +458,24 @@
       "confirmReject": "Ви впевнені, що хочете відхилити цю заявку?",
       "approved_success": "Професіонала успішно схвалено",
       "rejected_success": "Заявку відхилено"
+    },
+    "requests": {
+      "title": "Модерація заявок",
+      "subtitle": "Перегляньте та схваліть нові запити",
+      "pending": "очікують",
+      "queueEmpty": "Усі заявки оброблено",
+      "loadError": "Не вдалося завантажити заявки",
+      "signedInUser": "Авторизований користувач",
+      "unknownUser": "Невідомий користувач",
+      "answers": "Відповіді",
+      "photos": "Фото",
+      "phone": "Телефон",
+      "approve": "Схвалити та сповістити фахівців",
+      "reject": "Відхилити",
+      "confirmReject": "Підтвердити відхилення",
+      "rejectReasonRequired": "Потрібна причина відхилення",
+      "rejectReasonPlaceholder": "Причина відхилення…",
+      "processing": "Обробка…"
     }
   },
   "cities": {
@@ -661,7 +679,15 @@
     },
     "error": {
       "generic": "Сталася помилка. Спробуйте ще раз."
-    }
+    },
+    "anonymous": {
+      "emailRequired": "Email обов'язковий для неавторизованих користувачів",
+      "emailHint": "Підтвердження та оновлення надсилаємо на цю адресу",
+      "emailInvalid": "Введіть дійсний email",
+      "emailPlaceholder": "you@example.com"
+    },
+    "draftRestored": "Вашу попередню чернетку відновлено",
+    "startFresh": "Почати заново"
   },
   "dashboard": {
     "title": "Панель",

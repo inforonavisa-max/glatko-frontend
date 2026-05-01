@@ -458,6 +458,24 @@
       "confirmReject": "هل أنت متأكد أنك تريد رفض هذا الطلب؟",
       "approved_success": "تمت الموافقة على المحترف بنجاح",
       "rejected_success": "تم رفض الطلب"
+    },
+    "requests": {
+      "title": "اعتدال الطلبات",
+      "subtitle": "راجع واعتمد طلبات الخدمة الواردة",
+      "pending": "قيد الانتظار",
+      "queueEmpty": "تمت معالجة جميع الطلبات",
+      "loadError": "فشل تحميل الطلبات",
+      "signedInUser": "مستخدم مسجّل الدخول",
+      "unknownUser": "مستخدم غير معروف",
+      "answers": "الإجابات",
+      "photos": "الصور",
+      "phone": "الهاتف",
+      "approve": "اعتماد وإخطار المحترفين",
+      "reject": "رفض",
+      "confirmReject": "تأكيد الرفض",
+      "rejectReasonRequired": "سبب الرفض مطلوب",
+      "rejectReasonPlaceholder": "سبب الرفض…",
+      "processing": "جاري المعالجة…"
     }
   },
   "cities": {
@@ -661,7 +679,15 @@
     },
     "error": {
       "generic": "حدث خطأ. يرجى المحاولة مرة أخرى."
-    }
+    },
+    "anonymous": {
+      "emailRequired": "البريد الإلكتروني مطلوب للمستخدمين غير المسجلين",
+      "emailHint": "نرسل التأكيد والتحديثات إلى هذا العنوان",
+      "emailInvalid": "أدخل بريدًا إلكترونيًا صالحًا",
+      "emailPlaceholder": "you@example.com"
+    },
+    "draftRestored": "تمت استعادة مسودتك السابقة",
+    "startFresh": "ابدأ من جديد"
   },
   "dashboard": {
     "title": "لوحة التحكم",
