@@ -1,5 +1,3 @@
-import { redirect } from "next/navigation";
-import { createClient } from "@/supabase/server";
 import { setRequestLocale } from "next-intl/server";
 import { getServiceCategories } from "@/lib/supabase/glatko.server";
 import { RequestServiceWizard } from "@/components/glatko/request-service/RequestServiceWizard";
@@ -10,18 +8,15 @@ type Props = {
   params: Promise<{ locale: string }> | { locale: string };
 };
 
+/**
+ * G-REQ-1 anonim flow: the wizard is reachable without a session. If a
+ * user IS signed in, `submitServiceRequest` reads their id off the auth
+ * cookie; otherwise the form collects an `anonymous_email` in the final
+ * step (Airbnb pattern).
+ */
 export default async function RequestServicePage({ params }: Props) {
   const { locale } = await Promise.resolve(params);
   setRequestLocale(locale);
-
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect(`/${locale}/login?redirect=/request-service`);
-  }
 
   const categories: ServiceCategory[] = await getServiceCategories();
 
