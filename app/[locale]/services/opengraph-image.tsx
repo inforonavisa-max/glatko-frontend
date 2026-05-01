@@ -38,8 +38,11 @@ export default async function ServicesOG({
   params: { locale: string };
 }) {
   const isRTL = params.locale === "ar";
-  const heading = HEADINGS[params.locale] || HEADINGS.en;
-  const subline = SUBLINES[params.locale] || SUBLINES.en;
+  // Satori's bundled font is Latin-only; ar headings need the English fallback
+  // until a Noto Sans Arabic load is plumbed in. Sub headings already match.
+  const safeLocale = params.locale === "ar" ? "en" : params.locale;
+  const heading = HEADINGS[safeLocale] || HEADINGS.en;
+  const subline = SUBLINES[safeLocale] || SUBLINES.en;
 
   return new ImageResponse(
     (

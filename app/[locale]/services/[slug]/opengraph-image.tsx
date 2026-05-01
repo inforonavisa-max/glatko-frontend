@@ -34,8 +34,12 @@ export default async function CategoryOG({
   const category = await getCategoryBySlug(params.slug);
   const isRTL = params.locale === "ar";
 
+  // Satori's bundled font is Latin-only; rendering Arabic glyphs without a
+  // custom font load produces a 0-byte PNG. Fall back to the English name
+  // on ar locale until a Noto Sans Arabic load is plumbed through.
+  const titleLocale = params.locale === "ar" ? "en" : params.locale;
   const title = category
-    ? pickName(category.name, params.locale, category.slug)
+    ? pickName(category.name, titleLocale, category.slug)
     : "Glatko";
   const seasonal = category?.seasonal ?? null;
 
