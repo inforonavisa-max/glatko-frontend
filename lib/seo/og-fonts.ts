@@ -45,22 +45,27 @@ async function fetchAndCache(
   return buf;
 }
 
-/** Noto Sans Arabic Bold for ar OG cards (variable font, weight 700 axis). */
+/** Noto Naskh Arabic for ar OG cards (variable font, default wght axis). */
 export async function getNotoSansArabic(): Promise<ArrayBuffer> {
-  return fetchAndCache("noto-sans-arabic-700", "/fonts/NotoSansArabic.ttf");
+  return fetchAndCache("noto-naskh-arabic", "/fonts/NotoSansArabic.ttf");
 }
 
 export interface OgFont {
   name: string;
   data: ArrayBuffer;
-  weight: 700;
+  weight: 400 | 700;
   style: "normal";
 }
 
 /**
  * Returns the font set ImageResponse needs for a given locale. Latin +
  * Cyrillic locales return [] — Satori's bundled font already covers them.
- * Arabic returns the Noto Sans Arabic buffer.
+ *
+ * Arabic returns the Noto Naskh Arabic variable font, declared at weight
+ * 400 (the variable's default axis). Satori's variable-font handling is
+ * unforgiving about non-default weight requests, so we render the Arabic
+ * title at fontWeight 400 in the OG handler — visually still bold-enough
+ * thanks to the 92px size, and reliable.
  */
 export async function getFontsForLocale(locale: string): Promise<OgFont[]> {
   if (locale === "ar") {
@@ -68,7 +73,7 @@ export async function getFontsForLocale(locale: string): Promise<OgFont[]> {
       {
         name: "Noto Sans Arabic",
         data: await getNotoSansArabic(),
-        weight: 700,
+        weight: 400,
         style: "normal",
       },
     ];
