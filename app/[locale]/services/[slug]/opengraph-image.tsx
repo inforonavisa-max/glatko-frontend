@@ -37,9 +37,10 @@ export default async function CategoryOG({
     : "Glatko";
   const seasonal = category?.seasonal ?? null;
   const fonts = await getFontsForLocale(params.locale);
-  const titleFontFamily = isRTL
-    ? '"Noto Sans Arabic"'
-    : "system-ui, sans-serif";
+  // Override fontFamily only for ar; Latin/Cyrillic locales inherit
+  // Satori's bundled font from the outer div (passing an explicit value
+  // makes Satori's lookup miss and silently emit 0-byte PNGs).
+  const titleFontFamily = isRTL ? '"Noto Sans Arabic"' : undefined;
 
   return new ImageResponse(
     (
@@ -77,7 +78,7 @@ export default async function CategoryOG({
             direction: isRTL ? "rtl" : "ltr",
           }}
         >
-          {/* Top: Glatko brand (always Latin) */}
+          {/* Top: Glatko brand (Latin glyphs — inherit Satori default) */}
           <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
             <span
               style={{
@@ -85,7 +86,6 @@ export default async function CategoryOG({
                 fontSize: 44,
                 fontWeight: 700,
                 letterSpacing: -1,
-                fontFamily: "system-ui, sans-serif",
               }}
             >
               Glatko
@@ -101,7 +101,7 @@ export default async function CategoryOG({
             />
           </div>
 
-          {/* Middle: localized category name (Arabic font when ar) */}
+          {/* Middle: localized category name (Arabic font when ar, else inherit) */}
           <div
             style={{
               display: "flex",
@@ -112,13 +112,13 @@ export default async function CategoryOG({
               letterSpacing: isRTL ? 0 : -1.5,
               maxWidth: 980,
               textShadow: "0 4px 32px rgba(0,0,0,0.6)",
-              fontFamily: titleFontFamily,
+              ...(titleFontFamily ? { fontFamily: titleFontFamily } : {}),
             }}
           >
             {title}
           </div>
 
-          {/* Bottom: domain (Latin) + seasonal pill */}
+          {/* Bottom: domain + seasonal pill (both Latin — inherit) */}
           <div
             style={{
               display: "flex",
@@ -132,7 +132,6 @@ export default async function CategoryOG({
                 fontSize: 28,
                 fontWeight: 500,
                 letterSpacing: 0.2,
-                fontFamily: "system-ui, sans-serif",
               }}
             >
               glatko.app
@@ -149,7 +148,6 @@ export default async function CategoryOG({
                   fontSize: 22,
                   fontWeight: 600,
                   letterSpacing: 0.4,
-                  fontFamily: "system-ui, sans-serif",
                 }}
               >
                 {seasonal === "summer" ? "🌊" : seasonal === "winter" ? "❄️" : "•"}{" "}

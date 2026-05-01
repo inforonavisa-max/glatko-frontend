@@ -42,9 +42,10 @@ export default async function ServicesOG({
   const heading = HEADINGS[params.locale] || HEADINGS.en;
   const subline = SUBLINES[params.locale] || SUBLINES.en;
   const fonts = await getFontsForLocale(params.locale);
-  const localizedFontFamily = isRTL
-    ? '"Noto Sans Arabic"'
-    : "system-ui, sans-serif";
+  // Override fontFamily only for ar; Latin/Cyrillic inherit Satori default
+  // (passing an explicit value makes Satori's lookup miss and silently
+  // emit 0-byte PNGs).
+  const localizedFontFamily = isRTL ? '"Noto Sans Arabic"' : undefined;
 
   return new ImageResponse(
     (
@@ -87,7 +88,6 @@ export default async function ServicesOG({
                 fontSize: 44,
                 fontWeight: 700,
                 letterSpacing: -1,
-                fontFamily: "system-ui, sans-serif",
               }}
             >
               Glatko
@@ -112,7 +112,7 @@ export default async function ServicesOG({
                 fontWeight: 700,
                 lineHeight: 1.05,
                 letterSpacing: isRTL ? 0 : -2,
-                fontFamily: localizedFontFamily,
+                ...(localizedFontFamily ? { fontFamily: localizedFontFamily } : {}),
               }}
             >
               {heading}
@@ -125,7 +125,7 @@ export default async function ServicesOG({
                 fontWeight: 500,
                 letterSpacing: 0.2,
                 maxWidth: 880,
-                fontFamily: localizedFontFamily,
+                ...(localizedFontFamily ? { fontFamily: localizedFontFamily } : {}),
               }}
             >
               {subline}
@@ -138,7 +138,6 @@ export default async function ServicesOG({
               fontSize: 28,
               fontWeight: 500,
               letterSpacing: 0.2,
-              fontFamily: "system-ui, sans-serif",
             }}
           >
             glatko.app
