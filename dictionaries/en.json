@@ -99,6 +99,33 @@
     "step3": {
       "title": "Complete & Review",
       "description": "Choose your professional, get the job done, share your experience"
+    },
+    "hero": {
+      "eyebrow": "How Glatko works",
+      "title": "Three steps from request to job done",
+      "subtitle": "Tell us what you need, get bids from verified Boka Bay professionals, pick the one you trust."
+    },
+    "steps": {
+      "s1": {
+        "title": "Tell us what you need",
+        "desc": "Pick a category, answer a few short questions, attach photos if helpful. Takes about 2 minutes."
+      },
+      "s2": {
+        "title": "Compare bids and chat",
+        "desc": "Within hours, you receive bids from verified pros. Message them, ask questions, see ratings."
+      },
+      "s3": {
+        "title": "Pick a pro and get it done",
+        "desc": "Accept the bid that fits. After the job's complete, leave a review — that's how we keep the bar high."
+      }
+    },
+    "foundingCallout": {
+      "title": "First 100 customers get a Founding badge + 5 free credits",
+      "body": "We're in our soft-launch phase. Be one of the first 100 to submit a request and we'll add your Founding Customer perks automatically.",
+      "cta": "See the perks"
+    },
+    "cta": {
+      "button": "Start a request"
     }
   },
   "trust": {
@@ -1503,5 +1530,151 @@
     "goToSettings": "Open settings",
     "noteHeader": "Note",
     "supportNote": "For questions, contact support by replying to this email."
+  },
+  "founding": {
+    "counter": {
+      "providerTitle": "Founding Providers",
+      "customerTitle": "Founding Customers",
+      "remainingHint": "{count} spots remaining",
+      "filledHint": "All spots claimed — thank you!"
+    },
+    "pro": {
+      "hero": {
+        "eyebrow": "Founding Provider Program",
+        "title": "Be one of Glatko's first 50 trusted professionals in Boka Bay",
+        "subtitle": "Lifetime Founding badge, 3 free months of featured placement in Year 2, and the chance to shape the platform.",
+        "cta": "Apply now",
+        "secondaryCta": "How it works"
+      },
+      "value": {
+        "title": "What you get",
+        "badge": {
+          "title": "Lifetime Founding badge",
+          "desc": "A gold badge displayed on your profile, search results, and inside customer chats — forever."
+        },
+        "featured": {
+          "title": "3 months free featured placement (Year 2)",
+          "desc": "When paid featured slots launch in May 2027, you get the first 3 months free — top of relevant search results."
+        },
+        "firstClient": {
+          "title": "First-mover advantage",
+          "desc": "Reach Boka Bay customers before competitors arrive. Build your review history early."
+        }
+      },
+      "eligibility": {
+        "title": "Who can apply",
+        "subtitle": "Soft launch is Boka Bay-focused — we want quality over quantity in Year 1.",
+        "boka": "Operating in Budva, Kotor, or Tivat",
+        "verified": "Willing to complete identity + business verification",
+        "portfolio": "At least 3 portfolio examples and one company document",
+        "experience": "2+ years of professional experience in your category"
+      },
+      "timeline": {
+        "title": "Soft launch timeline",
+        "t1": {
+          "date": "May 2026",
+          "title": "Public soft launch",
+          "desc": "Glatko opens for Boka Bay. First 50 approved pros become Founding Providers."
+        },
+        "t2": {
+          "date": "Aug 2026",
+          "title": "First 100 customers",
+          "desc": "Founding Customer program closes. Marketing scales to neighbouring cities."
+        },
+        "t3": {
+          "date": "May 2027",
+          "title": "Year 2 launch",
+          "desc": "Featured placement & paid tiers go live. Founding Providers get 3 months free."
+        },
+        "t4": {
+          "date": "Aug 2027",
+          "title": "Featured perk ends",
+          "desc": "Founding badge stays forever. Featured slots become standard pricing."
+        }
+      },
+      "faq": {
+        "title": "Frequently asked questions",
+        "q1": {
+          "question": "Does the Founding badge expire?",
+          "answer": "No. The badge stays on your profile permanently as long as your account is in good standing."
+        },
+        "q2": {
+          "question": "What does the 3 months featured placement mean?",
+          "answer": "When we launch paid featured listings in May 2027, your profile appears at the top of relevant searches for 3 months at no charge."
+        },
+        "q3": {
+          "question": "Is there a fee to join?",
+          "answer": "No. Glatko is free for both customers and pros during the soft-launch phase."
+        },
+        "q4": {
+          "question": "What if I'm not in Boka Bay?",
+          "answer": "We'll expand to other Montenegrin cities throughout 2026. You can still register and we'll let you know when your area opens."
+        },
+        "q5": {
+          "question": "How long does verification take?",
+          "answer": "Most applications are reviewed within 1-2 business days after submission."
+        },
+        "q6": {
+          "question": "Can I lose Founding status?",
+          "answer": "Only if your account is suspended for serious policy violations. Normal performance variance does not affect Founding status."
+        }
+      },
+      "cta": {
+        "title": "Ready to join?",
+        "subtitle": "Submit your application — our team reviews in 1-2 business days.",
+        "button": "Start application"
+      }
+    },
+    "customer": {
+      "hero": {
+        "eyebrow": "Founding Customer Program",
+        "title": "Be one of Glatko's first 100 customers and get 5 free credits",
+        "subtitle": "Founding Customer badge, 5 free request credits, and priority support — for being part of the first wave.",
+        "cta": "Submit your first request"
+      },
+      "benefits": {
+        "title": "What you get",
+        "b1": {
+          "title": "Founding Customer badge",
+          "desc": "A purple badge on your reviews and chat handle — pros take you seriously from day one."
+        },
+        "b2": {
+          "title": "5 free request credits",
+          "desc": "Use them whenever you need a service across all categories — no expiry, no strings."
+        },
+        "b3": {
+          "title": "Priority support + referrals",
+          "desc": "Direct line to our team for any issue, plus extra credits when you refer friends."
+        }
+      },
+      "howToBecome": {
+        "title": "How to become a Founding Customer",
+        "step1": "Create a free account on Glatko (takes ~30 seconds).",
+        "step2": "Submit your first service request — any category, any city in Boka Bay.",
+        "step3": "If you're among the first 100 to do so, your badge and 5 credits land automatically."
+      },
+      "cta": {
+        "title": "Submit your first request",
+        "subtitle": "Free, no card required. Pros bid on your job — you pick the best fit.",
+        "button": "Get started"
+      }
+    }
+  },
+  "launchMetrics": {
+    "title": "Launch metrics",
+    "subtitle": "Live snapshot of soft-launch progress (admin-only)",
+    "loadError": "Could not load metrics. The RPC may have rejected the request.",
+    "foundingPrograms": "Founding programs",
+    "stats": {
+      "totalRequests": "Total requests",
+      "pendingRequests": "Pending moderation",
+      "publishedRequests": "Published",
+      "last24hSignups": "Signups (last 24h)"
+    },
+    "distribution": {
+      "byCity": "Approved pros by city",
+      "byCategory": "Approved pros by category",
+      "empty": "No approved pros yet."
+    }
   }
 }

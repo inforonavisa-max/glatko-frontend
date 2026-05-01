@@ -99,6 +99,33 @@
     "step3": {
       "title": "İşi Tamamla & Değerlendir",
       "description": "Profesyoneli seçin, işi yaptırın, deneyiminizi paylaşın"
+    },
+    "hero": {
+      "eyebrow": "Glatko nasıl çalışır",
+      "title": "Talepten iş tamam'a üç adım",
+      "subtitle": "Ne istediğini söyle, doğrulanmış Boka Bay pro'larından teklif al, güvendiğini seç."
+    },
+    "steps": {
+      "s1": {
+        "title": "Ne istediğini söyle",
+        "desc": "Kategori seç, kısa sorulara yanıt ver, gerekiyorsa fotoğraf ekle. Yaklaşık 2 dakika."
+      },
+      "s2": {
+        "title": "Teklifleri karşılaştır, sohbet et",
+        "desc": "Saatler içinde doğrulanmış pro'lardan teklifler alırsın. Mesaj at, sor, puanları gör."
+      },
+      "s3": {
+        "title": "Pro seç ve işi tamamla",
+        "desc": "Sana uyan teklifi onayla. İş bitince yorum bırak — kalite çıtasını böyle yüksek tutuyoruz."
+      }
+    },
+    "foundingCallout": {
+      "title": "İlk 100 müşteri Kurucu rozeti + 5 ücretsiz kredi alıyor",
+      "body": "Soft-launch aşamasındayız. Talep gönderen ilk 100 müşteriye Kurucu Müşteri ayrıcalıklarını otomatik tanıyoruz.",
+      "cta": "Ayrıcalıkları gör"
+    },
+    "cta": {
+      "button": "Talep oluştur"
     }
   },
   "trust": {
@@ -1503,5 +1530,151 @@
     "goToSettings": "Ayarları aç",
     "noteHeader": "Not",
     "supportNote": "Sorularınız için bu e-postayı yanıtlayarak destek ile iletişime geçebilirsiniz."
+  },
+  "founding": {
+    "counter": {
+      "providerTitle": "Kurucu Profesyoneller",
+      "customerTitle": "Kurucu Müşteriler",
+      "remainingHint": "{count} kontenjan kaldı",
+      "filledHint": "Tüm yerler doldu — teşekkürler!"
+    },
+    "pro": {
+      "hero": {
+        "eyebrow": "Kurucu Profesyonel Programı",
+        "title": "Glatko'nun Boka Bay'deki ilk 50 güvenilir profesyonelinden biri ol",
+        "subtitle": "Ömür boyu Kurucu rozeti, 2. yılda 3 ay ücretsiz öne çıkarma ve platformu şekillendirme şansı.",
+        "cta": "Hemen başvur",
+        "secondaryCta": "Nasıl çalışır"
+      },
+      "value": {
+        "title": "Senin için neler var",
+        "badge": {
+          "title": "Ömür boyu Kurucu rozeti",
+          "desc": "Profilinde, arama sonuçlarında ve müşteri sohbetlerinde gözüken altın rozet — sonsuza dek."
+        },
+        "featured": {
+          "title": "2. yılda 3 ay ücretsiz öne çıkarma",
+          "desc": "Mayıs 2027'de ücretli öne çıkarma slotları başladığında, ilgili aramaların en üstünde 3 ay ücretsiz görünürsün."
+        },
+        "firstClient": {
+          "title": "İlk hareket avantajı",
+          "desc": "Rakipler gelmeden Boka Bay müşterilerine ulaş. Yorum geçmişini erken oluştur."
+        }
+      },
+      "eligibility": {
+        "title": "Kimler başvurabilir",
+        "subtitle": "Soft launch Boka Bay odaklı — 1. yılda kalite önceliğimiz.",
+        "boka": "Budva, Kotor veya Tivat'ta hizmet veriyor olmak",
+        "verified": "Kimlik + işletme doğrulamasını tamamlamayı kabul etmek",
+        "portfolio": "En az 3 portfolyo örneği ve bir şirket belgesi",
+        "experience": "Kategorinde en az 2 yıl profesyonel deneyim"
+      },
+      "timeline": {
+        "title": "Soft launch takvimi",
+        "t1": {
+          "date": "Mayıs 2026",
+          "title": "Açık soft launch",
+          "desc": "Glatko Boka Bay için açıldı. İlk 50 onaylı pro Kurucu Profesyonel oluyor."
+        },
+        "t2": {
+          "date": "Ağu 2026",
+          "title": "İlk 100 müşteri",
+          "desc": "Kurucu Müşteri programı kapanıyor. Pazarlama komşu şehirlere genişliyor."
+        },
+        "t3": {
+          "date": "May 2027",
+          "title": "2. yıl açılışı",
+          "desc": "Öne çıkarma ve ücretli paketler aktif. Kurucu Profesyoneller 3 ay ücretsiz alıyor."
+        },
+        "t4": {
+          "date": "Ağu 2027",
+          "title": "Öne çıkarma süresi sonu",
+          "desc": "Kurucu rozeti kalır. Öne çıkarma slotları standart fiyata geçer."
+        }
+      },
+      "faq": {
+        "title": "Sıkça sorulan sorular",
+        "q1": {
+          "question": "Kurucu rozeti süresi dolar mı?",
+          "answer": "Hayır. Hesabın iyi durumdayken rozet profilinde kalıcı olarak kalır."
+        },
+        "q2": {
+          "question": "3 ay öne çıkarma ne demek?",
+          "answer": "Mayıs 2027'de ücretli öne çıkarma başladığında profilin ilgili aramaların üstünde 3 ay ücretsiz görünür."
+        },
+        "q3": {
+          "question": "Katılım ücreti var mı?",
+          "answer": "Hayır. Soft-launch boyunca Glatko hem müşteri hem pro için ücretsiz."
+        },
+        "q4": {
+          "question": "Boka Bay dışındaysam?",
+          "answer": "2026 boyunca diğer Karadağ şehirlerine genişleyeceğiz. Şimdiden kayıt olabilir, bölgen açıldığında haber alırsın."
+        },
+        "q5": {
+          "question": "Doğrulama ne kadar sürer?",
+          "answer": "Çoğu başvuru 1-2 iş günü içinde incelenir."
+        },
+        "q6": {
+          "question": "Kurucu statüsünü kaybeder miyim?",
+          "answer": "Sadece ciddi politika ihlali nedeniyle hesap askıya alındığında. Normal performans dalgalanması Kurucu statüyü etkilemez."
+        }
+      },
+      "cta": {
+        "title": "Katılmaya hazır mısın?",
+        "subtitle": "Başvurunu gönder — ekibimiz 1-2 iş gününde inceler.",
+        "button": "Başvuruya başla"
+      }
+    },
+    "customer": {
+      "hero": {
+        "eyebrow": "Kurucu Müşteri Programı",
+        "title": "Glatko'nun ilk 100 müşterisinden biri ol, 5 ücretsiz kredi al",
+        "subtitle": "Kurucu Müşteri rozeti, 5 ücretsiz talep kredisi ve öncelikli destek — ilk dalgada olmanın karşılığı.",
+        "cta": "İlk talebini gönder"
+      },
+      "benefits": {
+        "title": "Senin için neler var",
+        "b1": {
+          "title": "Kurucu Müşteri rozeti",
+          "desc": "Yorumlarında ve sohbet adında mor rozet — pro'lar seni ilk günden ciddiye alır."
+        },
+        "b2": {
+          "title": "5 ücretsiz talep kredisi",
+          "desc": "Tüm kategorilerde istediğinde kullan — son kullanma yok, koşul yok."
+        },
+        "b3": {
+          "title": "Öncelikli destek + referral",
+          "desc": "Her sorun için ekibimize doğrudan ulaş, arkadaş davet ettiğinde ekstra kredi kazan."
+        }
+      },
+      "howToBecome": {
+        "title": "Kurucu Müşteri nasıl olunur",
+        "step1": "Glatko'da ücretsiz hesap oluştur (~30 saniye).",
+        "step2": "İlk hizmet talebini gönder — Boka Bay'de herhangi bir kategori, herhangi bir şehir.",
+        "step3": "İlk 100 kişi arasındaysan rozet ve 5 kredi otomatik olarak hesabına eklenir."
+      },
+      "cta": {
+        "title": "İlk talebini gönder",
+        "subtitle": "Ücretsiz, kart gerekmez. Pro'lar teklif verir — sen en uygunu seçersin.",
+        "button": "Başla"
+      }
+    }
+  },
+  "launchMetrics": {
+    "title": "Lansman metrikleri",
+    "subtitle": "Soft-launch ilerleyişinin canlı görünümü (yalnızca admin)",
+    "loadError": "Metrikler yüklenemedi. RPC isteği reddetmiş olabilir.",
+    "foundingPrograms": "Kurucu programlar",
+    "stats": {
+      "totalRequests": "Toplam talep",
+      "pendingRequests": "Onay bekleyen",
+      "publishedRequests": "Yayında",
+      "last24hSignups": "Son 24 saat kayıt"
+    },
+    "distribution": {
+      "byCity": "Şehre göre onaylı pro",
+      "byCategory": "Kategoriye göre onaylı pro",
+      "empty": "Henüz onaylanmış pro yok."
+    }
   }
 }

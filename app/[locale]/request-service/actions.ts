@@ -12,6 +12,8 @@ interface SubmitResult {
   success: boolean;
   requestId?: string;
   categoryLabel?: string;
+  /** G-LAUNCH-1: true when this submit promoted user into founding-100. */
+  isFoundingCustomer?: boolean;
   error?: string;
 }
 
@@ -209,5 +211,65 @@ export async function submitServiceRequest(
     /* glatkoCaptureException already wraps inside the helper */
   });
 
-  return { success: true, requestId: row.id as string, categoryLabel };
+  // G-LAUNCH-1: auto-flag founding customer (first 100 authenticated submitters).
+  // Idempotent — RPC is no-op for users already founding or past the cap.
+  // Fire-and-forget so flag failure never blocks the success path.
+  let isFoundingCustomer = false;
+  if (customerId) {
+    try {
+      const { data: foundingResult } = await supabase.rpc(
+        "glatko_check_founding_customer",
+        { p_user_id: customerId },
+      );
+      isFoundingCustomer = Boolean(foundingResult);
+
+      // If the flag was JUST flipped on this submit, fire the welcome email.
+      // We detect "just flipped" by re-reading founding_customer_at and
+      // checking it's recent (5 second window — within the same request).
+      if (isFoundingCustomer) {
+        const { data: profile } = await supabase
+          .from("glatko_customer_profiles")
+          .select("founding_customer_number, founding_customer_at, preferred_locale")
+          .eq("id", customerId)
+          .maybeSingle();
+
+        if (
+          profile?.founding_customer_at &&
+          Date.now() - new Date(profile.founding_customer_at).getTime() < 10_000
+        ) {
+          const number =
+            (profile.founding_customer_number as number | null) ?? 0;
+          const userLocale =
+            (profile.preferred_locale as string | null) ?? submittedLocale;
+          const customerName =
+            (user?.user_metadata?.full_name as string | undefined) ||
+            user?.email?.split("@")[0] ||
+            "there";
+          const recipient = user?.email;
+          if (recipient && number > 0) {
+            const { sendFoundingCustomerWelcomeEmail } = await import(
+              "@/lib/email/founding-emails"
+            );
+            void sendFoundingCustomerWelcomeEmail({
+              to: recipient,
+              locale: userLocale,
+              customerName,
+              foundingNumber: number,
+            }).catch(() => {
+              /* helper logs to Sentry */
+            });
+          }
+        }
+      }
+    } catch {
+      // Don't block — RPC failure is non-critical (existing user already submitted).
+    }
+  }
+
+  return {
+    success: true,
+    requestId: row.id as string,
+    categoryLabel,
+    isFoundingCustomer,
+  };
 }

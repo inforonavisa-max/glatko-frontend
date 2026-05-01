@@ -99,6 +99,33 @@
     "step3": {
       "title": "Završite i ocenite",
       "description": "Izaberite profesionalca, obavite posao, podelite iskustvo"
+    },
+    "hero": {
+      "eyebrow": "Kako Glatko funkcioniše",
+      "title": "Tri koraka od zahteva do gotovog posla",
+      "subtitle": "Reci nam šta ti treba, primi ponude od proverenih bokeških profesionalaca, izaberi onog kome veruješ."
+    },
+    "steps": {
+      "s1": {
+        "title": "Reci nam šta ti treba",
+        "desc": "Izaberi kategoriju, odgovori na par pitanja, dodaj fotografije po potrebi. Oko 2 minuta."
+      },
+      "s2": {
+        "title": "Uporedi ponude i razgovaraj",
+        "desc": "Za nekoliko sati primaš ponude od proverenih profesionalaca. Pišite, pitajte, vidite ocene."
+      },
+      "s3": {
+        "title": "Izaberi profesionalca i završi",
+        "desc": "Prihvati odgovarajuću ponudu. Po završetku ostavi recenziju — tako držimo standard visoko."
+      }
+    },
+    "foundingCallout": {
+      "title": "Prvih 100 klijenata dobija osnivačku oznaku + 5 besplatnih kredita",
+      "body": "U fazi smo soft launch-a. Budi među prvih 100 koji pošalju zahtev — osnivačke pogodnosti dobijaš automatski.",
+      "cta": "Pogledaj pogodnosti"
+    },
+    "cta": {
+      "button": "Pokreni zahtev"
     }
   },
   "trust": {
@@ -1503,5 +1530,151 @@
     "goToSettings": "Otvori podešavanja",
     "noteHeader": "Napomena",
     "supportNote": "Za pitanja, odgovorite na ovaj email i podrška će vam pomoći."
+  },
+  "founding": {
+    "counter": {
+      "providerTitle": "Osnivački profesionalci",
+      "customerTitle": "Osnivački klijenti",
+      "remainingHint": "Ostalo {count} mesta",
+      "filledHint": "Sva mesta popunjena — hvala!"
+    },
+    "pro": {
+      "hero": {
+        "eyebrow": "Program osnivačkog profesionalca",
+        "title": "Postani jedan od prvih 50 proverenih profesionalaca u Boki",
+        "subtitle": "Doživotna osnivačka oznaka, 3 meseca besplatnog isticanja u 2. godini i prilika da oblikuješ platformu.",
+        "cta": "Prijavi se",
+        "secondaryCta": "Kako funkcioniše"
+      },
+      "value": {
+        "title": "Šta dobijaš",
+        "badge": {
+          "title": "Doživotna osnivačka oznaka",
+          "desc": "Zlatna oznaka na profilu, u rezultatima pretrage i u razgovoru s klijentima — zauvek."
+        },
+        "featured": {
+          "title": "3 meseca besplatnog isticanja (2. godina)",
+          "desc": "Kad u maju 2027. krenu plaćeni istaknuti slotovi, dobijaš prva 3 meseca besplatno na vrhu pretrage."
+        },
+        "firstClient": {
+          "title": "Prednost prvog igrača",
+          "desc": "Dosegni klijente Boke pre konkurencije. Izgradi istoriju recenzija ranije."
+        }
+      },
+      "eligibility": {
+        "title": "Ko može da se prijavi",
+        "subtitle": "Soft launch je fokusiran na Boku — kvalitet ispred kvantiteta u 1. godini.",
+        "boka": "Aktivan u Budvi, Kotoru ili Tivtu",
+        "verified": "Spreman za ličnu i poslovnu proveru",
+        "portfolio": "Najmanje 3 primera portfolija i jedan dokument firme",
+        "experience": "2+ godine profesionalnog iskustva u tvojoj kategoriji"
+      },
+      "timeline": {
+        "title": "Soft launch raspored",
+        "t1": {
+          "date": "Maj 2026",
+          "title": "Javni soft launch",
+          "desc": "Glatko se otvara za Boku. Prvih 50 odobrenih pro postaju Osnivači."
+        },
+        "t2": {
+          "date": "Avg 2026",
+          "title": "Prvih 100 klijenata",
+          "desc": "Program Osnivačkog klijenta se zatvara. Marketing se širi na susedne gradove."
+        },
+        "t3": {
+          "date": "Maj 2027",
+          "title": "Lansiranje 2. godine",
+          "desc": "Isticanje i plaćeni paketi aktivni. Osnivači dobijaju 3 meseca besplatno."
+        },
+        "t4": {
+          "date": "Avg 2027",
+          "title": "Kraj besplatnog isticanja",
+          "desc": "Osnivačka oznaka ostaje zauvek. Istaknuti slotovi prelaze na standardnu cenu."
+        }
+      },
+      "faq": {
+        "title": "Često postavljana pitanja",
+        "q1": {
+          "question": "Da li ističe osnivačka oznaka?",
+          "answer": "Ne. Oznaka ostaje na profilu trajno dok je nalog u dobrom stanju."
+        },
+        "q2": {
+          "question": "Šta znači 3 meseca isticanja?",
+          "answer": "Kad u maju 2027. krenu plaćena istaknuta mesta, profil ti je 3 meseca besplatno na vrhu relevantne pretrage."
+        },
+        "q3": {
+          "question": "Postoji li članarina?",
+          "answer": "Ne. Glatko je tokom soft launch-a besplatan i za klijente i za profesionalce."
+        },
+        "q4": {
+          "question": "Šta ako nisam u Boki?",
+          "answer": "Tokom 2026. širićemo se na druge gradove Crne Gore. Možeš se registrovati i javićemo kad se tvoj kraj otvori."
+        },
+        "q5": {
+          "question": "Koliko traje provera?",
+          "answer": "Većina prijava se pregleda u roku od 1-2 radna dana."
+        },
+        "q6": {
+          "question": "Mogu li izgubiti osnivački status?",
+          "answer": "Samo ako se nalog suspenduje zbog ozbiljnih kršenja pravila. Normalno variranje učinka ne utiče na status."
+        }
+      },
+      "cta": {
+        "title": "Spreman da se priključiš?",
+        "subtitle": "Pošalji prijavu — naš tim odgovara u 1-2 radna dana.",
+        "button": "Pokreni prijavu"
+      }
+    },
+    "customer": {
+      "hero": {
+        "eyebrow": "Program osnivačkog klijenta",
+        "title": "Budi među prvih 100 klijenata Glatka i dobij 5 besplatnih kredita",
+        "subtitle": "Oznaka osnivačkog klijenta, 5 besplatnih kredita i prioritetna podrška — jer si u prvom talasu.",
+        "cta": "Pošalji prvi zahtev"
+      },
+      "benefits": {
+        "title": "Šta dobijaš",
+        "b1": {
+          "title": "Oznaka osnivačkog klijenta",
+          "desc": "Ljubičasta oznaka na recenzijama i u razgovoru — profesionalci te shvataju ozbiljno od prvog dana."
+        },
+        "b2": {
+          "title": "5 besplatnih kredita za zahteve",
+          "desc": "Koristi ih kad god želiš u svim kategorijama — bez isteka, bez uslova."
+        },
+        "b3": {
+          "title": "Prioritetna podrška + preporuke",
+          "desc": "Direktan kanal do tima i bonus krediti kad pozoveš prijatelje."
+        }
+      },
+      "howToBecome": {
+        "title": "Kako postati osnivački klijent",
+        "step1": "Otvori besplatan nalog na Glatku (~30 sekundi).",
+        "step2": "Pošalji prvi zahtev za uslugu — bilo koja kategorija, bilo koji grad u Boki.",
+        "step3": "Ako si među prvih 100, oznaka i 5 kredita se dodaju automatski."
+      },
+      "cta": {
+        "title": "Pošalji prvi zahtev",
+        "subtitle": "Besplatno, bez kartice. Profesionalci daju ponude — biraš najbolju.",
+        "button": "Krenimo"
+      }
+    }
+  },
+  "launchMetrics": {
+    "title": "Lansiranje — metrike",
+    "subtitle": "Trenutni snimak napretka soft launch-a (samo admin)",
+    "loadError": "Metrike nije moguće učitati. RPC možda odbija zahtev.",
+    "foundingPrograms": "Osnivački programi",
+    "stats": {
+      "totalRequests": "Ukupno zahteva",
+      "pendingRequests": "Čeka moderaciju",
+      "publishedRequests": "Objavljeno",
+      "last24hSignups": "Registracije (24h)"
+    },
+    "distribution": {
+      "byCity": "Odobreni profesionalci po gradu",
+      "byCategory": "Odobreni profesionalci po kategoriji",
+      "empty": "Još nema odobrenih profesionalaca."
+    }
   }
 }

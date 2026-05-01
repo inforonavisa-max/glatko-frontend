@@ -99,6 +99,33 @@
     "step3": {
       "title": "Completa & Valuta",
       "description": "Scegli il tuo professionista, fai eseguire il lavoro, condividi la tua esperienza"
+    },
+    "hero": {
+      "eyebrow": "Come funziona Glatko",
+      "title": "Tre passi dalla richiesta al lavoro fatto",
+      "subtitle": "Dicci cosa ti serve, ricevi offerte da pro verificati delle Bocche, scegli quello di cui ti fidi."
+    },
+    "steps": {
+      "s1": {
+        "title": "Dicci cosa ti serve",
+        "desc": "Scegli una categoria, rispondi a brevi domande, allega foto se utile. Circa 2 minuti."
+      },
+      "s2": {
+        "title": "Confronta offerte e chatta",
+        "desc": "Entro poche ore ricevi offerte da pro verificati. Scrivi, fai domande, vedi le valutazioni."
+      },
+      "s3": {
+        "title": "Scegli un pro e completa",
+        "desc": "Accetta l'offerta giusta. A lavoro completato, lascia una recensione — così manteniamo alto il livello."
+      }
+    },
+    "foundingCallout": {
+      "title": "I primi 100 clienti ricevono badge Founding + 5 crediti gratis",
+      "body": "Siamo in soft launch. Sii tra i primi 100 a inviare una richiesta — i benefit Founding sono automatici.",
+      "cta": "Vedi i benefit"
+    },
+    "cta": {
+      "button": "Avvia una richiesta"
     }
   },
   "trust": {
@@ -1503,5 +1530,151 @@
     "goToSettings": "Apri impostazioni",
     "noteHeader": "Nota",
     "supportNote": "Per domande, contatta l'assistenza rispondendo a questa email."
+  },
+  "founding": {
+    "counter": {
+      "providerTitle": "Professionisti Founding",
+      "customerTitle": "Clienti Founding",
+      "remainingHint": "{count} posti rimasti",
+      "filledHint": "Tutti i posti assegnati — grazie!"
+    },
+    "pro": {
+      "hero": {
+        "eyebrow": "Programma Founding Provider",
+        "title": "Diventa uno dei primi 50 professionisti di Glatko nelle Bocche di Cattaro",
+        "subtitle": "Badge Founding a vita, 3 mesi di placement in evidenza nel secondo anno, e possibilità di plasmare la piattaforma.",
+        "cta": "Candidati ora",
+        "secondaryCta": "Come funziona"
+      },
+      "value": {
+        "title": "Cosa ottieni",
+        "badge": {
+          "title": "Badge Founding a vita",
+          "desc": "Badge oro sul tuo profilo, nei risultati di ricerca e nelle chat — per sempre."
+        },
+        "featured": {
+          "title": "3 mesi gratuiti in evidenza (Anno 2)",
+          "desc": "Quando lanceremo le posizioni in evidenza a pagamento a maggio 2027, otterrai 3 mesi gratis in cima ai risultati pertinenti."
+        },
+        "firstClient": {
+          "title": "Vantaggio del primo arrivato",
+          "desc": "Raggiungi i clienti delle Bocche prima che arrivino i concorrenti. Costruisci presto la tua storia di recensioni."
+        }
+      },
+      "eligibility": {
+        "title": "Chi può candidarsi",
+        "subtitle": "Soft launch focalizzato sulle Bocche — qualità prima della quantità nel primo anno.",
+        "boka": "Operativo a Budva, Cattaro o Teodo",
+        "verified": "Disposto a completare la verifica identità + business",
+        "portfolio": "Almeno 3 esempi di portfolio e un documento aziendale",
+        "experience": "2+ anni di esperienza professionale nella tua categoria"
+      },
+      "timeline": {
+        "title": "Calendario soft launch",
+        "t1": {
+          "date": "Mag 2026",
+          "title": "Soft launch pubblico",
+          "desc": "Glatko apre per le Bocche di Cattaro. I primi 50 pro approvati diventano Founding."
+        },
+        "t2": {
+          "date": "Ago 2026",
+          "title": "Primi 100 clienti",
+          "desc": "Programma Founding Customer chiuso. Marketing si espande alle città vicine."
+        },
+        "t3": {
+          "date": "Mag 2027",
+          "title": "Lancio Anno 2",
+          "desc": "Posizioni in evidenza e piani a pagamento attivi. I Founding ricevono 3 mesi gratis."
+        },
+        "t4": {
+          "date": "Ago 2027",
+          "title": "Fine vantaggio in evidenza",
+          "desc": "Il badge Founding rimane per sempre. Le posizioni in evidenza passano al prezzo standard."
+        }
+      },
+      "faq": {
+        "title": "Domande frequenti",
+        "q1": {
+          "question": "Il badge Founding scade?",
+          "answer": "No. Il badge resta sul profilo permanentemente, finché l'account è in regola."
+        },
+        "q2": {
+          "question": "Cosa significano 3 mesi in evidenza?",
+          "answer": "Quando lanceremo le posizioni a pagamento a maggio 2027, il tuo profilo apparirà in cima per 3 mesi gratis."
+        },
+        "q3": {
+          "question": "C'è una quota di iscrizione?",
+          "answer": "No. Glatko è gratis per clienti e pro durante il soft launch."
+        },
+        "q4": {
+          "question": "Se non sono nelle Bocche?",
+          "answer": "Ci espanderemo in altre città del Montenegro durante il 2026. Puoi registrarti — ti avviseremo quando aprirà la tua zona."
+        },
+        "q5": {
+          "question": "Quanto dura la verifica?",
+          "answer": "La maggior parte delle candidature viene esaminata entro 1-2 giorni lavorativi."
+        },
+        "q6": {
+          "question": "Posso perdere lo status Founding?",
+          "answer": "Solo se l'account viene sospeso per gravi violazioni delle policy. La normale variazione di performance non incide."
+        }
+      },
+      "cta": {
+        "title": "Pronto a unirti?",
+        "subtitle": "Invia la tua candidatura — il nostro team risponde in 1-2 giorni lavorativi.",
+        "button": "Inizia la candidatura"
+      }
+    },
+    "customer": {
+      "hero": {
+        "eyebrow": "Programma Founding Customer",
+        "title": "Sii uno dei primi 100 clienti Glatko e ottieni 5 crediti gratis",
+        "subtitle": "Badge Founding Customer, 5 crediti richiesta gratis e supporto prioritario — il riconoscimento per essere nella prima ondata.",
+        "cta": "Invia la tua prima richiesta"
+      },
+      "benefits": {
+        "title": "Cosa ottieni",
+        "b1": {
+          "title": "Badge Founding Customer",
+          "desc": "Badge viola su recensioni e chat — i pro ti prendono sul serio dal giorno 1."
+        },
+        "b2": {
+          "title": "5 crediti richiesta gratis",
+          "desc": "Usali quando vuoi su tutte le categorie — nessuna scadenza, nessun vincolo."
+        },
+        "b3": {
+          "title": "Supporto prioritario + referral",
+          "desc": "Filo diretto con il team, crediti extra quando inviti amici."
+        }
+      },
+      "howToBecome": {
+        "title": "Come diventare Founding Customer",
+        "step1": "Crea un account gratuito su Glatko (~30 secondi).",
+        "step2": "Invia la prima richiesta — qualsiasi categoria, qualsiasi città delle Bocche.",
+        "step3": "Se sei tra i primi 100, badge e 5 crediti vengono assegnati automaticamente."
+      },
+      "cta": {
+        "title": "Invia la prima richiesta",
+        "subtitle": "Gratis, nessuna carta richiesta. I pro fanno offerte — tu scegli la migliore.",
+        "button": "Inizia"
+      }
+    }
+  },
+  "launchMetrics": {
+    "title": "Metriche di lancio",
+    "subtitle": "Snapshot live del soft launch (solo admin)",
+    "loadError": "Impossibile caricare le metriche. L'RPC potrebbe aver rifiutato la richiesta.",
+    "foundingPrograms": "Programmi Founding",
+    "stats": {
+      "totalRequests": "Richieste totali",
+      "pendingRequests": "In moderazione",
+      "publishedRequests": "Pubblicate",
+      "last24hSignups": "Iscrizioni (24h)"
+    },
+    "distribution": {
+      "byCity": "Pro approvati per città",
+      "byCategory": "Pro approvati per categoria",
+      "empty": "Nessun pro approvato ancora."
+    }
   }
 }
