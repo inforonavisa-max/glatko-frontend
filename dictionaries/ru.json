@@ -1232,6 +1232,29 @@
     "suggestions": {
       "categories": "Категории",
       "professionals": "Специалисты"
+    },
+    "modal": {
+      "placeholder": "Поиск категорий или специалистов…",
+      "triggerLabel": "Открыть поиск",
+      "triggerPlaceholder": "Поиск…",
+      "close": "Закрыть поиск",
+      "noResults": "Ничего не найдено",
+      "noResultsDesc": "Попробуйте другое слово или посмотрите категории ниже.",
+      "empty": {
+        "popularTitle": "Популярные категории",
+        "recentTitle": "Недавние запросы",
+        "recentClear": "Очистить всё",
+        "recentRemove": "Удалить"
+      },
+      "results": {
+        "categoriesTitle": "Категории",
+        "professionalsTitle": "Специалисты"
+      },
+      "hints": {
+        "navigate": "навигация",
+        "select": "выбрать",
+        "close": "закрыть"
+      }
     }
   },
   "services": {

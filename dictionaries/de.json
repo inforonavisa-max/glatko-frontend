@@ -1232,6 +1232,29 @@
     "suggestions": {
       "categories": "Kategorien",
       "professionals": "Fachleute"
+    },
+    "modal": {
+      "placeholder": "Kategorien oder Profis suchen…",
+      "triggerLabel": "Suche öffnen",
+      "triggerPlaceholder": "Suchen…",
+      "close": "Suche schließen",
+      "noResults": "Keine Treffer",
+      "noResultsDesc": "Versuchen Sie ein anderes Stichwort oder durchsuchen Sie unten die Kategorien.",
+      "empty": {
+        "popularTitle": "Beliebte Kategorien",
+        "recentTitle": "Letzte Suchen",
+        "recentClear": "Alle löschen",
+        "recentRemove": "Entfernen"
+      },
+      "results": {
+        "categoriesTitle": "Kategorien",
+        "professionalsTitle": "Fachleute"
+      },
+      "hints": {
+        "navigate": "navigieren",
+        "select": "auswählen",
+        "close": "schließen"
+      }
     }
   },
   "services": {

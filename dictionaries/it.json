@@ -1232,6 +1232,29 @@
     "suggestions": {
       "categories": "Categorie",
       "professionals": "Professionisti"
+    },
+    "modal": {
+      "placeholder": "Cerca categorie o professionisti…",
+      "triggerLabel": "Apri ricerca",
+      "triggerPlaceholder": "Cerca…",
+      "close": "Chiudi ricerca",
+      "noResults": "Nessun risultato",
+      "noResultsDesc": "Prova con una parola diversa o esplora le categorie qui sotto.",
+      "empty": {
+        "popularTitle": "Categorie popolari",
+        "recentTitle": "Ricerche recenti",
+        "recentClear": "Cancella tutto",
+        "recentRemove": "Rimuovi"
+      },
+      "results": {
+        "categoriesTitle": "Categorie",
+        "professionalsTitle": "Professionisti"
+      },
+      "hints": {
+        "navigate": "naviga",
+        "select": "seleziona",
+        "close": "chiudi"
+      }
     }
   },
   "services": {

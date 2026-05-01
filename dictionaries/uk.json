@@ -1232,6 +1232,29 @@
     "suggestions": {
       "categories": "Категорії",
       "professionals": "Фахівці"
+    },
+    "modal": {
+      "placeholder": "Пошук категорій або фахівців…",
+      "triggerLabel": "Відкрити пошук",
+      "triggerPlaceholder": "Пошук…",
+      "close": "Закрити пошук",
+      "noResults": "Нічого не знайдено",
+      "noResultsDesc": "Спробуйте інше слово або перегляньте категорії нижче.",
+      "empty": {
+        "popularTitle": "Популярні категорії",
+        "recentTitle": "Нещодавні пошуки",
+        "recentClear": "Очистити все",
+        "recentRemove": "Видалити"
+      },
+      "results": {
+        "categoriesTitle": "Категорії",
+        "professionalsTitle": "Фахівці"
+      },
+      "hints": {
+        "navigate": "навігація",
+        "select": "обрати",
+        "close": "закрити"
+      }
     }
   },
   "services": {

@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/supabase/server";
 import { routing, type Locale } from "@/i18n/routing";
 import { CategoryGrid, type P0CategoryCard } from "@/components/categories/CategoryGrid";
+import { SearchTrigger } from "@/components/glatko/search/SearchTrigger";
+import { OpenSearchOnMount } from "@/components/glatko/search/OpenSearchOnMount";
 
 type Props = {
   params: Promise<{ locale: string }> | { locale: string };
@@ -165,9 +167,10 @@ export default async function ServicesPage({ params }: Props) {
           __html: JSON.stringify(ORGANIZATION_JSON_LD),
         }}
       />
+      <OpenSearchOnMount />
       <main className="min-h-screen bg-[#F8F6F0] dark:bg-[#0b1f23]">
         <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-24 pb-12">
-          <header className="mx-auto max-w-3xl text-center mb-10 md:mb-14">
+          <header className="mx-auto max-w-3xl text-center mb-8 md:mb-10">
             <h1 className="font-serif text-3xl md:text-5xl font-semibold text-gray-900 dark:text-white tracking-tight">
               {t("categories.allHeading")}
             </h1>
@@ -175,6 +178,9 @@ export default async function ServicesPage({ params }: Props) {
               {t("categories.allSubheading")}
             </p>
           </header>
+          <div className="mx-auto mb-10 max-w-2xl md:mb-14">
+            <SearchTrigger variant="hero" />
+          </div>
           {cards.length > 0 ? (
             <CategoryGrid cards={cards} />
           ) : (

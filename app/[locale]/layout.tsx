@@ -14,6 +14,8 @@ import { CookieConsent } from "@/components/glatko/CookieConsent";
 import { OnboardingWelcomeBanner } from "@/components/glatko/onboarding/OnboardingWelcomeBanner";
 import { HreflangLinks } from "@/components/seo/HreflangLinks";
 import { SentryUserScope } from "@/components/monitoring/SentryUserScope";
+import { SearchModalProvider } from "@/components/glatko/search/SearchModalContext";
+import { SearchModal } from "@/components/glatko/search/SearchModal";
 import type { Metadata } from "next";
 
 /** Path segment after `/${locale}` for hreflang URLs (set by middleware `x-pathname`). */
@@ -141,26 +143,29 @@ export default async function LocaleLayout({ children, params }: Props) {
   return (
     <NextIntlClientProvider messages={messages}>
       <NuqsAdapter>
-        <HreflangLinks locale={locale} path={hreflangPath} />
-        <HtmlLangSetter lang={locale} dir={dir} />
-        <SentryUserScope userId={userId} email={user?.email} />
-        <div className="flex min-h-screen flex-col" dir={dir}>
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[999] focus:rounded-xl focus:bg-teal-500 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white focus:shadow-lg"
-          >
-            Skip to content
-          </a>
-          <GlatkoHeader userId={userId} isPro={isPro} isAdmin={isAdmin} />
-          {showOnboardingBanner ? (
-            <div className="mt-16 shrink-0">
-              <OnboardingWelcomeBanner displayName={onboardingFirstName} />
-            </div>
-          ) : null}
-          <main id="main-content" className="flex-1">{children}</main>
-          <GlatkoFooter />
-          <CookieConsent />
-        </div>
+        <SearchModalProvider>
+          <HreflangLinks locale={locale} path={hreflangPath} />
+          <HtmlLangSetter lang={locale} dir={dir} />
+          <SentryUserScope userId={userId} email={user?.email} />
+          <div className="flex min-h-screen flex-col" dir={dir}>
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[999] focus:rounded-xl focus:bg-teal-500 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white focus:shadow-lg"
+            >
+              Skip to content
+            </a>
+            <GlatkoHeader userId={userId} isPro={isPro} isAdmin={isAdmin} />
+            {showOnboardingBanner ? (
+              <div className="mt-16 shrink-0">
+                <OnboardingWelcomeBanner displayName={onboardingFirstName} />
+              </div>
+            ) : null}
+            <main id="main-content" className="flex-1">{children}</main>
+            <GlatkoFooter />
+            <CookieConsent />
+          </div>
+          <SearchModal locale={locale} isAuthenticated={!!userId} />
+        </SearchModalProvider>
       </NuqsAdapter>
     </NextIntlClientProvider>
   );
