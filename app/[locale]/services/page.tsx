@@ -7,6 +7,11 @@ import { routing, type Locale } from "@/i18n/routing";
 import { CategoryGrid, type P0CategoryCard } from "@/components/categories/CategoryGrid";
 import { SearchTrigger } from "@/components/glatko/search/SearchTrigger";
 import { OpenSearchOnMount } from "@/components/glatko/search/OpenSearchOnMount";
+import {
+  generateItemListSchema,
+  jsonLdScriptProps,
+} from "@/lib/seo/jsonld";
+import { SEO_BASE, SEO_LOCALES, hreflangForLocale } from "@/lib/seo";
 
 type Props = {
   params: Promise<{ locale: string }> | { locale: string };
@@ -18,14 +23,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const t = await getTranslations({ locale });
   const title = t("seo.servicesTitle");
   const description = t("seo.servicesDesc");
+
+  // 9-locale hreflang in metadata (memory item 25 — every page).
+  const languages: Record<string, string> = {};
+  for (const l of SEO_LOCALES) {
+    languages[hreflangForLocale(l)] = `${SEO_BASE}/${l}/services`;
+  }
+  languages["x-default"] = `${SEO_BASE}/en/services`;
+
   return {
     title,
     description,
-    alternates: { canonical: `/${locale}/services` },
+    alternates: { canonical: `${SEO_BASE}/${locale}/services`, languages },
     openGraph: {
       title,
       description,
-      url: `https://glatko.app/${locale}/services`,
+      url: `${SEO_BASE}/${locale}/services`,
       siteName: "Glatko",
       locale,
       type: "website",
@@ -38,16 +51,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     robots: { index: true, follow: true },
   };
 }
-
-const ORGANIZATION_JSON_LD = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "Glatko",
-  url: "https://glatko.app",
-  description:
-    "Montenegro's digital marketplace to post service requests, receive bids from verified professionals, and choose the best fit.",
-  areaServed: { "@type": "Country", name: "Montenegro" },
-} as const;
 
 type RootRow = {
   id: string;
@@ -159,14 +162,15 @@ export default async function ServicesPage({ params }: Props) {
     })),
   }));
 
+  const itemListSchema = generateItemListSchema(
+    rootRows.map((r) => ({ slug: r.slug, name: r.name })),
+    locale,
+    "/services",
+  );
+
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(ORGANIZATION_JSON_LD),
-        }}
-      />
+      <script {...jsonLdScriptProps(itemListSchema)} />
       <OpenSearchOnMount />
       <main className="min-h-screen bg-[#F8F6F0] dark:bg-[#0b1f23]">
         <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-24 pb-12">

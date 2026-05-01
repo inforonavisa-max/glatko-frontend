@@ -1463,6 +1463,127 @@ export async function getCategoryWithStats(slug: string) {
   };
 }
 
+// ─── G-CAT-4: SEO helpers ───
+
+interface ParentCategorySlim {
+  slug: string;
+  name: Record<string, string>;
+}
+
+/**
+ * Loaded for category detail JSON-LD: the category itself plus a slim
+ * `parent` projection so breadcrumbs can include the root.
+ */
+export async function getCategoryBySlug(slug: string) {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("glatko_service_categories")
+    .select(
+      "id, slug, parent_id, name, description, hero_image_url, seasonal, parent:parent_id (slug, name)",
+    )
+    .eq("slug", slug)
+    .eq("is_active", true)
+    .single();
+
+  if (error || !data) return null;
+
+  // Supabase query builder may inline the FK relation as either an object
+  // or a single-element array depending on schema; normalise both.
+  const parentRel = data.parent as
+    | ParentCategorySlim
+    | ParentCategorySlim[]
+    | null;
+  const parent = Array.isArray(parentRel) ? parentRel[0] ?? null : parentRel;
+
+  return {
+    id: data.id as string,
+    slug: data.slug as string,
+    parent_id: data.parent_id as string | null,
+    name: data.name as Record<string, string>,
+    description: data.description as Record<string, string> | null,
+    hero_image_url: data.hero_image_url as string | null,
+    seasonal: data.seasonal as string | null,
+    parent_slug: parent?.slug ?? null,
+    parent_name: parent?.name ?? null,
+  };
+}
+
+/**
+ * Sub-categories of a given root, ordered by sort_order. Same shape as
+ * `getCategoryWithStats(...).children` but exported separately so SEO
+ * pages can fetch only what they need.
+ */
+export async function getSubCategories(parentId: string) {
+  const supabase = createClient();
+  const { data } = await supabase
+    .from("glatko_service_categories")
+    .select("id, slug, name, hero_image_url")
+    .eq("parent_id", parentId)
+    .eq("is_active", true)
+    .order("sort_order", { ascending: true });
+  return data ?? [];
+}
+
+/**
+ * All active categories used to drive the dynamic sitemap. Returns the
+ * minimum projection (slug, parent_id, created_at, name) so the sitemap
+ * function can `lastModified`-stamp each row. The schema has no
+ * `updated_at`, so we surface the row's creation timestamp.
+ */
+export async function getAllActiveCategories() {
+  const supabase = createClient();
+  const { data } = await supabase
+    .from("glatko_service_categories")
+    .select("id, slug, parent_id, name, created_at")
+    .eq("is_active", true);
+  return (data ?? []) as Array<{
+    id: string;
+    slug: string;
+    parent_id: string | null;
+    name: Record<string, string>;
+    created_at: string | null;
+  }>;
+}
+
+/**
+ * Distinct `location_city` values for active+verified pros that offer the
+ * given category, used as the dynamic part of `Service.areaServed` /
+ * `LocalBusiness.areaServed`. Returns [] when no verified pro is yet
+ * advertising — caller falls back to the 6 default Karadağ cities.
+ */
+export async function getCitiesServingCategory(
+  categoryId: string,
+): Promise<string[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("glatko_pro_services")
+    .select(
+      "professional:professional_id!inner(location_city, is_active, is_verified)",
+    )
+    .eq("category_id", categoryId)
+    .eq("professional.is_active", true)
+    .eq("professional.is_verified", true);
+
+  if (error || !data) return [];
+
+  const cities = new Set<string>();
+  for (const row of data as Array<{
+    professional:
+      | { location_city: string | null }
+      | Array<{ location_city: string | null }>
+      | null;
+  }>) {
+    const rel = row.professional;
+    const profile = Array.isArray(rel) ? rel[0] : rel;
+    const city = profile?.location_city;
+    if (city && typeof city === "string" && city.trim().length > 0) {
+      cities.add(city.trim());
+    }
+  }
+  return Array.from(cities);
+}
+
 export async function getSearchSuggestions(searchQuery: string, locale: string) {
   const supabase = createClient();
   const results: { type: string; label: string; slug: string }[] = [];
