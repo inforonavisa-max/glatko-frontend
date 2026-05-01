@@ -14,6 +14,29 @@ function pickName(name: Record<string, string> | null, locale: string, slug: str
   return name[locale] || name.en || slug;
 }
 
+/**
+ * Inline-fetch hero image as a base64 data URL. Satori (next/og) sometimes
+ * fails silently on cross-origin WebP `src` URLs, returning a 0-byte PNG;
+ * pre-fetching to ArrayBuffer + data URL is the documented workaround.
+ * Falls back to null on any error so the gradient-only variant renders.
+ */
+async function heroAsDataUrl(url: string | null): Promise<string | null> {
+  if (!url) return null;
+  try {
+    const res = await fetch(url, { cache: "force-cache" });
+    if (!res.ok) return null;
+    const buf = await res.arrayBuffer();
+    const bytes = new Uint8Array(buf);
+    let binary = "";
+    for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+    const b64 = btoa(binary);
+    const ct = res.headers.get("content-type") || "image/webp";
+    return `data:${ct};base64,${b64}`;
+  } catch {
+    return null;
+  }
+}
+
 export default async function CategoryOG({
   params,
 }: {
@@ -25,7 +48,7 @@ export default async function CategoryOG({
   const title = category
     ? pickName(category.name, params.locale, category.slug)
     : "Glatko";
-  const heroImage = category?.hero_image_url ?? null;
+  const heroImage = await heroAsDataUrl(category?.hero_image_url ?? null);
   const seasonal = category?.seasonal ?? null;
 
   return new ImageResponse(
