@@ -1,0 +1,16 @@
+docs/
+*.md
+CLAUDE.md
+README.md
+supabase/migrations/
+.env.local
+.env.development
+.vscode/
+.idea/
+.DS_Store
+__tests__/
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+*.log
