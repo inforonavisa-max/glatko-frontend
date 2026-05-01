@@ -145,6 +145,6 @@ export default async function ServicesOG({
         </div>
       </div>
     ),
-    { ...size, fonts },
+    fonts.length > 0 ? { ...size, fonts } : { ...size },
   );
 }

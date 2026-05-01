@@ -158,6 +158,6 @@ export default async function CategoryOG({
         </div>
       </div>
     ),
-    { ...size, fonts },
+    fonts.length > 0 ? { ...size, fonts } : { ...size },
   );
 }
