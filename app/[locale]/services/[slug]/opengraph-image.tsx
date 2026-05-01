@@ -101,15 +101,13 @@ export default async function CategoryOG({
             />
           </div>
 
-          {/* Middle: localized category name (Arabic font when ar, else inherit).
-              Arabic uses weight 400 because Satori's variable-font handling
-              on Edge fails to instance non-default weight axes. */}
+          {/* Middle: localized category name (Arabic font when ar, else inherit). */}
           <div
             style={{
               display: "flex",
               color: "white",
               fontSize: 92,
-              fontWeight: isRTL ? 400 : 700,
+              fontWeight: 700,
               lineHeight: 1.05,
               letterSpacing: isRTL ? 0 : -1.5,
               maxWidth: 980,

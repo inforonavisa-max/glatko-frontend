@@ -31,33 +31,35 @@ async function fetchAndCache(
 }
 
 /**
- * Noto Naskh Arabic variable font, fetched from jsDelivr's GitHub mirror.
- * Same-origin fetch via VERCEL_URL was unreliable (silent 0-byte from
- * Satori on Edge); jsDelivr's CDN is publicly cacheable and stable.
+ * Tajawal Bold (60 KB static) for Arabic OG cards. Two earlier candidates
+ * failed:
+ *   - NotoSansArabic Variable: blew up Satori's parser
+ *     (`Cannot read properties of undefined (reading '256')`).
+ *   - NotoSansArabic-Bold static: failed with
+ *     `lookupType: 5 - substFormat: 3 is not yet supported` — Satori
+ *     can't decode its GSUB advanced contextual substitutions.
+ * Tajawal ships a much simpler GSUB table and parses cleanly. Same-origin
+ * fetch via VERCEL_URL points at the public/fonts asset on the current
+ * deployment.
  */
-const NOTO_NASKH_ARABIC_URL =
-  "https://cdn.jsdelivr.net/gh/google/fonts@main/ofl/notonaskharabic/NotoNaskhArabic%5Bwght%5D.ttf";
+const TAJAWAL_BOLD_URL =
+  "https://cdn.jsdelivr.net/gh/google/fonts@main/ofl/tajawal/Tajawal-Bold.ttf";
 
 export async function getNotoSansArabic(): Promise<ArrayBuffer> {
-  return fetchAndCache("noto-naskh-arabic", NOTO_NASKH_ARABIC_URL);
+  return fetchAndCache("tajawal-bold", TAJAWAL_BOLD_URL);
 }
 
 export interface OgFont {
   name: string;
   data: ArrayBuffer;
-  weight: 400 | 700;
+  weight: 700;
   style: "normal";
 }
 
 /**
  * Returns the font set ImageResponse needs for a given locale. Latin +
  * Cyrillic locales return [] — Satori's bundled font already covers them.
- *
- * Arabic returns the Noto Naskh Arabic variable font, declared at weight
- * 400 (the variable's default axis). Satori's variable-font handling is
- * unforgiving about non-default weight requests, so we render the Arabic
- * title at fontWeight 400 in the OG handler — visually still bold-enough
- * thanks to the 92px size, and reliable.
+ * Arabic returns the static Noto Sans Arabic Bold buffer.
  */
 export async function getFontsForLocale(locale: string): Promise<OgFont[]> {
   if (locale === "ar") {
@@ -65,7 +67,7 @@ export async function getFontsForLocale(locale: string): Promise<OgFont[]> {
       {
         name: "Noto Sans Arabic",
         data: await getNotoSansArabic(),
-        weight: 400,
+        weight: 700,
         style: "normal",
       },
     ];
