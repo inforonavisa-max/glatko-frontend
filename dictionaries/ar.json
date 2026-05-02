@@ -83,7 +83,28 @@
     "view": "عرض الخدمات",
     "allHeading": "جميع الخدمات",
     "allSubheading": "10 فئات خدمة أساسية مع محترفين موثقين",
-    "subCount": "{count, plural, =0 {لا فئات فرعية} one {# فئة فرعية} two {# فئتان فرعيتان} few {# فئات فرعية} many {# فئة فرعية} other {# فئة فرعية}}"
+    "subCount": "{count, plural, =0 {لا فئات فرعية} one {# فئة فرعية} two {# فئتان فرعيتان} few {# فئات فرعية} many {# فئة فرعية} other {# فئة فرعية}}",
+    "beauty": {
+      "title": "الجمال والعافية",
+      "description": "الشعر، الأظافر، العناية بالبشرة، التدليك والمزيد",
+      "hairSalon": "صالون شعر",
+      "manicurePedicure": "مانيكير وباديكير",
+      "facialSkincare": "العناية بالوجه",
+      "massage": "تدليك",
+      "bridalPrep": "تحضيرات العروس",
+      "laserHairRemoval": "إزالة الشعر بالليزر"
+    },
+    "moving": {
+      "title": "النقل والتنقلات",
+      "description": "نقل المنازل أو المكاتب، التغليف، التخزين والمزيد",
+      "homeMoving": "نقل المنازل",
+      "officeMoving": "نقل المكاتب",
+      "singleItem": "قطعة واحدة",
+      "packing": "تغليف",
+      "storage": "تخزين",
+      "airportTransfer": "نقل من المطار"
+    },
+    "seeAll": "عرض جميع الفئات"
   },
   "howItWorks": {
     "title": "كيف يعمل",

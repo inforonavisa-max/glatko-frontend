@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { motion } from "framer-motion";
-import { Home, Anchor } from "lucide-react";
+import { Home, Anchor, Sparkles, Truck, ArrowRight } from "lucide-react";
 import { AceternityHeroBackground } from "@/components/aceternity/hero-background";
 import { LinesGradient } from "@/components/aceternity/lines-gradient";
 import { CollisionMechanism } from "@/components/aceternity/collision-beam";
@@ -220,7 +220,7 @@ export default function LandingPageClient() {
                     </span>
                   ))}
                 </div>
-                <Link href="/services/home-services" className="text-sm font-semibold text-teal-600 hover:underline dark:text-teal-400">
+                <Link href="/services/home-cleaning" className="text-sm font-semibold text-teal-600 hover:underline dark:text-teal-400">
                   {t("categories.getQuote")} →
                 </Link>
               </SpotlightCard>
@@ -252,6 +252,71 @@ export default function LandingPageClient() {
                 </Link>
               </SpotlightCard>
             </StaggerItem>
+            <StaggerItem index={2}>
+              <SpotlightCard>
+                <div className="mb-6 flex items-center gap-4">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-teal-500/10 dark:bg-teal-500/15">
+                    <Sparkles className="h-8 w-8 text-teal-600 dark:text-teal-400" />
+                  </div>
+                  <div className="text-left">
+                    <h3 className="font-sans text-xl font-semibold text-gray-900 dark:text-white">
+                      {t("categories.beauty.title")}
+                    </h3>
+                    <p className="text-sm text-gray-500 dark:text-white/50">
+                      {t("categories.beauty.description")}
+                    </p>
+                  </div>
+                </div>
+                <div className="mb-6 flex flex-wrap gap-2">
+                  {["hairSalon", "manicurePedicure", "facialSkincare", "massage", "bridalPrep", "laserHairRemoval"].map((s) => (
+                    <span key={s} className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs text-gray-600 dark:border-white/10 dark:bg-white/5 dark:text-white/60">
+                      {t(`categories.beauty.${s}`)}
+                    </span>
+                  ))}
+                </div>
+                <Link href="/services/beauty-wellness" className="text-sm font-semibold text-teal-600 hover:underline dark:text-teal-400">
+                  {t("categories.getQuote")} →
+                </Link>
+              </SpotlightCard>
+            </StaggerItem>
+            <StaggerItem index={3}>
+              <SpotlightCard>
+                <div className="mb-6 flex items-center gap-4">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-teal-500/10 dark:bg-teal-500/15">
+                    <Truck className="h-8 w-8 text-teal-600 dark:text-teal-400" />
+                  </div>
+                  <div className="text-left">
+                    <h3 className="font-sans text-xl font-semibold text-gray-900 dark:text-white">
+                      {t("categories.moving.title")}
+                    </h3>
+                    <p className="text-sm text-gray-500 dark:text-white/50">
+                      {t("categories.moving.description")}
+                    </p>
+                  </div>
+                </div>
+                <div className="mb-6 flex flex-wrap gap-2">
+                  {["homeMoving", "officeMoving", "singleItem", "packing", "storage", "airportTransfer"].map((s) => (
+                    <span key={s} className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs text-gray-600 dark:border-white/10 dark:bg-white/5 dark:text-white/60">
+                      {t(`categories.moving.${s}`)}
+                    </span>
+                  ))}
+                </div>
+                <Link href="/services/moving-transport" className="text-sm font-semibold text-teal-600 hover:underline dark:text-teal-400">
+                  {t("categories.getQuote")} →
+                </Link>
+              </SpotlightCard>
+            </StaggerItem>
+          </div>
+          {/* See-all CTA — categories.title section now shows 4 featured
+              cards; the full 92-row grid lives at /services. */}
+          <div className="mt-12 text-center">
+            <Link
+              href="/services"
+              className="inline-flex items-center gap-2 rounded-xl border border-teal-200 bg-white px-6 py-3 text-sm font-semibold text-teal-700 shadow-sm transition hover:border-teal-300 hover:bg-teal-50 dark:border-teal-500/30 dark:bg-white/5 dark:text-teal-300 dark:hover:bg-teal-500/10"
+            >
+              {t("categories.seeAll")}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
         </div>
       </section>

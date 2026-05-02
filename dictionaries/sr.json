@@ -83,7 +83,28 @@
     "view": "Погледај услуге",
     "allHeading": "Све услуге",
     "allSubheading": "10 кључних категорија услуга са проверenim професионалцима",
-    "subCount": "{count, plural, =0 {нема поткатегорија} one {# поткатегорија} other {# поткатегорија}}"
+    "subCount": "{count, plural, =0 {нема поткатегорија} one {# поткатегорија} other {# поткатегорија}}",
+    "beauty": {
+      "title": "Лепота и Wellness",
+      "description": "Фризура, нокти, нега коже, масажа и још више",
+      "hairSalon": "Фризерски салон",
+      "manicurePedicure": "Маникир и педикир",
+      "facialSkincare": "Нега лица",
+      "massage": "Масажа",
+      "bridalPrep": "Невестинска припрема",
+      "laserHairRemoval": "Ласерско уклањање длачица"
+    },
+    "moving": {
+      "title": "Селидбе и Транспорт",
+      "description": "Селидбе стана или канцеларије, паковање, складиштење и још",
+      "homeMoving": "Селидба куће",
+      "officeMoving": "Селидба канцеларије",
+      "singleItem": "Појединачни комад",
+      "packing": "Паковање",
+      "storage": "Складиштење",
+      "airportTransfer": "Аеродромски трансфер"
+    },
+    "seeAll": "Погледај све категорије"
   },
   "howItWorks": {
     "title": "Kako funkcioniše",

@@ -83,7 +83,28 @@
     "view": "Dienste ansehen",
     "allHeading": "Alle Dienstleistungen",
     "allSubheading": "10 wesentliche Servicekategorien mit verifizierten Fachkräften",
-    "subCount": "{count, plural, =0 {keine Unterkategorien} one {# Unterkategorie} other {# Unterkategorien}}"
+    "subCount": "{count, plural, =0 {keine Unterkategorien} one {# Unterkategorie} other {# Unterkategorien}}",
+    "beauty": {
+      "title": "Beauty & Wellness",
+      "description": "Haare, Nägel, Hautpflege, Massage und mehr",
+      "hairSalon": "Friseur",
+      "manicurePedicure": "Maniküre & Pediküre",
+      "facialSkincare": "Gesichts- & Hautpflege",
+      "massage": "Massage",
+      "bridalPrep": "Brautstyling",
+      "laserHairRemoval": "Laser-Haarentfernung"
+    },
+    "moving": {
+      "title": "Umzug & Transport",
+      "description": "Privat- oder Büroumzüge, Verpacken, Lagerung und mehr",
+      "homeMoving": "Privatumzug",
+      "officeMoving": "Büroumzug",
+      "singleItem": "Einzelstück",
+      "packing": "Verpacken",
+      "storage": "Einlagerung",
+      "airportTransfer": "Flughafentransfer"
+    },
+    "seeAll": "Alle Kategorien anzeigen"
   },
   "howItWorks": {
     "title": "So funktioniert's",
