@@ -1463,14 +1463,144 @@
   "becomePro": {
     "whyJoin": {
       "title": "Zašto Glatko?",
-      "card1": "Pool klijenata",
-      "card1Desc": "Klijenti u Budvi, Kotoru i Tivatu",
+      "card1": "Baza klijenata",
+      "card1Desc": "Dosegnite klijente u Budvi, Kotoru i Tivtu",
       "card2": "Fleksibilan rad",
-      "card2Desc": "Sami određujete raspored",
-      "card3": "Sigurna platforma",
+      "card2Desc": "Sami postavljate raspored",
+      "card3": "Pouzdana platforma",
       "card3Desc": "Provjereni klijenti i transparentne ponude",
       "card4": "9 jezika",
-      "card4Desc": "Komunicirajte na više jezika"
+      "card4Desc": "Povežite se s klijentima na više jezika"
+    },
+    "submit": "Pošalji prijavu",
+    "draftRestoredBanner": "Vratili smo vašu skicu. Možete nastaviti ili krenuti iznova.",
+    "startFresh": "Kreni iznova",
+    "dismiss": "Zatvori",
+    "optional": "opciono",
+    "steps": {
+      "personalInfo": "Lični podaci",
+      "serviceAreas": "Oblasti usluge",
+      "applicationQuestions": "Pitanja prijave",
+      "portfolio": "Portfolio i cijene",
+      "documents": "Dokumenti",
+      "review": "Pregled i slanje"
+    },
+    "personalInfo": {
+      "premiumFieldsTitle": "Premium polja profila (više vidljivosti)",
+      "serviceRadiusLabel": "Radijus usluge",
+      "serviceRadiusHint": "Koliko daleko od baze putujete za poslove?",
+      "insuranceLabel": "Status osiguranja",
+      "insurance": {
+        "none": "Nema",
+        "private": "Privatno",
+        "business": "Poslovno",
+        "professional": "Profesionalno"
+      },
+      "introVideoLabel": "URL uvodnog videa",
+      "introVideoHint": "Kratak YouTube/Vimeo link gradi povjerenje klijenata."
+    },
+    "serviceAreas": {
+      "limitsHint": "Najviše {maxRoots} glavnih kategorija, po {maxSubs} potkategorija.",
+      "maxRootsExceeded": "Maksimum {max} glavnih kategorija.",
+      "maxSubsExceeded": "Maksimum {max} potkategorija po glavnoj."
+    },
+    "applicationQuestions": {
+      "subtitle": "Nekoliko ciljanih pitanja pomaže klijentima da nađu pravog profesionalca.",
+      "noQuestions": "Nema dodatnih pitanja za izabrane kategorije."
+    },
+    "portfolio": {
+      "subtitle": "Pokažite svoje najbolje radove i postavite kako naplaćujete.",
+      "galleryTitle": "Galerija portfolija",
+      "title": "Galerija portfolija",
+      "hint": "Do {max} slika. JPEG/PNG/WebP, do 10 MB svaka.",
+      "dropHere": "Prevucite slike ili kliknite za upload",
+      "supportedTypes": "JPEG, PNG, WebP — do 10 MB",
+      "emptyState": "Nema slika — portfolio je najjači signal povjerenja.",
+      "invalidType": "{name} nije podržan tip slike",
+      "tooLarge": "{name} prelazi limit od 10 MB",
+      "maxFilesExceeded": "Možete uploadovati do {max} slika.",
+      "uploadFailed": "Upload {name} neuspio: {error}",
+      "deleteFailed": "Brisanje neuspjelo: {error}",
+      "remove": "Ukloni sliku",
+      "pricingTitle": "Model cijena",
+      "pricingHint": "Kako obično naplaćujete? Po kategoriji možete kasnije promijeniti.",
+      "pricingTypeLabel": "Tip cijene",
+      "pricingType": {
+        "hourly": "Po satu",
+        "fixed": "Fiksna cijena",
+        "per_unit": "Po jedinici"
+      },
+      "baseRateLabel": "Osnovna cijena",
+      "baseRateHint": {
+        "hourly": "Prosječna cijena po satu.",
+        "fixed": "Tipičan ukupan iznos projekta.",
+        "per_unit": "Cijena po jedinici (npr. m², soba, kg)."
+      }
+    },
+    "documents": {
+      "subtitle": "Otpremite licencu, osiguranje i poreske dokumente (privatno, samo admin).",
+      "uploadTitle": "Dokumenti firme",
+      "title": "Dokumenti firme",
+      "hint": "Do {max} fajlova. PDF/JPEG/PNG, do 5 MB svaki.",
+      "uploadButton": "Otpremi dokument",
+      "typeLabel": "Tip dokumenta",
+      "types": {
+        "license": "Licenca",
+        "insurance": "Osiguranje",
+        "tax_cert": "Poreski sertifikat",
+        "id_proof": "Lična karta",
+        "other": "Drugo"
+      },
+      "uploading": "Otpremanje…",
+      "emptyState": "Nema dokumenata — njihovo dodavanje ubrzava verifikaciju.",
+      "privacyNote": "Dokumenti su u privatnom prostoru — samo vi i Glatko admini ih vidite.",
+      "invalidType": "{name} nije podržan tip fajla",
+      "tooLarge": "{name} prelazi limit od 5 MB",
+      "maxFilesExceeded": "Možete otpremiti do {max} dokumenata.",
+      "uploadFailed": "Otpremanje {name} neuspjelo: {error}",
+      "deleteFailed": "Brisanje neuspjelo: {error}",
+      "remove": "Ukloni dokument"
+    },
+    "review": {
+      "subtitle": "Bacite još jedan pogled prije slanja.",
+      "moderationNotice": "Nakon slanja, naš tim provjerava prijavu u 1-2 radna dana.",
+      "personalInfo": "Lični podaci",
+      "businessName": "Naziv firme",
+      "city": "Grad",
+      "experience": "Iskustvo",
+      "years": "godina",
+      "languages": "Jezici",
+      "bio": "O meni",
+      "notSet": "—",
+      "servicesTitle": "Izabrane usluge",
+      "primary": "Primarno",
+      "applicationQuestionsTitle": "Odgovori prijave",
+      "answersCount": "Popunjenih odgovora",
+      "portfolioTitle": "Portfolio",
+      "imagesCount": "Slika",
+      "pricingTitle": "Model cijena",
+      "documentsTitle": "Dokumenti",
+      "documentsCount": "Fajlova"
+    },
+    "completionGauge": {
+      "title": "Popunjenost profila",
+      "subtitleHigh": "Odlično — ističete se kod klijenata.",
+      "subtitleMid": "Dobar početak — još par polja i pređete prosjek.",
+      "subtitleLow": "Nastavite — popunjeni profili dobijaju 3× više zahtjeva.",
+      "compactTitle": "Profil popunjen {score}%",
+      "ariaLabel": "Popunjenost profila {score}%",
+      "missingTitle": "Povećajte rezultat dodavanjem",
+      "missing": {
+        "bio": "Biografija od 100+ karaktera",
+        "portfolio": "Najmanje 3 slike portfolija",
+        "documents": "Dokumenta firme (licenca/osiguranje)",
+        "introVideo": "Uvodni video",
+        "hourlyRate": "Vaša cijena po satu"
+      }
+    },
+    "success": {
+      "title": "Prijava poslata",
+      "message": "Primili smo vašu prijavu. Naš tim će je provjeriti u 1-2 radna dana i poslati rezultat na email."
     }
   },
   "validation": {
