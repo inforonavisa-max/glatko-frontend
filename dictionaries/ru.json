@@ -1965,6 +1965,11 @@
     "sendMessage": "Отправить сообщение",
     "openingThread": "Открытие...",
     "openThreadError": "Не удалось открыть переписку. Попробуйте ещё раз.",
-    "viewThread": "Открыть переписку"
+    "viewThread": "Открыть переписку",
+    "showOriginal": "Показать оригинал",
+    "hideOriginal": "Скрыть оригинал",
+    "translatedFrom": "Переведено с",
+    "translating": "Перевод...",
+    "translationFailed": "Перевод недоступен"
   }
 }

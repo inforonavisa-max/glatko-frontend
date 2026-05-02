@@ -1965,6 +1965,11 @@
     "sendMessage": "Send Message",
     "openingThread": "Opening...",
     "openThreadError": "Could not open thread. Please try again.",
-    "viewThread": "View Thread"
+    "viewThread": "View Thread",
+    "showOriginal": "Show original",
+    "hideOriginal": "Hide original",
+    "translatedFrom": "Translated from",
+    "translating": "Translating...",
+    "translationFailed": "Translation unavailable"
   }
 }

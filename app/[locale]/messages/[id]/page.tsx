@@ -50,7 +50,9 @@ export default async function MessagesThreadPage({ params }: Props) {
 
   const { data: messages } = await supabase
     .from("glatko_thread_messages")
-    .select("id, sender_id, body, body_locale, read_at, created_at")
+    .select(
+      "id, sender_id, body, body_locale, translated_body, translated_locale, read_at, created_at",
+    )
     .eq("thread_id", id)
     .order("created_at", { ascending: true })
     .limit(200);

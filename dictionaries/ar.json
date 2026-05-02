@@ -1965,6 +1965,11 @@
     "sendMessage": "إرسال رسالة",
     "openingThread": "جارٍ الفتح...",
     "openThreadError": "تعذر فتح المحادثة. الرجاء المحاولة مرة أخرى.",
-    "viewThread": "فتح المحادثة"
+    "viewThread": "فتح المحادثة",
+    "showOriginal": "إظهار الأصل",
+    "hideOriginal": "إخفاء الأصل",
+    "translatedFrom": "تُرجم من",
+    "translating": "جارٍ الترجمة...",
+    "translationFailed": "الترجمة غير متاحة"
   }
 }
