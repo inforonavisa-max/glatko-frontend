@@ -1,6 +1,6 @@
 import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { Link } from "@/i18n/navigation";
 import { ArrowRight, Users, Star } from "lucide-react";
@@ -96,7 +96,21 @@ export default async function CategoryDetailPage({ params }: Props) {
   const t = await getTranslations();
 
   const category = await getCategoryBySlug(slug);
-  if (!category) notFound();
+  if (!category) {
+    // Hot-fix safety net (PR #25): some legacy slugs (e.g. home-services)
+    // were deactivated when their parent split into smaller categories.
+    // Send the user to the all-categories index instead of a hard 404 so
+    // stale outbound links from email / social / older pages still land
+    // somewhere useful. Keep notFound() for genuinely unknown slugs.
+    const RETIRED_SLUG_REDIRECTS: Record<string, string> = {
+      "home-services": "home-cleaning",
+    };
+    const replacement = RETIRED_SLUG_REDIRECTS[slug];
+    if (replacement) {
+      redirect(`/${locale}/services/${replacement}`);
+    }
+    notFound();
+  }
 
   // Parallel: sub-categories, pro count, cities for areaServed, top pros.
   const [subCategories, stats, citiesFromPros, { professionals }] =
