@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/supabase/server";
+import { getSiteUrl } from "@/lib/email/resend";
 
 interface ActionResult<T = unknown> {
   success: boolean;
@@ -70,10 +71,32 @@ export async function sendMessage(input: {
     return { success: false, error: error.message };
   }
 
+  const messageId = data.id as string;
+
+  // G-MSG-2: fire-and-forget gpt-4o translation. The endpoint is
+  // CRON_SECRET-gated so we authenticate by passing the same secret.
+  // Awaiting would push send latency by 2-4s; the recipient sees the
+  // raw body until Realtime delivers the translation a moment later.
+  const cronSecret = process.env.CRON_SECRET;
+  if (cronSecret) {
+    const baseUrl = getSiteUrl();
+    void fetch(`${baseUrl}/api/messages/translate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${cronSecret}`,
+      },
+      body: JSON.stringify({ message_id: messageId }),
+      cache: "no-store",
+    }).catch((err) => {
+      console.error("[GLATKO:translate] background dispatch failed", err);
+    });
+  }
+
   revalidatePath(`/[locale]/messages/${input.thread_id}`, "page");
   revalidatePath(`/[locale]/messages`, "page");
 
-  return { success: true, data: { message_id: data.id as string } };
+  return { success: true, data: { message_id: messageId } };
 }
 
 export async function markThreadAsRead(thread_id: string): Promise<ActionResult> {

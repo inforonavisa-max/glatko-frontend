@@ -9,7 +9,7 @@ import {
 } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { ArrowLeft, Send } from "lucide-react";
+import { ArrowLeft, Send, Sparkles } from "lucide-react";
 import { createClient } from "@/supabase/browser";
 import { sendMessage } from "@/app/[locale]/messages/actions";
 
@@ -18,6 +18,8 @@ interface ThreadMessage {
   sender_id: string;
   body: string;
   body_locale: string | null;
+  translated_body: string | null;
+  translated_locale: string | null;
   read_at: string | null;
   created_at: string;
 }
@@ -75,7 +77,8 @@ export function ChatBox({
     return () => cancelAnimationFrame(id);
   }, [messages.length, scrollToBottom]);
 
-  // Realtime subscription — postgres_changes INSERT on glatko_thread_messages
+  // Realtime subscription — both INSERT (new messages) and UPDATE (G-MSG-2
+  // translated_body backfill from /api/messages/translate completing).
   useEffect(() => {
     const channel = supabase
       .channel(`thread:${threadId}`)
@@ -93,12 +96,35 @@ export function ChatBox({
             if (prev.some((m) => m.id === newMsg.id)) return prev;
             return [...prev, newMsg];
           });
-          // Mark as read if it's from the counterpart
           if (newMsg.sender_id !== currentUserId) {
             void supabase.rpc("glatko_mark_thread_read", {
               p_thread_id: threadId,
             });
           }
+        },
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "glatko_thread_messages",
+          filter: `thread_id=eq.${threadId}`,
+        },
+        (payload) => {
+          const updated = payload.new as ThreadMessage;
+          setMessages((prev) =>
+            prev.map((m) =>
+              m.id === updated.id
+                ? {
+                    ...m,
+                    translated_body: updated.translated_body,
+                    translated_locale: updated.translated_locale,
+                    read_at: updated.read_at,
+                  }
+                : m,
+            ),
+          );
         },
       )
       .subscribe();
@@ -123,6 +149,8 @@ export function ChatBox({
       sender_id: currentUserId,
       body: trimmed,
       body_locale: locale,
+      translated_body: null,
+      translated_locale: null,
       read_at: null,
       created_at: new Date().toISOString(),
     };
@@ -209,39 +237,14 @@ export function ChatBox({
             <p className="text-sm">{t("messaging.threadEmptyHint")}</p>
           </div>
         ) : (
-          messages.map((m) => {
-            const mine = m.sender_id === currentUserId;
-            return (
-              <div
-                key={m.id}
-                className={`flex ${mine ? "justify-end" : "justify-start"}`}
-              >
-                <div
-                  className={`max-w-[75%] rounded-2xl px-4 py-2 ${
-                    mine
-                      ? "bg-blue-600 text-white rounded-br-sm"
-                      : "bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded-bl-sm border border-gray-200 dark:border-neutral-700"
-                  }`}
-                >
-                  <p className="whitespace-pre-wrap break-words text-sm">
-                    {m.body}
-                  </p>
-                  <div
-                    className={`flex items-center gap-1 mt-1 text-xs ${
-                      mine
-                        ? "text-blue-100/80 justify-end"
-                        : "text-gray-500 dark:text-neutral-500"
-                    }`}
-                  >
-                    <span>{formatTime(m.created_at, locale)}</span>
-                    {mine && m.read_at && (
-                      <span aria-label={t("messaging.read")}>· ✓✓</span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            );
-          })
+          messages.map((m) => (
+            <MessageBubble
+              key={m.id}
+              msg={m}
+              mine={m.sender_id === currentUserId}
+              locale={locale}
+            />
+          ))
         )}
       </div>
 
@@ -289,6 +292,95 @@ export function ChatBox({
           {t("messaging.threadInactive")}
         </div>
       )}
+    </div>
+  );
+}
+
+interface BubbleProps {
+  msg: ThreadMessage;
+  mine: boolean;
+  locale: string;
+}
+
+function MessageBubble({ msg, mine, locale }: BubbleProps) {
+  const t = useTranslations();
+  const [showOriginal, setShowOriginal] = useState(false);
+
+  // Translation visible when: counterpart sent it, body was translated to
+  // a different locale, and translated text is set. Self-sent messages
+  // and same-locale skips show only the original.
+  const hasTranslation =
+    !mine &&
+    Boolean(msg.translated_body) &&
+    Boolean(msg.translated_locale) &&
+    msg.translated_locale !== msg.body_locale;
+
+  const primaryText = hasTranslation
+    ? (msg.translated_body as string)
+    : msg.body;
+
+  return (
+    <div className={`flex ${mine ? "justify-end" : "justify-start"}`}>
+      <div
+        className={`max-w-[75%] rounded-2xl px-4 py-2 ${
+          mine
+            ? "bg-blue-600 text-white rounded-br-sm"
+            : "bg-white dark:bg-neutral-800 text-gray-900 dark:text-white rounded-bl-sm border border-gray-200 dark:border-neutral-700"
+        }`}
+      >
+        <p className="whitespace-pre-wrap break-words text-sm">{primaryText}</p>
+
+        {hasTranslation && (
+          <>
+            {showOriginal && (
+              <p
+                className={`mt-1 whitespace-pre-wrap break-words text-sm italic border-t pt-1 ${
+                  mine
+                    ? "border-blue-300/40 text-blue-50/90"
+                    : "border-gray-200 dark:border-neutral-700 text-gray-600 dark:text-neutral-400"
+                }`}
+              >
+                {msg.body}
+              </p>
+            )}
+            <div
+              className={`flex items-center gap-2 mt-1 text-[11px] ${
+                mine ? "text-blue-100/80" : "text-gray-500 dark:text-neutral-500"
+              }`}
+            >
+              <span className="inline-flex items-center gap-1">
+                <Sparkles className="h-3 w-3" />
+                {t("messaging.translatedFrom")}{" "}
+                <span className="uppercase">
+                  {(msg.body_locale ?? "").toUpperCase()}
+                </span>
+              </span>
+              <button
+                type="button"
+                onClick={() => setShowOriginal((v) => !v)}
+                className="underline hover:opacity-100 opacity-80"
+              >
+                {showOriginal
+                  ? t("messaging.hideOriginal")
+                  : t("messaging.showOriginal")}
+              </button>
+            </div>
+          </>
+        )}
+
+        <div
+          className={`flex items-center gap-1 mt-1 text-xs ${
+            mine
+              ? "text-blue-100/80 justify-end"
+              : "text-gray-500 dark:text-neutral-500"
+          }`}
+        >
+          <span>{formatTime(msg.created_at, locale)}</span>
+          {mine && msg.read_at && (
+            <span aria-label={t("messaging.read")}>· ✓✓</span>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
