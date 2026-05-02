@@ -11,7 +11,6 @@ import {
   MapPin,
   MessageCircle,
   Phone,
-  ShieldCheck,
   Star,
   Eye,
 } from "lucide-react";
@@ -22,6 +21,11 @@ import type { Locale } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 import { getProfessionalProfile, getPublishedReviews, calculateTrustBadges } from "@/lib/supabase/glatko.server";
 import { TrustBadge } from "@/components/glatko/trust/TrustBadge";
+import { VerifiedBadgeWithProof } from "@/components/glatko/verification/VerifiedBadgeWithProof";
+import type {
+  VerificationData,
+  VerificationDoc,
+} from "@/components/glatko/verification/VerificationProofModal";
 import { ReviewSection } from "@/components/glatko/review/ReviewSection";
 import { LocalBusinessSchema } from "@/components/seo/LocalBusinessSchema";
 import type { Metadata } from "next";
@@ -74,13 +78,31 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!profile) return {};
   const name = profile.business_name?.trim() || profile.profile?.full_name?.trim() || "Professional";
   const city = profile.location_city || "Montenegro";
+
+  // G-PRO-2 Faz 2: 9-locale hreflang alternates so search engines and
+  // social cards surface the language-correct provider page. Same
+  // canonical pattern as G-CAT-4 sub-category pages.
+  const baseUrl =
+    process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") || "https://glatko.app";
+  const languageAlternates: Record<string, string> = {};
+  for (const loc of routing.locales) {
+    languageAlternates[loc] = `${baseUrl}/${loc}/provider/${id}`;
+  }
+  languageAlternates["x-default"] = `${baseUrl}/en/provider/${id}`;
+
+  const canonical = `${baseUrl}/${locale}/provider/${id}`;
+
   return {
     title: `${name} — Glatko`,
     description: `${name} — verified professional in ${city}. ${profile.avg_rating.toFixed(1)}★ rating, ${profile.completed_jobs} jobs completed.`,
+    alternates: {
+      canonical,
+      languages: languageAlternates,
+    },
     openGraph: {
       title: `${name} — Glatko`,
       description: `Verified professional in ${city}. Get a quote on Glatko.`,
-      url: `https://glatko.app/${locale}/provider/${id}`,
+      url: canonical,
       siteName: "Glatko",
       locale,
       type: "profile",
@@ -135,6 +157,33 @@ export default async function ProviderProfilePage({ params }: PageProps) {
   const rating = profile.avg_rating;
   const fullStars = Math.min(5, Math.round(rating));
 
+  // G-PRO-2 Faz 3: VerifiedBadgeWithProof needs the verification audit data.
+  // tier_documents lands in Faz 4 (Migration 031); fall back to [] for now
+  // so admin-side document tracking can light up later without UI churn.
+  const proAny = profile as unknown as {
+    verified_at?: string | null;
+    tier_documents?: Record<string, { verified?: boolean; verified_at?: string }> | null;
+    verification_tier?: "basic" | "business" | "professional" | null;
+  };
+  const docMap = proAny.tier_documents ?? {};
+  const verificationData: VerificationData = {
+    verifiedAt: proAny.verified_at ?? null,
+    verifiedBy: "Glatko Trust Team",
+    tier: proAny.verification_tier ?? "basic",
+    documents: (
+      [
+        "business_registration",
+        "license",
+        "insurance",
+        "tax_certificate",
+      ] as VerificationDoc["type"][]
+    ).map((type) => ({
+      type,
+      verified: Boolean(docMap[type]?.verified),
+      verifiedAt: docMap[type]?.verified_at,
+    })),
+  };
+
   const statItems = [
     { value: profile.completed_jobs, label: t("pro.profile.completedJobs"), icon: CheckCircle },
     ...(profile.response_time_minutes != null
@@ -183,10 +232,10 @@ export default async function ProviderProfilePage({ params }: PageProps) {
                   {displayName}
                 </h1>
                 {profile.is_verified && (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-teal-500/20 bg-teal-500/10 px-2.5 py-0.5 text-xs font-medium text-teal-700 dark:text-teal-400">
-                    <ShieldCheck className="h-3.5 w-3.5" aria-hidden />
-                    {t("pro.profile.verified")}
-                  </span>
+                  <VerifiedBadgeWithProof
+                    verificationData={verificationData}
+                    size="md"
+                  />
                 )}
               </div>
 

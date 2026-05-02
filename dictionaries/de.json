@@ -1806,5 +1806,48 @@
       "byCategory": "Freigegebene Profis nach Kategorie",
       "empty": "Noch keine freigegebenen Profis."
     }
+  },
+  "verification": {
+    "verified": "Verifiziert",
+    "verifiedAt": "Verifiziert am",
+    "verifiedBy": "Verifiziert von {admin}",
+    "verifiedTooltip": "Identität, Unternehmen und Dokumente von Glatko geprüft",
+    "clickForDetails": "Klicken für Verifizierungs-Nachweis",
+    "proofTitle": "Von Glatko verifiziert",
+    "proofSubtitle": "Was wir geprüft haben, was hinterlegt ist",
+    "verifiedDocuments": "Verifizierte Dokumente",
+    "notSubmitted": "Nicht hinterlegt",
+    "whatIsVerification": "Was bedeutet Verifizierung?",
+    "documentTypes": {
+      "business_registration": "Gewerbeanmeldung",
+      "license": "Berufslizenz",
+      "insurance": "Versicherungsnachweis",
+      "tax_certificate": "Steuerbescheinigung"
+    },
+    "tier": "Stufe",
+    "tierEditorTitle": "Verifizierungsstufe",
+    "tierEditorSubtitle": "Stufe setzen und Dokument-Flags umschalten. Atomar via Admin-RPC gespeichert.",
+    "saveTier": "Stufe speichern",
+    "tierSaved": "Stufe gespeichert",
+    "tierSaveFailed": "Stufe konnte nicht gespeichert werden",
+    "currentTier": "Aktuell",
+    "nextTier": "Nächste Stufe",
+    "nextTierExplain": "Laden Sie {docs} hoch, um {tier} zu erreichen.",
+    "tierRequirementsTitle": "Anforderungen",
+    "tierRequirements": {
+      "approved": "Profil von Glatko freigegeben",
+      "business_registration": "Gewerbeanmeldung",
+      "license": "Berufslizenz / Zertifizierung",
+      "insurance": "Versicherungsnachweis"
+    },
+    "tierDescription": {
+      "basic": "Identität verifiziert, Profil vom Glatko-Team freigegeben.",
+      "business": "Gewerbeanmeldung bestätigt — eigenständige juristische Person.",
+      "professional": "Lizenziert und versichert — unser höchstes Vertrauenssignal."
+    },
+    "uploadMissingDocs": "Fehlende Dokumente hochladen",
+    "upgradeTierTitle": "Stufen-Upgrade",
+    "upgradeTierSubtitle": "Höhere Stufen erhöhen Sichtbarkeit und Kundenvertrauen. Laden Sie die fehlenden Dokumente hoch, um die nächste Stufe zu erreichen.",
+    "notApprovedYet": "Ihr Profil wird noch geprüft. Stufen-Upgrades werden nach Freigabe verfügbar."
   }
 }

@@ -1806,5 +1806,48 @@
       "byCategory": "Pro approvati per categoria",
       "empty": "Nessun pro approvato ancora."
     }
+  },
+  "verification": {
+    "verified": "Verificato",
+    "verifiedAt": "Verificato il",
+    "verifiedBy": "Verificato da {admin}",
+    "verifiedTooltip": "Identità, azienda e documenti controllati dal team Glatko",
+    "clickForDetails": "Clicca per i dettagli di verifica",
+    "proofTitle": "Verificato da Glatko",
+    "proofSubtitle": "Cosa abbiamo controllato, cosa è agli atti",
+    "verifiedDocuments": "Documenti verificati",
+    "notSubmitted": "Non agli atti",
+    "whatIsVerification": "Cosa significa verifica?",
+    "documentTypes": {
+      "business_registration": "Iscrizione camerale",
+      "license": "Licenza professionale",
+      "insurance": "Certificato assicurativo",
+      "tax_certificate": "Certificato fiscale"
+    },
+    "tier": "Livello",
+    "tierEditorTitle": "Livello di verifica",
+    "tierEditorSubtitle": "Imposta il livello e attiva i flag dei documenti verificati. Salvataggio atomico via RPC admin.",
+    "saveTier": "Salva livello",
+    "tierSaved": "Livello salvato",
+    "tierSaveFailed": "Salvataggio livello fallito",
+    "currentTier": "Attuale",
+    "nextTier": "Prossimo livello",
+    "nextTierExplain": "Carica {docs} per qualificarti come {tier}.",
+    "tierRequirementsTitle": "Requisiti",
+    "tierRequirements": {
+      "approved": "Profilo approvato da Glatko",
+      "business_registration": "Iscrizione camerale",
+      "license": "Licenza professionale / certificazione",
+      "insurance": "Certificato assicurativo"
+    },
+    "tierDescription": {
+      "basic": "Identità verificata, profilo approvato dal team Glatko.",
+      "business": "Iscrizione camerale confermata — entità giuridica indipendente.",
+      "professional": "Con licenza e assicurato — il massimo segnale di fiducia che diamo."
+    },
+    "uploadMissingDocs": "Carica documenti mancanti",
+    "upgradeTierTitle": "Upgrade di livello",
+    "upgradeTierSubtitle": "Livelli più alti aumentano visibilità e fiducia. Carica i documenti mancanti per qualificarti al prossimo livello.",
+    "notApprovedYet": "Il tuo profilo è ancora in revisione. Gli upgrade di livello si sbloccano dopo l'approvazione."
   }
 }

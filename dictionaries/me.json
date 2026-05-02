@@ -1806,5 +1806,48 @@
       "byCategory": "Odobreni profesionalci po kategoriji",
       "empty": "Još nema odobrenih profesionalaca."
     }
+  },
+  "verification": {
+    "verified": "Verifikovano",
+    "verifiedAt": "Verifikovano dana",
+    "verifiedBy": "Verifikovao {admin}",
+    "verifiedTooltip": "Identitet, firma i dokumenti pregledani od strane Glatko tima",
+    "clickForDetails": "Kliknite za detalje verifikacije",
+    "proofTitle": "Verifikovano od strane Glatka",
+    "proofSubtitle": "Šta smo provjerili, šta je u arhivi",
+    "verifiedDocuments": "Verifikovani dokumenti",
+    "notSubmitted": "Nije u arhivi",
+    "whatIsVerification": "Šta znači verifikacija?",
+    "documentTypes": {
+      "business_registration": "Registracija firme",
+      "license": "Profesionalna licenca",
+      "insurance": "Polisa osiguranja",
+      "tax_certificate": "Poreski sertifikat"
+    },
+    "tier": "Nivo",
+    "tierEditorTitle": "Nivo verifikacije",
+    "tierEditorSubtitle": "Postavite nivo i prebacite oznake verifikacije po dokumentu. Atomski sačuvano preko admin RPC-a.",
+    "saveTier": "Sačuvaj nivo",
+    "tierSaved": "Nivo sačuvan",
+    "tierSaveFailed": "Nije moguće sačuvati nivo",
+    "currentTier": "Trenutni",
+    "nextTier": "Sljedeći nivo",
+    "nextTierExplain": "Otpremi {docs} da bi se kvalifikovao za {tier}.",
+    "tierRequirementsTitle": "Uslovi",
+    "tierRequirements": {
+      "approved": "Profil odobren od Glatka",
+      "business_registration": "Dokument o registraciji firme",
+      "license": "Profesionalna licenca / sertifikat",
+      "insurance": "Polisa osiguranja"
+    },
+    "tierDescription": {
+      "basic": "Identitet verifikovan, profil odobren od strane Glatko tima.",
+      "business": "Registracija firme potvrđena — nezavisno pravno lice.",
+      "professional": "Licenciran i osiguran — najviši signal povjerenja koji dajemo."
+    },
+    "uploadMissingDocs": "Otpremi dokumenta koja nedostaju",
+    "upgradeTierTitle": "Unapređenje nivoa",
+    "upgradeTierSubtitle": "Viši nivoi povećavaju vašu vidljivost i povjerenje klijenata. Otpremite dokumenta koja nedostaju da biste se kvalifikovali za sljedeći nivo.",
+    "notApprovedYet": "Vaš profil je još uvijek u pregledu. Unapređenje nivoa otključava se nakon odobrenja."
   }
 }

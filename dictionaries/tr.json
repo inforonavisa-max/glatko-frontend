@@ -1806,5 +1806,48 @@
       "byCategory": "Kategoriye göre onaylı pro",
       "empty": "Henüz onaylanmış pro yok."
     }
+  },
+  "verification": {
+    "verified": "Doğrulandı",
+    "verifiedAt": "Doğrulanma tarihi",
+    "verifiedBy": "Doğrulayan: {admin}",
+    "verifiedTooltip": "Kimlik, işletme ve belgeler Glatko ekibi tarafından kontrol edildi",
+    "clickForDetails": "Doğrulama detayları için tıkla",
+    "proofTitle": "Glatko tarafından doğrulandı",
+    "proofSubtitle": "Neyi kontrol ettik, neler dosyada var",
+    "verifiedDocuments": "Doğrulanmış belgeler",
+    "notSubmitted": "Dosyada yok",
+    "whatIsVerification": "Doğrulama ne anlama gelir?",
+    "documentTypes": {
+      "business_registration": "İşletme tescil belgesi",
+      "license": "Mesleki lisans",
+      "insurance": "Sigorta belgesi",
+      "tax_certificate": "Vergi belgesi"
+    },
+    "tier": "Seviye",
+    "tierEditorTitle": "Doğrulama seviyesi",
+    "tierEditorSubtitle": "Seviyeyi seç ve belge başına doğrulanmış işaretlerini değiştir. Admin RPC ile atomik kaydedilir.",
+    "saveTier": "Seviyeyi kaydet",
+    "tierSaved": "Seviye kaydedildi",
+    "tierSaveFailed": "Seviye kaydedilemedi",
+    "currentTier": "Mevcut",
+    "nextTier": "Sonraki seviye",
+    "nextTierExplain": "{tier} seviyesi için {docs} yükle.",
+    "tierRequirementsTitle": "Gereksinimler",
+    "tierRequirements": {
+      "approved": "Glatko tarafından onaylanmış profil",
+      "business_registration": "İşletme tescil belgesi",
+      "license": "Mesleki lisans / sertifikasyon",
+      "insurance": "Sigorta belgesi"
+    },
+    "tierDescription": {
+      "basic": "Kimlik doğrulanmış, profil Glatko ekibi tarafından onaylanmış.",
+      "business": "İşletme tescili teyit edilmiş — bağımsız tüzel kişilik.",
+      "professional": "Lisanslı ve sigortalı — verdiğimiz en yüksek güven işareti."
+    },
+    "uploadMissingDocs": "Eksik belgeleri yükle",
+    "upgradeTierTitle": "Seviye yükseltme",
+    "upgradeTierSubtitle": "Daha yüksek seviyeler görünürlüğünü ve müşteri güvenini artırır. Sonraki seviye için eksik belgeleri aşağıdan yükle.",
+    "notApprovedYet": "Profilin hâlâ inceleme aşamasında. Seviye yükseltmeleri onaylandıktan sonra açılır."
   }
 }

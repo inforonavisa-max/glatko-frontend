@@ -140,3 +140,97 @@ export async function updateProfessionalStatus(
 
   return result;
 }
+
+export type VerificationTier = "basic" | "business" | "professional";
+
+export interface TierDocsInput {
+  business_registration?: boolean;
+  license?: boolean;
+  insurance?: boolean;
+  tax_certificate?: boolean;
+}
+
+interface SetTierResult {
+  success: boolean;
+  error?: string;
+}
+
+/**
+ * G-PRO-2 Faz 4 — Admin tier setter.
+ *
+ * Calls glatko_admin_set_tier RPC to flip the pro's verification_tier
+ * and update the per-document tier_documents JSONB in one go. Admin
+ * gate is enforced both here (isAdminEmail) and in the RPC (is_admin()).
+ *
+ * docs argument is sparse — only the verified flags caller wants to
+ * change. Existing tier_documents JSONB is the merge base; passing
+ * undefined for a doc keeps the current state.
+ */
+export async function adminSetProTier(
+  professionalId: string,
+  tier: VerificationTier,
+  docs: TierDocsInput,
+): Promise<SetTierResult> {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!isAdminEmail(user?.email)) {
+    return { success: false, error: "Unauthorized" };
+  }
+
+  const admin = createAdminClient();
+
+  // Read existing tier_documents to merge (sparse update)
+  const { data: existing } = await admin
+    .from("glatko_professional_profiles")
+    .select("tier_documents")
+    .eq("id", professionalId)
+    .maybeSingle();
+
+  const current = (existing?.tier_documents ?? {}) as Record<
+    string,
+    { verified?: boolean; verified_at?: string; admin?: string }
+  >;
+
+  const adminLabel = user?.email ?? "admin";
+  const nowIso = new Date().toISOString();
+  const merged: Record<
+    string,
+    { verified: boolean; verified_at?: string; admin?: string }
+  > = { ...current } as Record<
+    string,
+    { verified: boolean; verified_at?: string; admin?: string }
+  >;
+
+  for (const docType of [
+    "business_registration",
+    "license",
+    "insurance",
+    "tax_certificate",
+  ] as const) {
+    if (typeof docs[docType] === "boolean") {
+      merged[docType] = {
+        verified: docs[docType] as boolean,
+        verified_at: docs[docType] ? nowIso : undefined,
+        admin: docs[docType] ? adminLabel : undefined,
+      };
+    }
+  }
+
+  const { data, error } = await admin.rpc("glatko_admin_set_tier", {
+    p_professional_id: professionalId,
+    p_tier: tier,
+    p_documents: merged,
+  });
+
+  if (error) {
+    return { success: false, error: error.message };
+  }
+
+  if (data === false) {
+    return { success: false, error: "Pro not found" };
+  }
+
+  return { success: true };
+}
