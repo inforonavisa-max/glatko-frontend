@@ -456,6 +456,45 @@
       "primary": "Hauptleistung",
       "ctaTitle": "Brauchen Sie diese Dienstleistung?",
       "ctaDesc": "Fordern Sie ein Angebot von diesem Profi an"
+    },
+    "leads": {
+      "title": "Eingehende Anfragen",
+      "subtitle": "Algorithmisch passende Anfragen von Kunden in Ihrer Region",
+      "emptyTitle": "Noch keine Anfragen",
+      "emptyBody": "Neue passende Anfragen erscheinen hier. Stellen Sie sicher, dass Ihr Profil vollständig ist und Sie umliegende Städte abdecken.",
+      "primaryMatch": "Top-3-Match",
+      "primaryMatchTooltip": "Sie sind unter den ersten 3 benachrichtigten Profis — geben Sie schnell ein Angebot ab.",
+      "waitlistMatch": "Warteliste",
+      "waitlistMatchTooltip": "Sie wurden aktiviert, nachdem die Top 3 die Anfrage nicht innerhalb von 30 Minuten erfüllt haben.",
+      "match": "Übereinstimmung",
+      "matchScoreTooltip": "Gesamtpunktzahl aus Entfernung, Profilvollständigkeit, Antwortgeschwindigkeit, Bewertung und Preisgestaltung.",
+      "urgency": {
+        "asap": "Sofort",
+        "this_week": "Diese Woche",
+        "flexible": "Flexibel",
+        "specific_date": "Bestimmtes Datum"
+      },
+      "sendQuote": "Angebot senden",
+      "quoteAlreadySent": "Angebot gesendet",
+      "requestNotActive": "Anfrage geschlossen",
+      "sendQuoteTitle": "Ihr Angebot senden",
+      "priceLabel": "Ihr Preis (EUR)",
+      "pricingModelLabel": "Preismodell",
+      "pricingModel": {
+        "hourly": "Stundensatz",
+        "fixed": "Festpreis",
+        "per_unit": "Pro Einheit",
+        "estimate": "Kostenvoranschlag"
+      },
+      "messageLabel": "Ihre Nachricht an den Kunden",
+      "messagePlaceholder": "Stellen Sie sich vor, erläutern Sie Ihre Vorgehensweise und stellen Sie ggf. klärende Fragen.",
+      "messageMin": "Zeichen mindestens",
+      "messageMinError": "Die Nachricht muss mindestens 10 Zeichen lang sein.",
+      "priceRequired": "Preis ist erforderlich und muss größer als null sein.",
+      "cancel": "Abbrechen",
+      "submitQuote": "Angebot absenden",
+      "submitting": "Wird gesendet...",
+      "submitError": "Angebot konnte nicht gesendet werden. Bitte versuchen Sie es erneut."
     }
   },
   "admin": {
@@ -1881,5 +1920,30 @@
     "quoteValidationPriceRequired": "Preis ist erforderlich.",
     "quoteValidationMessageMin": "Nachricht muss mindestens 10 Zeichen lang sein.",
     "quoteValidationMessageMax": "Nachricht darf höchstens 5000 Zeichen lang sein."
+  },
+  "customer": {
+    "quotes": {
+      "budget": "Budget",
+      "waitingMoreQuotes": "Weitere Angebote sind unterwegs",
+      "waitingTimer": "Verbleibende Zeit",
+      "waitlistActivated": "Wir haben zusätzliche Profis aktiviert, damit Sie tolle Optionen erhalten.",
+      "quotesReceived": "Erhaltene Angebote",
+      "quotesSortedByPrice": "Nach Preis sortiert (niedrigster zuerst).",
+      "noQuotesYet": "Angebote sind unterwegs",
+      "noQuotesYetBody": "Die Profis in Ihrer Region wurden benachrichtigt. Neue Angebote erscheinen hier.",
+      "bestPrice": "Bester Preis",
+      "foundingTooltip": "Gründungsanbieter — Early Adopter mit verlängerter Hervorhebung.",
+      "completedJobs": "abgeschlossene Aufträge",
+      "pricingModel": {
+        "hourly": "pro Stunde",
+        "fixed": "Festpreis",
+        "per_unit": "pro Einheit",
+        "estimate": "Kostenvoranschlag"
+      },
+      "whatsappMessage": "Hallo, ich möchte über meine Glatko-Anfrage sprechen:",
+      "whatsappCta": "WhatsApp",
+      "messagingComingSoon": "Nachrichten — bald verfügbar",
+      "viewProfile": "Profil ansehen"
+    }
   }
 }

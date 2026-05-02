@@ -456,6 +456,45 @@
       "primary": "الخدمة الأساسية",
       "ctaTitle": "هل تحتاج هذه الخدمة؟",
       "ctaDesc": "اطلب عرض سعر من هذا المحترف"
+    },
+    "leads": {
+      "title": "الطلبات الواردة",
+      "subtitle": "طلبات مطابَقة بالخوارزمية من العملاء في منطقتك",
+      "emptyTitle": "لا توجد طلبات بعد",
+      "emptyBody": "ستظهر الطلبات الجديدة المطابقة لخدماتك هنا. تأكد من اكتمال ملفك الشخصي وأنك تغطي المدن القريبة.",
+      "primaryMatch": "ضمن أفضل 3",
+      "primaryMatchTooltip": "أنت من بين أول 3 محترفين تم إخطارهم — أرسل عرض السعر بسرعة لأفضل فرصة.",
+      "waitlistMatch": "قائمة الانتظار",
+      "waitlistMatchTooltip": "تم تفعيلك بعد أن لم يستجب أفضل 3 للطلب خلال 30 دقيقة.",
+      "match": "تطابق",
+      "matchScoreTooltip": "نتيجة مركّبة من المسافة، اكتمال الملف، سرعة الاستجابة، التقييم، والتسعير.",
+      "urgency": {
+        "asap": "فوراً",
+        "this_week": "هذا الأسبوع",
+        "flexible": "مرن",
+        "specific_date": "تاريخ محدد"
+      },
+      "sendQuote": "إرسال عرض السعر",
+      "quoteAlreadySent": "تم إرسال العرض",
+      "requestNotActive": "الطلب مغلق",
+      "sendQuoteTitle": "أرسل عرض السعر الخاص بك",
+      "priceLabel": "سعرك (يورو)",
+      "pricingModelLabel": "نموذج التسعير",
+      "pricingModel": {
+        "hourly": "أجر بالساعة",
+        "fixed": "سعر ثابت",
+        "per_unit": "لكل وحدة",
+        "estimate": "تقدير"
+      },
+      "messageLabel": "رسالتك للعميل",
+      "messagePlaceholder": "قدّم نفسك، اشرح طريقتك في العمل، واطرح أي أسئلة استيضاحية.",
+      "messageMin": "حروف كحد أدنى",
+      "messageMinError": "يجب أن تتكون الرسالة من 10 أحرف على الأقل.",
+      "priceRequired": "السعر مطلوب ويجب أن يكون أكبر من صفر.",
+      "cancel": "إلغاء",
+      "submitQuote": "إرسال العرض",
+      "submitting": "جارٍ الإرسال...",
+      "submitError": "تعذّر إرسال العرض. الرجاء المحاولة مرة أخرى."
     }
   },
   "admin": {
@@ -1881,5 +1920,30 @@
     "quoteValidationPriceRequired": "السعر مطلوب.",
     "quoteValidationMessageMin": "يجب أن تتكون الرسالة من 10 أحرف على الأقل.",
     "quoteValidationMessageMax": "يجب ألا تتجاوز الرسالة 5000 حرف."
+  },
+  "customer": {
+    "quotes": {
+      "budget": "الميزانية",
+      "waitingMoreQuotes": "المزيد من العروض في طريقها إليك",
+      "waitingTimer": "الوقت المتبقي",
+      "waitlistActivated": "قمنا بتفعيل محترفين إضافيين لضمان حصولك على خيارات رائعة.",
+      "quotesReceived": "العروض المستلمة",
+      "quotesSortedByPrice": "مرتّبة حسب السعر (الأقل أولاً).",
+      "noQuotesYet": "العروض في طريقها",
+      "noQuotesYetBody": "تم إخطار المحترفين في منطقتك. ستظهر العروض الجديدة هنا.",
+      "bestPrice": "أفضل سعر",
+      "foundingTooltip": "مزوّد مؤسس — عضو مبكر بفترة إبراز ممتدة.",
+      "completedJobs": "أعمال منجزة",
+      "pricingModel": {
+        "hourly": "بالساعة",
+        "fixed": "سعر ثابت",
+        "per_unit": "لكل وحدة",
+        "estimate": "تقدير"
+      },
+      "whatsappMessage": "مرحبًا، أود التحدث عن طلبي على Glatko:",
+      "whatsappCta": "واتساب",
+      "messagingComingSoon": "المراسلة — قريبًا",
+      "viewProfile": "عرض الملف الشخصي"
+    }
   }
 }
