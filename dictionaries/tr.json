@@ -1965,6 +1965,11 @@
     "sendMessage": "Mesaj Gönder",
     "openingThread": "Açılıyor...",
     "openThreadError": "Sohbet açılamadı. Lütfen tekrar deneyin.",
-    "viewThread": "Sohbeti Aç"
+    "viewThread": "Sohbeti Aç",
+    "showOriginal": "Orijinali göster",
+    "hideOriginal": "Orijinali gizle",
+    "translatedFrom": "Çeviren dil",
+    "translating": "Çevriliyor...",
+    "translationFailed": "Çeviri kullanılamıyor"
   }
 }

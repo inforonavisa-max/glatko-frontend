@@ -1965,6 +1965,11 @@
     "sendMessage": "Pošalji poruku",
     "openingThread": "Otvaranje...",
     "openThreadError": "Razgovor nije mogao biti otvoren. Molimo pokušajte ponovo.",
-    "viewThread": "Otvori razgovor"
+    "viewThread": "Otvori razgovor",
+    "showOriginal": "Prikaži original",
+    "hideOriginal": "Sakrij original",
+    "translatedFrom": "Prevedeno sa",
+    "translating": "Prevođenje...",
+    "translationFailed": "Prevod nije dostupan"
   }
 }

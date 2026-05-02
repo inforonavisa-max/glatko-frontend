@@ -1965,6 +1965,11 @@
     "sendMessage": "Invia messaggio",
     "openingThread": "Apertura...",
     "openThreadError": "Impossibile aprire la conversazione. Riprova.",
-    "viewThread": "Apri conversazione"
+    "viewThread": "Apri conversazione",
+    "showOriginal": "Mostra originale",
+    "hideOriginal": "Nascondi originale",
+    "translatedFrom": "Tradotto da",
+    "translating": "Traduzione...",
+    "translationFailed": "Traduzione non disponibile"
   }
 }

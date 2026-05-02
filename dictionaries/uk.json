@@ -1965,6 +1965,11 @@
     "sendMessage": "Надіслати повідомлення",
     "openingThread": "Відкриття...",
     "openThreadError": "Не вдалося відкрити листування. Спробуйте ще раз.",
-    "viewThread": "Відкрити листування"
+    "viewThread": "Відкрити листування",
+    "showOriginal": "Показати оригінал",
+    "hideOriginal": "Сховати оригінал",
+    "translatedFrom": "Перекладено з",
+    "translating": "Переклад...",
+    "translationFailed": "Переклад недоступний"
   }
 }

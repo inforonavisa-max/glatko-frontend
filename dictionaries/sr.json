@@ -1965,6 +1965,11 @@
     "sendMessage": "Пошаљи поруку",
     "openingThread": "Отварање...",
     "openThreadError": "Разговор није могао бити отворен. Молимо покушајте поново.",
-    "viewThread": "Отвори разговор"
+    "viewThread": "Отвори разговор",
+    "showOriginal": "Прикажи оригинал",
+    "hideOriginal": "Сакриј оригинал",
+    "translatedFrom": "Преведено са",
+    "translating": "Превођење...",
+    "translationFailed": "Превод није доступан"
   }
 }

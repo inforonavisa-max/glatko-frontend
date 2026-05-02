@@ -1965,6 +1965,11 @@
     "sendMessage": "Nachricht senden",
     "openingThread": "Wird geöffnet...",
     "openThreadError": "Gespräch konnte nicht geöffnet werden. Bitte erneut versuchen.",
-    "viewThread": "Gespräch öffnen"
+    "viewThread": "Gespräch öffnen",
+    "showOriginal": "Original anzeigen",
+    "hideOriginal": "Original ausblenden",
+    "translatedFrom": "Übersetzt aus",
+    "translating": "Wird übersetzt...",
+    "translationFailed": "Übersetzung nicht verfügbar"
   }
 }
