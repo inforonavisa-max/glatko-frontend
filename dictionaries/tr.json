@@ -495,6 +495,10 @@
       "submitQuote": "Teklifi Gönder",
       "submitting": "Gönderiliyor...",
       "submitError": "Teklif gönderilemedi. Lütfen tekrar deneyin."
+    },
+    "reviews": {
+      "title": "Müşteri Yorumları",
+      "anonymous": "Anonim müşteri"
     }
   },
   "admin": {
@@ -1944,6 +1948,25 @@
       "whatsappCta": "WhatsApp",
       "messagingComingSoon": "Mesajlaşma — yakında",
       "viewProfile": "Profili gör"
+    },
+    "review": {
+      "title": "Bu işi puanla",
+      "ratingRequired": "Lütfen 1 ile 5 arasında puan seç.",
+      "submitError": "Değerlendirme gönderilemedi. Lütfen tekrar dene.",
+      "starsAria": "yıldız",
+      "ratingLabel": {
+        "1": "Berbat",
+        "2": "Kötü",
+        "3": "İdare eder",
+        "4": "İyi",
+        "5": "Mükemmel"
+      },
+      "commentLabel": "Başkalarına nasıl gittiğini anlat",
+      "commentPlaceholder": "Bu profesyonel hakkında öne çıkan ne oldu? (opsiyonel)",
+      "optional": "opsiyonel",
+      "cancel": "İptal",
+      "submitReview": "Değerlendirmeyi Gönder",
+      "submitting": "Gönderiliyor..."
     }
   },
   "messaging": {
@@ -1970,6 +1993,23 @@
     "hideOriginal": "Orijinali gizle",
     "translatedFrom": "Çeviren dil",
     "translating": "Çevriliyor...",
-    "translationFailed": "Çeviri kullanılamıyor"
+    "translationFailed": "Çeviri kullanılamıyor",
+    "completion": {
+      "proProgressHint": "İş bitince tamamlandı olarak işaretle, müşteri değerlendirebilsin.",
+      "markAsCompleted": "Tamamlandı olarak işaretle",
+      "marking": "İşaretleniyor...",
+      "markError": "İşaretlenemedi. Lütfen tekrar dene.",
+      "proMarkedComplete": "Profesyonel işi tamamlandı olarak işaretledi",
+      "proMarkedCompleteBody": "Her şey tamamsa onayla; sonra değerlendirme bırakabilirsin.",
+      "confirmCompletion": "Tamamlandığını onayla",
+      "disputeCompletion": "İtiraz et",
+      "confirmError": "Güncellenemedi. Lütfen tekrar dene.",
+      "waitingCustomerConfirm": "Müşterinin tamamlandığını onaylaması bekleniyor.",
+      "writeReview": "Değerlendirme yaz",
+      "reviewSubmitted": "Teşekkürler — değerlendirmen yayında.",
+      "jobCompleted": "Müşteri işin tamamlandığını onayladı.",
+      "disputed": "Müşteri tamamlamaya itiraz etti. Sohbet üzerinden çözün.",
+      "cancelled": "Bu iş iptal edildi."
+    }
   }
 }

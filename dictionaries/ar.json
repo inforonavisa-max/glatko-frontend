@@ -495,6 +495,10 @@
       "submitQuote": "إرسال العرض",
       "submitting": "جارٍ الإرسال...",
       "submitError": "تعذّر إرسال العرض. الرجاء المحاولة مرة أخرى."
+    },
+    "reviews": {
+      "title": "آراء العملاء",
+      "anonymous": "عميل مجهول"
     }
   },
   "admin": {
@@ -1944,6 +1948,25 @@
       "whatsappCta": "واتساب",
       "messagingComingSoon": "المراسلة — قريبًا",
       "viewProfile": "عرض الملف الشخصي"
+    },
+    "review": {
+      "title": "قيّم هذه المهمة",
+      "ratingRequired": "يرجى اختيار تقييم من 1 إلى 5.",
+      "submitError": "تعذر إرسال التقييم. الرجاء المحاولة مرة أخرى.",
+      "starsAria": "نجوم",
+      "ratingLabel": {
+        "1": "سيء جداً",
+        "2": "ضعيف",
+        "3": "مقبول",
+        "4": "جيد",
+        "5": "ممتاز"
+      },
+      "commentLabel": "أخبر الآخرين كيف سارت الأمور",
+      "commentPlaceholder": "ما الذي ميّز هذا المحترف؟ (اختياري)",
+      "optional": "اختياري",
+      "cancel": "إلغاء",
+      "submitReview": "إرسال التقييم",
+      "submitting": "جارٍ الإرسال..."
     }
   },
   "messaging": {
@@ -1970,6 +1993,23 @@
     "hideOriginal": "إخفاء الأصل",
     "translatedFrom": "تُرجم من",
     "translating": "جارٍ الترجمة...",
-    "translationFailed": "الترجمة غير متاحة"
+    "translationFailed": "الترجمة غير متاحة",
+    "completion": {
+      "proProgressHint": "عند انتهاء المهمة، حدّدها كمنتهية ليتمكن العميل من التقييم.",
+      "markAsCompleted": "حدّد كمنتهية",
+      "marking": "جارٍ التحديد...",
+      "markError": "تعذر التحديد. يرجى المحاولة مرة أخرى.",
+      "proMarkedComplete": "المحترف حدّد المهمة كمنتهية",
+      "proMarkedCompleteBody": "أكد إذا اكتمل كل شيء؛ بعد ذلك يمكنك ترك تقييم.",
+      "confirmCompletion": "تأكيد الانتهاء",
+      "disputeCompletion": "اعتراض",
+      "confirmError": "تعذر التحديث. يرجى المحاولة مرة أخرى.",
+      "waitingCustomerConfirm": "في انتظار تأكيد العميل لانتهاء المهمة.",
+      "writeReview": "كتابة تقييم",
+      "reviewSubmitted": "شكراً — تم نشر تقييمك.",
+      "jobCompleted": "أكد العميل اكتمال المهمة.",
+      "disputed": "اعترض العميل على الانتهاء. حلّ الأمر عبر المحادثة.",
+      "cancelled": "تم إلغاء هذه المهمة."
+    }
   }
 }

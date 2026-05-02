@@ -495,6 +495,10 @@
       "submitQuote": "Pošalji ponudu",
       "submitting": "Slanje...",
       "submitError": "Ponuda nije mogla biti poslata. Molimo pokušajte ponovo."
+    },
+    "reviews": {
+      "title": "Recenzije klijenata",
+      "anonymous": "Anonimni klijent"
     }
   },
   "admin": {
@@ -1944,6 +1948,25 @@
       "whatsappCta": "WhatsApp",
       "messagingComingSoon": "Poruke — uskoro",
       "viewProfile": "Pogledaj profil"
+    },
+    "review": {
+      "title": "Ocijeni ovaj posao",
+      "ratingRequired": "Izaberite ocjenu od 1 do 5.",
+      "submitError": "Recenzija nije poslata. Pokušajte ponovo.",
+      "starsAria": "zvjezdica",
+      "ratingLabel": {
+        "1": "Užasno",
+        "2": "Loše",
+        "3": "OK",
+        "4": "Dobro",
+        "5": "Izvrsno"
+      },
+      "commentLabel": "Recite drugima kako je prošlo",
+      "commentPlaceholder": "Šta je posebno bilo dobro kod ovog profesionalca? (opciono)",
+      "optional": "opciono",
+      "cancel": "Otkaži",
+      "submitReview": "Pošalji recenziju",
+      "submitting": "Slanje..."
     }
   },
   "messaging": {
@@ -1970,6 +1993,23 @@
     "hideOriginal": "Sakrij original",
     "translatedFrom": "Prevedeno sa",
     "translating": "Prevođenje...",
-    "translationFailed": "Prevod nije dostupan"
+    "translationFailed": "Prevod nije dostupan",
+    "completion": {
+      "proProgressHint": "Kada posao bude gotov, označite ga kao završen da bi klijent mogao ocijeniti.",
+      "markAsCompleted": "Označi kao završeno",
+      "marking": "Označavanje...",
+      "markError": "Nije moguće označiti. Pokušajte ponovo.",
+      "proMarkedComplete": "Profesionalac je označio posao kao završen",
+      "proMarkedCompleteBody": "Potvrdite ako je sve završeno; nakon toga možete ostaviti recenziju.",
+      "confirmCompletion": "Potvrdi završetak",
+      "disputeCompletion": "Ospori",
+      "confirmError": "Nije moguće ažurirati. Pokušajte ponovo.",
+      "waitingCustomerConfirm": "Čekamo da klijent potvrdi završetak.",
+      "writeReview": "Napiši recenziju",
+      "reviewSubmitted": "Hvala — vaša recenzija je objavljena.",
+      "jobCompleted": "Klijent je potvrdio završetak posla.",
+      "disputed": "Klijent osporio završetak. Riješite kroz čet.",
+      "cancelled": "Ovaj posao je otkazan."
+    }
   }
 }

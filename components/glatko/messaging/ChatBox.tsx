@@ -9,9 +9,14 @@ import {
 } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { ArrowLeft, Send, Sparkles } from "lucide-react";
+import { ArrowLeft, CheckCircle, Send, Sparkles, Star } from "lucide-react";
 import { createClient } from "@/supabase/browser";
-import { sendMessage } from "@/app/[locale]/messages/actions";
+import {
+  sendMessage,
+  markQuoteComplete,
+  confirmQuoteCompletion,
+} from "@/app/[locale]/messages/actions";
+import { ReviewModal } from "@/components/glatko/customer/ReviewModal";
 
 interface ThreadMessage {
   id: string;
@@ -24,6 +29,12 @@ interface ThreadMessage {
   created_at: string;
 }
 
+export interface QuoteSummary {
+  id: string;
+  completion_state: string;
+  has_review: boolean;
+}
+
 interface Props {
   threadId: string;
   currentUserId: string;
@@ -33,6 +44,10 @@ interface Props {
   initialMessages: ThreadMessage[];
   locale: string;
   threadActive: boolean;
+  quote: QuoteSummary | null;
+  isProUser: boolean;
+  isCustomerUser: boolean;
+  counterpartId: string | null;
 }
 
 function formatTime(iso: string, locale: string): string {
@@ -51,6 +66,10 @@ export function ChatBox({
   initialMessages,
   locale,
   threadActive,
+  quote,
+  isProUser,
+  isCustomerUser,
+  counterpartId: _counterpartId,
 }: Props) {
   const t = useTranslations();
   const supabase = createClient();
@@ -59,6 +78,21 @@ export function ChatBox({
   const [body, setBody] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // G-REV-1 — local mirror of quote state so the banner reacts to
+  // mark/confirm/review without a full page refresh.
+  const [completionState, setCompletionState] = useState<string>(
+    quote?.completion_state ?? "in_progress",
+  );
+  const [hasReview, setHasReview] = useState<boolean>(
+    quote?.has_review ?? false,
+  );
+  const [completing, setCompleting] = useState(false);
+  const [confirming, setConfirming] = useState(false);
+  const [reviewOpen, setReviewOpen] = useState(false);
+  const [completionError, setCompletionError] = useState<string | null>(null);
+
+  void _counterpartId;
 
   const containerRef = useRef<HTMLDivElement>(null);
   const firstScrollDone = useRef(false);
@@ -227,6 +261,67 @@ export function ChatBox({
         </div>
       </div>
 
+      {/* G-REV-1 completion banner */}
+      {quote && (
+        <CompletionBanner
+          quoteId={quote.id}
+          completionState={completionState}
+          hasReview={hasReview}
+          isProUser={isProUser}
+          isCustomerUser={isCustomerUser}
+          completing={completing}
+          confirming={confirming}
+          error={completionError}
+          counterpartName={counterpartName}
+          onMarkComplete={async () => {
+            setCompleting(true);
+            setCompletionError(null);
+            const result = await markQuoteComplete(quote.id);
+            if (!result.success) {
+              setCompletionError(
+                result.error ?? t("messaging.completion.markError"),
+              );
+              setCompleting(false);
+              return;
+            }
+            setCompletionState("pro_marked_complete");
+            setCompleting(false);
+          }}
+          onConfirm={async (confirmed) => {
+            setConfirming(true);
+            setCompletionError(null);
+            const result = await confirmQuoteCompletion({
+              quote_id: quote.id,
+              confirmed,
+            });
+            if (!result.success) {
+              setCompletionError(
+                result.error ?? t("messaging.completion.confirmError"),
+              );
+              setConfirming(false);
+              return;
+            }
+            setCompletionState(
+              confirmed ? "customer_confirmed" : "customer_disputed",
+            );
+            setConfirming(false);
+          }}
+          onWriteReview={() => setReviewOpen(true)}
+        />
+      )}
+
+      {reviewOpen && quote && (
+        <ReviewModal
+          quoteId={quote.id}
+          proName={counterpartName}
+          onClose={() => setReviewOpen(false)}
+          onSubmitted={() => {
+            setReviewOpen(false);
+            setHasReview(true);
+          }}
+        />
+      )}
+
       {/* Message list */}
       <div
         ref={containerRef}
@@ -294,6 +389,171 @@ export function ChatBox({
       )}
     </div>
   );
+}
+
+interface CompletionBannerProps {
+  quoteId: string;
+  completionState: string;
+  hasReview: boolean;
+  isProUser: boolean;
+  isCustomerUser: boolean;
+  completing: boolean;
+  confirming: boolean;
+  error: string | null;
+  counterpartName: string;
+  onMarkComplete: () => Promise<void>;
+  onConfirm: (confirmed: boolean) => Promise<void>;
+  onWriteReview: () => void;
+}
+
+function CompletionBanner({
+  completionState,
+  hasReview,
+  isProUser,
+  isCustomerUser,
+  completing,
+  confirming,
+  error,
+  onMarkComplete,
+  onConfirm,
+  onWriteReview,
+}: CompletionBannerProps) {
+  const t = useTranslations();
+
+  if (
+    completionState === "in_progress" &&
+    isProUser
+  ) {
+    return (
+      <div className="border-b border-gray-200 dark:border-neutral-800 bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 px-4 py-3">
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <p className="text-sm text-emerald-900 dark:text-emerald-300">
+            {t("messaging.completion.proProgressHint")}
+          </p>
+          <button
+            type="button"
+            onClick={onMarkComplete}
+            disabled={completing}
+            className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium flex items-center gap-1 disabled:opacity-60"
+          >
+            <CheckCircle className="h-4 w-4" />
+            {completing
+              ? t("messaging.completion.marking")
+              : t("messaging.completion.markAsCompleted")}
+          </button>
+        </div>
+        {error && (
+          <p className="mt-2 text-xs text-red-700 dark:text-red-400">{error}</p>
+        )}
+      </div>
+    );
+  }
+
+  if (
+    completionState === "pro_marked_complete" &&
+    isCustomerUser
+  ) {
+    return (
+      <div className="border-b border-gray-200 dark:border-neutral-800 bg-blue-50 dark:bg-blue-950/20 px-4 py-3">
+        <p className="font-medium text-blue-900 dark:text-blue-300">
+          {t("messaging.completion.proMarkedComplete")}
+        </p>
+        <p className="text-sm text-blue-700 dark:text-blue-400 mt-1">
+          {t("messaging.completion.proMarkedCompleteBody")}
+        </p>
+        <div className="flex gap-2 mt-3 flex-wrap">
+          <button
+            type="button"
+            onClick={() => onConfirm(true)}
+            disabled={confirming}
+            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium disabled:opacity-60"
+          >
+            ✓ {t("messaging.completion.confirmCompletion")}
+          </button>
+          <button
+            type="button"
+            onClick={() => onConfirm(false)}
+            disabled={confirming}
+            className="px-4 py-2 border border-red-300 dark:border-red-700 text-red-700 dark:text-red-400 rounded-lg text-sm font-medium hover:bg-red-50 dark:hover:bg-red-950/20 disabled:opacity-60"
+          >
+            {t("messaging.completion.disputeCompletion")}
+          </button>
+        </div>
+        {error && (
+          <p className="mt-2 text-xs text-red-700 dark:text-red-400">{error}</p>
+        )}
+      </div>
+    );
+  }
+
+  if (
+    completionState === "pro_marked_complete" &&
+    isProUser
+  ) {
+    return (
+      <div className="border-b border-gray-200 dark:border-neutral-800 bg-blue-50 dark:bg-blue-950/20 px-4 py-3">
+        <p className="text-sm text-blue-900 dark:text-blue-300">
+          {t("messaging.completion.waitingCustomerConfirm")}
+        </p>
+      </div>
+    );
+  }
+
+  if (completionState === "customer_confirmed" && isCustomerUser) {
+    if (hasReview) {
+      return (
+        <div className="border-b border-gray-200 dark:border-neutral-800 bg-emerald-50 dark:bg-emerald-950/20 px-4 py-3">
+          <p className="text-sm text-emerald-900 dark:text-emerald-300">
+            {t("messaging.completion.reviewSubmitted")}
+          </p>
+        </div>
+      );
+    }
+    return (
+      <div className="border-b border-gray-200 dark:border-neutral-800 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 px-4 py-3">
+        <button
+          type="button"
+          onClick={onWriteReview}
+          className="w-full px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg font-medium flex items-center justify-center gap-2"
+        >
+          <Star className="h-4 w-4" />
+          {t("messaging.completion.writeReview")}
+        </button>
+      </div>
+    );
+  }
+
+  if (completionState === "customer_confirmed" && isProUser) {
+    return (
+      <div className="border-b border-gray-200 dark:border-neutral-800 bg-emerald-50 dark:bg-emerald-950/20 px-4 py-3">
+        <p className="text-sm text-emerald-900 dark:text-emerald-300">
+          {t("messaging.completion.jobCompleted")}
+        </p>
+      </div>
+    );
+  }
+
+  if (completionState === "customer_disputed") {
+    return (
+      <div className="border-b border-gray-200 dark:border-neutral-800 bg-amber-50 dark:bg-amber-950/20 px-4 py-3">
+        <p className="text-sm text-amber-900 dark:text-amber-300">
+          {t("messaging.completion.disputed")}
+        </p>
+      </div>
+    );
+  }
+
+  if (completionState === "cancelled") {
+    return (
+      <div className="border-b border-gray-200 dark:border-neutral-800 bg-gray-50 dark:bg-neutral-900 px-4 py-3">
+        <p className="text-sm text-gray-700 dark:text-neutral-400">
+          {t("messaging.completion.cancelled")}
+        </p>
+      </div>
+    );
+  }
+
+  return null;
 }
 
 interface BubbleProps {
