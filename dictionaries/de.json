@@ -1945,5 +1945,26 @@
       "messagingComingSoon": "Nachrichten — bald verfügbar",
       "viewProfile": "Profil ansehen"
     }
+  },
+  "messaging": {
+    "inboxTitle": "Nachrichten",
+    "inboxSubtitle": "Gespräche mit den Profis, die Angebote zu Ihren Anfragen abgegeben haben",
+    "inboxEmptyTitle": "Noch keine Nachrichten",
+    "inboxEmptyBody": "Ihre Gespräche mit Profis erscheinen hier, sobald Sie eines von einer Angebotskarte aus starten.",
+    "threadFromRequest": "Betreff",
+    "noMessagesYet": "Noch keine Nachrichten",
+    "back": "Zurück",
+    "composerPlaceholder": "Nachricht schreiben...",
+    "send": "Senden",
+    "sending": "Wird gesendet...",
+    "sendError": "Nachricht konnte nicht gesendet werden. Bitte erneut versuchen.",
+    "read": "Gelesen",
+    "delivered": "Zugestellt",
+    "threadEmptyHint": "Sagen Sie Hallo — hier beginnt Ihr Gespräch.",
+    "threadInactive": "Dieses Gespräch ist nicht mehr aktiv.",
+    "sendMessage": "Nachricht senden",
+    "openingThread": "Wird geöffnet...",
+    "openThreadError": "Gespräch konnte nicht geöffnet werden. Bitte erneut versuchen.",
+    "viewThread": "Gespräch öffnen"
   }
 }

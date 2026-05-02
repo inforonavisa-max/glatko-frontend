@@ -1945,5 +1945,26 @@
       "messagingComingSoon": "Poruke — uskoro",
       "viewProfile": "Pogledaj profil"
     }
+  },
+  "messaging": {
+    "inboxTitle": "Poruke",
+    "inboxSubtitle": "Razgovori sa profesionalcima koji su poslali ponude za vaše zahtjeve",
+    "inboxEmptyTitle": "Još nema poruka",
+    "inboxEmptyBody": "Vaši razgovori sa profesionalcima pojaviće se ovdje kad ih pokrenete sa kartice ponude.",
+    "threadFromRequest": "Tema",
+    "noMessagesYet": "Još nema poruka",
+    "back": "Nazad",
+    "composerPlaceholder": "Napišite poruku...",
+    "send": "Pošalji",
+    "sending": "Slanje...",
+    "sendError": "Poruka nije mogla biti poslata. Molimo pokušajte ponovo.",
+    "read": "Pročitano",
+    "delivered": "Dostavljeno",
+    "threadEmptyHint": "Pozdravite — vaš razgovor počinje ovdje.",
+    "threadInactive": "Ovaj razgovor više nije aktivan.",
+    "sendMessage": "Pošalji poruku",
+    "openingThread": "Otvaranje...",
+    "openThreadError": "Razgovor nije mogao biti otvoren. Molimo pokušajte ponovo.",
+    "viewThread": "Otvori razgovor"
   }
 }

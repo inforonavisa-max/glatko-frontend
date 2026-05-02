@@ -1945,5 +1945,26 @@
       "messagingComingSoon": "Mesajlaşma — yakında",
       "viewProfile": "Profili gör"
     }
+  },
+  "messaging": {
+    "inboxTitle": "Mesajlar",
+    "inboxSubtitle": "Talebinize teklif veren profesyonellerle yazışmalar",
+    "inboxEmptyTitle": "Henüz mesaj yok",
+    "inboxEmptyBody": "Bir teklif kartından sohbet başlattığınızda yazışmalarınız burada görünecek.",
+    "threadFromRequest": "Konu",
+    "noMessagesYet": "Henüz mesaj yok",
+    "back": "Geri",
+    "composerPlaceholder": "Bir mesaj yazın...",
+    "send": "Gönder",
+    "sending": "Gönderiliyor...",
+    "sendError": "Mesaj gönderilemedi. Lütfen tekrar deneyin.",
+    "read": "Okundu",
+    "delivered": "İletildi",
+    "threadEmptyHint": "Selam verin — sohbetiniz buradan başlıyor.",
+    "threadInactive": "Bu sohbet artık aktif değil.",
+    "sendMessage": "Mesaj Gönder",
+    "openingThread": "Açılıyor...",
+    "openThreadError": "Sohbet açılamadı. Lütfen tekrar deneyin.",
+    "viewThread": "Sohbeti Aç"
   }
 }

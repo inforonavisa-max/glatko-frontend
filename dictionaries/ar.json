@@ -1945,5 +1945,26 @@
       "messagingComingSoon": "المراسلة — قريبًا",
       "viewProfile": "عرض الملف الشخصي"
     }
+  },
+  "messaging": {
+    "inboxTitle": "الرسائل",
+    "inboxSubtitle": "محادثاتك مع المحترفين الذين قدّموا عروضًا على طلباتك",
+    "inboxEmptyTitle": "لا توجد رسائل بعد",
+    "inboxEmptyBody": "ستظهر محادثاتك مع المحترفين هنا بمجرد بدء واحدة من بطاقة عرض السعر.",
+    "threadFromRequest": "الموضوع",
+    "noMessagesYet": "لا توجد رسائل بعد",
+    "back": "رجوع",
+    "composerPlaceholder": "اكتب رسالة...",
+    "send": "إرسال",
+    "sending": "جارٍ الإرسال...",
+    "sendError": "تعذر إرسال الرسالة. الرجاء المحاولة مرة أخرى.",
+    "read": "تمت القراءة",
+    "delivered": "تم التسليم",
+    "threadEmptyHint": "ألقِ التحية — تبدأ محادثتك من هنا.",
+    "threadInactive": "هذه المحادثة لم تعد نشطة.",
+    "sendMessage": "إرسال رسالة",
+    "openingThread": "جارٍ الفتح...",
+    "openThreadError": "تعذر فتح المحادثة. الرجاء المحاولة مرة أخرى.",
+    "viewThread": "فتح المحادثة"
   }
 }
