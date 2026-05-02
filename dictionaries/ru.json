@@ -104,7 +104,48 @@
       "storage": "Хранение",
       "airportTransfer": "Трансфер из аэропорта"
     },
-    "seeAll": "Все категории"
+    "seeAll": "Все категории",
+    "garden": {
+      "title": "Сад и бассейн",
+      "description": "Ландшафт, газон, полив, обслуживание бассейна",
+      "landscaping": "Ландшафтный дизайн",
+      "lawn": "Кошение травы",
+      "irrigation": "Полив",
+      "treePruning": "Обрезка деревьев",
+      "poolCare": "Уход за бассейном",
+      "poolRepair": "Ремонт бассейна"
+    },
+    "events": {
+      "title": "События и свадьбы",
+      "description": "Свадьбы за рубежом, организация, декор, звук и свет",
+      "destinationWedding": "Дестинационная свадьба",
+      "decoration": "Декор и цветы",
+      "stageTent": "Сцена и шатёр",
+      "soundLight": "Звук и свет",
+      "corporate": "Корпоративные события",
+      "kidsParty": "Детский праздник"
+    },
+    "photo": {
+      "title": "Фото и видео",
+      "description": "Свадьбы, дроны, корпоративное видео, недвижимость, соцсети",
+      "weddingPhoto": "Свадебный фотограф",
+      "droneShoot": "Съёмка дроном",
+      "corporateVideo": "Корпоративное видео",
+      "realEstate": "Недвижимость / Airbnb",
+      "familyShoot": "Семейная и детская",
+      "socialContent": "Контент для соцсетей"
+    },
+    "health": {
+      "title": "Здоровье и велнес",
+      "description": "Физиотерапия, массаж, домашний уход, диетолог",
+      "physiotherapy": "Физиотерапия",
+      "therapeuticMassage": "Лечебный массаж",
+      "homeNursing": "Медсестра на дом",
+      "nutrition": "Питание и диета",
+      "psychologist": "Психолог и терапевт",
+      "homeBloodTest": "Анализ крови на дому"
+    },
+    "newBadge": "НОВОЕ"
   },
   "howItWorks": {
     "title": "Как это работает",

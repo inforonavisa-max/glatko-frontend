@@ -4,7 +4,17 @@ import { useRef } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { motion } from "framer-motion";
-import { Home, Anchor, Sparkles, Truck, ArrowRight } from "lucide-react";
+import {
+  Home,
+  Anchor,
+  Sparkles,
+  Truck,
+  ArrowRight,
+  Trees,
+  PartyPopper,
+  Camera,
+  HeartPulse,
+} from "lucide-react";
 import { AceternityHeroBackground } from "@/components/aceternity/hero-background";
 import { LinesGradient } from "@/components/aceternity/lines-gradient";
 import { CollisionMechanism } from "@/components/aceternity/collision-beam";
@@ -307,8 +317,79 @@ export default function LandingPageClient() {
               </SpotlightCard>
             </StaggerItem>
           </div>
-          {/* See-all CTA — categories.title section now shows 4 featured
-              cards; the full 92-row grid lives at /services. */}
+
+          {/* G-CAT-5: 4 new categories surfaced with NEW badge below the
+              evergreen four. Clicking still hits /services/<slug>; the
+              card pattern matches but the badge differentiates them. */}
+          <div className="mt-8 grid gap-8 md:grid-cols-2">
+            {[
+              {
+                icon: Trees,
+                slug: "garden-pool",
+                ns: "garden",
+                pills: ["landscaping", "lawn", "irrigation", "treePruning", "poolCare", "poolRepair"],
+                index: 4,
+              },
+              {
+                icon: PartyPopper,
+                slug: "events-wedding",
+                ns: "events",
+                pills: ["destinationWedding", "decoration", "stageTent", "soundLight", "corporate", "kidsParty"],
+                index: 5,
+              },
+              {
+                icon: Camera,
+                slug: "photo-video",
+                ns: "photo",
+                pills: ["weddingPhoto", "droneShoot", "corporateVideo", "realEstate", "familyShoot", "socialContent"],
+                index: 6,
+              },
+              {
+                icon: HeartPulse,
+                slug: "health-wellness",
+                ns: "health",
+                pills: ["physiotherapy", "therapeuticMassage", "homeNursing", "nutrition", "psychologist", "homeBloodTest"],
+                index: 7,
+              },
+            ].map(({ icon: Icon, slug, ns, pills, index }) => (
+              <StaggerItem key={slug} index={index}>
+                <SpotlightCard>
+                  <div className="mb-6 flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-4">
+                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-teal-500/10 dark:bg-teal-500/15">
+                        <Icon className="h-8 w-8 text-teal-600 dark:text-teal-400" />
+                      </div>
+                      <div className="text-left">
+                        <h3 className="font-sans text-xl font-semibold text-gray-900 dark:text-white">
+                          {t(`categories.${ns}.title`)}
+                        </h3>
+                        <p className="text-sm text-gray-500 dark:text-white/50">
+                          {t(`categories.${ns}.description`)}
+                        </p>
+                      </div>
+                    </div>
+                    <span className="shrink-0 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm">
+                      {t("categories.newBadge")}
+                    </span>
+                  </div>
+                  <div className="mb-6 flex flex-wrap gap-2">
+                    {pills.map((p) => (
+                      <span key={p} className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs text-gray-600 dark:border-white/10 dark:bg-white/5 dark:text-white/60">
+                        {t(`categories.${ns}.${p}`)}
+                      </span>
+                    ))}
+                  </div>
+                  <Link href={`/services/${slug}`} className="text-sm font-semibold text-teal-600 hover:underline dark:text-teal-400">
+                    {t("categories.getQuote")} →
+                  </Link>
+                </SpotlightCard>
+              </StaggerItem>
+            ))}
+          </div>
+
+          {/* See-all CTA — categories.title section now shows 4 evergreen
+              + 4 new (NEW badge) cards; the full 92-row grid lives at
+              /services. */}
           <div className="mt-12 text-center">
             <Link
               href="/services"

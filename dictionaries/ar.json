@@ -104,7 +104,48 @@
       "storage": "تخزين",
       "airportTransfer": "نقل من المطار"
     },
-    "seeAll": "عرض جميع الفئات"
+    "seeAll": "عرض جميع الفئات",
+    "garden": {
+      "title": "الحديقة والمسبح",
+      "description": "تنسيق الحدائق، العشب، الري، صيانة المسبح",
+      "landscaping": "تصميم المناظر الطبيعية",
+      "lawn": "جز العشب",
+      "irrigation": "الري",
+      "treePruning": "تقليم الأشجار",
+      "poolCare": "صيانة المسبح",
+      "poolRepair": "إصلاح المسبح"
+    },
+    "events": {
+      "title": "الفعاليات والأعراس",
+      "description": "حفلات زفاف الوجهة، التنظيم، الديكور، الصوت والإضاءة",
+      "destinationWedding": "حفلة زفاف الوجهة",
+      "decoration": "الديكور والزهور",
+      "stageTent": "المسرح والخيمة",
+      "soundLight": "الصوت والإضاءة",
+      "corporate": "الفعاليات للشركات",
+      "kidsParty": "حفلة أطفال"
+    },
+    "photo": {
+      "title": "تصوير الصور والفيديو",
+      "description": "حفلات الزفاف، طائرات بدون طيار، فيديو شركات، عقارات، تواصل",
+      "weddingPhoto": "مصور حفلات الزفاف",
+      "droneShoot": "تصوير بالطائرات بدون طيار",
+      "corporateVideo": "فيديو الشركات",
+      "realEstate": "العقارات / Airbnb",
+      "familyShoot": "جلسة عائلية وأطفال",
+      "socialContent": "محتوى وسائل التواصل"
+    },
+    "health": {
+      "title": "الصحة والعافية",
+      "description": "العلاج الطبيعي، التدليك، التمريض المنزلي، التغذية",
+      "physiotherapy": "العلاج الطبيعي",
+      "therapeuticMassage": "التدليك العلاجي",
+      "homeNursing": "تمريض منزلي",
+      "nutrition": "التغذية والحمية",
+      "psychologist": "أخصائي نفسي ومعالج",
+      "homeBloodTest": "تحليل الدم في المنزل"
+    },
+    "newBadge": "جديد"
   },
   "howItWorks": {
     "title": "كيف يعمل",
