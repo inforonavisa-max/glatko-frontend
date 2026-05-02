@@ -495,6 +495,10 @@
       "submitQuote": "Invia preventivo",
       "submitting": "Invio in corso...",
       "submitError": "Impossibile inviare il preventivo. Riprova."
+    },
+    "reviews": {
+      "title": "Recensioni dei clienti",
+      "anonymous": "Cliente anonimo"
     }
   },
   "admin": {
@@ -1944,6 +1948,25 @@
       "whatsappCta": "WhatsApp",
       "messagingComingSoon": "Messaggi — presto disponibili",
       "viewProfile": "Vedi profilo"
+    },
+    "review": {
+      "title": "Valuta questo lavoro",
+      "ratingRequired": "Seleziona una valutazione da 1 a 5.",
+      "submitError": "Impossibile inviare la recensione. Riprova.",
+      "starsAria": "stelle",
+      "ratingLabel": {
+        "1": "Pessimo",
+        "2": "Scarso",
+        "3": "OK",
+        "4": "Buono",
+        "5": "Eccellente"
+      },
+      "commentLabel": "Racconta com'è andata",
+      "commentPlaceholder": "Cosa ha reso speciale questo professionista? (opzionale)",
+      "optional": "opzionale",
+      "cancel": "Annulla",
+      "submitReview": "Invia recensione",
+      "submitting": "Invio..."
     }
   },
   "messaging": {
@@ -1970,6 +1993,23 @@
     "hideOriginal": "Nascondi originale",
     "translatedFrom": "Tradotto da",
     "translating": "Traduzione...",
-    "translationFailed": "Traduzione non disponibile"
+    "translationFailed": "Traduzione non disponibile",
+    "completion": {
+      "proProgressHint": "Quando il lavoro è finito, segnalo come completato così il cliente può recensirti.",
+      "markAsCompleted": "Segna come completato",
+      "marking": "Segnalazione...",
+      "markError": "Impossibile segnare. Riprova.",
+      "proMarkedComplete": "Il professionista ha segnato il lavoro come completato",
+      "proMarkedCompleteBody": "Conferma se è tutto fatto; poi potrai lasciare una recensione.",
+      "confirmCompletion": "Conferma completamento",
+      "disputeCompletion": "Contesta",
+      "confirmError": "Impossibile aggiornare. Riprova.",
+      "waitingCustomerConfirm": "In attesa che il cliente confermi il completamento.",
+      "writeReview": "Scrivi una recensione",
+      "reviewSubmitted": "Grazie — la tua recensione è pubblicata.",
+      "jobCompleted": "Il cliente ha confermato il completamento del lavoro.",
+      "disputed": "Il cliente ha contestato il completamento. Risolvete in chat.",
+      "cancelled": "Questo lavoro è stato annullato."
+    }
   }
 }

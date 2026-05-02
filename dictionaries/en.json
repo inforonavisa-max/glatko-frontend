@@ -495,6 +495,10 @@
       "submitQuote": "Submit Quote",
       "submitting": "Sending...",
       "submitError": "Could not send quote. Please try again."
+    },
+    "reviews": {
+      "title": "Customer Reviews",
+      "anonymous": "Anonymous customer"
     }
   },
   "admin": {
@@ -1944,6 +1948,25 @@
       "whatsappCta": "WhatsApp",
       "messagingComingSoon": "Messaging — coming soon",
       "viewProfile": "View profile"
+    },
+    "review": {
+      "title": "Rate this job",
+      "ratingRequired": "Please pick a rating from 1 to 5.",
+      "submitError": "Could not submit review. Please try again.",
+      "starsAria": "stars",
+      "ratingLabel": {
+        "1": "Terrible",
+        "2": "Poor",
+        "3": "OK",
+        "4": "Good",
+        "5": "Excellent"
+      },
+      "commentLabel": "Tell others how it went",
+      "commentPlaceholder": "What stood out about this pro? (optional)",
+      "optional": "optional",
+      "cancel": "Cancel",
+      "submitReview": "Submit Review",
+      "submitting": "Submitting..."
     }
   },
   "messaging": {
@@ -1970,6 +1993,23 @@
     "hideOriginal": "Hide original",
     "translatedFrom": "Translated from",
     "translating": "Translating...",
-    "translationFailed": "Translation unavailable"
+    "translationFailed": "Translation unavailable",
+    "completion": {
+      "proProgressHint": "When the job is finished, mark it complete so the customer can review.",
+      "markAsCompleted": "Mark as completed",
+      "marking": "Marking...",
+      "markError": "Could not mark complete. Please try again.",
+      "proMarkedComplete": "Pro marked the job as completed",
+      "proMarkedCompleteBody": "Confirm if everything is done; you can leave a review afterward.",
+      "confirmCompletion": "Confirm completion",
+      "disputeCompletion": "Dispute",
+      "confirmError": "Could not update. Please try again.",
+      "waitingCustomerConfirm": "Waiting for the customer to confirm completion.",
+      "writeReview": "Write a review",
+      "reviewSubmitted": "Thanks — your review is published.",
+      "jobCompleted": "Customer confirmed the job is complete.",
+      "disputed": "Customer disputed the completion. Resolve via chat.",
+      "cancelled": "This job was cancelled."
+    }
   }
 }

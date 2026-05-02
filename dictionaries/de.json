@@ -495,6 +495,10 @@
       "submitQuote": "Angebot absenden",
       "submitting": "Wird gesendet...",
       "submitError": "Angebot konnte nicht gesendet werden. Bitte versuchen Sie es erneut."
+    },
+    "reviews": {
+      "title": "Kundenbewertungen",
+      "anonymous": "Anonymer Kunde"
     }
   },
   "admin": {
@@ -1944,6 +1948,25 @@
       "whatsappCta": "WhatsApp",
       "messagingComingSoon": "Nachrichten — bald verfügbar",
       "viewProfile": "Profil ansehen"
+    },
+    "review": {
+      "title": "Auftrag bewerten",
+      "ratingRequired": "Bitte wählen Sie eine Bewertung von 1 bis 5.",
+      "submitError": "Bewertung konnte nicht gesendet werden. Bitte erneut versuchen.",
+      "starsAria": "Sterne",
+      "ratingLabel": {
+        "1": "Schlecht",
+        "2": "Mäßig",
+        "3": "OK",
+        "4": "Gut",
+        "5": "Hervorragend"
+      },
+      "commentLabel": "Erzählen Sie anderen, wie es lief",
+      "commentPlaceholder": "Was hat diesen Profi ausgemacht? (optional)",
+      "optional": "optional",
+      "cancel": "Abbrechen",
+      "submitReview": "Bewertung absenden",
+      "submitting": "Wird gesendet..."
     }
   },
   "messaging": {
@@ -1970,6 +1993,23 @@
     "hideOriginal": "Original ausblenden",
     "translatedFrom": "Übersetzt aus",
     "translating": "Wird übersetzt...",
-    "translationFailed": "Übersetzung nicht verfügbar"
+    "translationFailed": "Übersetzung nicht verfügbar",
+    "completion": {
+      "proProgressHint": "Wenn der Auftrag erledigt ist, markieren Sie ihn als abgeschlossen, damit der Kunde bewerten kann.",
+      "markAsCompleted": "Als abgeschlossen markieren",
+      "marking": "Wird markiert...",
+      "markError": "Konnte nicht markiert werden. Bitte erneut versuchen.",
+      "proMarkedComplete": "Profi hat den Auftrag als abgeschlossen markiert",
+      "proMarkedCompleteBody": "Bestätigen Sie, wenn alles erledigt ist; danach können Sie eine Bewertung abgeben.",
+      "confirmCompletion": "Abschluss bestätigen",
+      "disputeCompletion": "Anfechten",
+      "confirmError": "Konnte nicht aktualisiert werden. Bitte erneut versuchen.",
+      "waitingCustomerConfirm": "Warte auf Bestätigung des Kunden.",
+      "writeReview": "Bewertung abgeben",
+      "reviewSubmitted": "Danke — Ihre Bewertung ist veröffentlicht.",
+      "jobCompleted": "Kunde hat den Auftrag bestätigt.",
+      "disputed": "Kunde hat den Abschluss angefochten. Klären Sie es per Chat.",
+      "cancelled": "Dieser Auftrag wurde storniert."
+    }
   }
 }
