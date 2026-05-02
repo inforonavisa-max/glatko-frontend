@@ -10,6 +10,7 @@ import {
   sendProApprovedEmail,
   sendProRejectedEmail,
 } from "@/lib/email/pro-emails";
+import { sendFoundingProviderWelcomeEmail } from "@/lib/email/founding-emails";
 import { glatkoCaptureException } from "@/lib/sentry/glatko-capture";
 import type { VerificationStatus } from "@/types/glatko";
 
@@ -66,16 +67,24 @@ export async function updateProfessionalStatus(
     }).catch(() => {});
   }
 
-  // G-PRO-1: transactional email on approve/reject
+  // G-PRO-1 + G-LAUNCH-1: transactional email on approve/reject.
+  // Approve path also fires the FoundingProviderWelcome mailer when the
+  // pre-update trigger flipped is_founding_provider on this row (i.e.
+  // the pro just landed inside the first-50 window).
   if (status === "approved" || status === "rejected") {
     const admin = createAdminClient();
     const { data: profileRow } = await admin
       .from("glatko_professional_profiles")
-      .select("business_name")
+      .select(
+        "business_name, is_founding_provider, founding_provider_number",
+      )
       .eq("id", professionalId)
       .maybeSingle();
     const businessName =
       (profileRow?.business_name as string | null) ?? "Professional";
+    const isFoundingProvider = Boolean(profileRow?.is_founding_provider);
+    const foundingNumber =
+      (profileRow?.founding_provider_number as number | null) ?? null;
 
     const { email, locale } = await lookupProfessionalEmailAndLocale(
       professionalId,
@@ -94,6 +103,24 @@ export async function updateProfessionalStatus(
             professionalId,
           });
         });
+
+        // G-LAUNCH-1 deferred integration: founding provider welcome
+        // mailer fires alongside the regular approve mailer (not instead
+        // of it) so the celebratory email reads naturally as a follow-up.
+        if (isFoundingProvider && foundingNumber !== null) {
+          void sendFoundingProviderWelcomeEmail({
+            to: email,
+            locale,
+            professionalName: businessName,
+            foundingNumber,
+          }).catch((err) => {
+            glatkoCaptureException(err, {
+              module: "admin/professionals/actions",
+              op: "founding_welcome_email",
+              professionalId,
+            });
+          });
+        }
       } else {
         void sendProRejectedEmail({
           to: email,
