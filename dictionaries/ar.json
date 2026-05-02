@@ -1806,5 +1806,48 @@
       "byCategory": "المحترفون المعتمدون حسب الفئة",
       "empty": "لا يوجد محترفون معتمدون بعد."
     }
+  },
+  "verification": {
+    "verified": "موثّق",
+    "verifiedAt": "تاريخ التوثيق",
+    "verifiedBy": "وثقه {admin}",
+    "verifiedTooltip": "الهوية والعمل والوثائق راجعها فريق Glatko",
+    "clickForDetails": "اضغط للحصول على تفاصيل التوثيق",
+    "proofTitle": "موثّق من قبل Glatko",
+    "proofSubtitle": "ماذا فحصنا، وما هو محفوظ",
+    "verifiedDocuments": "الوثائق الموثّقة",
+    "notSubmitted": "غير محفوظ",
+    "whatIsVerification": "ماذا يعني التوثيق؟",
+    "documentTypes": {
+      "business_registration": "السجل التجاري",
+      "license": "الترخيص المهني",
+      "insurance": "شهادة التأمين",
+      "tax_certificate": "الشهادة الضريبية"
+    },
+    "tier": "المستوى",
+    "tierEditorTitle": "مستوى التوثيق",
+    "tierEditorSubtitle": "حدد المستوى وعدّل علامات التوثيق لكل وثيقة. يُحفظ ذرّيًا عبر RPC للمشرف.",
+    "saveTier": "حفظ المستوى",
+    "tierSaved": "تم حفظ المستوى",
+    "tierSaveFailed": "تعذّر حفظ المستوى",
+    "currentTier": "حالي",
+    "nextTier": "المستوى التالي",
+    "nextTierExplain": "ارفع {docs} للتأهل إلى {tier}.",
+    "tierRequirementsTitle": "المتطلبات",
+    "tierRequirements": {
+      "approved": "تمت الموافقة على الملف من قبل Glatko",
+      "business_registration": "وثيقة السجل التجاري",
+      "license": "الترخيص المهني / الشهادة",
+      "insurance": "شهادة التأمين"
+    },
+    "tierDescription": {
+      "basic": "الهوية موثّقة، الملف معتمد من فريق Glatko.",
+      "business": "السجل التجاري مؤكّد — كيان قانوني مستقل.",
+      "professional": "مرخّص ومؤمّن — أعلى إشارة ثقة نمنحها."
+    },
+    "uploadMissingDocs": "ارفع الوثائق الناقصة",
+    "upgradeTierTitle": "ترقية المستوى",
+    "upgradeTierSubtitle": "تزيد المستويات الأعلى من ظهورك وثقة العملاء. ارفع الوثائق الناقصة أدناه للتأهل للمستوى التالي.",
+    "notApprovedYet": "ملفك لا يزال قيد المراجعة. تتوفر ترقيات المستوى بعد الموافقة."
   }
 }

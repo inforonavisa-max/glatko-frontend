@@ -1806,5 +1806,48 @@
       "byCategory": "Approved pros by category",
       "empty": "No approved pros yet."
     }
+  },
+  "verification": {
+    "verified": "Verified",
+    "verifiedAt": "Verified on",
+    "verifiedBy": "Verified by {admin}",
+    "verifiedTooltip": "Identity, business, and documents reviewed by Glatko",
+    "clickForDetails": "Click for verification proof",
+    "proofTitle": "Verified by Glatko",
+    "proofSubtitle": "What we checked, what's on file",
+    "verifiedDocuments": "Verified documents",
+    "notSubmitted": "Not on file",
+    "whatIsVerification": "What does verification mean?",
+    "documentTypes": {
+      "business_registration": "Business registration",
+      "license": "Professional license",
+      "insurance": "Insurance certificate",
+      "tax_certificate": "Tax certificate"
+    },
+    "tier": "Tier",
+    "tierEditorTitle": "Verification tier",
+    "tierEditorSubtitle": "Set the tier and flip per-document verified flags. Saved atomically via the admin RPC.",
+    "saveTier": "Save tier",
+    "tierSaved": "Tier saved",
+    "tierSaveFailed": "Failed to save tier",
+    "currentTier": "Current",
+    "nextTier": "Next tier",
+    "nextTierExplain": "Upload {docs} to qualify for {tier}.",
+    "tierRequirementsTitle": "Requirements",
+    "tierRequirements": {
+      "approved": "Profile approved by Glatko",
+      "business_registration": "Business registration document",
+      "license": "Professional license / certification",
+      "insurance": "Insurance certificate"
+    },
+    "tierDescription": {
+      "basic": "Identity verified, profile approved by the Glatko team.",
+      "business": "Business registration confirmed — independent legal entity.",
+      "professional": "Licensed and insured — highest trust signal we award."
+    },
+    "uploadMissingDocs": "Upload missing documents",
+    "upgradeTierTitle": "Tier upgrade",
+    "upgradeTierSubtitle": "Higher tiers boost your visibility and customer trust. Upload the missing documents below to qualify for the next tier.",
+    "notApprovedYet": "Your profile is still under review. Tier upgrades unlock once you're approved."
   }
 }

@@ -6,6 +6,8 @@ import {
   getVerificationDocumentsAsAdmin,
 } from "@/lib/supabase/glatko.server";
 import { AdminActions } from "@/components/glatko/admin/AdminActions";
+import { AdminTierEditor } from "@/components/glatko/admin/AdminTierEditor";
+import type { VerificationTier } from "@/app/[locale]/admin/professionals/actions";
 import { ArrowLeft } from "lucide-react";
 import type { VerificationStatus, DocumentStatus } from "@/types/glatko";
 
@@ -201,6 +203,31 @@ export default async function ProfessionalDetailPage({ params }: Props) {
               currentStatus={profile.verification_status}
             />
           </section>
+
+          {profile.verification_status === "approved" && (
+            <section>
+              <AdminTierEditor
+                professionalId={profile.id}
+                currentTier={
+                  ((profile as unknown as {
+                    verification_tier?: VerificationTier | null;
+                  }).verification_tier as VerificationTier | undefined) ??
+                  "basic"
+                }
+                currentDocs={
+                  ((profile as unknown as {
+                    tier_documents?: Record<
+                      string,
+                      { verified?: boolean }
+                    > | null;
+                  }).tier_documents as Record<
+                    string,
+                    { verified?: boolean }
+                  > | null) ?? {}
+                }
+              />
+            </section>
+          )}
         </div>
       </div>
     </div>

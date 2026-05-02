@@ -11,7 +11,6 @@ import {
   MapPin,
   MessageCircle,
   Phone,
-  ShieldCheck,
   Star,
   Eye,
 } from "lucide-react";
