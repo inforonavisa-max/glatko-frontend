@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 
 import { createClient, createAdminClient } from "@/supabase/server";
 import { isAdminEmail } from "@/lib/admin";
-import { notifyProfessionalsOfNewRequest } from "@/lib/supabase/glatko.server";
+import { dispatchRequestMatchNotifications } from "@/lib/notifications/match-dispatch";
 import {
   sendRequestApprovedEmail,
   sendRequestRejectedEmail,
@@ -45,10 +45,11 @@ async function requireAdmin(): Promise<{ ok: true; userId: string } | { ok: fals
 }
 
 /**
- * Approve a pending_moderation request → publish it and trigger the
- * existing notifyProfessionalsOfNewRequest fan-out (which is the same
- * helper the original wizard called inline before G-REQ-1 introduced
- * the moderation gate).
+ * Approve a pending_moderation request → publish it and dispatch the
+ * Top-3 match notifications via the G-REQ-2 matching algorithm. The
+ * remaining 7 wait-list pros are queued (notified_at NULL) and
+ * activated by /api/cron/activate-waitlists 30 min later if fewer than
+ * 3 quotes have landed.
  */
 export async function approveRequest(requestId: string): Promise<ActionResult> {
   const auth = await requireAdmin();
@@ -87,22 +88,13 @@ export async function approveRequest(requestId: string): Promise<ActionResult> {
   const categoryNames =
     (catRow?.name as Record<string, string> | null | undefined) ?? {};
 
-  // Fire notify for matching pros (best-effort — never blocks the approve).
-  if (row.customer_id) {
-    await notifyProfessionalsOfNewRequest({
-      requestId: row.id as string,
-      customerId: row.customer_id as string,
-      categoryId: row.category_id as string,
-      title: row.title as string,
-      municipality: row.municipality as string,
-      preferredProfessionalId:
-        (row.preferred_professional_id as string | null) ?? null,
-      categoryNames,
-    }).catch(() => {
-      // Notify failure shouldn't roll back the approve. A future cron
-      // can re-fan-out unread requests; the row is now `published`.
-    });
-  }
+  // G-REQ-2: dispatch Top 3 matches via algorithm RPC + email.
+  // Wait-list (7) is queued unnotified; cron activates it after 30 min
+  // if quote_count < 3. Failures here never roll back the approve —
+  // the row is now `published` and the cron can retry.
+  await dispatchRequestMatchNotifications(row.id as string).catch(() => {
+    /* logged inside dispatcher */
+  });
 
   // User mailer: localized "your request is live" with verified-pro count.
   const userEmail = await lookupRequestorEmail(
