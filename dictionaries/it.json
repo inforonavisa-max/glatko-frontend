@@ -83,7 +83,28 @@
     "view": "Vedi servizi",
     "allHeading": "Tutti i servizi",
     "allSubheading": "10 categorie di servizio essenziali con professionisti verificati",
-    "subCount": "{count, plural, =0 {nessuna sottocategoria} one {# sottocategoria} other {# sottocategorie}}"
+    "subCount": "{count, plural, =0 {nessuna sottocategoria} one {# sottocategoria} other {# sottocategorie}}",
+    "beauty": {
+      "title": "Bellezza e Benessere",
+      "description": "Capelli, unghie, cura della pelle, massaggi e altro",
+      "hairSalon": "Salone di parrucchiere",
+      "manicurePedicure": "Manicure e pedicure",
+      "facialSkincare": "Cura del viso",
+      "massage": "Massaggio",
+      "bridalPrep": "Preparazione sposa",
+      "laserHairRemoval": "Epilazione laser"
+    },
+    "moving": {
+      "title": "Traslochi e Trasporti",
+      "description": "Traslochi casa o ufficio, imballaggio, deposito e altro",
+      "homeMoving": "Trasloco casa",
+      "officeMoving": "Trasloco ufficio",
+      "singleItem": "Singolo oggetto",
+      "packing": "Imballaggio",
+      "storage": "Deposito",
+      "airportTransfer": "Transfer aeroporto"
+    },
+    "seeAll": "Vedi tutte le categorie"
   },
   "howItWorks": {
     "title": "Come Funziona",

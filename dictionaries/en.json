@@ -83,7 +83,28 @@
     "view": "View services",
     "allHeading": "All services",
     "allSubheading": "10 essential service categories with verified professionals",
-    "subCount": "{count, plural, =0 {no subcategories} one {# subcategory} other {# subcategories}}"
+    "subCount": "{count, plural, =0 {no subcategories} one {# subcategory} other {# subcategories}}",
+    "beauty": {
+      "title": "Beauty & Wellness",
+      "description": "Hair, nails, skincare, massage and more",
+      "hairSalon": "Hair Salon",
+      "manicurePedicure": "Manicure & Pedicure",
+      "facialSkincare": "Facial & Skincare",
+      "massage": "Massage",
+      "bridalPrep": "Bridal Prep",
+      "laserHairRemoval": "Laser Hair Removal"
+    },
+    "moving": {
+      "title": "Moving & Transport",
+      "description": "Home or office moves, packing, storage and more",
+      "homeMoving": "Home Moving",
+      "officeMoving": "Office Moving",
+      "singleItem": "Single Item",
+      "packing": "Packing",
+      "storage": "Storage",
+      "airportTransfer": "Airport Transfer"
+    },
+    "seeAll": "See all categories"
   },
   "howItWorks": {
     "title": "How It Works",

@@ -83,7 +83,28 @@
     "view": "Hizmetleri gör",
     "allHeading": "Tüm hizmetler",
     "allSubheading": "Doğrulanmış profesyonellerle 10 temel hizmet kategorisi",
-    "subCount": "{count, plural, =0 {alt kategori yok} one {# alt kategori} other {# alt kategori}}"
+    "subCount": "{count, plural, =0 {alt kategori yok} one {# alt kategori} other {# alt kategori}}",
+    "beauty": {
+      "title": "Güzellik & Bakım",
+      "description": "Saç, tırnak, cilt bakımı, masaj ve daha fazlası",
+      "hairSalon": "Kuaför",
+      "manicurePedicure": "Manikür & Pedikür",
+      "facialSkincare": "Cilt Bakımı",
+      "massage": "Masaj",
+      "bridalPrep": "Gelin Hazırlık",
+      "laserHairRemoval": "Lazer Epilasyon"
+    },
+    "moving": {
+      "title": "Nakliye & Transport",
+      "description": "Ev veya ofis taşıma, paketleme, depolama ve daha fazlası",
+      "homeMoving": "Ev Taşıma",
+      "officeMoving": "Ofis Taşıma",
+      "singleItem": "Tek Parça Taşıma",
+      "packing": "Paketleme",
+      "storage": "Depolama",
+      "airportTransfer": "Havalimanı Transferi"
+    },
+    "seeAll": "Tüm kategorileri gör"
   },
   "howItWorks": {
     "title": "Nasıl Çalışır?",
