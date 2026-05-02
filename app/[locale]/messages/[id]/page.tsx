@@ -27,6 +27,7 @@ export default async function MessagesThreadPage({ params }: Props) {
       request_id,
       professional_id,
       customer_id,
+      initial_quote_id,
       status,
       glatko_service_requests (
         id,
@@ -47,6 +48,32 @@ export default async function MessagesThreadPage({ params }: Props) {
   const isParticipant =
     thread.customer_id === user.id || thread.professional_id === user.id;
   if (!isParticipant) notFound();
+
+  // G-REV-1: load the linked quote (completion_state machine) + any
+  // existing review so the ChatBox can render the right banner.
+  let quoteInfo: {
+    id: string;
+    completion_state: string;
+    has_review: boolean;
+  } | null = null;
+  if (thread.initial_quote_id) {
+    const { data: q } = await supabase
+      .from("glatko_request_quotes")
+      .select("id, completion_state")
+      .eq("id", thread.initial_quote_id as string)
+      .maybeSingle();
+    if (q) {
+      const { count: reviewCount } = await supabase
+        .from("glatko_quote_reviews")
+        .select("id", { count: "exact", head: true })
+        .eq("quote_id", q.id as string);
+      quoteInfo = {
+        id: q.id as string,
+        completion_state: (q.completion_state as string) ?? "in_progress",
+        has_review: (reviewCount ?? 0) > 0,
+      };
+    }
+  }
 
   const { data: messages } = await supabase
     .from("glatko_thread_messages")
@@ -95,6 +122,9 @@ export default async function MessagesThreadPage({ params }: Props) {
   const requestInfo =
     thread.glatko_service_requests as unknown as ServiceRequestInfo;
 
+  const isProUser = user.id === thread.professional_id;
+  const isCustomerUser = user.id === thread.customer_id;
+
   return (
     <ChatBox
       threadId={id}
@@ -105,6 +135,10 @@ export default async function MessagesThreadPage({ params }: Props) {
       initialMessages={JSON.parse(JSON.stringify(messages ?? []))}
       locale={locale}
       threadActive={thread.status === "active"}
+      quote={quoteInfo}
+      isProUser={isProUser}
+      isCustomerUser={isCustomerUser}
+      counterpartId={counterpartId ?? null}
     />
   );
 }

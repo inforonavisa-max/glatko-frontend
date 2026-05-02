@@ -117,3 +117,127 @@ export async function markThreadAsRead(thread_id: string): Promise<ActionResult>
   revalidatePath(`/[locale]/messages`, "page");
   return { success: true };
 }
+
+/* ─── G-REV-1 — completion + review actions ────────────────────────────── */
+
+export async function markQuoteComplete(
+  quote_id: string,
+): Promise<ActionResult<{ updated: boolean }>> {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { success: false, error: "Unauthorized" };
+
+  const { data, error } = await supabase.rpc("glatko_pro_mark_complete", {
+    p_quote_id: quote_id,
+  });
+  if (error) return { success: false, error: error.message };
+
+  revalidatePath(`/[locale]/messages`, "page");
+  return { success: true, data: { updated: Boolean(data) } };
+}
+
+export async function confirmQuoteCompletion(input: {
+  quote_id: string;
+  confirmed: boolean;
+}): Promise<ActionResult<{ updated: boolean }>> {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { success: false, error: "Unauthorized" };
+
+  const { data, error } = await supabase.rpc(
+    "glatko_customer_confirm_completion",
+    {
+      p_quote_id: input.quote_id,
+      p_confirmed: input.confirmed,
+    },
+  );
+  if (error) return { success: false, error: error.message };
+
+  revalidatePath(`/[locale]/messages`, "page");
+  return { success: true, data: { updated: Boolean(data) } };
+}
+
+function anonymizeName(fullName: string | null | undefined): string {
+  const trimmed = (fullName ?? "").trim();
+  if (!trimmed) return "";
+  const parts = trimmed.split(/\s+/);
+  if (parts.length === 1) return parts[0];
+  const last = parts[parts.length - 1];
+  return `${parts[0]} ${last.charAt(0).toUpperCase()}.`;
+}
+
+export async function submitReview(input: {
+  quote_id: string;
+  rating: number;
+  comment?: string;
+}): Promise<ActionResult<{ review_id: string }>> {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { success: false, error: "Unauthorized" };
+
+  if (!Number.isInteger(input.rating) || input.rating < 1 || input.rating > 5) {
+    return { success: false, error: "Rating must be 1–5" };
+  }
+  const trimmedComment = (input.comment ?? "").trim();
+  if (trimmedComment.length > 1000) {
+    return { success: false, error: "Comment too long (max 1000)" };
+  }
+
+  const { data: quote, error: quoteErr } = await supabase
+    .from("glatko_request_quotes")
+    .select("id, professional_id, request_id, completion_state")
+    .eq("id", input.quote_id)
+    .maybeSingle();
+
+  if (quoteErr || !quote) {
+    return { success: false, error: "Quote not found" };
+  }
+  if (quote.completion_state !== "customer_confirmed") {
+    return {
+      success: false,
+      error: "Cannot review until customer confirms completion",
+    };
+  }
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("full_name")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  const displayName = anonymizeName(profile?.full_name as string | null);
+
+  const { data, error } = await supabase
+    .from("glatko_quote_reviews")
+    .insert({
+      quote_id: input.quote_id,
+      request_id: quote.request_id as string,
+      professional_id: quote.professional_id as string,
+      customer_id: user.id,
+      rating: input.rating,
+      comment: trimmedComment || null,
+      customer_display_name: displayName || null,
+    })
+    .select("id")
+    .single();
+
+  if (error) {
+    if (error.code === "23505") {
+      return {
+        success: false,
+        error: "You have already reviewed this job",
+      };
+    }
+    return { success: false, error: error.message };
+  }
+
+  revalidatePath(`/[locale]/provider/${quote.professional_id}`, "page");
+  revalidatePath(`/[locale]/messages`, "page");
+  return { success: true, data: { review_id: data.id as string } };
+}
