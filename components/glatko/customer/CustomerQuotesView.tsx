@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
   Star,
   MapPin,
   MessageCircle,
+  MessageSquare,
   Clock,
   ShieldCheck,
   Crown,
@@ -13,6 +15,7 @@ import {
   Hourglass,
 } from "lucide-react";
 import { Tooltip } from "@/components/aceternity/tooltip";
+import { openOrCreateThread } from "@/app/[locale]/messages/actions";
 
 type CategoryNames = Record<string, string>;
 
@@ -90,6 +93,7 @@ export function CustomerQuotesView({
   locale,
 }: Props) {
   const t = useTranslations();
+  const router = useRouter();
 
   const quotes = request.glatko_request_quotes ?? [];
   const quoteCount = quotes.length;
@@ -98,6 +102,33 @@ export function CustomerQuotesView({
   );
 
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
+  const [openingThread, setOpeningThread] = useState<string | null>(null);
+  const [threadError, setThreadError] = useState<string | null>(null);
+
+  async function handleStartChat(quote: Quote) {
+    const pro = quote.glatko_professional_profiles;
+    if (!pro) return;
+    setOpeningThread(quote.id);
+    setThreadError(null);
+    try {
+      const result = await openOrCreateThread({
+        request_id: request.id,
+        professional_id: pro.id,
+        initial_quote_id: quote.id,
+      });
+      if (!result.success || !result.data) {
+        setThreadError(result.error ?? t("messaging.openThreadError"));
+        setOpeningThread(null);
+        return;
+      }
+      router.push(`/${locale}/messages/${result.data.thread_id}`);
+    } catch (err) {
+      setThreadError(
+        err instanceof Error ? err.message : t("messaging.openThreadError"),
+      );
+      setOpeningThread(null);
+    }
+  }
 
   useEffect(() => {
     if (!dispatchedAt || quoteCount >= 3) {
@@ -342,35 +373,46 @@ export function CustomerQuotesView({
                 </div>
 
                 {/* CTAs */}
-                <div className="flex gap-2">
-                  {extras.phone ? (
-                    <button
-                      type="button"
-                      onClick={() => handleWhatsApp(pro)}
-                      className="flex-1 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium flex items-center justify-center gap-2"
-                    >
-                      <MessageCircle className="h-4 w-4" />
-                      {t("customer.quotes.whatsappCta")}
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      disabled
-                      className="flex-1 px-3 py-2 bg-gray-200 dark:bg-neutral-800 text-gray-500 dark:text-neutral-500 rounded-lg text-sm font-medium cursor-not-allowed"
-                    >
-                      {t("customer.quotes.messagingComingSoon")}
-                    </button>
-                  )}
-                  <a
-                    href={`/${locale}/provider/${pro.id}`}
-                    className="px-3 py-2 border border-gray-300 dark:border-neutral-700 text-gray-700 dark:text-neutral-300 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-neutral-800"
+                <div className="space-y-2">
+                  <button
+                    type="button"
+                    onClick={() => handleStartChat(quote)}
+                    disabled={openingThread === quote.id}
+                    className="w-full px-3 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg text-sm font-medium flex items-center justify-center gap-2 disabled:opacity-60"
                   >
-                    {t("customer.quotes.viewProfile")}
-                  </a>
+                    <MessageSquare className="h-4 w-4" />
+                    {openingThread === quote.id
+                      ? t("messaging.openingThread")
+                      : t("messaging.sendMessage")}
+                  </button>
+                  <div className="flex gap-2">
+                    {extras.phone && (
+                      <button
+                        type="button"
+                        onClick={() => handleWhatsApp(pro)}
+                        className="flex-1 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium flex items-center justify-center gap-2"
+                      >
+                        <MessageCircle className="h-4 w-4" />
+                        {t("customer.quotes.whatsappCta")}
+                      </button>
+                    )}
+                    <a
+                      href={`/${locale}/provider/${pro.id}`}
+                      className="flex-1 px-3 py-2 border border-gray-300 dark:border-neutral-700 text-gray-700 dark:text-neutral-300 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-neutral-800 text-center"
+                    >
+                      {t("customer.quotes.viewProfile")}
+                    </a>
+                  </div>
                 </div>
               </div>
             );
           })}
+        </div>
+      )}
+
+      {threadError && (
+        <div className="mt-4 rounded-lg bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 p-3 text-sm text-red-700 dark:text-red-400">
+          {threadError}
         </div>
       )}
     </div>

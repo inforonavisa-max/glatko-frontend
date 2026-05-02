@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import {
   Clock,
@@ -9,6 +10,7 @@ import {
   CheckCircle,
   FileText,
   Hourglass,
+  MessageSquare,
 } from "lucide-react";
 import { Tooltip } from "@/components/aceternity/tooltip";
 import {
@@ -60,8 +62,14 @@ export interface Lead {
   glatko_request_quotes: LeadQuote[] | null;
 }
 
+interface ThreadInfo {
+  thread_id: string;
+  pro_unread_count: number;
+}
+
 interface Props {
   leads: Lead[];
+  threadByRequestId?: Record<string, ThreadInfo>;
   locale: string;
 }
 
@@ -88,7 +96,11 @@ function formatBudget(min: number | null, max: number | null): string {
   return `EUR ≤${max}`;
 }
 
-export function LeadsList({ leads, locale }: Props) {
+export function LeadsList({
+  leads,
+  threadByRequestId = {},
+  locale,
+}: Props) {
   const t = useTranslations();
 
   if (leads.length === 0) {
@@ -211,7 +223,7 @@ export function LeadsList({ leads, locale }: Props) {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-2">
                 {sentQuote ? (
                   <span className="px-4 py-2 bg-gray-100 dark:bg-neutral-800 text-gray-700 dark:text-neutral-300 rounded-lg text-sm font-medium">
                     ✓ {t("pro.leads.quoteAlreadySent")} ·{" "}
@@ -232,6 +244,23 @@ export function LeadsList({ leads, locale }: Props) {
                       </ModalContent>
                     </ModalBody>
                   </Modal>
+                )}
+                {threadByRequestId[lead.request_id] && (
+                  <Link
+                    href={`/${locale}/messages/${
+                      threadByRequestId[lead.request_id].thread_id
+                    }`}
+                    className="px-4 py-2 border border-gray-300 dark:border-neutral-700 text-gray-700 dark:text-neutral-300 rounded-lg text-sm font-medium hover:bg-gray-50 dark:hover:bg-neutral-800 flex items-center gap-2"
+                  >
+                    <MessageSquare className="h-4 w-4" />
+                    {t("messaging.viewThread")}
+                    {threadByRequestId[lead.request_id].pro_unread_count >
+                      0 && (
+                      <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 bg-blue-600 text-white rounded-full text-xs font-semibold">
+                        {threadByRequestId[lead.request_id].pro_unread_count}
+                      </span>
+                    )}
+                  </Link>
                 )}
               </div>
             </div>

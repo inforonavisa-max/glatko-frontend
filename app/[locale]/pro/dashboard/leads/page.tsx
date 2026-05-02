@@ -68,9 +68,34 @@ export default async function ProLeadsPage({ params }: Props) {
     console.error("[GLATKO:leads] notifications fetch failed:", error);
   }
 
+  // Map (request_id → thread + pro_unread_count) so the lead card can
+  // show "View thread" with an unread badge when a chat already exists.
+  const requestIds = (notifications ?? [])
+    .map((n) => n.request_id as string)
+    .filter(Boolean);
+
+  const threadByRequestId: Record<
+    string,
+    { thread_id: string; pro_unread_count: number }
+  > = {};
+  if (requestIds.length > 0) {
+    const { data: threads } = await supabase
+      .from("glatko_message_threads")
+      .select("id, request_id, pro_unread_count")
+      .eq("professional_id", user.id)
+      .in("request_id", requestIds);
+    for (const t of threads ?? []) {
+      threadByRequestId[t.request_id as string] = {
+        thread_id: t.id as string,
+        pro_unread_count: (t.pro_unread_count as number) ?? 0,
+      };
+    }
+  }
+
   return (
     <LeadsList
       leads={JSON.parse(JSON.stringify(notifications ?? []))}
+      threadByRequestId={threadByRequestId}
       locale={locale}
     />
   );
