@@ -1994,3 +1994,246 @@ const proRejected: Record<EmailLocale, ProRejectedCopy> = {
 export function getProRejectedCopy(locale: EmailLocale): ProRejectedCopy {
   return proRejected[locale] ?? proRejected.en;
 }
+/* ═══════════════════════════════════════════════════════════════════════════
+   G-LAUNCH-1: Founding Provider + Founding Customer welcome emails
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+export type FoundingProviderWelcomeCopy = {
+  subject: string;
+  preview: string;
+  heading: string;
+  body: string;
+  perksTitle: string;
+  perk1: string;
+  perk2: string;
+  perk3: string;
+  cta: string;
+};
+
+const foundingProviderWelcome: Record<EmailLocale, FoundingProviderWelcomeCopy> = {
+  en: {
+    subject: "Welcome — you are Founding Provider #{number}",
+    preview: "Your Founding Provider perks are now active",
+    heading: "You are a Founding Provider",
+    body: "Welcome to Glatko, {name}. As one of our first 50 verified pros in Boka Bay, your Founding badge is now live on your profile and stays with you for life.",
+    perksTitle: "Your Founding perks",
+    perk1: "Lifetime gold Founding badge on your profile and search results",
+    perk2: "3 months of free featured placement when paid tiers launch (May 2027)",
+    perk3: "Priority access to upcoming features and direct line to our team",
+    cta: "Open your dashboard",
+  },
+  tr: {
+    subject: "Hoş geldin — Kurucu Profesyonel #{number} oldun",
+    preview: "Kurucu Profesyonel ayrıcalıkların aktif",
+    heading: "Sen bir Kurucu Profesyonelsin",
+    body: "Glatko'ya hoş geldin {name}. Boka Bay'deki ilk 50 doğrulanmış pro'muzdan biri olarak Kurucu rozetin profilinde aktif ve ömür boyu seninle.",
+    perksTitle: "Ayrıcalıkların",
+    perk1: "Profil ve arama sonuçlarında ömür boyu altın Kurucu rozeti",
+    perk2: "Ücretli paketler başladığında 3 ay ücretsiz öne çıkarma (Mayıs 2027)",
+    perk3: "Yeni özelliklere öncelikli erişim ve ekibimizle direkt iletişim",
+    cta: "Paneli aç",
+  },
+  de: {
+    subject: "Willkommen — Sie sind Founding-Profi Nr. {number}",
+    preview: "Ihre Founding-Vorteile sind aktiv",
+    heading: "Sie sind ein Founding-Profi",
+    body: "Willkommen bei Glatko, {name}. Als eine(r) der ersten 50 verifizierten Profis in der Bucht von Kotor ist Ihr Founding-Abzeichen ab sofort aktiv — und bleibt es für immer.",
+    perksTitle: "Ihre Founding-Vorteile",
+    perk1: "Lebenslanges goldenes Founding-Abzeichen im Profil und Suchergebnissen",
+    perk2: "3 Monate kostenlose Featured-Platzierung beim Paid-Launch (Mai 2027)",
+    perk3: "Vorrang bei kommenden Features und direkter Draht zu unserem Team",
+    cta: "Dashboard öffnen",
+  },
+  ar: {
+    subject: "أهلاً — أنت المحترف المؤسس رقم {number}",
+    preview: "امتيازات المحترف المؤسس فعّالة الآن",
+    heading: "أنت محترف مؤسس",
+    body: "مرحبًا بك في Glatko يا {name}. كأحد أول 50 محترفًا موثوقًا في خليج بوكا، شارة المؤسس فعّالة في ملفك وتبقى معك مدى الحياة.",
+    perksTitle: "امتيازاتك كمؤسس",
+    perk1: "شارة مؤسس ذهبية مدى الحياة في الملف ونتائج البحث",
+    perk2: "3 أشهر إبراز مجاني عند إطلاق الباقات المدفوعة (مايو 2027)",
+    perk3: "أولوية الوصول للميزات الجديدة وخط مباشر مع فريقنا",
+    cta: "افتح لوحة التحكم",
+  },
+  it: {
+    subject: "Benvenuto — sei il Founding Provider #{number}",
+    preview: "I tuoi benefit Founding sono attivi",
+    heading: "Sei un Founding Provider",
+    body: "Benvenuto su Glatko, {name}. Come uno dei primi 50 pro verificati nelle Bocche di Cattaro, il tuo badge Founding è attivo sul profilo e resta con te a vita.",
+    perksTitle: "I tuoi benefit Founding",
+    perk1: "Badge Founding oro a vita su profilo e risultati di ricerca",
+    perk2: "3 mesi di placement in evidenza gratis al lancio dei piani a pagamento (mag 2027)",
+    perk3: "Accesso prioritario alle funzioni future e contatto diretto con il team",
+    cta: "Apri la dashboard",
+  },
+  me: {
+    subject: "Dobrodošli — vi ste Osnivački profesionalac #{number}",
+    preview: "Vaše Osnivačke pogodnosti su aktivne",
+    heading: "Vi ste Osnivački profesionalac",
+    body: "Dobrodošli na Glatko, {name}. Kao jedan od prvih 50 provjerenih pro u Boki, vaša Osnivačka oznaka je aktivna na profilu i ostaje doživotno.",
+    perksTitle: "Vaše Osnivačke pogodnosti",
+    perk1: "Doživotna zlatna Osnivačka oznaka na profilu i u rezultatima pretrage",
+    perk2: "3 mjeseca besplatnog isticanja kad krenu plaćeni paketi (maj 2027)",
+    perk3: "Prioritetni pristup novim funkcijama i direktan kanal s timom",
+    cta: "Otvori kontrolnu tablu",
+  },
+  ru: {
+    subject: "Добро пожаловать — вы Founding-специалист №{number}",
+    preview: "Ваши преимущества Founding активны",
+    heading: "Вы — Founding-специалист",
+    body: "Добро пожаловать в Glatko, {name}. Как один из первых 50 проверенных специалистов в Бока-Которском заливе, ваш значок Founding активен в профиле и остаётся с вами навсегда.",
+    perksTitle: "Ваши преимущества Founding",
+    perk1: "Пожизненный золотой значок Founding в профиле и результатах поиска",
+    perk2: "3 месяца бесплатного приоритета при запуске платных тарифов (май 2027)",
+    perk3: "Приоритетный доступ к новым функциям и прямой канал с командой",
+    cta: "Открыть панель",
+  },
+  sr: {
+    subject: "Dobrodošli — vi ste Osnivački profesionalac #{number}",
+    preview: "Vaše Osnivačke pogodnosti su aktivne",
+    heading: "Vi ste Osnivački profesionalac",
+    body: "Dobrodošli na Glatko, {name}. Kao jedan od prvih 50 proverenih pro u Boki, vaša Osnivačka oznaka je aktivna na profilu i ostaje doživotno.",
+    perksTitle: "Vaše Osnivačke pogodnosti",
+    perk1: "Doživotna zlatna Osnivačka oznaka na profilu i u rezultatima pretrage",
+    perk2: "3 meseca besplatnog isticanja kad krenu plaćeni paketi (maj 2027)",
+    perk3: "Prioritetni pristup novim funkcijama i direktan kanal sa timom",
+    cta: "Otvori kontrolnu tablu",
+  },
+  uk: {
+    subject: "Ласкаво просимо — ви Founding-фахівець №{number}",
+    preview: "Ваші переваги Founding активні",
+    heading: "Ви — Founding-фахівець",
+    body: "Ласкаво просимо до Glatko, {name}. Як один із перших 50 перевірених фахівців у Бока-Которі, ваш значок Founding активний у профілі та залишається з вами назавжди.",
+    perksTitle: "Ваші переваги Founding",
+    perk1: "Довічний золотий значок Founding у профілі та результатах пошуку",
+    perk2: "3 місяці безкоштовного пріоритету при запуску платних тарифів (травень 2027)",
+    perk3: "Пріоритетний доступ до нових функцій та прямий канал з командою",
+    cta: "Відкрити панель",
+  },
+};
+
+export function getFoundingProviderWelcomeCopy(
+  locale: EmailLocale,
+): FoundingProviderWelcomeCopy {
+  return foundingProviderWelcome[locale] ?? foundingProviderWelcome.en;
+}
+
+export type FoundingCustomerWelcomeCopy = {
+  subject: string;
+  preview: string;
+  heading: string;
+  body: string;
+  perksTitle: string;
+  perk1: string;
+  perk2: string;
+  perk3: string;
+  cta: string;
+};
+
+const foundingCustomerWelcome: Record<EmailLocale, FoundingCustomerWelcomeCopy> = {
+  en: {
+    subject: "Welcome — you are Founding Customer #{number}",
+    preview: "5 free credits added to your account",
+    heading: "Welcome aboard, Founding Customer",
+    body: "Thanks for being among Glatko's first 100 customers, {name}. We've added 5 free request credits to your account and a Founding Customer badge to your profile.",
+    perksTitle: "What you get",
+    perk1: "Founding Customer badge on your reviews and chats — pros notice it",
+    perk2: "5 free request credits, no expiry, usable across all categories",
+    perk3: "Priority support and bonus credits for every friend you refer",
+    cta: "Browse services",
+  },
+  tr: {
+    subject: "Hoş geldin — Kurucu Müşteri #{number} oldun",
+    preview: "Hesabına 5 ücretsiz kredi eklendi",
+    heading: "Aramıza hoş geldin Kurucu Müşteri",
+    body: "Glatko'nun ilk 100 müşterisi arasında olduğun için teşekkürler {name}. Hesabına 5 ücretsiz talep kredisi ve profiline Kurucu Müşteri rozeti ekledik.",
+    perksTitle: "Senin için neler var",
+    perk1: "Yorum ve sohbetlerde Kurucu Müşteri rozeti — pro'lar fark eder",
+    perk2: "5 ücretsiz talep kredisi, son kullanma yok, tüm kategorilerde kullanılır",
+    perk3: "Öncelikli destek ve davet ettiğin her arkadaş için bonus kredi",
+    cta: "Hizmetlere göz at",
+  },
+  de: {
+    subject: "Willkommen — Sie sind Founding-Kunde Nr. {number}",
+    preview: "5 Gratis-Credits Ihrem Konto hinzugefügt",
+    heading: "Willkommen, Founding-Kunde",
+    body: "Danke, dass Sie zu Glatkos ersten 100 Kunden gehören, {name}. Wir haben 5 Gratis-Credits zu Ihrem Konto hinzugefügt und ein Founding-Kunden-Abzeichen auf Ihrem Profil angebracht.",
+    perksTitle: "Ihre Vorteile",
+    perk1: "Founding-Kunden-Abzeichen in Bewertungen und Chats — Profis sehen es",
+    perk2: "5 Gratis-Anfrage-Credits, kein Verfall, in allen Kategorien nutzbar",
+    perk3: "Priority-Support und Bonus-Credits für jede geworbene Person",
+    cta: "Dienstleistungen entdecken",
+  },
+  ar: {
+    subject: "أهلاً — أنت العميل المؤسس رقم {number}",
+    preview: "أُضيفت 5 أرصدة مجانية إلى حسابك",
+    heading: "أهلاً بك، أيها العميل المؤسس",
+    body: "شكرًا لكونك بين أول 100 عميل في Glatko، {name}. أضفنا 5 أرصدة طلبات مجانية إلى حسابك وشارة العميل المؤسس إلى ملفك.",
+    perksTitle: "ما تحصل عليه",
+    perk1: "شارة العميل المؤسس على تقييماتك ومحادثاتك — يلاحظها المحترفون",
+    perk2: "5 أرصدة طلبات مجانية، بلا انتهاء، صالحة في جميع الفئات",
+    perk3: "دعم مميز وأرصدة إضافية لكل صديق تدعوه",
+    cta: "تصفح الخدمات",
+  },
+  it: {
+    subject: "Benvenuto — sei il Founding Customer #{number}",
+    preview: "5 crediti gratis aggiunti al tuo account",
+    heading: "Benvenuto a bordo, Founding Customer",
+    body: "Grazie per essere tra i primi 100 clienti di Glatko, {name}. Abbiamo aggiunto 5 crediti richiesta gratis al tuo account e un badge Founding Customer al tuo profilo.",
+    perksTitle: "Cosa ottieni",
+    perk1: "Badge Founding Customer su recensioni e chat — i pro lo notano",
+    perk2: "5 crediti richiesta gratis, senza scadenza, su tutte le categorie",
+    perk3: "Supporto prioritario e crediti bonus per ogni amico invitato",
+    cta: "Esplora i servizi",
+  },
+  me: {
+    subject: "Dobrodošli — vi ste Osnivački klijent #{number}",
+    preview: "5 besplatnih kredita dodato na nalog",
+    heading: "Dobrodošli, Osnivački kliente",
+    body: "Hvala što ste među prvih 100 klijenata Glatka, {name}. Dodali smo 5 besplatnih kredita za zahtjeve na nalog i Osnivačku oznaku na profil.",
+    perksTitle: "Šta dobijate",
+    perk1: "Oznaka Osnivačkog klijenta na recenzijama i u chatu — profesionalci to primjećuju",
+    perk2: "5 besplatnih kredita za zahtjeve, bez isteka, u svim kategorijama",
+    perk3: "Prioritetna podrška i bonus krediti za svakog pozvanog prijatelja",
+    cta: "Pregledaj usluge",
+  },
+  ru: {
+    subject: "Добро пожаловать — вы Founding-клиент №{number}",
+    preview: "5 бесплатных кредитов добавлены на ваш счёт",
+    heading: "Добро пожаловать, Founding-клиент",
+    body: "Спасибо, что вы среди первых 100 клиентов Glatko, {name}. Мы добавили 5 бесплатных кредитов запросов на ваш счёт и значок Founding Customer в профиль.",
+    perksTitle: "Что вы получаете",
+    perk1: "Значок Founding Customer в отзывах и чатах — специалисты замечают",
+    perk2: "5 бесплатных кредитов запросов, без срока, во всех категориях",
+    perk3: "Приоритетная поддержка и бонус-кредиты за каждого приглашённого друга",
+    cta: "Посмотреть услуги",
+  },
+  sr: {
+    subject: "Dobrodošli — vi ste Osnivački klijent #{number}",
+    preview: "5 besplatnih kredita dodato na nalog",
+    heading: "Dobrodošli, Osnivački kliente",
+    body: "Hvala što ste među prvih 100 klijenata Glatka, {name}. Dodali smo 5 besplatnih kredita za zahteve na nalog i Osnivačku oznaku na profil.",
+    perksTitle: "Šta dobijate",
+    perk1: "Oznaka Osnivačkog klijenta na recenzijama i u chatu — profesionalci to primećuju",
+    perk2: "5 besplatnih kredita za zahteve, bez isteka, u svim kategorijama",
+    perk3: "Prioritetna podrška i bonus krediti za svakog pozvanog prijatelja",
+    cta: "Pregledaj usluge",
+  },
+  uk: {
+    subject: "Ласкаво просимо — ви Founding-клієнт №{number}",
+    preview: "5 безкоштовних кредитів додано на рахунок",
+    heading: "Ласкаво просимо, Founding-клієнте",
+    body: "Дякуємо, що ви серед перших 100 клієнтів Glatko, {name}. Додали 5 безкоштовних кредитів запитів на ваш рахунок і значок Founding Customer у профіль.",
+    perksTitle: "Що ви отримуєте",
+    perk1: "Значок Founding Customer у відгуках та чатах — фахівці помічають",
+    perk2: "5 безкоштовних кредитів запитів, без терміну, у всіх категоріях",
+    perk3: "Пріоритетна підтримка та бонусні кредити за кожного запрошеного друга",
+    cta: "Переглянути послуги",
+  },
+};
+
+export function getFoundingCustomerWelcomeCopy(
+  locale: EmailLocale,
+): FoundingCustomerWelcomeCopy {
+  return foundingCustomerWelcome[locale] ?? foundingCustomerWelcome.en;
+}
