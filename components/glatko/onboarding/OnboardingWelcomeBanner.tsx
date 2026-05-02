@@ -12,18 +12,46 @@ type Props = {
 };
 
 const COLLAPSE_MS = 320;
+const LOCAL_DISMISS_KEY = "glatko_welcome_dismissed_v1";
 
 export function OnboardingWelcomeBanner({ displayName }: Props) {
   const t = useTranslations("onboarding");
   const [pending, startTransition] = useTransition();
   const reducedMotion = useReducedMotion();
   const [isClosing, setIsClosing] = useState(false);
+  // Defensive layer (PR #25): the layout's onboarding_completed flag is
+  // the canonical signal, but Next.js's revalidatePath("/", "layout")
+  // doesn't always invalidate the RSC cache for the current page navigation
+  // — the banner re-appears until the user navigates. localStorage gives
+  // an immediate, browser-side "dismissed" signal that survives soft
+  // reloads regardless of the server cache state.
+  const [localDismissed, setLocalDismissed] = useState(false);
+
+  useEffect(() => {
+    try {
+      if (window.localStorage.getItem(LOCAL_DISMISS_KEY) === "1") {
+        setLocalDismissed(true);
+      }
+    } catch {
+      /* SSR / privacy mode — fall back to server-side flag */
+    }
+  }, []);
+
+  function persistLocalDismiss() {
+    try {
+      window.localStorage.setItem(LOCAL_DISMISS_KEY, "1");
+    } catch {
+      /* ignore */
+    }
+  }
 
   function onDismiss() {
+    persistLocalDismiss();
     if (reducedMotion) {
       startTransition(async () => {
         await dismissOnboardingWelcome();
       });
+      setLocalDismissed(true);
       return;
     }
     setIsClosing(true);
@@ -37,12 +65,16 @@ export function OnboardingWelcomeBanner({ displayName }: Props) {
         const result = await dismissOnboardingWelcome();
         if (result && "error" in result && result.error) {
           setIsClosing(false);
+        } else {
+          setLocalDismissed(true);
         }
       });
     }, COLLAPSE_MS);
 
     return () => window.clearTimeout(id);
   }, [isClosing, reducedMotion]);
+
+  if (localDismissed) return null;
 
   const title =
     displayName.trim().length > 0
