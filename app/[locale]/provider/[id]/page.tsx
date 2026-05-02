@@ -74,13 +74,31 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!profile) return {};
   const name = profile.business_name?.trim() || profile.profile?.full_name?.trim() || "Professional";
   const city = profile.location_city || "Montenegro";
+
+  // G-PRO-2 Faz 2: 9-locale hreflang alternates so search engines and
+  // social cards surface the language-correct provider page. Same
+  // canonical pattern as G-CAT-4 sub-category pages.
+  const baseUrl =
+    process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") || "https://glatko.app";
+  const languageAlternates: Record<string, string> = {};
+  for (const loc of routing.locales) {
+    languageAlternates[loc] = `${baseUrl}/${loc}/provider/${id}`;
+  }
+  languageAlternates["x-default"] = `${baseUrl}/en/provider/${id}`;
+
+  const canonical = `${baseUrl}/${locale}/provider/${id}`;
+
   return {
     title: `${name} — Glatko`,
     description: `${name} — verified professional in ${city}. ${profile.avg_rating.toFixed(1)}★ rating, ${profile.completed_jobs} jobs completed.`,
+    alternates: {
+      canonical,
+      languages: languageAlternates,
+    },
     openGraph: {
       title: `${name} — Glatko`,
       description: `Verified professional in ${city}. Get a quote on Glatko.`,
-      url: `https://glatko.app/${locale}/provider/${id}`,
+      url: canonical,
       siteName: "Glatko",
       locale,
       type: "profile",
