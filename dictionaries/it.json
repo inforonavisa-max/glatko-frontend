@@ -456,6 +456,45 @@
       "primary": "Servizio principale",
       "ctaTitle": "Ti serve questo servizio?",
       "ctaDesc": "Richiedi un preventivo a questo professionista"
+    },
+    "leads": {
+      "title": "Richieste in arrivo",
+      "subtitle": "Richieste di clienti nella tua zona abbinate dall'algoritmo",
+      "emptyTitle": "Nessuna richiesta ancora",
+      "emptyBody": "Le nuove richieste che corrispondono ai tuoi servizi appariranno qui. Assicurati che il tuo profilo sia completo e di servire le città vicine.",
+      "primaryMatch": "Top 3 Match",
+      "primaryMatchTooltip": "Sei tra i primi 3 professionisti notificati — invia un preventivo rapidamente per le migliori possibilità.",
+      "waitlistMatch": "Lista d'attesa",
+      "waitlistMatchTooltip": "Sei stato attivato dopo che i top 3 non hanno completato la richiesta in 30 minuti.",
+      "match": "match",
+      "matchScoreTooltip": "Punteggio composito basato su distanza, completezza del profilo, velocità di risposta, valutazione e prezzo.",
+      "urgency": {
+        "asap": "Urgente",
+        "this_week": "Questa settimana",
+        "flexible": "Flessibile",
+        "specific_date": "Data specifica"
+      },
+      "sendQuote": "Invia preventivo",
+      "quoteAlreadySent": "Preventivo inviato",
+      "requestNotActive": "Richiesta chiusa",
+      "sendQuoteTitle": "Invia il tuo preventivo",
+      "priceLabel": "Il tuo prezzo (EUR)",
+      "pricingModelLabel": "Modello di prezzo",
+      "pricingModel": {
+        "hourly": "Tariffa oraria",
+        "fixed": "Prezzo fisso",
+        "per_unit": "Per unità",
+        "estimate": "Preventivo"
+      },
+      "messageLabel": "Il tuo messaggio al cliente",
+      "messagePlaceholder": "Presentati, spiega il tuo approccio e fai eventuali domande di chiarimento.",
+      "messageMin": "caratteri minimo",
+      "messageMinError": "Il messaggio deve contenere almeno 10 caratteri.",
+      "priceRequired": "Il prezzo è obbligatorio e deve essere maggiore di zero.",
+      "cancel": "Annulla",
+      "submitQuote": "Invia preventivo",
+      "submitting": "Invio in corso...",
+      "submitError": "Impossibile inviare il preventivo. Riprova."
     }
   },
   "admin": {
@@ -1881,5 +1920,30 @@
     "quoteValidationPriceRequired": "Il prezzo è obbligatorio.",
     "quoteValidationMessageMin": "Il messaggio deve avere almeno 10 caratteri.",
     "quoteValidationMessageMax": "Il messaggio non può superare i 5000 caratteri."
+  },
+  "customer": {
+    "quotes": {
+      "budget": "Budget",
+      "waitingMoreQuotes": "Altri preventivi sono in arrivo",
+      "waitingTimer": "Tempo rimanente",
+      "waitlistActivated": "Abbiamo attivato altri professionisti per assicurarti ottime opzioni.",
+      "quotesReceived": "Preventivi ricevuti",
+      "quotesSortedByPrice": "Ordinati per prezzo (più basso prima).",
+      "noQuotesYet": "I preventivi sono in arrivo",
+      "noQuotesYetBody": "I professionisti nella tua zona sono stati notificati. Nuovi preventivi appariranno qui.",
+      "bestPrice": "Miglior prezzo",
+      "foundingTooltip": "Provider fondatore — early adopter con visibilità estesa.",
+      "completedJobs": "lavori completati",
+      "pricingModel": {
+        "hourly": "all'ora",
+        "fixed": "prezzo fisso",
+        "per_unit": "per unità",
+        "estimate": "preventivo"
+      },
+      "whatsappMessage": "Ciao, vorrei parlare della mia richiesta Glatko:",
+      "whatsappCta": "WhatsApp",
+      "messagingComingSoon": "Messaggi — presto disponibili",
+      "viewProfile": "Vedi profilo"
+    }
   }
 }

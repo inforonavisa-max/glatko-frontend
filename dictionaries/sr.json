@@ -456,6 +456,45 @@
       "primary": "Primarna usluga",
       "ctaTitle": "Da li vam treba ova usluga?",
       "ctaDesc": "Zatražite ponudu od ovog profesionalca"
+    },
+    "leads": {
+      "title": "Пристигли захтеви",
+      "subtitle": "Захтеви клијената из ваше области, ускладени алгоритмом",
+      "emptyTitle": "Још нема захтева",
+      "emptyBody": "Нови захтеви који одговарају вашим услугама појавиће се овдe. Уверите се да је ваш профил потпун и да покривате околне градове.",
+      "primaryMatch": "Топ 3 подударање",
+      "primaryMatchTooltip": "Ви сте међу прва 3 обавештена професионалца — пошаљите понуду брзо за најбољу шансу.",
+      "waitlistMatch": "Листа чекања",
+      "waitlistMatchTooltip": "Активирани сте након што топ 3 нису одговорили на захтев у 30 минута.",
+      "match": "подударање",
+      "matchScoreTooltip": "Композитни резултат из удаљености, комплетности профила, брзине одговора, оцене и цене.",
+      "urgency": {
+        "asap": "Хитно",
+        "this_week": "Ове недеље",
+        "flexible": "Флексибилно",
+        "specific_date": "Одређени датум"
+      },
+      "sendQuote": "Пошаљи понуду",
+      "quoteAlreadySent": "Понуда послата",
+      "requestNotActive": "Захтев затворен",
+      "sendQuoteTitle": "Пошаљите своју понуду",
+      "priceLabel": "Ваша цена (EUR)",
+      "pricingModelLabel": "Модел цене",
+      "pricingModel": {
+        "hourly": "Цена по сату",
+        "fixed": "Фиксна цена",
+        "per_unit": "По јединици",
+        "estimate": "Процена"
+      },
+      "messageLabel": "Ваша порука клијенту",
+      "messagePlaceholder": "Представите се, објасните свој приступ и поставите евентуална питања.",
+      "messageMin": "знакова минимум",
+      "messageMinError": "Порука мора имати најмање 10 знакова.",
+      "priceRequired": "Цена је обавезна и мора бити већа од нуле.",
+      "cancel": "Откажи",
+      "submitQuote": "Пошаљи понуду",
+      "submitting": "Слање...",
+      "submitError": "Понуда није могла бити послата. Молимо покушајте поново."
     }
   },
   "admin": {
@@ -1881,5 +1920,30 @@
     "quoteValidationPriceRequired": "Цена је обавезна.",
     "quoteValidationMessageMin": "Порука мора имати најмање 10 знакова.",
     "quoteValidationMessageMax": "Порука може имати највише 5000 знакова."
+  },
+  "customer": {
+    "quotes": {
+      "budget": "Буџет",
+      "waitingMoreQuotes": "Стиже још понуда",
+      "waitingTimer": "Преостало време",
+      "waitlistActivated": "Активирали смо додатне професионалце да бисте добили одличне опције.",
+      "quotesReceived": "Пристигле понуде",
+      "quotesSortedByPrice": "Сортирано по цени (најнижа прва).",
+      "noQuotesYet": "Понуде су на путу",
+      "noQuotesYetBody": "Професионалци у вашој области су обавештени. Нове понуде ће се појавити овде.",
+      "bestPrice": "Најбоља цена",
+      "foundingTooltip": "Оснивачки провајдер — рани приступач с продуженим истицањем.",
+      "completedJobs": "завршених послова",
+      "pricingModel": {
+        "hourly": "по сату",
+        "fixed": "фиксна цена",
+        "per_unit": "по јединици",
+        "estimate": "процена"
+      },
+      "whatsappMessage": "Здраво, желим да разговарам о мом Glatko захтеву:",
+      "whatsappCta": "WhatsApp",
+      "messagingComingSoon": "Поруке — ускоро",
+      "viewProfile": "Погледај профил"
+    }
   }
 }

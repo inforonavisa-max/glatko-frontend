@@ -456,6 +456,45 @@
       "primary": "Ana hizmet",
       "ctaTitle": "Bu hizmete mi ihtiyacınız var?",
       "ctaDesc": "Bu profesyonelden teklif isteyin"
+    },
+    "leads": {
+      "title": "Gelen Talepler",
+      "subtitle": "Bölgenizdeki müşterilerden algoritma ile eşleştirilmiş talepler",
+      "emptyTitle": "Henüz talep yok",
+      "emptyBody": "Hizmetlerinize uyan yeni talepler burada görünecek. Profilinizin eksiksiz olduğundan ve yakın şehirlere hizmet verdiğinizden emin olun.",
+      "primaryMatch": "İlk 3 Eşleşme",
+      "primaryMatchTooltip": "Bilgilendirilen ilk 3 profesyonelden birisiniz — en iyi şans için hızlı teklif verin.",
+      "waitlistMatch": "Bekleme listesi",
+      "waitlistMatchTooltip": "İlk 3 pro 30 dakika içinde talebi karşılamadığı için aktive edildiniz.",
+      "match": "eşleşme",
+      "matchScoreTooltip": "Mesafe, profil tamamlama, yanıt hızı, puan ve fiyatlandırma birleşik puanı.",
+      "urgency": {
+        "asap": "Acil",
+        "this_week": "Bu hafta",
+        "flexible": "Esnek",
+        "specific_date": "Belirli tarih"
+      },
+      "sendQuote": "Teklif Gönder",
+      "quoteAlreadySent": "Teklif gönderildi",
+      "requestNotActive": "Talep kapandı",
+      "sendQuoteTitle": "Teklifinizi gönderin",
+      "priceLabel": "Fiyatınız (EUR)",
+      "pricingModelLabel": "Fiyat modeli",
+      "pricingModel": {
+        "hourly": "Saatlik ücret",
+        "fixed": "Sabit fiyat",
+        "per_unit": "Birim başı",
+        "estimate": "Tahmini"
+      },
+      "messageLabel": "Müşteriye mesajınız",
+      "messagePlaceholder": "Kendinizi tanıtın, yaklaşımınızı açıklayın ve varsa sorularınızı sorun.",
+      "messageMin": "karakter minimum",
+      "messageMinError": "Mesaj en az 10 karakter olmalıdır.",
+      "priceRequired": "Fiyat zorunludur ve sıfırdan büyük olmalıdır.",
+      "cancel": "İptal",
+      "submitQuote": "Teklifi Gönder",
+      "submitting": "Gönderiliyor...",
+      "submitError": "Teklif gönderilemedi. Lütfen tekrar deneyin."
     }
   },
   "admin": {
@@ -1881,5 +1920,30 @@
     "quoteValidationPriceRequired": "Fiyat zorunludur.",
     "quoteValidationMessageMin": "Mesaj en az 10 karakter olmalıdır.",
     "quoteValidationMessageMax": "Mesaj en fazla 5000 karakter olmalıdır."
+  },
+  "customer": {
+    "quotes": {
+      "budget": "Bütçe",
+      "waitingMoreQuotes": "Daha fazla teklif geliyor",
+      "waitingTimer": "Kalan süre",
+      "waitlistActivated": "Harika seçenekler için ek profesyonelleri devreye aldık.",
+      "quotesReceived": "Alınan teklifler",
+      "quotesSortedByPrice": "Fiyata göre sıralandı (en düşük önce).",
+      "noQuotesYet": "Teklifler yolda",
+      "noQuotesYetBody": "Bölgenizdeki profesyonellere bildirim gönderildi. Yeni teklifler burada görünecek.",
+      "bestPrice": "En iyi fiyat",
+      "foundingTooltip": "Kurucu sağlayıcı — uzatılmaki öne çıkma süresine sahip erken üye.",
+      "completedJobs": "tamamlanan iş",
+      "pricingModel": {
+        "hourly": "saatlik",
+        "fixed": "sabit fiyat",
+        "per_unit": "birim başına",
+        "estimate": "tahmini"
+      },
+      "whatsappMessage": "Merhaba, Glatko talebimle ilgili konuşmak isterim:",
+      "whatsappCta": "WhatsApp",
+      "messagingComingSoon": "Mesajlaşma — yakında",
+      "viewProfile": "Profili gör"
+    }
   }
 }

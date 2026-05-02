@@ -456,6 +456,45 @@
       "primary": "Primary service",
       "ctaTitle": "Need this service?",
       "ctaDesc": "Request a quote from this professional"
+    },
+    "leads": {
+      "title": "Incoming Leads",
+      "subtitle": "Algorithm-matched requests from customers in your area",
+      "emptyTitle": "No leads yet",
+      "emptyBody": "When new requests match your services, they'll appear here. Make sure your profile is complete and you serve nearby cities.",
+      "primaryMatch": "Top 3 Match",
+      "primaryMatchTooltip": "You're one of the first 3 pros notified — quote fast for the best chance.",
+      "waitlistMatch": "Wait-list",
+      "waitlistMatchTooltip": "You were activated after the top 3 didn't fill the request in 30 minutes.",
+      "match": "match",
+      "matchScoreTooltip": "Composite score from your distance, profile completeness, response speed, rating, and pricing.",
+      "urgency": {
+        "asap": "ASAP",
+        "this_week": "This week",
+        "flexible": "Flexible timing",
+        "specific_date": "Specific date"
+      },
+      "sendQuote": "Send Quote",
+      "quoteAlreadySent": "Quote sent",
+      "requestNotActive": "Request closed",
+      "sendQuoteTitle": "Send your quote",
+      "priceLabel": "Your price (EUR)",
+      "pricingModelLabel": "Pricing model",
+      "pricingModel": {
+        "hourly": "Hourly rate",
+        "fixed": "Fixed price",
+        "per_unit": "Per unit",
+        "estimate": "Estimate"
+      },
+      "messageLabel": "Your message to the customer",
+      "messagePlaceholder": "Introduce yourself, explain your approach, and ask any clarifying questions.",
+      "messageMin": "characters minimum",
+      "messageMinError": "Message must be at least 10 characters.",
+      "priceRequired": "Price is required and must be greater than zero.",
+      "cancel": "Cancel",
+      "submitQuote": "Submit Quote",
+      "submitting": "Sending...",
+      "submitError": "Could not send quote. Please try again."
     }
   },
   "admin": {
@@ -1881,5 +1920,30 @@
     "quoteValidationPriceRequired": "Price is required.",
     "quoteValidationMessageMin": "Message must be at least 10 characters.",
     "quoteValidationMessageMax": "Message must be at most 5000 characters."
+  },
+  "customer": {
+    "quotes": {
+      "budget": "Budget",
+      "waitingMoreQuotes": "More quotes are on the way",
+      "waitingTimer": "Time left",
+      "waitlistActivated": "We've activated additional pros to make sure you get great options.",
+      "quotesReceived": "Quotes received",
+      "quotesSortedByPrice": "Sorted by price (lowest first).",
+      "noQuotesYet": "Quotes are on the way",
+      "noQuotesYetBody": "Pros in your area have been notified. New quotes will appear here as they arrive.",
+      "bestPrice": "Best price",
+      "foundingTooltip": "Founding provider — early adopter with extended featured listing.",
+      "completedJobs": "completed jobs",
+      "pricingModel": {
+        "hourly": "per hour",
+        "fixed": "fixed price",
+        "per_unit": "per unit",
+        "estimate": "estimate"
+      },
+      "whatsappMessage": "Hi, I'd like to talk about my Glatko request:",
+      "whatsappCta": "WhatsApp",
+      "messagingComingSoon": "Messaging — coming soon",
+      "viewProfile": "View profile"
+    }
   }
 }
