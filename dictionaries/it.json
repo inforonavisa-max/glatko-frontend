@@ -1945,5 +1945,26 @@
       "messagingComingSoon": "Messaggi — presto disponibili",
       "viewProfile": "Vedi profilo"
     }
+  },
+  "messaging": {
+    "inboxTitle": "Messaggi",
+    "inboxSubtitle": "Conversazioni con i professionisti che hanno inviato preventivi per le tue richieste",
+    "inboxEmptyTitle": "Nessun messaggio ancora",
+    "inboxEmptyBody": "Le tue conversazioni con i professionisti appariranno qui non appena ne avvii una da una scheda preventivo.",
+    "threadFromRequest": "Oggetto",
+    "noMessagesYet": "Nessun messaggio ancora",
+    "back": "Indietro",
+    "composerPlaceholder": "Scrivi un messaggio...",
+    "send": "Invia",
+    "sending": "Invio...",
+    "sendError": "Impossibile inviare il messaggio. Riprova.",
+    "read": "Letto",
+    "delivered": "Consegnato",
+    "threadEmptyHint": "Saluta — la tua conversazione inizia qui.",
+    "threadInactive": "Questa conversazione non è più attiva.",
+    "sendMessage": "Invia messaggio",
+    "openingThread": "Apertura...",
+    "openThreadError": "Impossibile aprire la conversazione. Riprova.",
+    "viewThread": "Apri conversazione"
   }
 }

@@ -9,6 +9,10 @@
     {
       "path": "/api/cron/activate-waitlists",
       "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/cron/notify-new-messages",
+      "schedule": "*/5 * * * *"
     }
   ]
 }
