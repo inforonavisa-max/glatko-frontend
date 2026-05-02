@@ -104,7 +104,48 @@
       "storage": "Einlagerung",
       "airportTransfer": "Flughafentransfer"
     },
-    "seeAll": "Alle Kategorien anzeigen"
+    "seeAll": "Alle Kategorien anzeigen",
+    "garden": {
+      "title": "Garten & Pool",
+      "description": "Garten- und Landschaftsbau, Rasen, Bewässerung, Poolpflege",
+      "landscaping": "Landschaftsdesign",
+      "lawn": "Rasenmähen",
+      "irrigation": "Bewässerung",
+      "treePruning": "Baumschnitt",
+      "poolCare": "Poolpflege",
+      "poolRepair": "Poolreparatur"
+    },
+    "events": {
+      "title": "Events & Hochzeit",
+      "description": "Destination-Hochzeiten, Planung, Dekor, A/V",
+      "destinationWedding": "Destination-Hochzeit",
+      "decoration": "Dekoration & Blumen",
+      "stageTent": "Bühne & Festzelt",
+      "soundLight": "Ton & Licht",
+      "corporate": "Firmenveranstaltungen",
+      "kidsParty": "Kinderparty"
+    },
+    "photo": {
+      "title": "Foto & Video",
+      "description": "Hochzeit, Drohne, Firmenvideo, Immobilien, Social",
+      "weddingPhoto": "Hochzeitsfotograf",
+      "droneShoot": "Drohnenaufnahmen",
+      "corporateVideo": "Firmenvideo",
+      "realEstate": "Immobilien / Airbnb",
+      "familyShoot": "Familie & Baby",
+      "socialContent": "Social-Media-Content"
+    },
+    "health": {
+      "title": "Gesundheit & Wellness",
+      "description": "Physiotherapie, Massage, häusliche Pflege, Ernährung",
+      "physiotherapy": "Physiotherapie",
+      "therapeuticMassage": "Therapeutische Massage",
+      "homeNursing": "Häusliche Krankenpflege",
+      "nutrition": "Ernährung & Diät",
+      "psychologist": "Psychologe & Therapeut",
+      "homeBloodTest": "Hausbesuch Blutabnahme"
+    },
+    "newBadge": "NEU"
   },
   "howItWorks": {
     "title": "So funktioniert's",

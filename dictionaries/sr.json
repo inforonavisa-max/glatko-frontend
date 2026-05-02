@@ -104,7 +104,48 @@
       "storage": "Складиштење",
       "airportTransfer": "Аеродромски трансфер"
     },
-    "seeAll": "Погледај све категорије"
+    "seeAll": "Погледај све категорије",
+    "garden": {
+      "title": "Bašta i bazen",
+      "description": "Pejzaž, trava, navodnjavanje, održavanje bazena",
+      "landscaping": "Pejzažni dizajn",
+      "lawn": "Košenje trave",
+      "irrigation": "Navodnjavanje",
+      "treePruning": "Orezivanje drveća",
+      "poolCare": "Održavanje bazena",
+      "poolRepair": "Popravka bazena"
+    },
+    "events": {
+      "title": "Događaji i venčanja",
+      "description": "Destinacijska venčanja, organizacija, dekor, ozvučenje",
+      "destinationWedding": "Destinacijsko venčanje",
+      "decoration": "Dekoracija i cveće",
+      "stageTent": "Bina i šator",
+      "soundLight": "Ozvučenje i osvetljenje",
+      "corporate": "Korporativne organizacije",
+      "kidsParty": "Dečja zabava"
+    },
+    "photo": {
+      "title": "Foto i video",
+      "description": "Venčanja, dronovi, korporativni video, nekretnine, društvene mreže",
+      "weddingPhoto": "Venčani fotograf",
+      "droneShoot": "Snimanje dronom",
+      "corporateVideo": "Korporativni video",
+      "realEstate": "Nekretnine / Airbnb",
+      "familyShoot": "Porodični i bebi šut",
+      "socialContent": "Sadržaj za društvene mreže"
+    },
+    "health": {
+      "title": "Zdravlje i wellness",
+      "description": "Fizioterapija, masaža, sestrinska nega, dijetetičar",
+      "physiotherapy": "Fizioterapija",
+      "therapeuticMassage": "Terapeutska masaža",
+      "homeNursing": "Sestrinska nega kod kuće",
+      "nutrition": "Ishrana i dijeta",
+      "psychologist": "Psiholog i terapeut",
+      "homeBloodTest": "Vađenje krvi kod kuće"
+    },
+    "newBadge": "NOVO"
   },
   "howItWorks": {
     "title": "Kako funkcioniše",

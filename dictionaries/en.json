@@ -104,7 +104,48 @@
       "storage": "Storage",
       "airportTransfer": "Airport Transfer"
     },
-    "seeAll": "See all categories"
+    "seeAll": "See all categories",
+    "garden": {
+      "title": "Garden & Pool",
+      "description": "Landscaping, lawn, irrigation, pool care",
+      "landscaping": "Landscape design",
+      "lawn": "Lawn mowing",
+      "irrigation": "Irrigation",
+      "treePruning": "Tree pruning",
+      "poolCare": "Pool care",
+      "poolRepair": "Pool repair"
+    },
+    "events": {
+      "title": "Events & Wedding",
+      "description": "Destination weddings, planning, decor, A/V",
+      "destinationWedding": "Destination wedding",
+      "decoration": "Decoration & flowers",
+      "stageTent": "Stage & marquee",
+      "soundLight": "Sound & lighting",
+      "corporate": "Corporate events",
+      "kidsParty": "Kids party"
+    },
+    "photo": {
+      "title": "Photo & Video",
+      "description": "Wedding, drone, corporate, real estate, social",
+      "weddingPhoto": "Wedding photographer",
+      "droneShoot": "Drone shoots",
+      "corporateVideo": "Corporate video",
+      "realEstate": "Real estate / Airbnb",
+      "familyShoot": "Family & baby",
+      "socialContent": "Social media content"
+    },
+    "health": {
+      "title": "Health & Wellness",
+      "description": "Physiotherapy, massage, home nursing, dietitian",
+      "physiotherapy": "Physiotherapy",
+      "therapeuticMassage": "Therapeutic massage",
+      "homeNursing": "Home nursing",
+      "nutrition": "Nutrition & diet",
+      "psychologist": "Psychologist & therapist",
+      "homeBloodTest": "Home blood test"
+    },
+    "newBadge": "NEW"
   },
   "howItWorks": {
     "title": "How It Works",

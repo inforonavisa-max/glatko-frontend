@@ -104,7 +104,48 @@
       "storage": "Deposito",
       "airportTransfer": "Transfer aeroporto"
     },
-    "seeAll": "Vedi tutte le categorie"
+    "seeAll": "Vedi tutte le categorie",
+    "garden": {
+      "title": "Giardino e Piscina",
+      "description": "Paesaggistica, prato, irrigazione, cura piscina",
+      "landscaping": "Progettazione paesaggistica",
+      "lawn": "Taglio del prato",
+      "irrigation": "Irrigazione",
+      "treePruning": "Potatura alberi",
+      "poolCare": "Cura della piscina",
+      "poolRepair": "Riparazione piscina"
+    },
+    "events": {
+      "title": "Eventi & Matrimoni",
+      "description": "Matrimoni di destinazione, organizzazione, decor, audio/luci",
+      "destinationWedding": "Matrimonio di destinazione",
+      "decoration": "Decorazione e fiori",
+      "stageTent": "Palco e tendone",
+      "soundLight": "Audio e illuminazione",
+      "corporate": "Eventi aziendali",
+      "kidsParty": "Festa per bambini"
+    },
+    "photo": {
+      "title": "Foto e Video",
+      "description": "Matrimoni, droni, video aziendali, immobiliare, social",
+      "weddingPhoto": "Fotografo di matrimonio",
+      "droneShoot": "Riprese con drone",
+      "corporateVideo": "Video aziendali",
+      "realEstate": "Immobiliare / Airbnb",
+      "familyShoot": "Famiglia e neonato",
+      "socialContent": "Contenuti per social"
+    },
+    "health": {
+      "title": "Salute e Benessere",
+      "description": "Fisioterapia, massaggio, assistenza domiciliare, dietologo",
+      "physiotherapy": "Fisioterapia",
+      "therapeuticMassage": "Massaggio terapeutico",
+      "homeNursing": "Assistenza infermieristica a domicilio",
+      "nutrition": "Nutrizione e dieta",
+      "psychologist": "Psicologo e terapeuta",
+      "homeBloodTest": "Prelievo del sangue a domicilio"
+    },
+    "newBadge": "NUOVO"
   },
   "howItWorks": {
     "title": "Come Funziona",

@@ -104,7 +104,48 @@
       "storage": "Depolama",
       "airportTransfer": "Havalimanı Transferi"
     },
-    "seeAll": "Tüm kategorileri gör"
+    "seeAll": "Tüm kategorileri gör",
+    "garden": {
+      "title": "Bahçe & Havuz",
+      "description": "Peyzaj, çim, sulama, havuz bakımı",
+      "landscaping": "Peyzaj tasarımı",
+      "lawn": "Çim biçme",
+      "irrigation": "Sulama",
+      "treePruning": "Ağaç budama",
+      "poolCare": "Havuz bakımı",
+      "poolRepair": "Havuz onarımı"
+    },
+    "events": {
+      "title": "Etkinlik & Düğün",
+      "description": "Destination düğün, organizasyon, dekor, ses-ışık",
+      "destinationWedding": "Destination düğün",
+      "decoration": "Dekorasyon & çiçek",
+      "stageTent": "Sahne & tente",
+      "soundLight": "Ses & ışık",
+      "corporate": "Kurumsal organizasyon",
+      "kidsParty": "Çocuk partisi"
+    },
+    "photo": {
+      "title": "Foto & Video",
+      "description": "Düğün, drone, kurumsal, gayrimenkul, sosyal medya",
+      "weddingPhoto": "Düğün fotoğrafçısı",
+      "droneShoot": "Drone çekim",
+      "corporateVideo": "Kurumsal video",
+      "realEstate": "Gayrimenkul / Airbnb",
+      "familyShoot": "Aile / bebek",
+      "socialContent": "Sosyal medya içerik"
+    },
+    "health": {
+      "title": "Sağlık & Wellness",
+      "description": "Fizyoterapi, masaj, evde hemşire, diyetisyen",
+      "physiotherapy": "Fizyoterapi",
+      "therapeuticMassage": "Terapötik masaj",
+      "homeNursing": "Evde hemşire",
+      "nutrition": "Beslenme & diyet",
+      "psychologist": "Psikolog & terapist",
+      "homeBloodTest": "Evde kan tahlili"
+    },
+    "newBadge": "YENİ"
   },
   "howItWorks": {
     "title": "Nasıl Çalışır?",
