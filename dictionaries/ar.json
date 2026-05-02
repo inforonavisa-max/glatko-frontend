@@ -1491,13 +1491,143 @@
     "whyJoin": {
       "title": "لماذا Glatko؟",
       "card1": "قاعدة عملاء",
-      "card1Desc": "وصول إلى العملاء في بودفا وكوتور وتيفات",
+      "card1Desc": "الوصول إلى عملاء في بودفا وكوتور وتيفات",
       "card2": "عمل مرن",
       "card2Desc": "حدد جدولك بنفسك",
       "card3": "منصة موثوقة",
-      "card3Desc": "عملاء موثقون وعروض شفافة",
+      "card3Desc": "عملاء موثقون وتسعير شفاف",
       "card4": "9 لغات",
-      "card4Desc": "تواصل بعدة لغات"
+      "card4Desc": "تواصل مع العملاء بعدة لغات"
+    },
+    "submit": "إرسال الطلب",
+    "draftRestoredBanner": "استعدنا مسودتك. يمكنك المتابعة أو البدء من جديد.",
+    "startFresh": "ابدأ من جديد",
+    "dismiss": "إغلاق",
+    "optional": "اختياري",
+    "steps": {
+      "personalInfo": "البيانات الشخصية",
+      "serviceAreas": "مناطق الخدمة",
+      "applicationQuestions": "أسئلة التقديم",
+      "portfolio": "أعمالي وأسعاري",
+      "documents": "المستندات",
+      "review": "مراجعة وإرسال"
+    },
+    "personalInfo": {
+      "premiumFieldsTitle": "حقول البروفايل المميزة (لزيادة الظهور)",
+      "serviceRadiusLabel": "نطاق الخدمة",
+      "serviceRadiusHint": "ما المسافة القصوى التي تتنقل فيها للعمل؟",
+      "insuranceLabel": "حالة التأمين",
+      "insurance": {
+        "none": "لا يوجد",
+        "private": "خاص",
+        "business": "تجاري",
+        "professional": "احترافي"
+      },
+      "introVideoLabel": "رابط فيديو تعريفي",
+      "introVideoHint": "رابط YouTube/Vimeo قصير يبني ثقة العملاء."
+    },
+    "serviceAreas": {
+      "limitsHint": "حتى {maxRoots} فئات رئيسية، {maxSubs} فرعية لكل فئة.",
+      "maxRootsExceeded": "الحد الأقصى {max} فئات رئيسية.",
+      "maxSubsExceeded": "الحد الأقصى {max} فرعية في كل فئة رئيسية."
+    },
+    "applicationQuestions": {
+      "subtitle": "بعض الأسئلة المحددة تساعد العملاء على إيجاد المحترف المناسب.",
+      "noQuestions": "لا توجد أسئلة إضافية للفئات التي اخترتها."
+    },
+    "portfolio": {
+      "subtitle": "اعرض أفضل أعمالك وحدد طريقة التسعير.",
+      "galleryTitle": "معرض الأعمال",
+      "title": "معرض الأعمال",
+      "hint": "حتى {max} صورة. JPEG/PNG/WebP، 10 ميجابايت لكل ملف.",
+      "dropHere": "اسحب الصور وأفلتها أو انقر للرفع",
+      "supportedTypes": "JPEG، PNG، WebP — حتى 10 ميجابايت",
+      "emptyState": "لا توجد صور بعد — معرض أعمالك أقوى إشارة للثقة.",
+      "invalidType": "{name} ليس نوع صورة مدعومًا",
+      "tooLarge": "{name} يتجاوز حد 10 ميجابايت",
+      "maxFilesExceeded": "يمكنك رفع حتى {max} صورة.",
+      "uploadFailed": "فشل رفع {name}: {error}",
+      "deleteFailed": "فشل الحذف: {error}",
+      "remove": "إزالة الصورة",
+      "pricingTitle": "نموذج التسعير",
+      "pricingHint": "كيف تتقاضى عادة؟ يمكنك تعديل ذلك لكل فئة لاحقًا.",
+      "pricingTypeLabel": "نوع التسعير",
+      "pricingType": {
+        "hourly": "بالساعة",
+        "fixed": "سعر ثابت",
+        "per_unit": "لكل وحدة"
+      },
+      "baseRateLabel": "السعر الأساسي",
+      "baseRateHint": {
+        "hourly": "متوسط السعر بالساعة.",
+        "fixed": "إجمالي المشروع المعتاد.",
+        "per_unit": "السعر لكل وحدة (مثل م²، غرفة، كجم)."
+      }
+    },
+    "documents": {
+      "subtitle": "ارفع الترخيص والتأمين والشهادات الضريبية (خاص، للمشرفين فقط).",
+      "uploadTitle": "وثائق الشركة",
+      "title": "وثائق الشركة",
+      "hint": "حتى {max} ملفات. PDF/JPEG/PNG، 5 ميجابايت لكل ملف.",
+      "uploadButton": "رفع وثيقة",
+      "typeLabel": "نوع الوثيقة",
+      "types": {
+        "license": "ترخيص",
+        "insurance": "تأمين",
+        "tax_cert": "شهادة ضريبية",
+        "id_proof": "إثبات الهوية",
+        "other": "أخرى"
+      },
+      "uploading": "جاري الرفع…",
+      "emptyState": "لا توجد وثائق بعد — رفعها يسرّع التحقق.",
+      "privacyNote": "تُحفظ الوثائق في مساحة خاصة — أنت ومشرفو Glatko فقط ترونها.",
+      "invalidType": "{name} ليس نوع ملف مدعومًا",
+      "tooLarge": "{name} يتجاوز حد 5 ميجابايت",
+      "maxFilesExceeded": "يمكنك رفع حتى {max} وثيقة.",
+      "uploadFailed": "فشل رفع {name}: {error}",
+      "deleteFailed": "فشل الحذف: {error}",
+      "remove": "إزالة الوثيقة"
+    },
+    "review": {
+      "subtitle": "ألقِ نظرة أخيرة قبل إرسال طلبك.",
+      "moderationNotice": "بعد الإرسال، يراجع فريقنا الطلب خلال 1-2 يوم عمل.",
+      "personalInfo": "البيانات الشخصية",
+      "businessName": "اسم العمل",
+      "city": "المدينة",
+      "experience": "الخبرة",
+      "years": "سنوات",
+      "languages": "اللغات",
+      "bio": "نبذة عني",
+      "notSet": "—",
+      "servicesTitle": "الخدمات المختارة",
+      "primary": "أساسي",
+      "applicationQuestionsTitle": "إجابات التقديم",
+      "answersCount": "إجابات معبأة",
+      "portfolioTitle": "الأعمال",
+      "imagesCount": "صور",
+      "pricingTitle": "نموذج التسعير",
+      "documentsTitle": "الوثائق",
+      "documentsCount": "ملفات"
+    },
+    "completionGauge": {
+      "title": "اكتمال البروفايل",
+      "subtitleHigh": "ممتاز — أنت بارز للعملاء.",
+      "subtitleMid": "بداية جيدة — حقول قليلة ترفعك فوق المتوسط.",
+      "subtitleLow": "تابع — الملفات المكتملة تستقطب طلبات 3× أكثر.",
+      "compactTitle": "اكتمال البروفايل {score}%",
+      "ariaLabel": "اكتمال البروفايل {score}%",
+      "missingTitle": "ارفع نقاطك بإضافة",
+      "missing": {
+        "bio": "نبذة 100+ حرفًا",
+        "portfolio": "3 صور أعمال على الأقل",
+        "documents": "وثائق الشركة (ترخيص/تأمين)",
+        "introVideo": "فيديو تعريفي",
+        "hourlyRate": "أجرك بالساعة"
+      }
+    },
+    "success": {
+      "title": "تم إرسال الطلب",
+      "message": "استلمنا طلبك. سيراجعه فريقنا خلال 1-2 يوم عمل ويرسل لك النتيجة بالبريد."
     }
   },
   "validation": {

@@ -1,38 +1,96 @@
 "use client";
 
-import { useState, useCallback, useTransition, useEffect } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
 import {
-  User,
   Briefcase,
-  FolderOpen,
-  ChevronRight,
-  ChevronLeft,
-  Loader2,
   CheckCircle,
+  ChevronLeft,
+  ChevronRight,
+  ClipboardList,
+  FolderOpen,
+  Loader2,
+  ShieldCheck,
+  Sparkles,
+  User,
+  X,
 } from "lucide-react";
 import { submitProfessionalApplication } from "@/app/[locale]/become-a-pro/actions";
 import { cn } from "@/lib/utils";
+import { useFormPersistence } from "@/lib/hooks/useFormPersistence";
+import type { ServiceCategory, MultiLangText } from "@/types/glatko";
+import type { Locale } from "@/i18n/routing";
+import type { AnswersMap } from "@/lib/types/request-questions";
+
 import { StepPersonalInfo } from "./StepPersonalInfo";
 import { StepServiceAreas } from "./StepServiceAreas";
-import { StepPortfolio } from "./StepPortfolio";
-import type { ServiceCategory } from "@/types/glatko";
-import type { Locale } from "@/i18n/routing";
+import { StepApplicationQuestions } from "./StepApplicationQuestions";
+import { StepPortfolio, type PricingModel } from "./StepPortfolio";
+import { StepDocuments } from "./StepDocuments";
+import { StepReview } from "./StepReview";
+import type { ProDocument } from "./DocumentsUploader";
+
+const STEPS = [
+  { icon: User, key: "personalInfo" },
+  { icon: Briefcase, key: "serviceAreas" },
+  { icon: ClipboardList, key: "applicationQuestions" },
+  { icon: FolderOpen, key: "portfolio" },
+  { icon: ShieldCheck, key: "documents" },
+  { icon: Sparkles, key: "review" },
+] as const;
+
 interface Props {
+  userId: string;
   categories: ServiceCategory[];
   userEmail: string;
   displayName: string | null;
   initialAvatarUrl: string | null;
 }
 
-const STEPS = [
-  { icon: User, key: "step1" },
-  { icon: Briefcase, key: "step2" },
-  { icon: FolderOpen, key: "step3" },
-] as const;
+interface Snapshot {
+  businessName: string;
+  bio: string;
+  phone: string;
+  city: string;
+  languages: string[];
+  experience: string;
+  hourlyMin: string;
+  hourlyMax: string;
+  serviceRadiusKm: number;
+  insuranceStatus: string;
+  introductionVideoUrl: string;
+  selectedCategoryIds: string[];
+  primaryCategoryId: string;
+  applicationAnswers: Record<string, AnswersMap>;
+  portfolioImages: string[];
+  pricing: PricingModel;
+  companyDocuments: ProDocument[];
+  step: number;
+}
 
+function categoryLabel(cat: ServiceCategory, locale: Locale): string {
+  const n = cat.name as MultiLangText;
+  return (
+    n[locale] ??
+    n.en ??
+    n.tr ??
+    (Object.values(n).find((v) => typeof v === "string") as string | undefined) ??
+    cat.slug
+  );
+}
+
+/**
+ * G-PRO-1 Faz 5 — Pro onboarding wizard parent (6 steps). Orchestrates
+ * Personal Info → Service Areas → Application Questions → Portfolio →
+ * Documents → Review. State is persisted to localStorage (24h TTL) under
+ * a per-user key so a refresh mid-form doesn't lose progress. Submit
+ * fires submitProfessionalApplication which writes profile + services +
+ * answers + portfolio + documents in one server-side transaction-ish
+ * sequence.
+ */
 export function BecomeAProWizard({
+  userId,
   categories,
   userEmail,
   displayName,
@@ -40,12 +98,7 @@ export function BecomeAProWizard({
 }: Props) {
   const t = useTranslations();
   const locale = useLocale() as Locale;
-  const [step, setStep] = useState(0);
   const [isNarrow, setIsNarrow] = useState(false);
-
-  useEffect(() => {
-    setAvatarUrl(initialAvatarUrl?.trim() ?? "");
-  }, [initialAvatarUrl]);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 767px)");
@@ -55,6 +108,9 @@ export function BecomeAProWizard({
     return () => mq.removeEventListener("change", update);
   }, []);
 
+  const [step, setStep] = useState(0);
+
+  // Step 1
   const [businessName, setBusinessName] = useState("");
   const [bio, setBio] = useState("");
   const [phone, setPhone] = useState("");
@@ -63,44 +119,305 @@ export function BecomeAProWizard({
   const [experience, setExperience] = useState("");
   const [hourlyMin, setHourlyMin] = useState("");
   const [hourlyMax, setHourlyMax] = useState("");
-
+  const [serviceRadiusKm, setServiceRadiusKm] = useState(25);
+  const [insuranceStatus, setInsuranceStatus] = useState("none");
+  const [introductionVideoUrl, setIntroductionVideoUrl] = useState("");
   const [avatarUrl, setAvatarUrl] = useState(initialAvatarUrl?.trim() ?? "");
 
+  // Step 2
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
   const [primaryCategoryId, setPrimaryCategoryId] = useState("");
   const [expandedParent, setExpandedParent] = useState<string | null>(null);
 
-  const parents = categories.filter((c) => !c.parent_id);
-  const childrenOf = useCallback(
-    (parentId: string) => categories.filter((c) => c.parent_id === parentId),
-    [categories]
-  );
+  // Step 3
+  const [applicationAnswers, setApplicationAnswers] = useState<
+    Record<string, AnswersMap>
+  >({});
 
+  // Step 4
+  const [portfolioImages, setPortfolioImages] = useState<string[]>([]);
+  const [pricing, setPricing] = useState<PricingModel>({
+    type: "hourly",
+    baseRate: "",
+    currency: "EUR",
+  });
+
+  // Step 5
+  const [companyDocuments, setCompanyDocuments] = useState<ProDocument[]>([]);
+
+  // Submit/state
   const [isPending, startTransition] = useTransition();
-  const [state, setState] = useState<{ success: boolean; error?: string }>({
+  const [submitState, setSubmitState] = useState<{ success: boolean; error?: string }>({
     success: false,
   });
 
+  useEffect(() => {
+    setAvatarUrl(initialAvatarUrl?.trim() ?? "");
+  }, [initialAvatarUrl]);
+
+  // Helpers
+  const parents = useMemo(() => categories.filter((c) => !c.parent_id), [
+    categories,
+  ]);
+  const childrenOf = useCallback(
+    (parentId: string) => categories.filter((c) => c.parent_id === parentId),
+    [categories],
+  );
+
   const toggleLanguage = (lang: string) =>
     setLanguages((prev) =>
-      prev.includes(lang) ? prev.filter((l) => l !== lang) : [...prev, lang]
+      prev.includes(lang) ? prev.filter((l) => l !== lang) : [...prev, lang],
     );
 
   const toggleCategory = (id: string) =>
     setSelectedCategoryIds((prev) =>
-      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]
+      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id],
     );
 
-  const hasAvatar = avatarUrl.trim().length > 0;
+  // Resolve selected categories with display names + root slugs (for
+  // StepApplicationQuestions which keys answers by root-slug).
+  const selectedCategoryRefs = useMemo(() => {
+    return selectedCategoryIds
+      .map((id) => {
+        const cat = categories.find((c) => c.id === id);
+        if (!cat) return null;
+        const rootCat =
+          categories.find((c) => c.id === cat.parent_id) ?? cat;
+        return {
+          slug: rootCat.slug,
+          name: categoryLabel(rootCat, locale),
+        };
+      })
+      .filter((x): x is { slug: string; name: string } => Boolean(x));
+  }, [selectedCategoryIds, categories, locale]);
 
-  const canAdvance =
-    (step === 0 && hasAvatar) ||
-    (step === 1 && selectedCategoryIds.length > 0);
+  // Deduplicate roots (single question set per root, even if multiple
+  // sub-categories of the same root are picked).
+  const dedupedCategoryRefs = useMemo(() => {
+    const seen = new Set<string>();
+    const out: { slug: string; name: string }[] = [];
+    for (const r of selectedCategoryRefs) {
+      if (seen.has(r.slug)) continue;
+      seen.add(r.slug);
+      out.push(r);
+    }
+    return out;
+  }, [selectedCategoryRefs]);
+
+  const reviewCategories = useMemo(() => {
+    return selectedCategoryIds.map((id) => {
+      const cat = categories.find((c) => c.id === id);
+      return {
+        slug: cat?.slug ?? id,
+        name: cat ? categoryLabel(cat, locale) : id,
+        isPrimary: primaryCategoryId === id,
+      };
+    });
+  }, [selectedCategoryIds, categories, locale, primaryCategoryId]);
+
+  const applicationAnswerCount = useMemo(() => {
+    let count = 0;
+    for (const slug of Object.keys(applicationAnswers)) {
+      const map = applicationAnswers[slug];
+      for (const k of Object.keys(map)) {
+        const v = map[k];
+        if (v === null || v === undefined) continue;
+        if (typeof v === "string" && v.trim().length === 0) continue;
+        if (Array.isArray(v) && v.length === 0) continue;
+        count += 1;
+      }
+    }
+    return count;
+  }, [applicationAnswers]);
+
+  // Live (client-side) profile completion preview. The DB RPC is
+  // canonical post-save; this is a UX hint only.
+  const completionScore = useMemo(() => {
+    let s = 0;
+    if (businessName.trim()) s += 10;
+    if (bio.trim().length >= 100) s += 10;
+    if (phone.trim()) s += 5;
+    if (city) s += 10;
+    if (languages.length >= 2) s += 5;
+    if (selectedCategoryIds.length > 0) s += 10;
+    if (Number(experience) > 0) s += 5;
+    if (Number(hourlyMin) > 0) s += 5;
+    if (portfolioImages.length >= 3) s += 15;
+    if (companyDocuments.length > 0) s += 10;
+    if (introductionVideoUrl.trim()) s += 10;
+    if (insuranceStatus && insuranceStatus !== "none") s += 5;
+    return Math.min(100, s);
+  }, [
+    businessName,
+    bio,
+    phone,
+    city,
+    languages,
+    selectedCategoryIds,
+    experience,
+    hourlyMin,
+    portfolioImages,
+    companyDocuments,
+    introductionVideoUrl,
+    insuranceStatus,
+  ]);
+
+  const missingFields = useMemo(() => {
+    const out: string[] = [];
+    if (bio.trim().length < 100)
+      out.push(t("becomePro.completionGauge.missing.bio"));
+    if (portfolioImages.length < 3)
+      out.push(t("becomePro.completionGauge.missing.portfolio"));
+    if (companyDocuments.length === 0)
+      out.push(t("becomePro.completionGauge.missing.documents"));
+    if (!introductionVideoUrl.trim())
+      out.push(t("becomePro.completionGauge.missing.introVideo"));
+    if (Number(hourlyMin) === 0)
+      out.push(t("becomePro.completionGauge.missing.hourlyRate"));
+    return out;
+  }, [bio, portfolioImages, companyDocuments, introductionVideoUrl, hourlyMin, t]);
+
+  // Persistence
+  const snapshot: Snapshot = useMemo(
+    () => ({
+      businessName,
+      bio,
+      phone,
+      city,
+      languages,
+      experience,
+      hourlyMin,
+      hourlyMax,
+      serviceRadiusKm,
+      insuranceStatus,
+      introductionVideoUrl,
+      selectedCategoryIds,
+      primaryCategoryId,
+      applicationAnswers,
+      portfolioImages,
+      pricing,
+      companyDocuments,
+      step,
+    }),
+    [
+      businessName,
+      bio,
+      phone,
+      city,
+      languages,
+      experience,
+      hourlyMin,
+      hourlyMax,
+      serviceRadiusKm,
+      insuranceStatus,
+      introductionVideoUrl,
+      selectedCategoryIds,
+      primaryCategoryId,
+      applicationAnswers,
+      portfolioImages,
+      pricing,
+      companyDocuments,
+      step,
+    ],
+  );
+
+  const restore = useCallback((data: Snapshot) => {
+    setBusinessName(data.businessName ?? "");
+    setBio(data.bio ?? "");
+    setPhone(data.phone ?? "");
+    setCity(data.city ?? "");
+    setLanguages(Array.isArray(data.languages) ? data.languages : []);
+    setExperience(data.experience ?? "");
+    setHourlyMin(data.hourlyMin ?? "");
+    setHourlyMax(data.hourlyMax ?? "");
+    setServiceRadiusKm(typeof data.serviceRadiusKm === "number" ? data.serviceRadiusKm : 25);
+    setInsuranceStatus(data.insuranceStatus ?? "none");
+    setIntroductionVideoUrl(data.introductionVideoUrl ?? "");
+    setSelectedCategoryIds(
+      Array.isArray(data.selectedCategoryIds) ? data.selectedCategoryIds : [],
+    );
+    setPrimaryCategoryId(data.primaryCategoryId ?? "");
+    setApplicationAnswers(data.applicationAnswers ?? {});
+    setPortfolioImages(
+      Array.isArray(data.portfolioImages) ? data.portfolioImages : [],
+    );
+    setPricing(
+      data.pricing ?? { type: "hourly", baseRate: "", currency: "EUR" },
+    );
+    setCompanyDocuments(
+      Array.isArray(data.companyDocuments) ? data.companyDocuments : [],
+    );
+    if (typeof data.step === "number" && data.step >= 0 && data.step < STEPS.length) {
+      setStep(data.step);
+    }
+  }, []);
+
+  const { restored, clearDraft } = useFormPersistence({
+    key: `pro-onboarding:${userId}`,
+    enabled: true,
+    snapshot,
+    restore,
+  });
+
+  const [draftBannerVisible, setDraftBannerVisible] = useState(false);
+  useEffect(() => {
+    if (restored) setDraftBannerVisible(true);
+  }, [restored]);
+
+  // Validation gate per step
+  const applicationValidateRef = useRef<(() => boolean) | null>(null);
+
+  const hasAvatar = avatarUrl.trim().length > 0;
+  const step1Ok =
+    hasAvatar && businessName.trim().length > 0 && phone.trim().length > 0 && city;
+  const step2Ok = selectedCategoryIds.length > 0 && Boolean(primaryCategoryId);
+  const step4Ok = pricing.baseRate.trim().length > 0 && Number(pricing.baseRate) > 0;
+
+  function tryAdvance() {
+    if (step === 0 && !step1Ok) return;
+    if (step === 1 && !step2Ok) return;
+    if (step === 2) {
+      const pass = applicationValidateRef.current?.() ?? true;
+      if (!pass) return;
+    }
+    if (step === 3 && !step4Ok) return;
+    setStep((s) => Math.min(STEPS.length - 1, s + 1));
+  }
+
+  function handleSubmit() {
+    const fd = new FormData();
+    fd.set("businessName", businessName);
+    fd.set("bio", bio);
+    fd.set("phone", phone);
+    fd.set("city", city);
+    fd.set("yearsExperience", experience);
+    fd.set("hourlyRateMin", hourlyMin);
+    fd.set("hourlyRateMax", hourlyMax);
+    fd.set("avatar_url", avatarUrl.trim());
+    fd.set("serviceRadiusKm", String(serviceRadiusKm));
+    fd.set("insuranceStatus", insuranceStatus);
+    fd.set("introductionVideoUrl", introductionVideoUrl.trim());
+    languages.forEach((l) => fd.append("languages", l));
+    selectedCategoryIds.forEach((id) => fd.append("categoryIds", id));
+    fd.set("primaryCategoryId", primaryCategoryId);
+    fd.set("applicationAnswers", JSON.stringify(applicationAnswers));
+    fd.set("portfolioImages", JSON.stringify(portfolioImages));
+    fd.set("pricingModel", JSON.stringify(pricing));
+    fd.set("companyDocuments", JSON.stringify(companyDocuments));
+
+    startTransition(async () => {
+      const result = await submitProfessionalApplication(submitState, fd);
+      setSubmitState(result);
+      if (result.success) {
+        clearDraft();
+      }
+    });
+  }
 
   const stepTransition = { duration: isNarrow ? 0.15 : 0.25 };
   const progressFillDuration = isNarrow ? 0.25 : 0.4;
 
-  if (state.success) {
+  if (submitState.success) {
     return (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -111,188 +428,269 @@ export function BecomeAProWizard({
           <CheckCircle className="h-8 w-8 text-teal-500" />
         </div>
         <h2 className="mt-6 text-2xl font-semibold text-gray-900 dark:text-white">
-          {t("pro.wizard.success")}
+          {t("becomePro.success.title")}
         </h2>
         <p className="mt-2 max-w-md text-gray-500 dark:text-white/50">
-          {t("pro.wizard.successDesc")}
+          {t("becomePro.success.message")}
         </p>
       </motion.div>
     );
   }
 
+  const isLastStep = step === STEPS.length - 1;
+
   return (
     <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
       <div className="rounded-3xl border border-gray-200/80 bg-white/80 p-6 shadow-sm backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.04] dark:shadow-none md:p-10">
-      <div className="mb-10 text-center">
-        <h1 className="text-3xl font-semibold text-gray-900 dark:text-white">
-          {t("pro.wizard.title")}
-        </h1>
-        <p className="mt-2 text-gray-500 dark:text-white/50">
-          {t("pro.wizard.subtitle")}
-        </p>
-      </div>
-
-      {/* Progress bar */}
-      <div className="mb-10 flex items-center gap-2 px-0.5 sm:gap-3 sm:px-1 md:px-2">
-        {STEPS.map((s, i) => {
-          const Icon = s.icon;
-          const active = i <= step;
-          return (
-            <div key={s.key} className="flex flex-1 items-center gap-3">
-              <div
-                className={cn(
-                  "flex h-10 w-10 shrink-0 items-center justify-center rounded-full border transition-colors",
-                  active
-                    ? "border-teal-500 bg-gradient-to-br from-teal-400 to-teal-600 text-white shadow-md shadow-teal-500/25"
-                    : "border-gray-200 dark:border-white/10 text-gray-400 dark:text-white/30"
-                )}
-              >
-                <Icon className="h-4 w-4" />
-              </div>
-              {i < STEPS.length - 1 && (
-                <div className="h-1 flex-1 rounded-full bg-gray-100 dark:bg-white/5 overflow-hidden">
-                  <motion.div
-                    className="h-full rounded-full bg-gradient-to-r from-teal-500 to-teal-400"
-                    initial={false}
-                    animate={{ width: i < step ? "100%" : "0%" }}
-                    transition={{ duration: progressFillDuration }}
-                  />
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-
-      {state.error && (
-        <div className="mb-6 rounded-xl border border-red-200 dark:border-red-500/20 bg-red-50 dark:bg-red-500/10 px-4 py-3 text-sm text-red-600 dark:text-red-400">
-          {state.error}
+        <div className="mb-10 text-center">
+          <h1 className="text-3xl font-semibold text-gray-900 dark:text-white">
+            {t("pro.wizard.title")}
+          </h1>
+          <p className="mt-2 text-gray-500 dark:text-white/50">
+            {t("pro.wizard.subtitle")}
+          </p>
         </div>
-      )}
 
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={step}
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -30 }}
-          transition={stepTransition}
-        >
-          {step === 0 && (
-            <StepPersonalInfo
-              businessName={businessName}
-              setBusinessName={setBusinessName}
-              bio={bio}
-              setBio={setBio}
-              phone={phone}
-              setPhone={setPhone}
-              city={city}
-              setCity={setCity}
-              languages={languages}
-              toggleLanguage={toggleLanguage}
-              experience={experience}
-              setExperience={setExperience}
-              hourlyMin={hourlyMin}
-              setHourlyMin={setHourlyMin}
-              hourlyMax={hourlyMax}
-              setHourlyMax={setHourlyMax}
-              userEmail={userEmail}
-              displayName={displayName}
-              avatarUrl={avatarUrl}
-              onAvatarUrlChange={setAvatarUrl}
-              t={t}
-            />
-          )}
-
-          {step === 1 && (
-            <StepServiceAreas
-              parents={parents}
-              childrenOf={childrenOf}
-              allCategories={categories}
-              selectedCategoryIds={selectedCategoryIds}
-              toggleCategory={toggleCategory}
-              primaryCategoryId={primaryCategoryId}
-              setPrimaryCategoryId={setPrimaryCategoryId}
-              expandedParent={expandedParent}
-              setExpandedParent={setExpandedParent}
-              locale={locale}
-              t={t}
-            />
-          )}
-
-          {step === 2 && <StepPortfolio t={t} />}
-        </motion.div>
-      </AnimatePresence>
-
-      {/* Navigation */}
-      <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <button
-          type="button"
-          onClick={() => setStep((s) => s - 1)}
-          disabled={step === 0}
-          className={cn(
-            "flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-medium transition-all sm:w-auto",
-            step === 0
-              ? "hidden"
-              : "text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/5"
-          )}
-        >
-          <ChevronLeft className="h-4 w-4" />
-          {t("pro.wizard.back")}
-        </button>
-
-        {step < 2 ? (
-          <button
-            type="button"
-            onClick={() => setStep((s) => s + 1)}
-            disabled={!canAdvance}
-            className={cn(
-              "flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all sm:w-auto",
-              "hover:from-teal-600 hover:to-teal-700 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
-            )}
-          >
-            {t("pro.wizard.next")}
-            <ChevronRight className="h-4 w-4" />
-          </button>
-        ) : (
-          <button
-            type="button"
-            disabled={
-              isPending ||
-              selectedCategoryIds.length === 0 ||
-              !hasAvatar
-            }
-            onClick={() => {
-              const fd = new FormData();
-              fd.set("businessName", businessName);
-              fd.set("bio", bio);
-              fd.set("phone", phone);
-              fd.set("city", city);
-              fd.set("yearsExperience", experience);
-              fd.set("hourlyRateMin", hourlyMin);
-              fd.set("hourlyRateMax", hourlyMax);
-              fd.set("avatar_url", avatarUrl.trim());
-              languages.forEach((l) => fd.append("languages", l));
-              selectedCategoryIds.forEach((id) => fd.append("categoryIds", id));
-              fd.set("primaryCategoryId", primaryCategoryId);
-              startTransition(async () => {
-                const result = await submitProfessionalApplication(state, fd);
-                setState(result);
-              });
-            }}
-            className={cn(
-              "flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all sm:w-auto",
-              "hover:from-teal-600 hover:to-teal-700 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
-            )}
-          >
-            {isPending ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              t("pro.wizard.submit")
-            )}
-          </button>
+        {draftBannerVisible && (
+          <div className="mb-6 flex items-center justify-between gap-3 rounded-xl border border-teal-500/30 bg-teal-500/10 px-4 py-3 text-sm text-teal-700 dark:text-teal-300">
+            <span>{t("becomePro.draftRestoredBanner")}</span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  clearDraft();
+                  setDraftBannerVisible(false);
+                  setStep(0);
+                  setBusinessName("");
+                  setBio("");
+                  setPhone("");
+                  setCity("");
+                  setLanguages([]);
+                  setExperience("");
+                  setHourlyMin("");
+                  setHourlyMax("");
+                  setServiceRadiusKm(25);
+                  setInsuranceStatus("none");
+                  setIntroductionVideoUrl("");
+                  setSelectedCategoryIds([]);
+                  setPrimaryCategoryId("");
+                  setApplicationAnswers({});
+                  setPortfolioImages([]);
+                  setPricing({ type: "hourly", baseRate: "", currency: "EUR" });
+                  setCompanyDocuments([]);
+                }}
+                className="rounded-lg px-2 py-1 text-xs font-medium text-teal-700 hover:bg-teal-500/15 dark:text-teal-300"
+              >
+                {t("becomePro.startFresh")}
+              </button>
+              <button
+                type="button"
+                onClick={() => setDraftBannerVisible(false)}
+                className="rounded-full p-1 text-teal-700 hover:bg-teal-500/15 dark:text-teal-300"
+                aria-label={t("becomePro.dismiss")}
+              >
+                <X className="h-4 w-4" aria-hidden />
+              </button>
+            </div>
+          </div>
         )}
-      </div>
+
+        <div className="mb-10 flex items-center gap-1.5 px-0.5 sm:gap-2 md:px-1">
+          {STEPS.map((s, i) => {
+            const Icon = s.icon;
+            const active = i <= step;
+            return (
+              <div key={s.key} className="flex flex-1 items-center gap-1.5">
+                <div
+                  className={cn(
+                    "flex h-9 w-9 shrink-0 items-center justify-center rounded-full border transition-colors",
+                    active
+                      ? "border-teal-500 bg-gradient-to-br from-teal-400 to-teal-600 text-white shadow-md shadow-teal-500/25"
+                      : "border-gray-200 dark:border-white/10 text-gray-400 dark:text-white/30",
+                  )}
+                >
+                  <Icon className="h-3.5 w-3.5" />
+                </div>
+                {i < STEPS.length - 1 && (
+                  <div className="h-1 flex-1 rounded-full bg-gray-100 dark:bg-white/5 overflow-hidden">
+                    <motion.div
+                      className="h-full rounded-full bg-gradient-to-r from-teal-500 to-teal-400"
+                      initial={false}
+                      animate={{ width: i < step ? "100%" : "0%" }}
+                      transition={{ duration: progressFillDuration }}
+                    />
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {submitState.error && (
+          <div className="mb-6 rounded-xl border border-red-200 dark:border-red-500/20 bg-red-50 dark:bg-red-500/10 px-4 py-3 text-sm text-red-600 dark:text-red-400">
+            {submitState.error}
+          </div>
+        )}
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={step}
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -30 }}
+            transition={stepTransition}
+          >
+            {step === 0 && (
+              <StepPersonalInfo
+                businessName={businessName}
+                setBusinessName={setBusinessName}
+                bio={bio}
+                setBio={setBio}
+                phone={phone}
+                setPhone={setPhone}
+                city={city}
+                setCity={setCity}
+                languages={languages}
+                toggleLanguage={toggleLanguage}
+                experience={experience}
+                setExperience={setExperience}
+                hourlyMin={hourlyMin}
+                setHourlyMin={setHourlyMin}
+                hourlyMax={hourlyMax}
+                setHourlyMax={setHourlyMax}
+                serviceRadiusKm={serviceRadiusKm}
+                setServiceRadiusKm={setServiceRadiusKm}
+                insuranceStatus={insuranceStatus}
+                setInsuranceStatus={setInsuranceStatus}
+                introductionVideoUrl={introductionVideoUrl}
+                setIntroductionVideoUrl={setIntroductionVideoUrl}
+                userEmail={userEmail}
+                displayName={displayName}
+                avatarUrl={avatarUrl}
+                onAvatarUrlChange={setAvatarUrl}
+                t={t}
+              />
+            )}
+
+            {step === 1 && (
+              <StepServiceAreas
+                parents={parents}
+                childrenOf={childrenOf}
+                allCategories={categories}
+                selectedCategoryIds={selectedCategoryIds}
+                toggleCategory={toggleCategory}
+                primaryCategoryId={primaryCategoryId}
+                setPrimaryCategoryId={setPrimaryCategoryId}
+                expandedParent={expandedParent}
+                setExpandedParent={setExpandedParent}
+                locale={locale}
+                t={t}
+              />
+            )}
+
+            {step === 2 && (
+              <StepApplicationQuestions
+                categories={dedupedCategoryRefs}
+                answers={applicationAnswers}
+                setAnswers={setApplicationAnswers}
+                locale={locale}
+                t={(k) => t(k)}
+                validateRef={applicationValidateRef}
+              />
+            )}
+
+            {step === 3 && (
+              <StepPortfolio
+                userId={userId}
+                portfolioImages={portfolioImages}
+                setPortfolioImages={setPortfolioImages}
+                pricing={pricing}
+                setPricing={setPricing}
+                t={(k) => t(k)}
+              />
+            )}
+
+            {step === 4 && (
+              <StepDocuments
+                userId={userId}
+                documents={companyDocuments}
+                setDocuments={setCompanyDocuments}
+                t={(k) => t(k)}
+              />
+            )}
+
+            {step === 5 && (
+              <StepReview
+                businessName={businessName}
+                bio={bio}
+                city={city}
+                languages={languages}
+                experience={experience}
+                selectedCategories={reviewCategories}
+                applicationAnswerCount={applicationAnswerCount}
+                portfolioCount={portfolioImages.length}
+                documentsCount={companyDocuments.length}
+                pricingType={pricing.type}
+                pricingBaseRate={pricing.baseRate}
+                completionScore={completionScore}
+                missingFields={missingFields}
+                t={(k) => t(k)}
+              />
+            )}
+          </motion.div>
+        </AnimatePresence>
+
+        <div className="mt-8 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <button
+            type="button"
+            onClick={() => setStep((s) => Math.max(0, s - 1))}
+            disabled={step === 0}
+            className={cn(
+              "flex w-full items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-medium transition-all sm:w-auto",
+              step === 0
+                ? "hidden"
+                : "text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/5",
+            )}
+          >
+            <ChevronLeft className="h-4 w-4" />
+            {t("pro.wizard.back")}
+          </button>
+
+          {!isLastStep ? (
+            <button
+              type="button"
+              onClick={tryAdvance}
+              disabled={
+                (step === 0 && !step1Ok) ||
+                (step === 1 && !step2Ok) ||
+                (step === 3 && !step4Ok)
+              }
+              className={cn(
+                "flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all sm:w-auto",
+                "hover:from-teal-600 hover:to-teal-700 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50",
+              )}
+            >
+              {t("pro.wizard.next")}
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          ) : (
+            <button
+              type="button"
+              disabled={isPending}
+              onClick={handleSubmit}
+              className={cn(
+                "flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all sm:w-auto",
+                "hover:from-teal-600 hover:to-teal-700 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50",
+              )}
+            >
+              {isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                t("becomePro.submit")
+              )}
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

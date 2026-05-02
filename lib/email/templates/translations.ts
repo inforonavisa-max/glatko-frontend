@@ -1644,6 +1644,357 @@ export function getRequestRejectedCopy(locale: EmailLocale): RequestRejectedCopy
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
+   G-PRO-1: Pro onboarding email copies (admin alert + approve/reject mailers)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+export type AdminProApplicationCopy = {
+  subject: string;
+  preview: string;
+  heading: string;
+  intro: string;
+  professionalLabel: string;
+  emailLabel: string;
+  cityLabel: string;
+  servicesLabel: string;
+  completionLabel: string;
+  cta: string;
+};
+
+const adminProApplication: Record<EmailLocale, AdminProApplicationCopy> = {
+  en: {
+    subject: "New pro application — review needed",
+    preview: "A new professional has applied to Glatko",
+    heading: "New pro application",
+    intro: "A new professional just submitted an application. Please review and approve or reject from the admin panel.",
+    professionalLabel: "Professional",
+    emailLabel: "Email",
+    cityLabel: "City",
+    servicesLabel: "Services",
+    completionLabel: "Profile completion",
+    cta: "Review application",
+  },
+  tr: {
+    subject: "Yeni profesyonel başvurusu — inceleme gerekli",
+    preview: "Glatko'ya yeni bir profesyonel başvurdu",
+    heading: "Yeni profesyonel başvurusu",
+    intro: "Yeni bir profesyonel başvuru gönderdi. Lütfen yönetici panelinden inceleyin ve onaylayın ya da reddedin.",
+    professionalLabel: "Profesyonel",
+    emailLabel: "E-posta",
+    cityLabel: "Şehir",
+    servicesLabel: "Hizmetler",
+    completionLabel: "Profil tamamlanma oranı",
+    cta: "Başvuruyu incele",
+  },
+  de: {
+    subject: "Neue Pro-Bewerbung — Prüfung erforderlich",
+    preview: "Ein neuer Profi hat sich bei Glatko beworben",
+    heading: "Neue Pro-Bewerbung",
+    intro: "Ein neuer Profi hat soeben eine Bewerbung eingereicht. Bitte prüfen und im Admin-Panel freigeben oder ablehnen.",
+    professionalLabel: "Profi",
+    emailLabel: "E-Mail",
+    cityLabel: "Stadt",
+    servicesLabel: "Leistungen",
+    completionLabel: "Profil-Vollständigkeit",
+    cta: "Bewerbung prüfen",
+  },
+  ar: {
+    subject: "طلب محترف جديد — يحتاج إلى مراجعة",
+    preview: "تقدم محترف جديد بطلب الانضمام إلى Glatko",
+    heading: "طلب محترف جديد",
+    intro: "قدّم محترف جديد طلب انضمام. يرجى المراجعة والموافقة أو الرفض من لوحة الإدارة.",
+    professionalLabel: "المحترف",
+    emailLabel: "البريد الإلكتروني",
+    cityLabel: "المدينة",
+    servicesLabel: "الخدمات",
+    completionLabel: "اكتمال الملف",
+    cta: "مراجعة الطلب",
+  },
+  it: {
+    subject: "Nuova candidatura pro — revisione richiesta",
+    preview: "Un nuovo professionista si è candidato su Glatko",
+    heading: "Nuova candidatura pro",
+    intro: "Un nuovo professionista ha appena inviato una candidatura. Esamina e approva o rifiuta dal pannello admin.",
+    professionalLabel: "Professionista",
+    emailLabel: "Email",
+    cityLabel: "Città",
+    servicesLabel: "Servizi",
+    completionLabel: "Completamento profilo",
+    cta: "Esamina candidatura",
+  },
+  me: {
+    subject: "Nova prijava profesionalca — potrebna provjera",
+    preview: "Novi profesionalac se prijavio na Glatko",
+    heading: "Nova prijava profesionalca",
+    intro: "Novi profesionalac je upravo poslao prijavu. Molimo provjerite i odobrite ili odbijte iz admin panela.",
+    professionalLabel: "Profesionalac",
+    emailLabel: "Email",
+    cityLabel: "Grad",
+    servicesLabel: "Usluge",
+    completionLabel: "Popunjenost profila",
+    cta: "Provjeri prijavu",
+  },
+  ru: {
+    subject: "Новая заявка специалиста — требуется проверка",
+    preview: "Новый специалист подал заявку в Glatko",
+    heading: "Новая заявка специалиста",
+    intro: "Новый специалист отправил заявку. Пожалуйста, проверьте и одобрите или отклоните из админ-панели.",
+    professionalLabel: "Специалист",
+    emailLabel: "Email",
+    cityLabel: "Город",
+    servicesLabel: "Услуги",
+    completionLabel: "Заполненность профиля",
+    cta: "Проверить заявку",
+  },
+  sr: {
+    subject: "Nova prijava profesionalca — potrebna provera",
+    preview: "Novi profesionalac se prijavio na Glatko",
+    heading: "Nova prijava profesionalca",
+    intro: "Novi profesionalac je upravo poslao prijavu. Molimo proverite i odobrite ili odbijte iz admin panela.",
+    professionalLabel: "Profesionalac",
+    emailLabel: "Email",
+    cityLabel: "Grad",
+    servicesLabel: "Usluge",
+    completionLabel: "Popunjenost profila",
+    cta: "Proveri prijavu",
+  },
+  uk: {
+    subject: "Нова заявка фахівця — потрібна перевірка",
+    preview: "Новий фахівець подав заявку до Glatko",
+    heading: "Нова заявка фахівця",
+    intro: "Новий фахівець щойно надіслав заявку. Будь ласка, перевірте та схваліть або відхиліть із панелі адміністратора.",
+    professionalLabel: "Фахівець",
+    emailLabel: "Email",
+    cityLabel: "Місто",
+    servicesLabel: "Послуги",
+    completionLabel: "Заповненість профілю",
+    cta: "Переглянути заявку",
+  },
+};
+
+export function getAdminProApplicationCopy(
+  locale: EmailLocale,
+): AdminProApplicationCopy {
+  return adminProApplication[locale] ?? adminProApplication.en;
+}
+
+/* ─── G-PRO-1: pro approved ─── */
+export type ProApprovedCopy = {
+  subject: string;
+  preview: string;
+  heading: string;
+  body: string;
+  nextStepsTitle: string;
+  step1: string;
+  step2: string;
+  step3: string;
+  cta: string;
+};
+
+const proApproved: Record<EmailLocale, ProApprovedCopy> = {
+  en: {
+    subject: "Welcome to Glatko — your application is approved",
+    preview: "Your professional profile is now live",
+    heading: "You are approved!",
+    body: "Welcome to Glatko, {name}. Your professional profile is now visible to customers and you can start receiving requests in your service areas.",
+    nextStepsTitle: "Next steps",
+    step1: "Visit your dashboard to set up availability and packages.",
+    step2: "Complete your profile to boost your visibility (>= 80% recommended).",
+    step3: "Respond to incoming requests promptly — fast response wins jobs.",
+    cta: "Open dashboard",
+  },
+  tr: {
+    subject: "Glatko'ya hoş geldin — başvurun onaylandı",
+    preview: "Profesyonel profilin artık yayında",
+    heading: "Onaylandın!",
+    body: "Glatko'ya hoş geldin {name}. Profesyonel profilin artık müşterilere görünüyor ve hizmet bölgelerindeki talepleri almaya başlayabilirsin.",
+    nextStepsTitle: "Sonraki adımlar",
+    step1: "Panele git, uygunluk ve paketlerini ayarla.",
+    step2: "Profil tamamlanma oranını %80+ tut, görünürlüğün artar.",
+    step3: "Gelen taleplere hızlı dönüş yap — hız iş kazandırır.",
+    cta: "Paneli aç",
+  },
+  de: {
+    subject: "Willkommen bei Glatko — Ihre Bewerbung ist freigegeben",
+    preview: "Ihr Profi-Profil ist jetzt live",
+    heading: "Sie sind freigegeben!",
+    body: "Willkommen bei Glatko, {name}. Ihr Profi-Profil ist jetzt für Kunden sichtbar und Sie können Anfragen in Ihren Servicegebieten erhalten.",
+    nextStepsTitle: "Nächste Schritte",
+    step1: "Gehen Sie zum Dashboard, um Verfügbarkeit und Pakete einzurichten.",
+    step2: "Vervollständigen Sie Ihr Profil (>= 80% empfohlen) für mehr Sichtbarkeit.",
+    step3: "Antworten Sie schnell auf Anfragen — Geschwindigkeit gewinnt Aufträge.",
+    cta: "Dashboard öffnen",
+  },
+  ar: {
+    subject: "مرحبًا بك في Glatko — تمت الموافقة على طلبك",
+    preview: "ملفك المهني أصبح مباشرًا الآن",
+    heading: "تمت الموافقة عليك!",
+    body: "مرحبًا بك في Glatko يا {name}. ملفك المهني ظاهر الآن للعملاء، ويمكنك البدء باستقبال الطلبات في مناطق خدمتك.",
+    nextStepsTitle: "الخطوات التالية",
+    step1: "اذهب إلى لوحة التحكم لضبط أوقات التوفر والباقات.",
+    step2: "أكمل ملفك (الموصى به ≥ 80%) لزيادة ظهورك.",
+    step3: "استجب للطلبات بسرعة — الاستجابة السريعة تكسب الوظائف.",
+    cta: "فتح لوحة التحكم",
+  },
+  it: {
+    subject: "Benvenuto su Glatko — la tua candidatura è approvata",
+    preview: "Il tuo profilo professionale è ora online",
+    heading: "Sei approvato!",
+    body: "Benvenuto su Glatko, {name}. Il tuo profilo è ora visibile ai clienti e puoi iniziare a ricevere richieste nelle tue zone di servizio.",
+    nextStepsTitle: "Prossimi passi",
+    step1: "Visita la dashboard per impostare disponibilità e pacchetti.",
+    step2: "Completa il profilo (≥ 80% consigliato) per aumentare la visibilità.",
+    step3: "Rispondi rapidamente alle richieste — la velocità vince i lavori.",
+    cta: "Apri dashboard",
+  },
+  me: {
+    subject: "Dobrodošli na Glatko — vaša prijava je odobrena",
+    preview: "Vaš profesionalni profil je sada aktivan",
+    heading: "Odobreni ste!",
+    body: "Dobrodošli na Glatko, {name}. Vaš profil je sada vidljiv klijentima i možete početi da primate zahtjeve u vašim područjima usluge.",
+    nextStepsTitle: "Sljedeći koraci",
+    step1: "Posjetite kontrolnu tablu da podesite dostupnost i pakete.",
+    step2: "Dopunite profil (preporučeno ≥ 80%) za bolju vidljivost.",
+    step3: "Brzo odgovarajte na zahtjeve — brzina dobija poslove.",
+    cta: "Otvori kontrolnu tablu",
+  },
+  ru: {
+    subject: "Добро пожаловать в Glatko — заявка одобрена",
+    preview: "Ваш профиль специалиста активен",
+    heading: "Вы одобрены!",
+    body: "Добро пожаловать в Glatko, {name}. Ваш профиль теперь виден клиентам, и вы можете начать получать запросы в зонах обслуживания.",
+    nextStepsTitle: "Дальнейшие шаги",
+    step1: "Перейдите в панель — настройте доступность и пакеты.",
+    step2: "Заполните профиль (рекомендуется ≥ 80%) для большей видимости.",
+    step3: "Отвечайте на запросы быстро — скорость выигрывает заказы.",
+    cta: "Открыть панель",
+  },
+  sr: {
+    subject: "Dobrodošli na Glatko — vaša prijava je odobrena",
+    preview: "Vaš profesionalni profil je sada aktivan",
+    heading: "Odobreni ste!",
+    body: "Dobrodošli na Glatko, {name}. Vaš profil je sada vidljiv klijentima i možete početi da primate zahteve u vašim oblastima usluge.",
+    nextStepsTitle: "Sledeći koraci",
+    step1: "Posetite kontrolnu tablu i podesite dostupnost i pakete.",
+    step2: "Dopunite profil (preporučeno ≥ 80%) za bolju vidljivost.",
+    step3: "Brzo odgovarajte na zahteve — brzina dobija poslove.",
+    cta: "Otvori kontrolnu tablu",
+  },
+  uk: {
+    subject: "Ласкаво просимо до Glatko — заявку схвалено",
+    preview: "Ваш професійний профіль активний",
+    heading: "Вас схвалено!",
+    body: "Ласкаво просимо до Glatko, {name}. Ваш профіль тепер видно клієнтам, і ви можете починати отримувати запити у своїх зонах обслуговування.",
+    nextStepsTitle: "Наступні кроки",
+    step1: "Перейдіть до панелі та налаштуйте доступність і пакети.",
+    step2: "Заповніть профіль (рекомендовано ≥ 80%) для кращої видимості.",
+    step3: "Швидко відповідайте на запити — швидкість виграє замовлення.",
+    cta: "Відкрити панель",
+  },
+};
+
+export function getProApprovedCopy(locale: EmailLocale): ProApprovedCopy {
+  return proApproved[locale] ?? proApproved.en;
+}
+
+/* ─── G-PRO-1: pro rejected ─── */
+export type ProRejectedCopy = {
+  subject: string;
+  preview: string;
+  heading: string;
+  intro: string;
+  reasonLabel: string;
+  outro: string;
+  cta: string;
+};
+
+const proRejected: Record<EmailLocale, ProRejectedCopy> = {
+  en: {
+    subject: "Update on your Glatko application",
+    preview: "Your professional application status",
+    heading: "We could not approve your application",
+    intro: "Hi {name}, after review we are unable to approve your professional application at this time.",
+    reasonLabel: "Reason",
+    outro: "You can re-apply after addressing the points above. We are here to help — feel free to reach out to support.",
+    cta: "Contact support",
+  },
+  tr: {
+    subject: "Glatko başvurun hakkında güncelleme",
+    preview: "Profesyonel başvuru durumun",
+    heading: "Başvurunu şu an onaylayamıyoruz",
+    intro: "Merhaba {name}, inceleme sonrasında profesyonel başvurunu şu an onaylayamıyoruz.",
+    reasonLabel: "Sebep",
+    outro: "Yukarıdaki noktaları gidererek tekrar başvurabilirsin. Destek için her zaman ulaşabilirsin.",
+    cta: "Destek ile iletişime geç",
+  },
+  de: {
+    subject: "Update zu Ihrer Glatko-Bewerbung",
+    preview: "Status Ihrer Profi-Bewerbung",
+    heading: "Wir können Ihre Bewerbung derzeit nicht freigeben",
+    intro: "Hallo {name}, nach Prüfung können wir Ihre Profi-Bewerbung derzeit nicht freigeben.",
+    reasonLabel: "Grund",
+    outro: "Sie können sich erneut bewerben, sobald die Punkte behoben sind. Wir helfen gerne — kontaktieren Sie unseren Support.",
+    cta: "Support kontaktieren",
+  },
+  ar: {
+    subject: "تحديث بشأن طلبك في Glatko",
+    preview: "حالة طلب انضمامك كمحترف",
+    heading: "لم نتمكن من الموافقة على طلبك",
+    intro: "مرحبًا {name}، بعد المراجعة لا يمكننا الموافقة على طلبك كمحترف حاليًا.",
+    reasonLabel: "السبب",
+    outro: "يمكنك إعادة التقديم بعد معالجة النقاط المذكورة. نحن هنا للمساعدة — تواصل مع الدعم في أي وقت.",
+    cta: "تواصل مع الدعم",
+  },
+  it: {
+    subject: "Aggiornamento sulla tua candidatura Glatko",
+    preview: "Stato della tua candidatura pro",
+    heading: "Non possiamo approvare la tua candidatura",
+    intro: "Ciao {name}, dopo la revisione non possiamo approvare la tua candidatura pro al momento.",
+    reasonLabel: "Motivo",
+    outro: "Puoi ricandidarti dopo aver risolto i punti indicati. Siamo qui per aiutarti — contatta il supporto.",
+    cta: "Contatta il supporto",
+  },
+  me: {
+    subject: "Ažuriranje o vašoj Glatko prijavi",
+    preview: "Status vaše profesionalne prijave",
+    heading: "Trenutno ne možemo odobriti vašu prijavu",
+    intro: "Zdravo {name}, nakon provjere trenutno ne možemo odobriti vašu profesionalnu prijavu.",
+    reasonLabel: "Razlog",
+    outro: "Možete se ponovo prijaviti nakon što riješite navedene tačke. Tu smo ako vam treba pomoć — kontaktirajte podršku.",
+    cta: "Kontaktiraj podršku",
+  },
+  ru: {
+    subject: "Обновление по вашей заявке Glatko",
+    preview: "Статус заявки специалиста",
+    heading: "Мы не можем одобрить вашу заявку",
+    intro: "Здравствуйте {name}, после проверки мы не можем одобрить вашу заявку специалиста.",
+    reasonLabel: "Причина",
+    outro: "Вы можете подать повторную заявку после устранения замечаний. Мы готовы помочь — напишите в поддержку.",
+    cta: "Связаться с поддержкой",
+  },
+  sr: {
+    subject: "Ažuriranje o vašoj Glatko prijavi",
+    preview: "Status vaše profesionalne prijave",
+    heading: "Trenutno ne možemo da odobrimo vašu prijavu",
+    intro: "Zdravo {name}, nakon provere trenutno ne možemo da odobrimo vašu profesionalnu prijavu.",
+    reasonLabel: "Razlog",
+    outro: "Možete se ponovo prijaviti kada rešite navedene tačke. Tu smo da pomognemo — kontaktirajte podršku.",
+    cta: "Kontaktiraj podršku",
+  },
+  uk: {
+    subject: "Оновлення щодо вашої заявки Glatko",
+    preview: "Статус заявки фахівця",
+    heading: "Ми не можемо схвалити вашу заявку",
+    intro: "Вітаємо {name}, після перевірки ми не можемо схвалити вашу заявку фахівця.",
+    reasonLabel: "Причина",
+    outro: "Ви можете подати заявку знову, виправивши зазначені моменти. Ми поряд — звертайтеся до підтримки.",
+    cta: "Звʼязатися з підтримкою",
+  },
+};
+
+export function getProRejectedCopy(locale: EmailLocale): ProRejectedCopy {
+  return proRejected[locale] ?? proRejected.en;
+}
+/* ═══════════════════════════════════════════════════════════════════════════
    G-LAUNCH-1: Founding Provider + Founding Customer welcome emails
    ═══════════════════════════════════════════════════════════════════════════ */
 

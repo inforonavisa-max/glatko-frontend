@@ -78,6 +78,7 @@ export default async function BecomeAProPage({ params }: Props) {
       </div>
       <div className="mx-auto max-w-3xl px-4 pb-12 sm:px-6">
         <BecomeAProWizard
+          userId={user.id}
           categories={
             (categories ?? []) as import("@/types/glatko").ServiceCategory[]
           }

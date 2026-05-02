@@ -1490,14 +1490,144 @@
   "becomePro": {
     "whyJoin": {
       "title": "Warum Glatko?",
-      "card1": "Kundenstamm",
-      "card1Desc": "Erreichen Sie Kund:innen in Budva, Kotor und Tivat",
-      "card2": "Flexible Arbeit",
-      "card2Desc": "Bestimmen Sie Ihren eigenen Zeitplan",
-      "card3": "Sichere Plattform",
-      "card3Desc": "Verifizierte Kund:innen, transparente Angebote",
+      "card1": "Kunden-Pool",
+      "card1Desc": "Erreichen Sie Kunden in Budva, Kotor und Tivat",
+      "card2": "Flexibel arbeiten",
+      "card2Desc": "Bestimmen Sie selbst Ihren Zeitplan",
+      "card3": "Vertrauenswürdige Plattform",
+      "card3Desc": "Verifizierte Kunden, transparente Angebote",
       "card4": "9 Sprachen",
-      "card4Desc": "Kommunizieren Sie in vielen Sprachen"
+      "card4Desc": "Verbinden Sie sich mit Kunden in mehreren Sprachen"
+    },
+    "submit": "Bewerbung senden",
+    "draftRestoredBanner": "Wir haben Ihren Entwurf wiederhergestellt. Sie können weiterarbeiten oder neu starten.",
+    "startFresh": "Neu starten",
+    "dismiss": "Schließen",
+    "optional": "optional",
+    "steps": {
+      "personalInfo": "Persönliche Daten",
+      "serviceAreas": "Servicebereiche",
+      "applicationQuestions": "Bewerbungsfragen",
+      "portfolio": "Portfolio & Preise",
+      "documents": "Dokumente",
+      "review": "Prüfen & senden"
+    },
+    "personalInfo": {
+      "premiumFieldsTitle": "Premium-Profilfelder (mehr Sichtbarkeit)",
+      "serviceRadiusLabel": "Servicebereich",
+      "serviceRadiusHint": "Wie weit reisen Sie für Aufträge?",
+      "insuranceLabel": "Versicherungsstatus",
+      "insurance": {
+        "none": "Keine",
+        "private": "Privat",
+        "business": "Gewerbe",
+        "professional": "Berufshaftpflicht"
+      },
+      "introVideoLabel": "Vorstellungs-Video-Link",
+      "introVideoHint": "Ein kurzer YouTube-/Vimeo-Link schafft Vertrauen."
+    },
+    "serviceAreas": {
+      "limitsHint": "Maximal {maxRoots} Hauptkategorien mit je {maxSubs} Unterkategorien.",
+      "maxRootsExceeded": "Maximal {max} Hauptkategorien.",
+      "maxSubsExceeded": "Maximal {max} Unterkategorien pro Hauptkategorie."
+    },
+    "applicationQuestions": {
+      "subtitle": "Einige spezifische Fragen helfen Kunden, den richtigen Profi zu finden.",
+      "noQuestions": "Keine zusätzlichen Fragen für die gewählten Kategorien."
+    },
+    "portfolio": {
+      "subtitle": "Zeigen Sie Ihre besten Arbeiten und legen Sie Ihre Preisstruktur fest.",
+      "galleryTitle": "Portfolio-Galerie",
+      "title": "Portfolio-Galerie",
+      "hint": "Bis zu {max} Bilder. JPEG/PNG/WebP, je 10 MB.",
+      "dropHere": "Bilder hierher ziehen oder zum Hochladen klicken",
+      "supportedTypes": "JPEG, PNG, WebP — bis zu 10 MB",
+      "emptyState": "Noch keine Bilder — Ihr Portfolio ist das stärkste Vertrauenssignal.",
+      "invalidType": "{name} ist kein unterstützter Bildtyp",
+      "tooLarge": "{name} überschreitet das 10-MB-Limit",
+      "maxFilesExceeded": "Sie können bis zu {max} Bilder hochladen.",
+      "uploadFailed": "Upload fehlgeschlagen für {name}: {error}",
+      "deleteFailed": "Löschen fehlgeschlagen: {error}",
+      "remove": "Bild entfernen",
+      "pricingTitle": "Preismodell",
+      "pricingHint": "Wie rechnen Sie üblicherweise ab? Pro Kategorie überschreibbar.",
+      "pricingTypeLabel": "Preistyp",
+      "pricingType": {
+        "hourly": "Stundenlohn",
+        "fixed": "Festpreis",
+        "per_unit": "Pro Einheit"
+      },
+      "baseRateLabel": "Basistarif",
+      "baseRateHint": {
+        "hourly": "Durchschnittlicher Stundensatz.",
+        "fixed": "Typische Projektsumme.",
+        "per_unit": "Tarif pro Einheit (z.B. m², Raum, kg)."
+      }
+    },
+    "documents": {
+      "subtitle": "Laden Sie Lizenz, Versicherung und Steuerdokumente hoch (privat, admin-only).",
+      "uploadTitle": "Firmendokumente",
+      "title": "Firmendokumente",
+      "hint": "Bis zu {max} Dateien. PDF/JPEG/PNG, je 5 MB.",
+      "uploadButton": "Dokument hochladen",
+      "typeLabel": "Dokumenttyp",
+      "types": {
+        "license": "Lizenz",
+        "insurance": "Versicherung",
+        "tax_cert": "Steuerbescheinigung",
+        "id_proof": "Identitätsnachweis",
+        "other": "Sonstiges"
+      },
+      "uploading": "Wird hochgeladen…",
+      "emptyState": "Noch keine Dokumente — sie beschleunigen die Prüfung.",
+      "privacyNote": "Dokumente werden in einem privaten Bereich gespeichert — nur Sie und Glatko-Admins sehen sie.",
+      "invalidType": "{name} ist kein unterstützter Dateityp",
+      "tooLarge": "{name} überschreitet das 5-MB-Limit",
+      "maxFilesExceeded": "Sie können bis zu {max} Dokumente hochladen.",
+      "uploadFailed": "Upload fehlgeschlagen für {name}: {error}",
+      "deleteFailed": "Löschen fehlgeschlagen: {error}",
+      "remove": "Dokument entfernen"
+    },
+    "review": {
+      "subtitle": "Werfen Sie einen letzten Blick, bevor Sie senden.",
+      "moderationNotice": "Nach dem Absenden prüft unser Team Ihre Bewerbung in 1-2 Werktagen.",
+      "personalInfo": "Persönliche Daten",
+      "businessName": "Firmenname",
+      "city": "Stadt",
+      "experience": "Erfahrung",
+      "years": "Jahre",
+      "languages": "Sprachen",
+      "bio": "Über mich",
+      "notSet": "—",
+      "servicesTitle": "Ausgewählte Leistungen",
+      "primary": "Primär",
+      "applicationQuestionsTitle": "Bewerbungsantworten",
+      "answersCount": "Antworten",
+      "portfolioTitle": "Portfolio",
+      "imagesCount": "Bilder",
+      "pricingTitle": "Preismodell",
+      "documentsTitle": "Dokumente",
+      "documentsCount": "Dateien"
+    },
+    "completionGauge": {
+      "title": "Profil-Vollständigkeit",
+      "subtitleHigh": "Ausgezeichnet — Sie heben sich ab.",
+      "subtitleMid": "Guter Anfang — ein paar Felder mehr und Sie liegen über dem Schnitt.",
+      "subtitleLow": "Weiter so — vollständige Profile erhalten 3× mehr Anfragen.",
+      "compactTitle": "Profil zu {score}% vollständig",
+      "ariaLabel": "Profil-Vollständigkeit {score}%",
+      "missingTitle": "Erhöhen Sie Ihren Score mit",
+      "missing": {
+        "bio": "Mindestens 100 Zeichen Biografie",
+        "portfolio": "Mindestens 3 Portfolio-Bilder",
+        "documents": "Firmendokumente (Lizenz/Versicherung)",
+        "introVideo": "Einem Vorstellungsvideo",
+        "hourlyRate": "Ihrem Stundensatz"
+      }
+    },
+    "success": {
+      "title": "Bewerbung gesendet",
+      "message": "Wir haben Ihre Bewerbung erhalten. Unser Team prüft sie innerhalb von 1-2 Werktagen und benachrichtigt Sie per E-Mail."
     }
   },
   "validation": {

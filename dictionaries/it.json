@@ -1489,15 +1489,145 @@
   },
   "becomePro": {
     "whyJoin": {
-      "title": "Perché Glatko?",
-      "card1": "Rete di clienti",
-      "card1Desc": "Clienti a Budva, Kotor e Tivat",
+      "title": "Perché unirsi a Glatko?",
+      "card1": "Pool di clienti",
+      "card1Desc": "Raggiungi clienti a Budva, Cattaro e Teodo",
       "card2": "Lavoro flessibile",
-      "card2Desc": "Decidi il tuo programma",
-      "card3": "Piattaforma sicura",
+      "card2Desc": "Imposta i tuoi orari",
+      "card3": "Piattaforma affidabile",
       "card3Desc": "Clienti verificati e preventivi trasparenti",
       "card4": "9 lingue",
-      "card4Desc": "Comunica in più lingue"
+      "card4Desc": "Connettiti con clienti in più lingue"
+    },
+    "submit": "Invia candidatura",
+    "draftRestoredBanner": "Abbiamo ripristinato la tua bozza. Continua o ricomincia.",
+    "startFresh": "Ricomincia",
+    "dismiss": "Chiudi",
+    "optional": "facoltativo",
+    "steps": {
+      "personalInfo": "Dati personali",
+      "serviceAreas": "Aree di servizio",
+      "applicationQuestions": "Domande di candidatura",
+      "portfolio": "Portfolio e prezzi",
+      "documents": "Documenti",
+      "review": "Verifica e invia"
+    },
+    "personalInfo": {
+      "premiumFieldsTitle": "Campi premium del profilo (più visibilità)",
+      "serviceRadiusLabel": "Raggio di servizio",
+      "serviceRadiusHint": "Quanto lontano dalla tua base accetti lavori?",
+      "insuranceLabel": "Stato assicurazione",
+      "insurance": {
+        "none": "Nessuna",
+        "private": "Privata",
+        "business": "Aziendale",
+        "professional": "Professionale"
+      },
+      "introVideoLabel": "URL video di presentazione",
+      "introVideoHint": "Un breve link YouTube/Vimeo aiuta i clienti a fidarsi."
+    },
+    "serviceAreas": {
+      "limitsHint": "Massimo {maxRoots} categorie principali, {maxSubs} sottocategorie ciascuna.",
+      "maxRootsExceeded": "Massimo {max} categorie principali.",
+      "maxSubsExceeded": "Massimo {max} sottocategorie per categoria."
+    },
+    "applicationQuestions": {
+      "subtitle": "Alcune domande mirate aiutano i clienti a trovare il professionista giusto.",
+      "noQuestions": "Nessuna domanda aggiuntiva per le categorie scelte."
+    },
+    "portfolio": {
+      "subtitle": "Mostra i tuoi migliori lavori e definisci come fatturi.",
+      "galleryTitle": "Galleria portfolio",
+      "title": "Galleria portfolio",
+      "hint": "Fino a {max} immagini. JPEG/PNG/WebP, 10 MB ciascuna.",
+      "dropHere": "Trascina e rilascia o clicca per caricare",
+      "supportedTypes": "JPEG, PNG, WebP — fino a 10 MB",
+      "emptyState": "Nessuna immagine — il portfolio è il segnale più forte di fiducia.",
+      "invalidType": "{name} non è un tipo di immagine supportato",
+      "tooLarge": "{name} supera il limite di 10 MB",
+      "maxFilesExceeded": "Puoi caricare fino a {max} immagini.",
+      "uploadFailed": "Caricamento di {name} fallito: {error}",
+      "deleteFailed": "Eliminazione fallita: {error}",
+      "remove": "Rimuovi immagine",
+      "pricingTitle": "Modello di prezzo",
+      "pricingHint": "Come fatturi di solito? Modificabile per categoria.",
+      "pricingTypeLabel": "Tipo di prezzo",
+      "pricingType": {
+        "hourly": "Orario",
+        "fixed": "Prezzo fisso",
+        "per_unit": "Per unità"
+      },
+      "baseRateLabel": "Tariffa base",
+      "baseRateHint": {
+        "hourly": "Tariffa media oraria.",
+        "fixed": "Totale tipico del progetto.",
+        "per_unit": "Tariffa per unità (es. m², stanza, kg)."
+      }
+    },
+    "documents": {
+      "subtitle": "Carica licenza, assicurazione, doc fiscali (privati, solo admin).",
+      "uploadTitle": "Documenti aziendali",
+      "title": "Documenti aziendali",
+      "hint": "Fino a {max} file. PDF/JPEG/PNG, 5 MB ciascuno.",
+      "uploadButton": "Carica documento",
+      "typeLabel": "Tipo documento",
+      "types": {
+        "license": "Licenza",
+        "insurance": "Assicurazione",
+        "tax_cert": "Certificato fiscale",
+        "id_proof": "Documento d'identità",
+        "other": "Altro"
+      },
+      "uploading": "Caricamento…",
+      "emptyState": "Nessun documento — caricarli accelera la verifica.",
+      "privacyNote": "Documenti privati — solo tu e gli admin Glatko li vedete.",
+      "invalidType": "{name} non è un tipo di file supportato",
+      "tooLarge": "{name} supera il limite di 5 MB",
+      "maxFilesExceeded": "Puoi caricare fino a {max} documenti.",
+      "uploadFailed": "Caricamento di {name} fallito: {error}",
+      "deleteFailed": "Eliminazione fallita: {error}",
+      "remove": "Rimuovi documento"
+    },
+    "review": {
+      "subtitle": "Dai un'ultima occhiata prima di inviare.",
+      "moderationNotice": "Dopo l'invio, il nostro team revisiona la candidatura in 1-2 giorni lavorativi.",
+      "personalInfo": "Dati personali",
+      "businessName": "Nome attività",
+      "city": "Città",
+      "experience": "Esperienza",
+      "years": "anni",
+      "languages": "Lingue",
+      "bio": "Su di me",
+      "notSet": "—",
+      "servicesTitle": "Servizi selezionati",
+      "primary": "Principale",
+      "applicationQuestionsTitle": "Risposte di candidatura",
+      "answersCount": "Risposte compilate",
+      "portfolioTitle": "Portfolio",
+      "imagesCount": "Immagini",
+      "pricingTitle": "Modello di prezzo",
+      "documentsTitle": "Documenti",
+      "documentsCount": "File"
+    },
+    "completionGauge": {
+      "title": "Completamento profilo",
+      "subtitleHigh": "Eccellente — spicchi tra i clienti.",
+      "subtitleMid": "Buon inizio — pochi campi e superi la media.",
+      "subtitleLow": "Vai avanti — i profili completi ricevono 3× più richieste.",
+      "compactTitle": "Profilo completo al {score}%",
+      "ariaLabel": "Completamento profilo {score}%",
+      "missingTitle": "Aumenta il punteggio aggiungendo",
+      "missing": {
+        "bio": "Bio di 100+ caratteri",
+        "portfolio": "Almeno 3 immagini portfolio",
+        "documents": "Documenti aziendali (licenza/assicurazione)",
+        "introVideo": "Un video di presentazione",
+        "hourlyRate": "La tua tariffa oraria"
+      }
+    },
+    "success": {
+      "title": "Candidatura inviata",
+      "message": "Abbiamo ricevuto la tua candidatura. Il team la revisiona in 1-2 giorni e ti scrive il risultato."
     }
   },
   "validation": {

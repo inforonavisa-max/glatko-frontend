@@ -1489,15 +1489,145 @@
   },
   "becomePro": {
     "whyJoin": {
-      "title": "Neden Glatko'ya Katılmalısınız?",
-      "card1": "Müşteri Havuzu",
-      "card1Desc": "Budva, Kotor ve Tivat'taki müşterilere ulaşın",
-      "card2": "Esnek Çalışma",
-      "card2Desc": "Kendi programınızı belirleyin",
-      "card3": "Güvenli Platform",
-      "card3Desc": "Doğrulanmış müşteriler, şeffaf teklif sistemi",
-      "card4": "9 Dil Desteği",
-      "card4Desc": "Farklı dillerdeki müşterilerle iletişim kurun"
+      "title": "Neden Glatko'ya katılmalı?",
+      "card1": "Müşteri havuzu",
+      "card1Desc": "Budva, Kotor ve Tivat'taki müşterilere ulaş",
+      "card2": "Esnek çalışma",
+      "card2Desc": "Kendi takvimini sen belirle",
+      "card3": "Güvenilir platform",
+      "card3Desc": "Doğrulanmış müşteriler, şeffaf teklif",
+      "card4": "9 dil",
+      "card4Desc": "Birden çok dilde müşterilerle bağlantı kur"
+    },
+    "submit": "Başvuruyu gönder",
+    "draftRestoredBanner": "Taslağını geri yükledik. Düzenlemeye devam edebilir veya yeniden başlayabilirsin.",
+    "startFresh": "Sıfırdan başla",
+    "dismiss": "Kapat",
+    "optional": "isteğe bağlı",
+    "steps": {
+      "personalInfo": "Kişisel bilgi",
+      "serviceAreas": "Hizmet alanları",
+      "applicationQuestions": "Başvuru soruları",
+      "portfolio": "Portfolyo ve fiyat",
+      "documents": "Belgeler",
+      "review": "Önizle ve gönder"
+    },
+    "personalInfo": {
+      "premiumFieldsTitle": "Premium profil alanları (görünürlüğünü artır)",
+      "serviceRadiusLabel": "Hizmet yarıçapı",
+      "serviceRadiusHint": "Üssünden ne kadar uzaktaki işlere gidersin?",
+      "insuranceLabel": "Sigorta durumu",
+      "insurance": {
+        "none": "Yok",
+        "private": "Bireysel",
+        "business": "Ticari",
+        "professional": "Profesyonel"
+      },
+      "introVideoLabel": "Tanıtım video bağlantısı",
+      "introVideoHint": "Kısa bir YouTube/Vimeo bağlantısı müşterinin sana güvenmesine yardımcı olur."
+    },
+    "serviceAreas": {
+      "limitsHint": "En fazla {maxRoots} ana kategori, her birinde {maxSubs} alt seçim.",
+      "maxRootsExceeded": "En fazla {max} ana kategori.",
+      "maxSubsExceeded": "Her ana kategoride en fazla {max} alt kategori."
+    },
+    "applicationQuestions": {
+      "subtitle": "Birkaç özel soru, müşterilerin doğru profesyoneli bulmasına yardımcı olur.",
+      "noQuestions": "Seçtiğin kategoriler için ek soru yok."
+    },
+    "portfolio": {
+      "subtitle": "En iyi işlerini göster ve nasıl ücret aldığını ayarla.",
+      "galleryTitle": "Portfolyo galerisi",
+      "title": "Portfolyo galerisi",
+      "hint": "Toplam {max} görsel. JPEG/PNG/WebP, her biri 10 MB.",
+      "dropHere": "Görselleri sürükle bırak veya yüklemek için tıkla",
+      "supportedTypes": "JPEG, PNG, WebP — her biri 10 MB'a kadar",
+      "emptyState": "Henüz görsel yok — portfolyon, güven için en güçlü sinyaldir.",
+      "invalidType": "{name} desteklenen bir görsel türü değil",
+      "tooLarge": "{name} 10 MB sınırını aşıyor",
+      "maxFilesExceeded": "En fazla {max} görsel yükleyebilirsin.",
+      "uploadFailed": "{name} yüklenemedi: {error}",
+      "deleteFailed": "Silinemedi: {error}",
+      "remove": "Görseli kaldır",
+      "pricingTitle": "Fiyatlandırma modeli",
+      "pricingHint": "Genelde nasıl ücret alırsın? Daha sonra kategori bazında ezebilirsin.",
+      "pricingTypeLabel": "Fiyat tipi",
+      "pricingType": {
+        "hourly": "Saatlik",
+        "fixed": "Sabit fiyat",
+        "per_unit": "Birim başına"
+      },
+      "baseRateLabel": "Temel ücret",
+      "baseRateHint": {
+        "hourly": "Ortalama saatlik ücret.",
+        "fixed": "Tipik proje toplamı.",
+        "per_unit": "Birim başına ücret (örn. m², oda, kg)."
+      }
+    },
+    "documents": {
+      "subtitle": "Lisans, sigorta ve vergi belgelerini yükle (özel, sadece yönetici görür).",
+      "uploadTitle": "Şirket belgeleri",
+      "title": "Şirket belgeleri",
+      "hint": "Toplam {max} dosya. PDF/JPEG/PNG, her biri 5 MB.",
+      "uploadButton": "Belge yükle",
+      "typeLabel": "Belge türü",
+      "types": {
+        "license": "Lisans",
+        "insurance": "Sigorta",
+        "tax_cert": "Vergi belgesi",
+        "id_proof": "Kimlik kanıtı",
+        "other": "Diğer"
+      },
+      "uploading": "Yükleniyor…",
+      "emptyState": "Henüz belge yok — eklemen doğrulamayı hızlandırır.",
+      "privacyNote": "Belgeler özel bir alanda saklanır — sadece sen ve Glatko yöneticileri görür.",
+      "invalidType": "{name} desteklenen bir dosya türü değil",
+      "tooLarge": "{name} 5 MB sınırını aşıyor",
+      "maxFilesExceeded": "En fazla {max} belge yükleyebilirsin.",
+      "uploadFailed": "{name} yüklenemedi: {error}",
+      "deleteFailed": "Silinemedi: {error}",
+      "remove": "Belgeyi kaldır"
+    },
+    "review": {
+      "subtitle": "Başvurunu göndermeden önce son bir kez bak.",
+      "moderationNotice": "Gönderdikten sonra ekibimiz başvurunu 1-2 iş günü içinde inceler.",
+      "personalInfo": "Kişisel bilgi",
+      "businessName": "İşletme adı",
+      "city": "Şehir",
+      "experience": "Deneyim",
+      "years": "yıl",
+      "languages": "Diller",
+      "bio": "Hakkımda",
+      "notSet": "—",
+      "servicesTitle": "Seçilen hizmetler",
+      "primary": "Birincil",
+      "applicationQuestionsTitle": "Başvuru cevapları",
+      "answersCount": "Doldurulan cevap",
+      "portfolioTitle": "Portfolyo",
+      "imagesCount": "Görsel",
+      "pricingTitle": "Fiyatlandırma modeli",
+      "documentsTitle": "Belgeler",
+      "documentsCount": "Dosya"
+    },
+    "completionGauge": {
+      "title": "Profil tamamlanması",
+      "subtitleHigh": "Mükemmel — müşteriler arasında öne çıkıyorsun.",
+      "subtitleMid": "İyi bir başlangıç — birkaç alan daha ortalamanın üstüne çıkartır.",
+      "subtitleLow": "Devam et — tamamlanmış profiller 3× daha fazla talep alır.",
+      "compactTitle": "Profilinin %{score}'i tamamlandı",
+      "ariaLabel": "Profil tamamlanma %{score}",
+      "missingTitle": "Skorunu artırmak için ekle",
+      "missing": {
+        "bio": "100+ karakterlik biyografi",
+        "portfolio": "En az 3 portfolyo görseli",
+        "documents": "Şirket belgeleri (lisans/sigorta)",
+        "introVideo": "Tanıtım videosu",
+        "hourlyRate": "Saatlik ücretin"
+      }
+    },
+    "success": {
+      "title": "Başvuru gönderildi",
+      "message": "Başvurunu aldık. Ekibimiz 1-2 iş günü içinde inceler ve sonucu sana e-posta ile bildirir."
     }
   },
   "validation": {

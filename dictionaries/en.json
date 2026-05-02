@@ -1498,6 +1498,136 @@
       "card3Desc": "Verified customers and transparent quoting",
       "card4": "9 languages",
       "card4Desc": "Connect with customers in multiple languages"
+    },
+    "submit": "Submit application",
+    "draftRestoredBanner": "We restored your draft. You can keep editing or start fresh.",
+    "startFresh": "Start fresh",
+    "dismiss": "Dismiss",
+    "optional": "optional",
+    "steps": {
+      "personalInfo": "Personal info",
+      "serviceAreas": "Service areas",
+      "applicationQuestions": "Application questions",
+      "portfolio": "Portfolio & pricing",
+      "documents": "Documents",
+      "review": "Review & submit"
+    },
+    "personalInfo": {
+      "premiumFieldsTitle": "Premium profile fields (boost your visibility)",
+      "serviceRadiusLabel": "Service radius",
+      "serviceRadiusHint": "How far from your base will you travel for jobs?",
+      "insuranceLabel": "Insurance status",
+      "insurance": {
+        "none": "None",
+        "private": "Private",
+        "business": "Business",
+        "professional": "Professional"
+      },
+      "introVideoLabel": "Introduction video URL",
+      "introVideoHint": "A short YouTube/Vimeo link helps customers trust you."
+    },
+    "serviceAreas": {
+      "limitsHint": "Pick up to {maxRoots} root categories, {maxSubs} sub-categories each.",
+      "maxRootsExceeded": "Maximum {max} root categories.",
+      "maxSubsExceeded": "Maximum {max} sub-categories per root."
+    },
+    "applicationQuestions": {
+      "subtitle": "A few specific questions help customers find the right professional.",
+      "noQuestions": "No additional questions for the categories you picked."
+    },
+    "portfolio": {
+      "subtitle": "Show your best work and set how you charge.",
+      "galleryTitle": "Portfolio gallery",
+      "title": "Portfolio gallery",
+      "hint": "Up to {max} images. JPEG/PNG/WebP, 10 MB each.",
+      "dropHere": "Drag and drop images, or click to upload",
+      "supportedTypes": "JPEG, PNG, WebP — up to 10 MB",
+      "emptyState": "No images yet — your portfolio is the strongest signal of trust.",
+      "invalidType": "{name} is not a supported image type",
+      "tooLarge": "{name} exceeds the 10 MB limit",
+      "maxFilesExceeded": "You can upload up to {max} images.",
+      "uploadFailed": "Upload failed for {name}: {error}",
+      "deleteFailed": "Delete failed: {error}",
+      "remove": "Remove image",
+      "pricingTitle": "Pricing model",
+      "pricingHint": "How do you typically charge? You can override per category later.",
+      "pricingTypeLabel": "Pricing type",
+      "pricingType": {
+        "hourly": "Hourly",
+        "fixed": "Fixed price",
+        "per_unit": "Per unit"
+      },
+      "baseRateLabel": "Base rate",
+      "baseRateHint": {
+        "hourly": "Average hourly rate.",
+        "fixed": "Typical project total.",
+        "per_unit": "Rate per unit (e.g. m², room, kg)."
+      }
+    },
+    "documents": {
+      "subtitle": "Upload license, insurance, and tax docs (private, admin-only).",
+      "uploadTitle": "Company documents",
+      "title": "Company documents",
+      "hint": "Up to {max} files. PDF/JPEG/PNG, 5 MB each.",
+      "uploadButton": "Upload document",
+      "typeLabel": "Document type",
+      "types": {
+        "license": "License",
+        "insurance": "Insurance",
+        "tax_cert": "Tax certificate",
+        "id_proof": "ID proof",
+        "other": "Other"
+      },
+      "uploading": "Uploading…",
+      "emptyState": "No documents yet — adding them speeds up verification.",
+      "privacyNote": "Documents are stored in a private bucket — only you and Glatko admins can view them.",
+      "invalidType": "{name} is not a supported file type",
+      "tooLarge": "{name} exceeds the 5 MB limit",
+      "maxFilesExceeded": "You can upload up to {max} documents.",
+      "uploadFailed": "Upload failed for {name}: {error}",
+      "deleteFailed": "Delete failed: {error}",
+      "remove": "Remove document"
+    },
+    "review": {
+      "subtitle": "Take a final look before sending your application.",
+      "moderationNotice": "After submit, our team reviews your application within 1-2 business days.",
+      "personalInfo": "Personal info",
+      "businessName": "Business name",
+      "city": "City",
+      "experience": "Experience",
+      "years": "years",
+      "languages": "Languages",
+      "bio": "About me",
+      "notSet": "—",
+      "servicesTitle": "Services selected",
+      "primary": "Primary",
+      "applicationQuestionsTitle": "Application answers",
+      "answersCount": "Answers filled",
+      "portfolioTitle": "Portfolio",
+      "imagesCount": "Images",
+      "pricingTitle": "Pricing model",
+      "documentsTitle": "Documents",
+      "documentsCount": "Files"
+    },
+    "completionGauge": {
+      "title": "Profile completion",
+      "subtitleHigh": "Excellent — you stand out to customers.",
+      "subtitleMid": "Good start — a few more fields lift you above the average.",
+      "subtitleLow": "Keep going — completed profiles get 3× more requests.",
+      "compactTitle": "Profile {score}% complete",
+      "ariaLabel": "Profile completion {score}%",
+      "missingTitle": "Boost your score by adding",
+      "missing": {
+        "bio": "A 100+ character bio",
+        "portfolio": "At least 3 portfolio images",
+        "documents": "Company documents (license/insurance)",
+        "introVideo": "An introduction video",
+        "hourlyRate": "Your hourly rate"
+      }
+    },
+    "success": {
+      "title": "Application submitted",
+      "message": "We received your application. Our team will review it within 1-2 business days and email you the result."
     }
   },
   "validation": {
