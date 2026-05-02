@@ -36,6 +36,7 @@ export type DispatchNotificationType =
   | "bid_accepted"
   | "bid_rejected"
   | "message"
+  | "thread_message"
   | "status_change"
   | "review"
   | "verification_approved"
@@ -81,6 +82,7 @@ function shouldSendEmailForType(
     case "bid_rejected":
       return prefs.email_pro_bid_outcome;
     case "message":
+    case "thread_message":
       return prefs.email_new_message;
     case "review":
       return prefs.email_new_review;
@@ -246,6 +248,26 @@ async function buildEmailForType(params: {
         }),
       };
     }
+    case "thread_message": {
+      const threadId = String(data.threadId ?? data.thread_id ?? "");
+      const m = getNewMessageEmailCopy(locale);
+      const body = String(data.notificationBody ?? "").trim() || "—";
+      const ctaUrl = threadId
+        ? buildLocalizedPath(locale, `/messages/${threadId}`)
+        : buildLocalizedPath(locale, "/messages");
+      return {
+        subject: m.subject,
+        react: createElement(SimpleActionEmail, {
+          recipientName,
+          preview: body.slice(0, 100),
+          title: m.title,
+          body,
+          ctaLabel: m.cta,
+          ctaUrl,
+          locale,
+        }),
+      };
+    }
     case "verification_approved": {
       const c = getProWelcomeEmailCopy(locale);
       const adminNote = String(data.notificationBody ?? "").trim();
@@ -301,6 +323,7 @@ export async function dispatchNotificationEmail(params: {
       "bid_accepted",
       "bid_rejected",
       "message",
+      "thread_message",
       "status_change",
       "review",
       "verification_approved",
@@ -402,6 +425,29 @@ export async function dispatchNotificationEmail(params: {
           return c === convId;
         }).length;
         if (sameConvCount > 1) {
+          return;
+        }
+      }
+    }
+
+    if (type === "thread_message") {
+      const threadId = String(
+        mergedData.threadId ?? mergedData.thread_id ?? "",
+      ).trim();
+      if (threadId) {
+        const since = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+        const { data: recentRows } = await admin
+          .from("glatko_notifications")
+          .select("id, data")
+          .eq("user_id", params.userId)
+          .eq("type", "thread_message")
+          .gte("created_at", since);
+        const sameThreadCount = (recentRows ?? []).filter((row) => {
+          const d = row.data as Record<string, unknown> | null;
+          const tid = String(d?.threadId ?? d?.thread_id ?? "").trim();
+          return tid === threadId;
+        }).length;
+        if (sameThreadCount > 1) {
           return;
         }
       }
