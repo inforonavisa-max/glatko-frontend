@@ -27,6 +27,7 @@ import type {
   VerificationDoc,
 } from "@/components/glatko/verification/VerificationProofModal";
 import { ReviewSection } from "@/components/glatko/review/ReviewSection";
+import { QuoteReviewsSection } from "@/components/glatko/pro/QuoteReviewsSection";
 import { LocalBusinessSchema } from "@/components/seo/LocalBusinessSchema";
 import type { Metadata } from "next";
 import type { MultiLangText, ProService, ProfessionalProfile } from "@/types/glatko";
@@ -122,6 +123,24 @@ export default async function ProviderProfilePage({ params }: PageProps) {
   if (!profile) notFound();
 
   const { reviews, total: totalReviews } = await getPublishedReviews(id);
+
+  // G-REV-1 quote-based reviews (parallel to legacy bid-based reviews above).
+  const { createClient: _createSupabase } = await import("@/supabase/server");
+  const _supabase = _createSupabase();
+  const { data: quoteReviewsRaw } = await _supabase
+    .from("glatko_quote_reviews")
+    .select("id, rating, comment, customer_display_name, created_at")
+    .eq("professional_id", id)
+    .eq("status", "published")
+    .order("created_at", { ascending: false })
+    .limit(10);
+  const quoteReviews = (quoteReviewsRaw ?? []) as Array<{
+    id: string;
+    rating: number;
+    comment: string | null;
+    customer_display_name: string | null;
+    created_at: string;
+  }>;
   const trustBadges = await calculateTrustBadges(id);
 
   const qualityRated = reviews.filter((r: { quality_rating: number | null }) => r.quality_rating != null);
@@ -429,6 +448,14 @@ export default async function ProviderProfilePage({ params }: PageProps) {
             locale={locale}
           />
         </div>
+
+        {/* G-REV-1 quote-based reviews (lives alongside the legacy
+            multi-axis section above; feeds from glatko_quote_reviews). */}
+        {quoteReviews.length > 0 && (
+          <div className="mb-8 rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
+            <QuoteReviewsSection reviews={quoteReviews} locale={locale} />
+          </div>
+        )}
 
         {/* ── SECTION G: CTA ── */}
         <div className="rounded-2xl border border-gray-200/50 bg-white/70 p-8 text-center backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
