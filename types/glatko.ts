@@ -19,6 +19,7 @@ export type InsuranceStatus = "none" | "self_reported" | "verified";
 
 export interface ProfessionalProfile {
   id: string;
+  slug: string;
   business_name: string | null;
   bio: string | null;
   phone: string | null;

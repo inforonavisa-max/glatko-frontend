@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
+import { buildAlternates } from "@/lib/seo";
 import { PageBackground } from "@/components/ui/PageBackground";
 import { FoundingCounter } from "@/components/glatko/founding/FoundingCounter";
 import { createAdminClient } from "@/supabase/server";
@@ -27,6 +28,7 @@ export async function generateMetadata({
   return {
     title: `${t("hero.title")} — Glatko`,
     description: t("hero.subtitle"),
+    alternates: buildAlternates(locale, "/how-it-works"),
     openGraph: {
       title: `${t("hero.title")} — Glatko`,
       description: t("hero.subtitle"),

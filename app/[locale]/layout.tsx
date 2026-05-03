@@ -7,7 +7,6 @@ import { routing } from "@/i18n/routing";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { GlatkoHeader } from "@/components/GlatkoHeader";
 import { GlatkoFooter } from "@/components/GlatkoFooter";
-import { HtmlLangSetter } from "@/components/HtmlLangSetter";
 import { createClient } from "@/supabase/server";
 import { isAdminEmail } from "@/lib/admin";
 import { CookieConsent } from "@/components/glatko/CookieConsent";
@@ -151,7 +150,6 @@ export default async function LocaleLayout({ children, params }: Props) {
         <SearchModalProvider>
           <script {...jsonLdScriptProps(generateOrganizationSchema(locale))} />
           <HreflangLinks locale={locale} path={hreflangPath} />
-          <HtmlLangSetter lang={locale} dir={dir} />
           <SentryUserScope userId={userId} email={user?.email} />
           <div className="flex min-h-screen flex-col" dir={dir}>
             <a
