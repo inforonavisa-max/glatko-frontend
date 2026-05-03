@@ -19,7 +19,11 @@ import { routing } from "@/i18n/routing";
 import { PageBackground } from "@/components/ui/PageBackground";
 import type { Locale } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
-import { getProfessionalProfile, getPublishedReviews, calculateTrustBadges } from "@/lib/supabase/glatko.server";
+import {
+  getProfessionalProfileBySlug,
+  getPublishedReviews,
+  calculateTrustBadges,
+} from "@/lib/supabase/glatko.server";
 import { TrustBadge } from "@/components/glatko/trust/TrustBadge";
 import { VerifiedBadgeWithProof } from "@/components/glatko/verification/VerifiedBadgeWithProof";
 import type {
@@ -28,9 +32,10 @@ import type {
 } from "@/components/glatko/verification/VerificationProofModal";
 import { ReviewSection } from "@/components/glatko/review/ReviewSection";
 import { QuoteReviewsSection } from "@/components/glatko/pro/QuoteReviewsSection";
-import { LocalBusinessSchema } from "@/components/seo/LocalBusinessSchema";
+import { ProviderSchema } from "@/components/seo/ProviderSchema";
+import { buildAlternates, SEO_BASE } from "@/lib/seo";
 import type { Metadata } from "next";
-import type { MultiLangText, ProService, ProfessionalProfile } from "@/types/glatko";
+import type { MultiLangText, ProService } from "@/types/glatko";
 
 type ReviewItem = {
   id: string;
@@ -42,7 +47,10 @@ type ReviewItem = {
   photos: string[];
   created_at: string;
   reviewer: { full_name: string; avatar_url: string | null } | null;
-  service_request: { title: string; category: { name: Record<string, string>; icon: string } | null } | null;
+  service_request: {
+    title: string;
+    category: { name: Record<string, string>; icon: string } | null;
+  } | null;
 };
 
 function labelForCategory(
@@ -69,42 +77,31 @@ function initialsFromName(name: string): string {
 }
 
 type PageProps = {
-  params: Promise<{ locale: string; id: string }> | { locale: string; id: string };
+  params:
+    | Promise<{ locale: string; slug: string }>
+    | { locale: string; slug: string };
 };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { locale, id } = await Promise.resolve(params);
+  const { locale, slug } = await Promise.resolve(params);
   if (!hasLocale(routing.locales, locale)) return {};
-  const profile = await getProfessionalProfile(id);
+  const profile = await getProfessionalProfileBySlug(slug);
   if (!profile) return {};
-  const name = profile.business_name?.trim() || profile.profile?.full_name?.trim() || "Professional";
+  const name =
+    profile.business_name?.trim() ||
+    profile.profile?.full_name?.trim() ||
+    "Professional";
   const city = profile.location_city || "Montenegro";
-
-  // G-SEO-FOUNDATION: legacy UUID URL points canonical at the new
-  // /pros/{slug} surface so Google consolidates indexing signals onto the
-  // SEO-friendly route. Hreflang alternates also resolve to the slug URLs.
-  const baseUrl =
-    process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") || "https://glatko.app";
-  const slugPath = profile.slug ? `/pros/${profile.slug}` : `/provider/${id}`;
-  const languageAlternates: Record<string, string> = {};
-  for (const loc of routing.locales) {
-    languageAlternates[loc] = `${baseUrl}/${loc}${slugPath}`;
-  }
-  languageAlternates["x-default"] = `${baseUrl}/en${slugPath}`;
-
-  const canonical = `${baseUrl}/${locale}${slugPath}`;
+  const alternates = buildAlternates(locale, `/pros/${slug}`);
 
   return {
     title: `${name} — Glatko`,
     description: `${name} — verified professional in ${city}. ${profile.avg_rating.toFixed(1)}★ rating, ${profile.completed_jobs} jobs completed.`,
-    alternates: {
-      canonical,
-      languages: languageAlternates,
-    },
+    alternates,
     openGraph: {
       title: `${name} — Glatko`,
       description: `Verified professional in ${city}. Get a quote on Glatko.`,
-      url: canonical,
+      url: alternates.canonical,
       siteName: "Glatko",
       locale,
       type: "profile",
@@ -113,19 +110,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function ProviderProfilePage({ params }: PageProps) {
-  const { locale: localeParam, id } = await Promise.resolve(params);
+export default async function ProviderProfileBySlugPage({ params }: PageProps) {
+  const { locale: localeParam, slug } = await Promise.resolve(params);
   if (!hasLocale(routing.locales, localeParam)) notFound();
   const locale = localeParam as Locale;
   setRequestLocale(locale);
   const t = await getTranslations();
 
-  const profile = await getProfessionalProfile(id);
+  const profile = await getProfessionalProfileBySlug(slug);
   if (!profile) notFound();
+  const id = profile.id;
 
   const { reviews, total: totalReviews } = await getPublishedReviews(id);
 
-  // G-REV-1 quote-based reviews (parallel to legacy bid-based reviews above).
   const { createClient: _createSupabase } = await import("@/supabase/server");
   const _supabase = _createSupabase();
   const { data: quoteReviewsRaw } = await _supabase
@@ -144,20 +141,41 @@ export default async function ProviderProfilePage({ params }: PageProps) {
   }>;
   const trustBadges = await calculateTrustBadges(id);
 
-  const qualityRated = reviews.filter((r: { quality_rating: number | null }) => r.quality_rating != null);
-  const avgQuality = qualityRated.length > 0
-    ? qualityRated.reduce((sum: number, r: { quality_rating: number | null }) => sum + (r.quality_rating ?? 0), 0) / qualityRated.length
-    : null;
+  const qualityRated = reviews.filter(
+    (r: { quality_rating: number | null }) => r.quality_rating != null
+  );
+  const avgQuality =
+    qualityRated.length > 0
+      ? qualityRated.reduce(
+          (sum: number, r: { quality_rating: number | null }) =>
+            sum + (r.quality_rating ?? 0),
+          0
+        ) / qualityRated.length
+      : null;
 
-  const commRated = reviews.filter((r: { communication_rating: number | null }) => r.communication_rating != null);
-  const avgCommunication = commRated.length > 0
-    ? commRated.reduce((sum: number, r: { communication_rating: number | null }) => sum + (r.communication_rating ?? 0), 0) / commRated.length
-    : null;
+  const commRated = reviews.filter(
+    (r: { communication_rating: number | null }) => r.communication_rating != null
+  );
+  const avgCommunication =
+    commRated.length > 0
+      ? commRated.reduce(
+          (sum: number, r: { communication_rating: number | null }) =>
+            sum + (r.communication_rating ?? 0),
+          0
+        ) / commRated.length
+      : null;
 
-  const punctRated = reviews.filter((r: { punctuality_rating: number | null }) => r.punctuality_rating != null);
-  const avgPunctuality = punctRated.length > 0
-    ? punctRated.reduce((sum: number, r: { punctuality_rating: number | null }) => sum + (r.punctuality_rating ?? 0), 0) / punctRated.length
-    : null;
+  const punctRated = reviews.filter(
+    (r: { punctuality_rating: number | null }) => r.punctuality_rating != null
+  );
+  const avgPunctuality =
+    punctRated.length > 0
+      ? punctRated.reduce(
+          (sum: number, r: { punctuality_rating: number | null }) =>
+            sum + (r.punctuality_rating ?? 0),
+          0
+        ) / punctRated.length
+      : null;
 
   const displayName =
     profile.business_name?.trim() ||
@@ -177,12 +195,12 @@ export default async function ProviderProfilePage({ params }: PageProps) {
   const rating = profile.avg_rating;
   const fullStars = Math.min(5, Math.round(rating));
 
-  // G-PRO-2 Faz 3: VerifiedBadgeWithProof needs the verification audit data.
-  // tier_documents lands in Faz 4 (Migration 031); fall back to [] for now
-  // so admin-side document tracking can light up later without UI churn.
   const proAny = profile as unknown as {
     verified_at?: string | null;
-    tier_documents?: Record<string, { verified?: boolean; verified_at?: string }> | null;
+    tier_documents?: Record<
+      string,
+      { verified?: boolean; verified_at?: string }
+    > | null;
     verification_tier?: "basic" | "business" | "professional" | null;
   };
   const docMap = proAny.tier_documents ?? {};
@@ -205,30 +223,49 @@ export default async function ProviderProfilePage({ params }: PageProps) {
   };
 
   const statItems = [
-    { value: profile.completed_jobs, label: t("pro.profile.completedJobs"), icon: CheckCircle },
+    {
+      value: profile.completed_jobs,
+      label: t("pro.profile.completedJobs"),
+      icon: CheckCircle,
+    },
     ...(profile.response_time_minutes != null
-      ? [{ value: `${profile.response_time_minutes}m`, label: t("pro.profile.responseTime"), icon: Clock }]
+      ? [
+          {
+            value: `${profile.response_time_minutes}m`,
+            label: t("pro.profile.responseTime"),
+            icon: Clock,
+          },
+        ]
       : []),
     ...(profile.years_experience != null
-      ? [{ value: profile.years_experience, label: t("pro.profile.yearsExp"), icon: Briefcase }]
+      ? [
+          {
+            value: profile.years_experience,
+            label: t("pro.profile.yearsExp"),
+            icon: Briefcase,
+          },
+        ]
       : []),
     { value: rating.toFixed(1), label: t("pro.profile.rating"), icon: Star },
   ];
 
+  const canonicalUrl = `${SEO_BASE}/${locale}/pros/${slug}`;
+
   return (
     <PageBackground opacity={0.06}>
-      <LocalBusinessSchema pro={profile as unknown as ProfessionalProfile} />
+      <ProviderSchema
+        pro={profile}
+        reviews={quoteReviews}
+        canonicalUrl={canonicalUrl}
+      />
 
-      {/* ── SECTION A: Hero Banner — teal gradient top ── */}
       <div className="relative">
         <div className="absolute inset-x-0 top-0 h-72 bg-gradient-to-b from-teal-600/[0.15] via-teal-500/[0.06] to-transparent dark:from-teal-600/[0.12] dark:via-teal-500/[0.04]" />
       </div>
 
       <div className="relative mx-auto max-w-4xl px-4 pb-20 pt-28 sm:px-6">
-        {/* Hero card */}
         <div className="relative mb-8 rounded-3xl border border-gray-200/60 bg-white/80 p-6 shadow-xl backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03] sm:p-8">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
-            {/* Avatar */}
             {profile.profile?.avatar_url ? (
               <Image
                 src={profile.profile.avatar_url}
@@ -267,9 +304,12 @@ export default async function ProviderProfilePage({ params }: PageProps) {
                 </div>
               )}
 
-              {/* Stars */}
               <div className="flex items-center gap-2">
-                <div className="flex items-center gap-0.5" role="img" aria-label={`${rating.toFixed(1)}`}>
+                <div
+                  className="flex items-center gap-0.5"
+                  role="img"
+                  aria-label={`${rating.toFixed(1)}`}
+                >
                   {Array.from({ length: 5 }, (_, i) => (
                     <Star
                       key={i}
@@ -291,23 +331,31 @@ export default async function ProviderProfilePage({ params }: PageProps) {
                 </span>
               </div>
 
-              {/* Location + languages */}
               <div className="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-white/60">
                 {profile.location_city && (
                   <span className="inline-flex items-center gap-1.5">
-                    <MapPin className="h-4 w-4 shrink-0 text-teal-600 dark:text-teal-400" aria-hidden />
+                    <MapPin
+                      className="h-4 w-4 shrink-0 text-teal-600 dark:text-teal-400"
+                      aria-hidden
+                    />
                     {profile.location_city}
                   </span>
                 )}
                 {profile.languages.length > 0 && (
                   <span className="inline-flex items-center gap-1.5">
-                    <Languages className="h-4 w-4 shrink-0 text-teal-600 dark:text-teal-400" aria-hidden />
+                    <Languages
+                      className="h-4 w-4 shrink-0 text-teal-600 dark:text-teal-400"
+                      aria-hidden
+                    />
                     {profile.languages.join(", ")}
                   </span>
                 )}
                 {profile.years_experience != null && (
                   <span className="inline-flex items-center gap-1.5">
-                    <Globe className="h-4 w-4 shrink-0 text-teal-600 dark:text-teal-400" aria-hidden />
+                    <Globe
+                      className="h-4 w-4 shrink-0 text-teal-600 dark:text-teal-400"
+                      aria-hidden
+                    />
                     {profile.years_experience} {t("pro.profile.yearsExp")}
                   </span>
                 )}
@@ -316,7 +364,6 @@ export default async function ProviderProfilePage({ params }: PageProps) {
           </div>
         </div>
 
-        {/* ── SECTION B: Stat Strip — adapted from kit pricing.tsx grid pattern ── */}
         <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
           {statItems.map((stat) => {
             const Icon = stat.icon;
@@ -337,7 +384,6 @@ export default async function ProviderProfilePage({ params }: PageProps) {
           })}
         </div>
 
-        {/* ── SECTION C: About ── */}
         {profile.bio?.trim() && (
           <div className="mb-8 rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
             <h2 className="mb-1 font-serif text-xl font-semibold text-gray-900 dark:text-white">
@@ -350,14 +396,15 @@ export default async function ProviderProfilePage({ params }: PageProps) {
           </div>
         )}
 
-        {/* ── SECTION D: Services — adapted from kit features.tsx Card pattern ── */}
         <div className="mb-8">
           <h2 className="mb-1 font-serif text-xl font-semibold text-gray-900 dark:text-white">
             {t("pro.profile.services")}
           </h2>
           <div className="mb-5 h-0.5 w-8 rounded-full bg-gradient-to-r from-teal-500 to-transparent" />
           {categories.length === 0 ? (
-            <p className="text-sm text-gray-500 dark:text-white/40">{t("pro.profile.noServices")}</p>
+            <p className="text-sm text-gray-500 dark:text-white/40">
+              {t("pro.profile.noServices")}
+            </p>
           ) : (
             <div className="space-y-3">
               {services.map((s, i) => {
@@ -401,7 +448,6 @@ export default async function ProviderProfilePage({ params }: PageProps) {
           )}
         </div>
 
-        {/* ── SECTION E: Portfolio — masonry grid ── */}
         <div className="mb-8">
           <h2 className="mb-1 font-serif text-xl font-semibold text-gray-900 dark:text-white">
             {t("pro.profile.portfolio")}
@@ -410,7 +456,9 @@ export default async function ProviderProfilePage({ params }: PageProps) {
           {profile.portfolio_images.length === 0 ? (
             <div className="flex flex-col items-center py-12 text-center">
               <Eye className="mb-3 h-10 w-10 text-gray-300 dark:text-white/15" />
-              <p className="text-sm text-gray-500 dark:text-white/40">{t("pro.profile.noPortfolio")}</p>
+              <p className="text-sm text-gray-500 dark:text-white/40">
+                {t("pro.profile.noPortfolio")}
+              </p>
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -436,7 +484,6 @@ export default async function ProviderProfilePage({ params }: PageProps) {
           )}
         </div>
 
-        {/* ── SECTION F: Reviews — adapted from kit testimonials.tsx pattern ── */}
         <div className="mb-8 rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
           <ReviewSection
             reviews={reviews as ReviewItem[]}
@@ -450,15 +497,12 @@ export default async function ProviderProfilePage({ params }: PageProps) {
           />
         </div>
 
-        {/* G-REV-1 quote-based reviews (lives alongside the legacy
-            multi-axis section above; feeds from glatko_quote_reviews). */}
         {quoteReviews.length > 0 && (
           <div className="mb-8 rounded-2xl border border-gray-200/50 bg-white/70 p-6 backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
             <QuoteReviewsSection reviews={quoteReviews} locale={locale} />
           </div>
         )}
 
-        {/* ── SECTION G: CTA ── */}
         <div className="rounded-2xl border border-gray-200/50 bg-white/70 p-8 text-center backdrop-blur-sm dark:border-white/[0.08] dark:bg-white/[0.03]">
           <h3 className="font-serif text-xl font-semibold text-gray-900 dark:text-white">
             {t("pro.profile.ctaTitle") ?? t("pro.profile.requestQuote")}

@@ -1,6 +1,9 @@
 import type { MetadataRoute } from "next";
 
-import { getAllActiveCategories } from "@/lib/supabase/glatko.server";
+import {
+  getAllActiveCategories,
+  getProfessionalsForSitemap,
+} from "@/lib/supabase/glatko.server";
 import { SEO_BASE, SEO_LOCALES, hreflangForLocale } from "@/lib/seo";
 
 // Force runtime evaluation. Our Supabase server client depends on `cookies()`,
@@ -32,17 +35,20 @@ const STATIC_PAGES = [
 ] as const;
 
 /**
- * G-CAT-4: dynamic sitemap.
+ * G-CAT-4 + G-SEO-FOUNDATION: dynamic sitemap.
  * - Static pages × 9 locales (81 URLs).
- * - Active categories from DB × 9 locales (~85 × 9 = 765 URLs).
+ * - Active categories from DB × 9 locales.
+ * - Active+approved provider profiles at /{locale}/pros/{slug} × 9 locales
+ *   (G-SEO-FOUNDATION Faz 6: replaces UUID surface with stable slugs).
  *
- * Replaces the prior hardcoded 21-slug list, which had drifted from the
- * G-CAT-2/3 catalog (6 phantom slugs returned 404, 6 stale slugs hit
- * 308 redirects). Each entry carries 9-locale hreflang alternates so
- * Search Console can deduplicate locale variants.
+ * Each entry carries 9-locale hreflang alternates so Search Console can
+ * deduplicate locale variants.
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const categories = await getAllActiveCategories();
+  const [categories, professionals] = await Promise.all([
+    getAllActiveCategories(),
+    getProfessionalsForSitemap(),
+  ]);
   const buildTime = new Date();
   const routes: MetadataRoute.Sitemap = [];
 
@@ -72,6 +78,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified,
         changeFrequency: "weekly",
         priority,
+        alternates: { languages: makeAlternates(path) },
+      });
+    }
+  }
+
+  for (const pro of professionals) {
+    const path = `/pros/${pro.slug}`;
+    const lastModified = pro.updated_at
+      ? new Date(pro.updated_at)
+      : buildTime;
+    for (const locale of LOCALES) {
+      routes.push({
+        url: `${SEO_BASE}/${locale}${path}`,
+        lastModified,
+        changeFrequency: "weekly",
+        priority: 0.7,
         alternates: { languages: makeAlternates(path) },
       });
     }

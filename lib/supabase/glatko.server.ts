@@ -72,6 +72,56 @@ export async function getProfessionalProfile(
   } as ProfessionalProfile;
 }
 
+/**
+ * G-SEO-FOUNDATION: slug-based lookup for /[locale]/pros/[slug]. Mirrors
+ * getProfessionalProfile but resolves by the unique slug column added in
+ * migration 041. Slugs are stable (BEFORE INSERT trigger guarantees one),
+ * so this is the canonical SEO URL surface for provider pages.
+ */
+export async function getProfessionalProfileBySlug(
+  slug: string
+): Promise<ProfessionalProfile | null> {
+  const supabase = createClient();
+
+  const { data: pro, error } = await supabase
+    .from("glatko_professional_profiles")
+    .select("*, profiles!glatko_professional_profiles_id_fkey(full_name, avatar_url)")
+    .eq("slug", slug)
+    .single();
+
+  if (error || !pro) return null;
+
+  const { data: services } = await supabase
+    .from("glatko_pro_services")
+    .select("*, category:category_id(id, slug, name, icon)")
+    .eq("professional_id", pro.id);
+
+  return {
+    ...pro,
+    profile: pro.profiles ?? undefined,
+    services: (services as ProService[]) ?? [],
+  } as ProfessionalProfile;
+}
+
+/**
+ * Sitemap-only projection: the minimal columns needed to emit
+ * /{locale}/pros/{slug} URLs. Filtered to active + approved pros so
+ * we never advertise pending/rejected profiles to crawlers.
+ */
+export async function getProfessionalsForSitemap(): Promise<
+  { slug: string; updated_at: string }[]
+> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("glatko_professional_profiles")
+    .select("slug, updated_at")
+    .eq("is_active", true)
+    .eq("verification_status", "approved");
+
+  if (error || !data) return [];
+  return data as { slug: string; updated_at: string }[];
+}
+
 /** Admin UI only — service role bypasses RLS so pending / inactive rows are visible. */
 export async function getProfessionalsByStatus(
   status?: VerificationStatus
