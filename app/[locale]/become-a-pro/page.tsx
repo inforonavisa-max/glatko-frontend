@@ -36,10 +36,17 @@ export default async function BecomeAProPage({ params }: Props) {
     .eq("id", user.id)
     .maybeSingle();
 
+  // Fetch BOTH roots and sub-categories. StepServiceAreas splits them itself
+  // (`parents` = roots, `childrenOf(parentId)` = subs of a given root); the
+  // per-card expansion only renders sub-checkboxes — there is nothing else
+  // to click to make a selection. Filtering this query to roots only made
+  // every parent card a no-op (expansion empty / no children), so clicks
+  // looked dead and step 2 was unreachable. Bug shipped unnoticed because
+  // founding pros completed signup before sub-categories landed in migration
+  // 038 (G-CAT-6 expansion).
   const { data: categories } = await supabase
     .from("glatko_service_categories")
     .select("*")
-    .is("parent_id", null)
     .eq("is_active", true)
     .order("sort_order");
 
