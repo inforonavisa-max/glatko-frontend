@@ -146,8 +146,8 @@
       "homeBloodTest": "Vađenje krvi kod kuće"
     },
     "newBadge": "NOVO",
-    "subtitleDynamic": "{count, plural, one {# kategorija usluge za vaše potrebe} other {# kategorija usluga za vaše potrebe}}",
-    "allSubheadingDynamic": "{count, plural, one {# ključna kategorija usluga sa proverenim profesionalcima} other {# ključnih kategorija usluga sa proverenim profesionalcima}}",
+    "subtitleDynamic": "{count, plural, one {# kategorija usluge za vaše potrebe} few {# kategorije usluga za vaše potrebe} other {# kategorija usluga za vaše potrebe}}",
+    "allSubheadingDynamic": "{count, plural, one {# ključna kategorija usluga sa proverenim profesionalcima} few {# ključne kategorije usluga sa proverenim profesionalcima} other {# ključnih kategorija usluga sa proverenim profesionalcima}}",
     "viewAllCategories": "Pogledaj svih {count} kategorija"
   },
   "howItWorks": {
