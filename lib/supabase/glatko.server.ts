@@ -1389,6 +1389,36 @@ export async function getUnreadNotificationCount(
 
 // ─── G7: Search + Discovery ───
 
+/**
+ * For a given category id, return [id] for sub-categories or
+ * [id, ...all-children-ids] for root categories. Wizard inserts pro_services
+ * junctions at the sub-category level (the cards in StepServiceAreas only
+ * expose sub-checkboxes), so a root-category page that filtered by exact
+ * category_id alone would never see those pros — only the rare anomaly of
+ * a junction inserted at the root level (e.g. OttoWin's manual seed) would
+ * match. Used by searchProfessionals, getCategoryWithStats, and
+ * getCitiesServingCategory.
+ */
+async function expandRootCategoryIds(
+  supabase: ReturnType<typeof createClient>,
+  categoryId: string,
+): Promise<string[]> {
+  const { data: cat } = await supabase
+    .from("glatko_service_categories")
+    .select("id, parent_id")
+    .eq("id", categoryId)
+    .maybeSingle();
+  if (!cat) return [categoryId];
+  if (cat.parent_id) return [categoryId];
+  const { data: subs } = await supabase
+    .from("glatko_service_categories")
+    .select("id")
+    .eq("parent_id", categoryId)
+    .eq("is_active", true);
+  if (!subs || subs.length === 0) return [categoryId];
+  return [categoryId, ...subs.map((s) => s.id as string)];
+}
+
 export async function searchProfessionals(params: {
   locale: string;
   categorySlug?: string;
@@ -1425,10 +1455,11 @@ export async function searchProfessionals(params: {
       .single();
 
     if (cat) {
+      const categoryIds = await expandRootCategoryIds(supabase, cat.id as string);
       const { data: proIds } = await supabase
         .from("glatko_pro_services")
         .select("professional_id")
-        .eq("category_id", cat.id);
+        .in("category_id", categoryIds);
 
       if (proIds && proIds.length > 0) {
         q = q.in(
@@ -1501,10 +1532,17 @@ export async function getCategoryWithStats(slug: string) {
     .eq("is_active", true)
     .order("sort_order");
 
+  // Same root/sub semantics as searchProfessionals: root pages must count
+  // pros offering ANY sub-category of this root, not just the ones with a
+  // junction at the root id.
+  const categoryIdsForCount = await expandRootCategoryIds(
+    supabase,
+    category.id as string,
+  );
   const { count: proCount } = await supabase
     .from("glatko_pro_services")
     .select("professional_id", { count: "exact", head: true })
-    .eq("category_id", category.id);
+    .in("category_id", categoryIdsForCount);
 
   return {
     ...category,
@@ -1610,12 +1648,15 @@ export async function getCitiesServingCategory(
   categoryId: string,
 ): Promise<string[]> {
   const supabase = createClient();
+  // Same root/sub semantics as searchProfessionals: a root category's
+  // areaServed should include cities from pros offering any sub-category.
+  const categoryIds = await expandRootCategoryIds(supabase, categoryId);
   const { data, error } = await supabase
     .from("glatko_pro_services")
     .select(
       "professional:professional_id!inner(location_city, is_active, is_verified)",
     )
-    .eq("category_id", categoryId)
+    .in("category_id", categoryIds)
     .eq("professional.is_active", true)
     .eq("professional.is_verified", true);
 
