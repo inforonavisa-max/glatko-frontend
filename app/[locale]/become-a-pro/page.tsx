@@ -39,6 +39,7 @@ export default async function BecomeAProPage({ params }: Props) {
   const { data: categories } = await supabase
     .from("glatko_service_categories")
     .select("*")
+    .is("parent_id", null)
     .eq("is_active", true)
     .order("sort_order");
 
