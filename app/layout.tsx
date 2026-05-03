@@ -1,10 +1,32 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { Inter, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+
+// BCP 47 lang tag for the <html lang> attribute. Decoupled from URL prefix
+// so URLs stay short (/me/, /sr/) but crawlers see the explicit script subtag.
+//   me → sr-Latn-ME (Montenegrin Latin script)
+//   sr → sr-Latn-RS (Serbian Latin script as used on the .sr/ subtree)
+const URL_LOCALE_TO_HTML_LANG: Record<string, string> = {
+  ar: "ar",
+  de: "de",
+  en: "en",
+  it: "it",
+  me: "sr-Latn-ME",
+  ru: "ru",
+  sr: "sr-Latn-RS",
+  tr: "tr",
+  uk: "uk",
+};
+
+function resolveLocaleFromPath(pathname: string): string {
+  const match = pathname.match(/^\/(ar|de|en|it|me|ru|sr|tr|uk)(?:\/|$)/);
+  return match ? match[1] : "en";
+}
 
 const inter = Inter({
   subsets: ["latin", "cyrillic", "latin-ext"],
@@ -62,13 +84,23 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // x-pathname is set by middleware (see middleware.ts). Used here to resolve
+  // the locale for the <html lang> attribute on initial SSR — the previous
+  // approach was a client-only useEffect (HtmlLangSetter) which left the
+  // attribute empty for crawlers. See G-SEO-AUDIT M2/M11.
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname") ?? "/";
+  const urlLocale = resolveLocaleFromPath(pathname);
+  const htmlLang = URL_LOCALE_TO_HTML_LANG[urlLocale] ?? "en";
+  const dir = urlLocale === "ar" ? "rtl" : "ltr";
+
   return (
-    <html suppressHydrationWarning>
+    <html lang={htmlLang} dir={dir} suppressHydrationWarning>
       <head>
         {/* Preconnect to Supabase: warms TLS so the first client-side
             REST/auth call (after hydration) doesn't pay the handshake cost. */}
