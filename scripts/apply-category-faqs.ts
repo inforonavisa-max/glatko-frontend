@@ -1,11 +1,13 @@
 /**
- * G-SEO-FOUNDATION migration 042 runner: applies the FAQ seed data for the
- * 4 P0 categories. Run AFTER the ALTER TABLE has been applied via the
- * Supabase Dashboard SQL Editor (or earlier idempotent run).
+ * Idempotent FAQ-data runner. Scans every migration under `supabase/migrations/`
+ * for `UPDATE public.glatko_service_categories SET faqs = '[...]'::jsonb WHERE
+ * slug = '...'` blocks, parses out the JSONB literal, and pushes it via
+ * supabase-js with the service-role key.
  *
- * The migration file is the source of truth. This runner parses out each
- * UPDATE block's JSONB literal, undoes SQL single-quote escaping, and pushes
- * via supabase-js with the service-role key.
+ * The DDL portion of each migration (e.g. `ALTER TABLE ... ADD COLUMN faqs`)
+ * still needs to be applied via the Supabase Dashboard SQL Editor first —
+ * supabase-js cannot run DDL through PostgREST. After that one-time setup
+ * this script can be re-run safely; UPDATEs are idempotent.
  *
  * Run with:  npx tsx scripts/apply-category-faqs.ts
  */
@@ -13,7 +15,7 @@ import { config as loadEnv } from "dotenv";
 loadEnv({ path: ".env.local" });
 loadEnv({ path: ".env" });
 
-import { readFileSync } from "fs";
+import { readFileSync, readdirSync } from "fs";
 import { join } from "path";
 import { createClient } from "@supabase/supabase-js";
 
@@ -29,51 +31,83 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
   auth: { autoRefreshToken: false, persistSession: false },
 });
 
-const MIG_PATH = join(
-  process.cwd(),
-  "supabase/migrations/042_glatko_category_faqs.sql",
-);
+const MIG_DIR = join(process.cwd(), "supabase/migrations");
 
-const SLUGS = [
-  "boat-services",
-  "home-cleaning",
-  "renovation-construction",
-  "beauty-wellness",
-] as const;
+interface FaqUpdate {
+  slug: string;
+  faqs: unknown[];
+  source: string; // migration filename
+}
 
-function extractFaqsJson(sql: string, slug: string): unknown {
-  // Split by UPDATE markers so each block is isolated; the previous greedy
-  // regex was reaching back through earlier UPDATEs to find the slug match.
+/**
+ * Walks the SQL string and yields every `UPDATE … SET faqs = '…'::jsonb
+ * WHERE slug = '…';` block. The block-by-block split avoids the greedy-regex
+ * bug where one UPDATE's content could swallow a neighbour's slug match.
+ */
+function extractFaqUpdates(sql: string, source: string): FaqUpdate[] {
   const blocks = sql
     .split(/UPDATE public\.glatko_service_categories\s+SET faqs = '/)
-    .slice(1); // first split element is the prologue (ALTER TABLE etc.)
+    .slice(1);
+  const out: FaqUpdate[] = [];
   for (const block of blocks) {
-    const blockRe = new RegExp(
-      `^([\\s\\S]+?)'::jsonb\\s+WHERE slug = '${slug}';`,
-      "m",
+    const m = block.match(
+      /^([\s\S]+?)'::jsonb\s+WHERE slug = '([a-z0-9-]+)';/m,
     );
-    const m = block.match(blockRe);
     if (!m) continue;
-    const jsonText = m[1].replace(/''/g, "'");
+    const [, rawJson, slug] = m;
+    const jsonText = rawJson.replace(/''/g, "'");
+    let parsed: unknown;
     try {
-      return JSON.parse(jsonText);
+      parsed = JSON.parse(jsonText);
     } catch (err) {
-      console.error(`JSON parse failed for ${slug}:`, err);
+      console.error(`JSON parse failed for ${slug} in ${source}:`, err);
       console.error("First 200 chars:", jsonText.slice(0, 200));
       throw err;
     }
+    if (!Array.isArray(parsed)) {
+      throw new Error(`${slug} in ${source}: faqs literal is not an array`);
+    }
+    out.push({ slug, faqs: parsed, source });
   }
-  throw new Error(`No UPDATE block found for slug "${slug}"`);
+  return out;
 }
 
 async function main() {
-  const sql = readFileSync(MIG_PATH, "utf8");
+  // Discover all migrations and gather updates in filename order so later
+  // migrations win for the same slug (last-write-wins).
+  const files = readdirSync(MIG_DIR)
+    .filter((f) => /^0\d+_glatko_category_faqs.*\.sql$/.test(f))
+    .sort();
+  if (files.length === 0) {
+    console.error(`No FAQ migration files matched in ${MIG_DIR}`);
+    process.exit(1);
+  }
+  console.log(`Scanning ${files.length} FAQ migration(s):`, files.join(", "));
 
-  // Sanity: ensure column exists by reading one row
-  const { data: probe, error: probeErr } = await supabase
+  const allUpdates: FaqUpdate[] = [];
+  for (const f of files) {
+    const sql = readFileSync(join(MIG_DIR, f), "utf8");
+    const updates = extractFaqUpdates(sql, f);
+    allUpdates.push(...updates);
+  }
+  // Last-write-wins on duplicate slugs across files.
+  const bySlug = new Map<string, FaqUpdate>();
+  for (const u of allUpdates) bySlug.set(u.slug, u);
+  const final = [...bySlug.values()];
+  console.log(
+    `Found ${allUpdates.length} UPDATE block(s); applying ${final.length} unique slug(s).`,
+  );
+
+  // Sanity: column exists?
+  const probeSlug = final[0]?.slug;
+  if (!probeSlug) {
+    console.error("No UPDATE blocks parsed; aborting.");
+    process.exit(1);
+  }
+  const { error: probeErr } = await supabase
     .from("glatko_service_categories")
     .select("slug, faqs")
-    .eq("slug", "boat-services")
+    .eq("slug", probeSlug)
     .single();
   if (probeErr) {
     console.error(
@@ -82,32 +116,29 @@ async function main() {
     console.error(probeErr);
     process.exit(1);
   }
-  console.log(`Probe OK. Current boat-services faqs length:`, Array.isArray(probe?.faqs) ? probe.faqs.length : "not-array");
 
-  for (const slug of SLUGS) {
-    const faqs = extractFaqsJson(sql, slug) as unknown[];
-    if (!Array.isArray(faqs)) {
-      console.error(`${slug}: not an array, got`, typeof faqs);
-      process.exit(1);
-    }
+  for (const u of final) {
     const { error, data } = await supabase
       .from("glatko_service_categories")
-      .update({ faqs })
-      .eq("slug", slug)
+      .update({ faqs: u.faqs })
+      .eq("slug", u.slug)
       .select("slug");
 
     if (error) {
-      console.error(`${slug}: UPDATE failed`, error);
+      console.error(`${u.slug}: UPDATE failed`, error);
       process.exit(1);
     }
-    console.log(`✓ ${slug}: ${faqs.length} FAQs applied (rows=${data?.length ?? 0})`);
+    console.log(
+      `✓ ${u.slug.padEnd(30)} ${u.faqs.length} FAQs applied (rows=${data?.length ?? 0}, source=${u.source})`,
+    );
   }
 
   // Verify final state
+  const slugs = final.map((u) => u.slug);
   const { data: verifyRows, error: verifyErr } = await supabase
     .from("glatko_service_categories")
     .select("slug, faqs")
-    .in("slug", [...SLUGS]);
+    .in("slug", slugs);
   if (verifyErr) {
     console.error("Verify failed:", verifyErr);
     process.exit(1);
@@ -115,7 +146,9 @@ async function main() {
   console.log("\nVerify:");
   for (const row of verifyRows ?? []) {
     const arr = row.faqs as unknown[];
-    console.log(`  ${row.slug}: ${Array.isArray(arr) ? arr.length : "?"} FAQs`);
+    console.log(
+      `  ${(row.slug as string).padEnd(30)} ${Array.isArray(arr) ? arr.length : "?"} FAQs`,
+    );
   }
 }
 
