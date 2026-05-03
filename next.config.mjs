@@ -1,7 +1,16 @@
 import { withSentryConfig } from "@sentry/nextjs";
+import bundleAnalyzer from "@next/bundle-analyzer";
 import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
+
+// G-PERF-2 Faz 6: opt-in bundle analyzer.
+// Run with `ANALYZE=true npm run build`; reports drop into .next/analyze/.
+// Disabled by default so the production build chain stays unchanged.
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+  openAnalyzer: false,
+});
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -68,8 +77,9 @@ const nextConfig = {
 };
 
 const withIntl = withNextIntl(nextConfig);
+const withAnalyzer = withBundleAnalyzer(withIntl);
 
-export default withSentryConfig(withIntl, {
+export default withSentryConfig(withAnalyzer, {
   org: process.env.SENTRY_ORG,
   project: process.env.SENTRY_PROJECT,
   silent: true,
