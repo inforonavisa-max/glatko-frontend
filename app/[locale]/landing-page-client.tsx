@@ -96,7 +96,6 @@ export default function LandingPageClient({
   };
 
   const heroTitle = t("hero.title");
-  const heroTitleWords = heroTitle.split(/\s+/).filter(Boolean);
 
   const heroStats = [
     { value: "100+", labelKey: "hero.stats.professionals" as const },
@@ -145,27 +144,19 @@ export default function LandingPageClient({
         )}
 
         <div className="relative z-10 mx-auto max-w-4xl px-4 text-center">
-          <motion.h1 className="font-serif text-5xl font-light leading-[1.1] tracking-tight sm:text-6xl md:text-7xl lg:text-8xl">
-            {!reduced ? (
-              heroTitleWords.map((word, index) => (
-                <motion.span
-                  key={`${word}-${index}`}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: index * 0.05 }}
-                  style={{ willChange: "transform, opacity" }}
-                  className="inline-block bg-gradient-to-b from-gray-900 via-gray-800 to-teal-800 bg-clip-text text-transparent dark:from-white dark:via-white/90 dark:to-teal-200/70"
-                >
-                  {word}
-                  {index < heroTitleWords.length - 1 ? "\u00A0" : ""}
-                </motion.span>
-              ))
-            ) : (
-              <span className="bg-gradient-to-b from-gray-900 via-gray-800 to-teal-800 bg-clip-text text-transparent dark:from-white dark:via-white/90 dark:to-teal-200/70">
-                {heroTitle}
-              </span>
-            )}
-          </motion.h1>
+          {/*
+            Hero h1 is rendered statically (no opacity:0 first paint) so it can
+            be the LCP candidate. Per-word stagger removed \u2014 the full title
+            paints at FCP, then the subtitle + CTAs below provide motion polish.
+            See G-PERF-1 investigation: word-by-word framer-motion was deferring
+            LCP to ~5.7s. Hero background animations (LinesGradient, CollisionMechanism)
+            still play; only the title text is now SSR-visible.
+          */}
+          <h1 className="font-serif text-5xl font-light leading-[1.1] tracking-tight sm:text-6xl md:text-7xl lg:text-8xl">
+            <span className="bg-gradient-to-b from-gray-900 via-gray-800 to-teal-800 bg-clip-text text-transparent dark:from-white dark:via-white/90 dark:to-teal-200/70">
+              {heroTitle}
+            </span>
+          </h1>
           <motion.p
             variants={fadeUpVariants}
             initial="hidden"
