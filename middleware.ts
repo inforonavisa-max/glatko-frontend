@@ -7,9 +7,11 @@ import { locales, routing } from '@/i18n/routing';
 const intlMiddleware = createIntlMiddleware(routing);
 
 const HREFLANG_LOCALES = ['tr', 'en', 'de', 'it', 'ru', 'uk', 'sr', 'me', 'ar'] as const;
+// Explicit Latin script subtags so Google does not have to infer script
+// from the region code; matches lib/seo.ts and the rendered <html lang>.
 const HREFLANG_MAP: Record<string, string> = {
-  me: 'sr-ME',
-  sr: 'sr-RS',
+  me: 'sr-Latn-ME',
+  sr: 'sr-Latn-RS',
 };
 
 const PRIVATE_BARE_PREFIXES = [
