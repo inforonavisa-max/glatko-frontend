@@ -19,10 +19,12 @@ import { SEO_BASE, SEO_LOCALES, hreflangForLocale } from "@/lib/seo";
 import {
   generateBreadcrumbSchema,
   generateCategoryLocalBusinessSchema,
+  generateFAQPageSchema,
   generateItemListSchema,
   generateServiceSchema,
   jsonLdScriptProps,
   type BreadcrumbItem as JsonLdBreadcrumbItem,
+  type LocalizedFAQ,
 } from "@/lib/seo/jsonld";
 import type { Locale } from "@/i18n/routing";
 import type { MultiLangText } from "@/types/glatko";
@@ -192,6 +194,19 @@ export default async function CategoryDetailPage({ params }: Props) {
   });
   const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbSchemaItems);
 
+  // FAQ schema + visible content. Falls back gracefully when a category has
+  // no seeded FAQs yet (only 4 P0 categories seeded as of migration 042).
+  const categoryFaqs = (category.faqs ?? []) as LocalizedFAQ[];
+  const faqSchema = generateFAQPageSchema(categoryFaqs, locale);
+  const faqLocalized = categoryFaqs
+    .map((entry) => {
+      const q = entry.q?.[locale] || entry.q?.en;
+      const a = entry.a?.[locale] || entry.a?.en;
+      if (!q || !a) return null;
+      return { q, a };
+    })
+    .filter((x): x is { q: string; a: string } => x !== null);
+
   return (
     <PageBackground opacity={0.1}>
       <script {...jsonLdScriptProps(serviceSchema)} />
@@ -200,6 +215,7 @@ export default async function CategoryDetailPage({ params }: Props) {
         <script {...jsonLdScriptProps(itemListSchema)} />
       ) : null}
       <script {...jsonLdScriptProps(breadcrumbSchema)} />
+      {faqSchema ? <script {...jsonLdScriptProps(faqSchema)} /> : null}
 
       <Breadcrumb items={breadcrumbCrumbs} />
 
@@ -314,6 +330,33 @@ export default async function CategoryDetailPage({ params }: Props) {
                   </Link>
                 );
               })}
+            </div>
+          </div>
+        )}
+
+        {/* FAQ — visible answers required for FAQPage rich-result eligibility */}
+        {faqLocalized.length > 0 && (
+          <div className="mb-12">
+            <h2 className="mb-6 font-serif text-xl font-semibold text-gray-900 dark:text-white">
+              {t("services.faq")}
+            </h2>
+            <div className="space-y-3">
+              {faqLocalized.map((entry, i) => (
+                <details
+                  key={i}
+                  className="group rounded-2xl border border-gray-200/50 bg-white/70 px-5 py-4 backdrop-blur-sm transition-all duration-200 open:border-teal-500/30 open:bg-teal-500/[0.04] dark:border-white/[0.08] dark:bg-white/[0.03] dark:open:border-teal-500/20"
+                >
+                  <summary className="cursor-pointer list-none text-sm font-medium text-gray-900 marker:hidden dark:text-white">
+                    <span className="flex items-center justify-between gap-4">
+                      <span>{entry.q}</span>
+                      <ArrowRight className="h-4 w-4 shrink-0 text-teal-600 transition-transform duration-200 group-open:rotate-90 dark:text-teal-400" />
+                    </span>
+                  </summary>
+                  <p className="mt-3 text-sm leading-relaxed text-gray-600 dark:text-white/60">
+                    {entry.a}
+                  </p>
+                </details>
+              ))}
             </div>
           </div>
         )}

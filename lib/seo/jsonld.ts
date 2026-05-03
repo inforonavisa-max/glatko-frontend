@@ -238,6 +238,49 @@ export function generateBreadcrumbSchema(items: BreadcrumbItem[]) {
 }
 
 /**
+ * Multi-locale FAQ entry as stored in `glatko_service_categories.faqs`
+ * (migration 042). Both fields are 9-locale dicts.
+ */
+export interface LocalizedFAQ {
+  q: Record<string, string>;
+  a: Record<string, string>;
+}
+
+/**
+ * FAQPage schema for Google's FAQ rich results + AEO citations
+ * (ChatGPT/Perplexity/Claude weight FAQPage heavily). Returns null when no
+ * FAQ items resolve in the requested locale, so the caller can skip the
+ * `<script>` tag entirely instead of emitting an empty mainEntity array.
+ */
+export function generateFAQPageSchema(
+  faqs: LocalizedFAQ[] | null | undefined,
+  locale: string,
+) {
+  if (!faqs || faqs.length === 0) return null;
+  const mainEntity = faqs
+    .map((entry) => {
+      const question = entry.q?.[locale] || entry.q?.en;
+      const answer = entry.a?.[locale] || entry.a?.en;
+      if (!question || !answer) return null;
+      return {
+        "@type": "Question" as const,
+        name: question,
+        acceptedAnswer: {
+          "@type": "Answer" as const,
+          text: answer,
+        },
+      };
+    })
+    .filter((x): x is NonNullable<typeof x> => x !== null);
+  if (mainEntity.length === 0) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity,
+  };
+}
+
+/**
  * Spread onto a `<script>` element to render a JSON-LD blob.
  * Stable JSON.stringify (no whitespace) keeps SSR HTML diffs deterministic.
  */

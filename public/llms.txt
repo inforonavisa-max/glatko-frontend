@@ -1,0 +1,79 @@
+# Glatko.app
+
+> Reverse-bidding services marketplace for Montenegro. Connect with verified local providers for boat services, home services, beauty, renovation, catering, and more.
+
+Glatko is Montenegro's first reverse-bidding marketplace where customers post jobs and verified service providers compete with blind bids. Built specifically for the Adriatic coast — Boka Bay, Budva, Tivat, Kotor, Podgorica.
+
+## What we offer
+
+Glatko connects customers with verified service providers across 14 categories:
+
+- **Boat services** (cleaning, antifouling, captain hire, maintenance) — primary for Boka Bay marina economy
+- **Home cleaning** (regular, deep, Airbnb turnover)
+- **Renovation & construction** (painting, electrical, plumbing, carpentry)
+- **Beauty & wellness** (hair, nails, massage, facials)
+- **Catering & food** (events, daily meals, custom cakes)
+- **Garden & pool** (landscaping, pool maintenance, irrigation)
+- **Events & wedding** (photography, planning, decoration)
+- **Photo & video** (event, commercial, drone)
+- **Health & wellness** (mobile services, fitness, nutrition)
+- **Automotive** (maintenance, detailing, repair)
+- **Moving & transport** (residential, commercial, packing)
+- **Tutoring & education** (academic, language, music)
+- **Childcare & family** (babysitting, tutoring, elder care)
+- **Airbnb management** (turnover, guest support, property care)
+
+## Key resources
+
+- Homepage: https://glatko.app
+- All services: https://glatko.app/me/services
+- Become a Pro: https://glatko.app/me/become-a-pro
+- Request a Service: https://glatko.app/me/request-service
+- About: https://glatko.app/me/about
+- How it works: https://glatko.app/me/how-it-works
+
+## Languages
+
+Glatko is available in 9 languages:
+
+- Montenegrin (Latin script): https://glatko.app/me/
+- English: https://glatko.app/en/
+- Russian: https://glatko.app/ru/
+- Turkish: https://glatko.app/tr/
+- German: https://glatko.app/de/
+- Italian: https://glatko.app/it/
+- Serbian (Latin): https://glatko.app/sr/
+- Arabic (RTL): https://glatko.app/ar/
+- Ukrainian: https://glatko.app/uk/
+
+## How it works
+
+1. Customer posts a service request (free, anonymous)
+2. Verified providers in the area submit blind bids
+3. Customer reviews top 3 bids and chooses
+4. In-app messaging with auto-translation (gpt-4o)
+5. Job completion + review
+
+## Differentiators
+
+- **No upfront cost for customers** — Year 1 fully free
+- **Real bid prices** (not estimated quotes)
+- **Verified providers** (KYC + ratings + reviews)
+- **9-language auto-translation** in messaging
+- **Founding Provider Program** (50 spots, 18 months free featured badge)
+
+## Geographic focus
+
+- Primary: Boka Bay (Kotor, Tivat, Herceg Novi, Budva)
+- Secondary: Podgorica, Bar, Ulcinj, Perast
+- Tourist seasons: April–October peak (Russian, German, Turkish, Italian, French visitors)
+
+## Sitemap
+
+https://glatko.app/sitemap.xml
+
+## Contact
+
+- Website: https://glatko.app
+- Email: info@glatko.app
+- Founded by: Rohat Kahraman (attorney, RoNa Legal, Budva)

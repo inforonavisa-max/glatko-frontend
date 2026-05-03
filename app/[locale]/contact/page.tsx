@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
+import { buildAlternates } from "@/lib/seo";
 import { PageBackground } from "@/components/ui/PageBackground";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { GlassmorphCard } from "@/components/ui/GlassmorphCard";
@@ -18,6 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: "Contact — Glatko",
     description: "Contact the Glatko team — email, WhatsApp, Viber and office hours.",
+    alternates: buildAlternates(locale, "/contact"),
     openGraph: {
       title: "Contact — Glatko",
       url: `https://glatko.app/${locale}/contact`,
