@@ -34,9 +34,13 @@ const inter = Inter({
   display: "swap",
 });
 
+// Cormorant weight usage audited 3 May 2026: only font-light (300),
+// default (400), font-semibold (600), font-bold (700) appear with
+// font-serif anywhere in the codebase. Weight 500 was loaded but never
+// referenced — dropping it removes one woff2 from the critical font set.
 const cormorant = Cormorant_Garamond({
   subsets: ["latin", "cyrillic", "latin-ext"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["300", "400", "600", "700"],
   variable: "--font-cormorant",
   display: "swap",
 });
