@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -29,13 +30,53 @@ import {
 } from "@/components/landing/scroll-reveal";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { LogoMarquee } from "@/components/glatko/landing/LogoMarquee";
-import { BentoFeatures } from "@/components/glatko/landing/BentoFeatures";
-import { DeepFeatures } from "@/components/glatko/landing/DeepFeatures";
-import { Testimonials } from "@/components/glatko/landing/Testimonials";
-import { FAQ } from "@/components/glatko/landing/FAQ";
-import { DashedGridCTA } from "@/components/glatko/landing/DashedGridCTA";
-import { ImagesCTA } from "@/components/glatko/landing/ImagesCTA";
-import { MobileShowcase } from "@/components/glatko/landing/MobileShowcase";
+
+// G-PERF-1: below-fold landing sections split into async chunks.
+// SSR is preserved (ssr: true) so the HTML still includes the rendered
+// content for SEO and immediate paint; only the client hydration JS is
+// fetched as a separate chunk. Loading placeholder is null because SSR
+// already painted the section — the placeholder only flashes during SPA
+// navigation, not on initial page load.
+const dynamicSection = <P extends object>(
+  loader: () => Promise<{ [k: string]: React.ComponentType<P> }>,
+  exportName: string,
+) =>
+  dynamic<P>(() => loader().then((m) => m[exportName] as React.ComponentType<P>), {
+    ssr: true,
+    loading: () => null,
+  });
+
+const BentoFeatures = dynamicSection<Record<string, never>>(
+  () => import("@/components/glatko/landing/BentoFeatures"),
+  "BentoFeatures",
+);
+const DeepFeatures = dynamicSection<Record<string, never>>(
+  () => import("@/components/glatko/landing/DeepFeatures"),
+  "DeepFeatures",
+);
+const Testimonials = dynamicSection<Record<string, never>>(
+  () => import("@/components/glatko/landing/Testimonials"),
+  "Testimonials",
+);
+const FAQ = dynamicSection<Record<string, never>>(
+  () => import("@/components/glatko/landing/FAQ"),
+  "FAQ",
+);
+const DashedGridCTA = dynamicSection<Record<string, never>>(
+  () => import("@/components/glatko/landing/DashedGridCTA"),
+  "DashedGridCTA",
+);
+const ImagesCTA = dynamicSection<{
+  title: string;
+  subtitle: string;
+  buttonText: string;
+  buttonHref: string;
+  trustText: string;
+}>(() => import("@/components/glatko/landing/ImagesCTA"), "ImagesCTA");
+const MobileShowcase = dynamicSection<{ title: string; subtitle: string }>(
+  () => import("@/components/glatko/landing/MobileShowcase"),
+  "MobileShowcase",
+);
 
 const easePremium = [0.25, 0.4, 0.25, 1] as const;
 
@@ -152,10 +193,8 @@ export default function LandingPageClient({
             LCP to ~5.7s. Hero background animations (LinesGradient, CollisionMechanism)
             still play; only the title text is now SSR-visible.
           */}
-          <h1 className="font-serif text-5xl font-light leading-[1.1] tracking-tight sm:text-6xl md:text-7xl lg:text-8xl">
-            <span className="bg-gradient-to-b from-gray-900 via-gray-800 to-teal-800 bg-clip-text text-transparent dark:from-white dark:via-white/90 dark:to-teal-200/70">
-              {heroTitle}
-            </span>
+          <h1 className="font-serif text-5xl font-light leading-[1.1] tracking-tight text-gray-900 dark:text-white sm:text-6xl md:text-7xl lg:text-8xl">
+            {heroTitle}
           </h1>
           <motion.p
             variants={fadeUpVariants}
