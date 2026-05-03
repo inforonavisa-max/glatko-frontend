@@ -19,6 +19,18 @@ const cormorant = Cormorant_Garamond({
   display: "swap",
 });
 
+// Search engine ownership verification meta tags. All three are env-gated so
+// previews / local builds don't leak verification tokens into the HTML.
+//   - GOOGLE_SITE_VERIFICATION: HTML tag method from Search Console (only used
+//     for URL-prefix properties; Domain properties auto-verify via DNS, so this
+//     is optional). Keeping it here as a backup verification method.
+//   - YANDEX_VERIFICATION: yandex-verification meta from Yandex Webmaster.
+//   - BING_SITE_VERIFICATION: msvalidate.01 meta from Bing Webmaster Tools.
+const verificationOther: Record<string, string> = {};
+if (process.env.BING_SITE_VERIFICATION) {
+  verificationOther["msvalidate.01"] = process.env.BING_SITE_VERIFICATION;
+}
+
 export const metadata: Metadata = {
   title: {
     default: "Glatko — Montenegro's Premier Service Marketplace",
@@ -42,6 +54,11 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+  },
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION,
+    yandex: process.env.YANDEX_VERIFICATION,
+    other: Object.keys(verificationOther).length > 0 ? verificationOther : undefined,
   },
 };
 
