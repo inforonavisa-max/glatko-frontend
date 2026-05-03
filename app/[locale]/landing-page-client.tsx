@@ -20,8 +20,22 @@ import type { Locale } from "@/i18n/routing";
 import type { MultiLangText } from "@/types/glatko";
 import { AceternityHeroBackground } from "@/components/aceternity/hero-background";
 import { LinesGradient } from "@/components/aceternity/lines-gradient";
-import { CollisionMechanism } from "@/components/aceternity/collision-beam";
 import { LazyAnimation } from "@/components/ui/LazyAnimation";
+
+// G-PERF-2: 3-instance CollisionMechanism cluster split into its own
+// client-only chunk so framer-motion code paths it pulls in don't load
+// synchronously with the landing bundle. Visually identical — beams
+// still appear inside the hero, just on a separate render tick.
+const HeroCollisionBeams = dynamic<{
+  parentRef: React.RefObject<HTMLDivElement | null>;
+  containerRef: React.RefObject<HTMLDivElement | null>;
+}>(
+  () =>
+    import("@/components/glatko/landing/HeroCollisionBeams").then(
+      (m) => m.HeroCollisionBeams,
+    ),
+  { ssr: false, loading: () => null },
+);
 import { SpotlightCard } from "@/components/landing/spotlight-card";
 import { HeroStatChip } from "@/components/landing/stat-chip";
 import {
@@ -166,20 +180,9 @@ export default function LandingPageClient({
             className="pointer-events-none absolute inset-0 z-[5]"
             aria-hidden
           >
-            <CollisionMechanism
-              beamOptions={{ initialX: -400, translateX: 600, duration: 7, repeatDelay: 3 }}
-              containerRef={heroCollisionTargetRef}
+            <HeroCollisionBeams
               parentRef={heroParentRef}
-            />
-            <CollisionMechanism
-              beamOptions={{ initialX: -200, translateX: 800, duration: 4, repeatDelay: 3 }}
               containerRef={heroCollisionTargetRef}
-              parentRef={heroParentRef}
-            />
-            <CollisionMechanism
-              beamOptions={{ initialX: 200, translateX: 1200, duration: 5, repeatDelay: 3 }}
-              containerRef={heroCollisionTargetRef}
-              parentRef={heroParentRef}
             />
           </LazyAnimation>
         )}
