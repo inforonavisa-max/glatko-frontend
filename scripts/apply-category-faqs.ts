@@ -93,7 +93,7 @@ async function main() {
   // Last-write-wins on duplicate slugs across files.
   const bySlug = new Map<string, FaqUpdate>();
   for (const u of allUpdates) bySlug.set(u.slug, u);
-  const final = [...bySlug.values()];
+  const final = Array.from(bySlug.values());
   console.log(
     `Found ${allUpdates.length} UPDATE block(s); applying ${final.length} unique slug(s).`,
   );
