@@ -25,11 +25,6 @@ interface CategoryRow {
   faqs: unknown[] | null;
 }
 
-interface JunctionAggRow {
-  category_id: string;
-  count: number;
-}
-
 export default async function AdminCategoriesPage({ params }: Props) {
   const { locale } = await Promise.resolve(params);
   const admin = createAdminClient();
@@ -206,8 +201,8 @@ export default async function AdminCategoriesPage({ params }: Props) {
         <CardContent className="pt-6">
           <p className="text-xs text-gray-500 dark:text-white/50">
             Bu sayfa şu an salt-okunur bir genel bakış sunuyor. FAQ düzenleme
-            ve pro–kategori junction yönetimi G-ADMIN-2'de gelecek (yetkili
-            sebep + audit log + UI).
+            ve pro&ndash;kategori junction y&ouml;netimi G-ADMIN-2&apos;de
+            gelecek (yetkili sebep + audit log + UI).
           </p>
         </CardContent>
       </Card>
