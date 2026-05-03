@@ -1,20 +1,22 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { motion } from "framer-motion";
 import {
-  Home,
   Anchor,
-  Sparkles,
-  Truck,
   ArrowRight,
-  Trees,
-  PartyPopper,
-  Camera,
-  HeartPulse,
+  Hammer,
+  Home,
+  Scissors,
+  Sparkles,
+  Tag,
+  type LucideIcon,
 } from "lucide-react";
+import type { Locale } from "@/i18n/routing";
+import type { MultiLangText } from "@/types/glatko";
 import { AceternityHeroBackground } from "@/components/aceternity/hero-background";
 import { LinesGradient } from "@/components/aceternity/lines-gradient";
 import { CollisionMechanism } from "@/components/aceternity/collision-beam";
@@ -37,7 +39,44 @@ import { MobileShowcase } from "@/components/glatko/landing/MobileShowcase";
 
 const easePremium = [0.25, 0.4, 0.25, 1] as const;
 
-export default function LandingPageClient() {
+export interface FeaturedCategoryCard {
+  id: string;
+  slug: string;
+  name: MultiLangText;
+  description: MultiLangText | null;
+  hero_image_url: string | null;
+  icon: string | null;
+}
+
+const ICON_MAP: Record<string, LucideIcon> = {
+  Anchor,
+  Hammer,
+  Home,
+  Scissors,
+  Sparkles,
+  Tag,
+};
+
+function pickLocalized(text: MultiLangText | null, locale: Locale): string {
+  if (!text) return "";
+  return (
+    text[locale] ??
+    text.en ??
+    (Object.values(text).find((v): v is string => typeof v === "string") ?? "")
+  );
+}
+
+interface LandingPageClientProps {
+  featuredCategories: FeaturedCategoryCard[];
+  totalCategoryCount: number;
+  locale: Locale;
+}
+
+export default function LandingPageClient({
+  featuredCategories,
+  totalCategoryCount,
+  locale,
+}: LandingPageClientProps) {
   const t = useTranslations();
   const reduced = useReducedMotion();
   const heroParentRef = useRef<HTMLDivElement>(null);
@@ -197,6 +236,12 @@ export default function LandingPageClient() {
       <LogoMarquee />
 
       {/* ── Categories ── */}
+      {/*
+        DB-driven 4 featured cards (Airbnb pattern). Cards are rendered from
+        glatko_service_categories rows fetched in the parent server page; the
+        full grid (14 categories) lives at /services. Subcategory chips were
+        removed — they are surfaced on the category detail page.
+      */}
       <section id="categories" className="px-4 py-24">
         <div className="mx-auto max-w-6xl">
           <SectionReveal className="mb-16 text-center">
@@ -204,198 +249,62 @@ export default function LandingPageClient() {
               {t("categories.title")}
             </h2>
             <p className="mt-4 text-gray-500 dark:text-white/50">
-              {t("categories.subtitle")}
+              {t("categories.subtitleDynamic", { count: totalCategoryCount })}
             </p>
           </SectionReveal>
           <div className="grid gap-8 md:grid-cols-2">
-            <StaggerItem index={0}>
-              <SpotlightCard>
-                <div className="mb-6 flex items-center gap-4">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-teal-500/10 dark:bg-teal-500/15">
-                    <Home className="h-8 w-8 text-teal-600 dark:text-teal-400" />
-                  </div>
-                  <div className="text-left">
-                    <h3 className="font-sans text-xl font-semibold text-gray-900 dark:text-white">
-                      {t("categories.home.title")}
-                    </h3>
-                    <p className="text-sm text-gray-500 dark:text-white/50">
-                      {t("categories.home.description")}
-                    </p>
-                  </div>
-                </div>
-                <div className="mb-6 flex flex-wrap gap-2">
-                  {["generalCleaning", "deepCleaning", "villaAirbnb", "painting", "electrical", "plumbing"].map((s) => (
-                    <span key={s} className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs text-gray-600 dark:border-white/10 dark:bg-white/5 dark:text-white/60">
-                      {t(`categories.home.${s}`)}
-                    </span>
-                  ))}
-                </div>
-                <Link href="/services/home-cleaning" className="text-sm font-semibold text-teal-600 hover:underline dark:text-teal-400">
-                  {t("categories.getQuote")} →
-                </Link>
-              </SpotlightCard>
-            </StaggerItem>
-            <StaggerItem index={1}>
-              <SpotlightCard>
-                <div className="mb-6 flex items-center gap-4">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-teal-500/10 dark:bg-teal-500/15">
-                    <Anchor className="h-8 w-8 text-teal-600 dark:text-teal-400" />
-                  </div>
-                  <div className="text-left">
-                    <h3 className="font-sans text-xl font-semibold text-gray-900 dark:text-white">
-                      {t("categories.boat.title")}
-                    </h3>
-                    <p className="text-sm text-gray-500 dark:text-white/50">
-                      {t("categories.boat.description")}
-                    </p>
-                  </div>
-                </div>
-                <div className="mb-6 flex flex-wrap gap-2">
-                  {["captainHire", "antifouling", "engineService", "hullCleaning", "winterization", "charterPrep"].map((s) => (
-                    <span key={s} className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs text-gray-600 dark:border-white/10 dark:bg-white/5 dark:text-white/60">
-                      {t(`categories.boat.${s}`)}
-                    </span>
-                  ))}
-                </div>
-                <Link href="/services/boat-services" className="text-sm font-semibold text-teal-600 hover:underline dark:text-teal-400">
-                  {t("categories.getQuote")} →
-                </Link>
-              </SpotlightCard>
-            </StaggerItem>
-            <StaggerItem index={2}>
-              <SpotlightCard>
-                <div className="mb-6 flex items-center gap-4">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-teal-500/10 dark:bg-teal-500/15">
-                    <Sparkles className="h-8 w-8 text-teal-600 dark:text-teal-400" />
-                  </div>
-                  <div className="text-left">
-                    <h3 className="font-sans text-xl font-semibold text-gray-900 dark:text-white">
-                      {t("categories.beauty.title")}
-                    </h3>
-                    <p className="text-sm text-gray-500 dark:text-white/50">
-                      {t("categories.beauty.description")}
-                    </p>
-                  </div>
-                </div>
-                <div className="mb-6 flex flex-wrap gap-2">
-                  {["hairSalon", "manicurePedicure", "facialSkincare", "massage", "bridalPrep", "laserHairRemoval"].map((s) => (
-                    <span key={s} className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs text-gray-600 dark:border-white/10 dark:bg-white/5 dark:text-white/60">
-                      {t(`categories.beauty.${s}`)}
-                    </span>
-                  ))}
-                </div>
-                <Link href="/services/beauty-wellness" className="text-sm font-semibold text-teal-600 hover:underline dark:text-teal-400">
-                  {t("categories.getQuote")} →
-                </Link>
-              </SpotlightCard>
-            </StaggerItem>
-            <StaggerItem index={3}>
-              <SpotlightCard>
-                <div className="mb-6 flex items-center gap-4">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-teal-500/10 dark:bg-teal-500/15">
-                    <Truck className="h-8 w-8 text-teal-600 dark:text-teal-400" />
-                  </div>
-                  <div className="text-left">
-                    <h3 className="font-sans text-xl font-semibold text-gray-900 dark:text-white">
-                      {t("categories.moving.title")}
-                    </h3>
-                    <p className="text-sm text-gray-500 dark:text-white/50">
-                      {t("categories.moving.description")}
-                    </p>
-                  </div>
-                </div>
-                <div className="mb-6 flex flex-wrap gap-2">
-                  {["homeMoving", "officeMoving", "singleItem", "packing", "storage", "airportTransfer"].map((s) => (
-                    <span key={s} className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs text-gray-600 dark:border-white/10 dark:bg-white/5 dark:text-white/60">
-                      {t(`categories.moving.${s}`)}
-                    </span>
-                  ))}
-                </div>
-                <Link href="/services/moving-transport" className="text-sm font-semibold text-teal-600 hover:underline dark:text-teal-400">
-                  {t("categories.getQuote")} →
-                </Link>
-              </SpotlightCard>
-            </StaggerItem>
-          </div>
-
-          {/* G-CAT-5: 4 new categories surfaced with NEW badge below the
-              evergreen four. Clicking still hits /services/<slug>; the
-              card pattern matches but the badge differentiates them. */}
-          <div className="mt-8 grid gap-8 md:grid-cols-2">
-            {[
-              {
-                icon: Trees,
-                slug: "garden-pool",
-                ns: "garden",
-                pills: ["landscaping", "lawn", "irrigation", "treePruning", "poolCare", "poolRepair"],
-                index: 4,
-              },
-              {
-                icon: PartyPopper,
-                slug: "events-wedding",
-                ns: "events",
-                pills: ["destinationWedding", "decoration", "stageTent", "soundLight", "corporate", "kidsParty"],
-                index: 5,
-              },
-              {
-                icon: Camera,
-                slug: "photo-video",
-                ns: "photo",
-                pills: ["weddingPhoto", "droneShoot", "corporateVideo", "realEstate", "familyShoot", "socialContent"],
-                index: 6,
-              },
-              {
-                icon: HeartPulse,
-                slug: "health-wellness",
-                ns: "health",
-                pills: ["physiotherapy", "therapeuticMassage", "homeNursing", "nutrition", "psychologist", "homeBloodTest"],
-                index: 7,
-              },
-            ].map(({ icon: Icon, slug, ns, pills, index }) => (
-              <StaggerItem key={slug} index={index}>
-                <SpotlightCard>
-                  <div className="mb-6 flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-4">
+            {featuredCategories.map((cat, i) => {
+              const Icon = (cat.icon && ICON_MAP[cat.icon]) || Tag;
+              const name = pickLocalized(cat.name, locale);
+              const description = pickLocalized(cat.description, locale);
+              return (
+                <StaggerItem key={cat.id} index={i}>
+                  <SpotlightCard>
+                    {cat.hero_image_url && (
+                      <div className="-mx-8 -mt-8 mb-6 overflow-hidden rounded-t-2xl">
+                        <Image
+                          src={cat.hero_image_url}
+                          alt={name}
+                          width={800}
+                          height={450}
+                          className="h-44 w-full object-cover sm:h-52"
+                          sizes="(min-width: 768px) 50vw, 100vw"
+                        />
+                      </div>
+                    )}
+                    <div className="mb-4 flex items-center gap-4">
                       <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-teal-500/10 dark:bg-teal-500/15">
                         <Icon className="h-8 w-8 text-teal-600 dark:text-teal-400" />
                       </div>
                       <div className="text-left">
                         <h3 className="font-sans text-xl font-semibold text-gray-900 dark:text-white">
-                          {t(`categories.${ns}.title`)}
+                          {name}
                         </h3>
-                        <p className="text-sm text-gray-500 dark:text-white/50">
-                          {t(`categories.${ns}.description`)}
-                        </p>
+                        {description && (
+                          <p className="text-sm text-gray-500 dark:text-white/50">
+                            {description}
+                          </p>
+                        )}
                       </div>
                     </div>
-                    <span className="shrink-0 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white shadow-sm">
-                      {t("categories.newBadge")}
-                    </span>
-                  </div>
-                  <div className="mb-6 flex flex-wrap gap-2">
-                    {pills.map((p) => (
-                      <span key={p} className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs text-gray-600 dark:border-white/10 dark:bg-white/5 dark:text-white/60">
-                        {t(`categories.${ns}.${p}`)}
-                      </span>
-                    ))}
-                  </div>
-                  <Link href={`/services/${slug}`} className="text-sm font-semibold text-teal-600 hover:underline dark:text-teal-400">
-                    {t("categories.getQuote")} →
-                  </Link>
-                </SpotlightCard>
-              </StaggerItem>
-            ))}
+                    <Link
+                      href={`/services/${cat.slug}`}
+                      className="text-sm font-semibold text-teal-600 hover:underline dark:text-teal-400"
+                    >
+                      {t("categories.getQuote")} →
+                    </Link>
+                  </SpotlightCard>
+                </StaggerItem>
+              );
+            })}
           </div>
 
-          {/* See-all CTA — categories.title section now shows 4 evergreen
-              + 4 new (NEW badge) cards; the full 92-row grid lives at
-              /services. */}
           <div className="mt-12 text-center">
             <Link
               href="/services"
               className="inline-flex items-center gap-2 rounded-xl border border-teal-200 bg-white px-6 py-3 text-sm font-semibold text-teal-700 shadow-sm transition hover:border-teal-300 hover:bg-teal-50 dark:border-teal-500/30 dark:bg-white/5 dark:text-teal-300 dark:hover:bg-teal-500/10"
             >
-              {t("categories.seeAll")}
+              {t("categories.viewAllCategories", { count: totalCategoryCount })}
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
