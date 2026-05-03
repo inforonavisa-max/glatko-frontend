@@ -174,6 +174,24 @@ export function BecomeAProWizard({
       prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id],
     );
 
+  // Auto-sync primaryCategoryId to the first selected category. Without this
+  // users hit a stuck state on step 2: they tick a sub-category, see the
+  // green ring on the parent card, click "Next" — but the primary-service
+  // radio (rendered below the cards) defaults to empty, so step2Ok stays
+  // false and the button is disabled with no visible reason. Auto-picking
+  // the first selection is a standard pattern; users can still change it
+  // via the radios, and removing the current primary reassigns to the
+  // first remaining selection.
+  useEffect(() => {
+    if (selectedCategoryIds.length === 0) {
+      if (primaryCategoryId !== "") setPrimaryCategoryId("");
+      return;
+    }
+    if (!primaryCategoryId || !selectedCategoryIds.includes(primaryCategoryId)) {
+      setPrimaryCategoryId(selectedCategoryIds[0]);
+    }
+  }, [selectedCategoryIds, primaryCategoryId]);
+
   // Resolve selected categories with display names + root slugs (for
   // StepApplicationQuestions which keys answers by root-slug).
   const selectedCategoryRefs = useMemo(() => {
