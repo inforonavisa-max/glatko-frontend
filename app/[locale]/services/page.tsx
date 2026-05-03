@@ -179,7 +179,7 @@ export default async function ServicesPage({ params }: Props) {
               {t("categories.allHeading")}
             </h1>
             <p className="mt-4 text-base md:text-lg text-gray-600 dark:text-white/60">
-              {t("categories.allSubheading")}
+              {t("categories.allSubheadingDynamic", { count: rootRows.length })}
             </p>
           </header>
           <div className="mx-auto mb-10 max-w-2xl md:mb-14">
@@ -189,7 +189,7 @@ export default async function ServicesPage({ params }: Props) {
             <CategoryGrid cards={cards} />
           ) : (
             <div className="text-center py-20 text-gray-500 dark:text-white/50">
-              {t("categories.allSubheading")}
+              {t("categories.allSubheadingDynamic", { count: 0 })}
             </div>
           )}
         </section>
