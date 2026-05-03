@@ -23,7 +23,16 @@ const PROFILE_BASE_FIELDS = z.object({
   insuranceStatus: z
     .enum(["none", "private", "business", "professional"])
     .default("none"),
-  introductionVideoUrl: z.string().url().optional().or(z.literal("")),
+  introductionVideoUrl: z.preprocess(
+    (v) => {
+      if (typeof v !== "string") return v;
+      const trimmed = v.trim();
+      if (!trimmed) return "";
+      if (!/^https?:\/\//i.test(trimmed)) return `https://${trimmed}`;
+      return trimmed;
+    },
+    z.string().url().optional().or(z.literal("")),
+  ),
 });
 
 interface PortfolioInput {
