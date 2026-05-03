@@ -145,7 +145,10 @@
       "psychologist": "Psicologo e terapeuta",
       "homeBloodTest": "Prelievo del sangue a domicilio"
     },
-    "newBadge": "NUOVO"
+    "newBadge": "NUOVO",
+    "subtitleDynamic": "{count, plural, one {# categoria di servizio per le tue esigenze} other {# categorie di servizio per le tue esigenze}}",
+    "allSubheadingDynamic": "{count, plural, one {# categoria di servizio essenziale con professionisti verificati} other {# categorie di servizio essenziali con professionisti verificati}}",
+    "viewAllCategories": "Vedi tutte le {count} categorie"
   },
   "howItWorks": {
     "title": "Come Funziona",

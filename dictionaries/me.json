@@ -145,7 +145,10 @@
       "psychologist": "Psiholog i terapeut",
       "homeBloodTest": "Vađenje krvi kod kuće"
     },
-    "newBadge": "NOVO"
+    "newBadge": "NOVO",
+    "subtitleDynamic": "{count, plural, one {# kategorija usluge za vaše potrebe} other {# kategorija usluga za vaše potrebe}}",
+    "allSubheadingDynamic": "{count, plural, one {# ključna kategorija usluga sa provjerenim profesionalcima} other {# ključnih kategorija usluga sa provjerenim profesionalcima}}",
+    "viewAllCategories": "Pogledaj svih {count} kategorija"
   },
   "howItWorks": {
     "title": "Kako funkcioniše",

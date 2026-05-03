@@ -145,7 +145,10 @@
       "psychologist": "Psikolog & terapist",
       "homeBloodTest": "Evde kan tahlili"
     },
-    "newBadge": "YENİ"
+    "newBadge": "YENİ",
+    "subtitleDynamic": "{count, plural, other {İhtiyacınıza uygun # hizmet kategorisi}}",
+    "allSubheadingDynamic": "{count, plural, other {Doğrulanmış profesyonellerle # temel hizmet kategorisi}}",
+    "viewAllCategories": "Tüm {count} kategoriyi gör"
   },
   "howItWorks": {
     "title": "Nasıl Çalışır?",
