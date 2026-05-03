@@ -52,6 +52,19 @@ export default function RootLayout({
 }) {
   return (
     <html suppressHydrationWarning>
+      <head>
+        {/* Preconnect to Supabase: warms TLS so the first client-side
+            REST/auth call (after hydration) doesn't pay the handshake cost. */}
+        <link
+          rel="preconnect"
+          href="https://cjqappdfyxgytdyeytwv.supabase.co"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="dns-prefetch"
+          href="https://cjqappdfyxgytdyeytwv.supabase.co"
+        />
+      </head>
       <body
         className={`${inter.variable} ${cormorant.variable} font-sans antialiased`}
       >
