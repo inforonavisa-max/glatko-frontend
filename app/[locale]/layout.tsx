@@ -14,6 +14,7 @@ import { CookieConsent } from "@/components/glatko/CookieConsent";
 import { OnboardingWelcomeBanner } from "@/components/glatko/onboarding/OnboardingWelcomeBanner";
 import { HreflangLinks } from "@/components/seo/HreflangLinks";
 import { SentryUserScope } from "@/components/monitoring/SentryUserScope";
+import { YandexMetrica } from "@/components/seo/YandexMetrica";
 import { SearchModalProvider } from "@/components/glatko/search/SearchModalContext";
 import { SearchModal } from "@/components/glatko/search/SearchModal";
 import {
@@ -170,6 +171,7 @@ export default async function LocaleLayout({ children, params }: Props) {
             <CookieConsent />
           </div>
           <SearchModal locale={locale} isAuthenticated={!!userId} />
+          <YandexMetrica />
         </SearchModalProvider>
       </NuqsAdapter>
     </NextIntlClientProvider>

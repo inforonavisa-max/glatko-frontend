@@ -54,6 +54,17 @@ function addHreflangHeaders(response: NextResponse, pathname: string) {
 export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
+    // IndexNow ownership endpoint at /{KEY}.txt (root). Search engines fetch
+    // this file as plain text containing the key. Handled in middleware so it
+    // skips next-intl locale routing and rate limiting.
+    const indexNowKey = process.env.INDEXNOW_KEY;
+    if (indexNowKey && pathname === `/${indexNowKey}.txt`) {
+        return new NextResponse(indexNowKey, {
+            status: 200,
+            headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+        });
+    }
+
     const requestHeaders = new Headers(request.headers);
     requestHeaders.set('x-pathname', pathname);
     const requestWithPath = new NextRequest(request.url, {
