@@ -145,7 +145,10 @@
       "psychologist": "Psychologe & Therapeut",
       "homeBloodTest": "Hausbesuch Blutabnahme"
     },
-    "newBadge": "NEU"
+    "newBadge": "NEU",
+    "subtitleDynamic": "{count, plural, one {# Servicekategorie für Ihren Bedarf} other {# Servicekategorien für Ihren Bedarf}}",
+    "allSubheadingDynamic": "{count, plural, one {# wesentliche Servicekategorie mit verifizierten Fachkräften} other {# wesentliche Servicekategorien mit verifizierten Fachkräften}}",
+    "viewAllCategories": "Alle {count} Kategorien ansehen"
   },
   "howItWorks": {
     "title": "So funktioniert's",

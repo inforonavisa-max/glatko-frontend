@@ -145,7 +145,10 @@
       "psychologist": "Psychologist & therapist",
       "homeBloodTest": "Home blood test"
     },
-    "newBadge": "NEW"
+    "newBadge": "NEW",
+    "subtitleDynamic": "{count, plural, one {# service category for your needs} other {# service categories for your needs}}",
+    "allSubheadingDynamic": "{count, plural, one {# essential service category with verified professionals} other {# essential service categories with verified professionals}}",
+    "viewAllCategories": "View all {count} categories"
   },
   "howItWorks": {
     "title": "How It Works",

@@ -145,7 +145,10 @@
       "psychologist": "أخصائي نفسي ومعالج",
       "homeBloodTest": "تحليل الدم في المنزل"
     },
-    "newBadge": "جديد"
+    "newBadge": "جديد",
+    "subtitleDynamic": "{count, plural, other {# فئة خدمة لاحتياجاتك}}",
+    "allSubheadingDynamic": "{count, plural, other {# فئة خدمة أساسية مع محترفين موثقين}}",
+    "viewAllCategories": "{count, plural, other {استعرض جميع # فئات}}"
   },
   "howItWorks": {
     "title": "كيف يعمل",

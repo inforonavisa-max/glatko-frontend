@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import dynamic from "next/dynamic";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { Menu, X, Mail, LogOut, User, Settings, ChevronDown, Briefcase } from "lucide-react";
@@ -10,11 +11,20 @@ import ThemeToggle from "@/components/ThemeToggle";
 import { useTheme } from "next-themes";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
-import { NotificationBell } from "@/components/glatko/notifications/NotificationDropdown";
 import { InboxUnreadBadge } from "@/components/glatko/inbox/InboxUnreadBadge";
 import { SearchTrigger } from "@/components/glatko/search/SearchTrigger";
-import { createClient } from "@/supabase/browser";
 import * as Sentry from "@sentry/nextjs";
+
+// G-PERF-1: NotificationBell pulls in @supabase/ssr (realtime subscription).
+// Anonymous visitors don't render it (gated by userId) so split it into its
+// own chunk and skip SSR. Saves ~60 KB unused JS on the homepage.
+const NotificationBell = dynamic(
+  () =>
+    import("@/components/glatko/notifications/NotificationDropdown").then(
+      (m) => m.NotificationBell,
+    ),
+  { ssr: false, loading: () => null },
+);
 
 interface GlatkoHeaderProps {
   userId?: string | null;
@@ -56,6 +66,9 @@ export function GlatkoHeader({
     if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
       Sentry.setUser(null);
     }
+    // G-PERF-1: dynamic import keeps @supabase/ssr out of the homepage chunk.
+    // Header is shipped on every page but signOut only fires on click.
+    const { createClient } = await import("@/supabase/browser");
     const supabase = createClient();
     await supabase.auth.signOut();
     window.location.href = "/";
