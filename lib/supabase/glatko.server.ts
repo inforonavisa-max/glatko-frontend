@@ -1530,7 +1530,7 @@ export async function getCategoryBySlug(slug: string) {
   const { data, error } = await supabase
     .from("glatko_service_categories")
     .select(
-      "id, slug, parent_id, name, description, hero_image_url, seasonal, parent:parent_id (slug, name)",
+      "id, slug, parent_id, name, description, hero_image_url, seasonal, faqs, parent:parent_id (slug, name)",
     )
     .eq("slug", slug)
     .eq("is_active", true)
@@ -1554,6 +1554,10 @@ export async function getCategoryBySlug(slug: string) {
     description: data.description as Record<string, string> | null,
     hero_image_url: data.hero_image_url as string | null,
     seasonal: data.seasonal as string | null,
+    faqs: (data.faqs as Array<{
+      q: Record<string, string>;
+      a: Record<string, string>;
+    }> | null) ?? [],
     parent_slug: parent?.slug ?? null,
     parent_name: parent?.name ?? null,
   };
