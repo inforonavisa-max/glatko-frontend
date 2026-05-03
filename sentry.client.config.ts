@@ -2,6 +2,11 @@ import * as Sentry from "@sentry/nextjs";
 
 const dsn = process.env.NEXT_PUBLIC_SENTRY_DSN;
 
+// G-PERF-1: Replay integration removed for initial-load performance.
+// Loading replayIntegration() shipped ~200 KB of session-recording client code
+// on every page even with replaysSessionSampleRate=0. Error capture, breadcrumbs,
+// and traces still work via the default integrations. Re-add post-launch if
+// user-session debugging becomes necessary.
 Sentry.init({
   dsn,
   enabled: Boolean(dsn),
@@ -10,7 +15,4 @@ Sentry.init({
     process.env.VERCEL_ENV ||
     process.env.NODE_ENV,
   tracesSampleRate: 0.1,
-  replaysSessionSampleRate: 0,
-  replaysOnErrorSampleRate: 0.5,
-  integrations: [Sentry.replayIntegration()],
 });
