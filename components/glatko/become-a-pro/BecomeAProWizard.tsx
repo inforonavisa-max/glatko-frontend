@@ -110,6 +110,20 @@ export function BecomeAProWizard({
 
   const [step, setStep] = useState(0);
 
+  // G-UX-1: Her step değişikliğinde sayfayı en üste smooth-scroll. İlk
+  // render'ı atlıyoruz (kullanıcı zaten üstte, gereksiz animasyon olmasın);
+  // sonraki step transitions (Next/Back/draft restore) scroll tetikler.
+  const isFirstStepRender = useRef(true);
+  useEffect(() => {
+    if (isFirstStepRender.current) {
+      isFirstStepRender.current = false;
+      return;
+    }
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [step]);
+
   // Step 1
   const [businessName, setBusinessName] = useState("");
   const [bio, setBio] = useState("");
