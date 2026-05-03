@@ -6,7 +6,21 @@ import type { VerificationStatus } from "@/types/glatko";
 
 type Props = {
   params: Promise<{ locale: string }> | { locale: string };
+  searchParams:
+    | Promise<{ status?: string }>
+    | { status?: string };
 };
+
+const STATUS_FILTER_OPTIONS: Array<{
+  value: "all" | VerificationStatus;
+  label: string;
+}> = [
+  { value: "all", label: "Tümü" },
+  { value: "pending", label: "Beklemede" },
+  { value: "in_review", label: "İncelemede" },
+  { value: "approved", label: "Onaylanmış" },
+  { value: "rejected", label: "Reddedilmiş" },
+];
 
 const STATUS_STYLES: Record<VerificationStatus, string> = {
   pending:
@@ -26,20 +40,62 @@ const STATUS_KEYS: Record<VerificationStatus, string> = {
   rejected: "admin.professionals.rejected",
 };
 
-export default async function ProfessionalsAdminPage({ params }: Props) {
+export default async function ProfessionalsAdminPage({
+  params,
+  searchParams,
+}: Props) {
   const { locale } = await Promise.resolve(params);
+  const sp = await Promise.resolve(searchParams);
   setRequestLocale(locale);
 
+  const filter = (sp.status ?? "all") as "all" | VerificationStatus;
+  const validFilters: Array<"all" | VerificationStatus> = [
+    "all",
+    "pending",
+    "in_review",
+    "approved",
+    "rejected",
+  ];
+  const safeFilter = validFilters.includes(filter) ? filter : "all";
+
   const t = await getTranslations();
-  const professionals = await getProfessionalsByStatus();
+  const professionals =
+    safeFilter === "all"
+      ? await getProfessionalsByStatus()
+      : await getProfessionalsByStatus(safeFilter);
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="font-serif text-2xl font-bold text-gray-900 dark:text-white md:text-3xl">
-          {t("admin.professionals.title")}
-        </h1>
-        <div className="mt-2 h-0.5 w-12 rounded-full bg-gradient-to-r from-teal-500 to-teal-600" />
+      <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="font-serif text-2xl font-bold text-gray-900 dark:text-white md:text-3xl">
+            {t("admin.professionals.title")}
+          </h1>
+          <div className="mt-2 h-0.5 w-12 rounded-full bg-gradient-to-r from-teal-500 to-teal-600" />
+          <p className="mt-2 text-sm text-gray-500 dark:text-white/50">
+            {professionals.length} kayıt
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {STATUS_FILTER_OPTIONS.map((opt) => {
+            const isActive = safeFilter === opt.value;
+            const href =
+              opt.value === "all" ? "?" : `?status=${opt.value}`;
+            return (
+              <Link
+                key={opt.value}
+                href={href}
+                className={
+                  isActive
+                    ? "rounded-lg bg-teal-500/15 px-3 py-1.5 text-xs font-medium text-teal-700 dark:text-teal-300"
+                    : "rounded-lg px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-100 dark:text-white/60 dark:hover:bg-white/[0.04]"
+                }
+              >
+                {opt.label}
+              </Link>
+            );
+          })}
+        </div>
       </div>
 
       {professionals.length === 0 ? (

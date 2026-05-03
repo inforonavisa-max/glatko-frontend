@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ClipboardList } from "lucide-react";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 
@@ -6,7 +7,18 @@ import { AdminRequestsList } from "@/components/admin/AdminRequestsList";
 
 type Props = {
   params: Promise<{ locale: string }> | { locale: string };
+  searchParams:
+    | Promise<{ status?: string }>
+    | { status?: string };
 };
+
+const REQUEST_STATUS_FILTERS: Array<{ value: string; label: string }> = [
+  { value: "pending_moderation", label: "Beklemede" },
+  { value: "published", label: "Yayında" },
+  { value: "rejected", label: "Reddedilmiş" },
+  { value: "expired", label: "Süresi dolmuş" },
+  { value: "all", label: "Tümü" },
+];
 
 export interface AdminRequestRow {
   id: string;
@@ -37,14 +49,24 @@ export interface AdminRequestRow {
  * service-role client so we don't have to ship admin-specific RLS
  * policies — the layout-level email gate is the authorization boundary.
  */
-export default async function AdminRequestsPage({ params }: Props) {
+export default async function AdminRequestsPage({
+  params,
+  searchParams,
+}: Props) {
   const { locale } = await Promise.resolve(params);
+  const sp = await Promise.resolve(searchParams);
   setRequestLocale(locale);
+
+  const validFilters = REQUEST_STATUS_FILTERS.map((f) => f.value);
+  const requestedFilter = sp.status ?? "pending_moderation";
+  const filter = validFilters.includes(requestedFilter)
+    ? requestedFilter
+    : "pending_moderation";
 
   const t = await getTranslations();
   const admin = createAdminClient();
 
-  const { data, error } = await admin
+  let query = admin
     .from("glatko_service_requests")
     .select(
       `id, customer_id, anonymous_email, category_id, details, municipality,
@@ -52,9 +74,14 @@ export default async function AdminRequestsPage({ params }: Props) {
        urgency, photos, locale, status, created_at,
        category:category_id (slug, name)`,
     )
-    .eq("status", "pending_moderation")
     .order("created_at", { ascending: false })
     .limit(100);
+
+  if (filter !== "all") {
+    query = query.eq("status", filter);
+  }
+
+  const { data, error } = await query;
 
   const rows: AdminRequestRow[] = (data ?? []).map((row) => {
     const cat = (row as { category: unknown }).category;
@@ -85,19 +112,38 @@ export default async function AdminRequestsPage({ params }: Props) {
 
   return (
     <div>
-      <div className="mb-8 flex items-center justify-between gap-4">
+      <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="font-serif text-2xl font-bold text-gray-900 dark:text-white md:text-3xl">
             {t("admin.requests.title")}
           </h1>
           <div className="mt-2 h-0.5 w-12 rounded-full bg-gradient-to-r from-teal-500 to-teal-600" />
-          <p className="mt-3 text-sm text-gray-600 dark:text-white/50">
-            {t("admin.requests.subtitle")}
+          <p className="mt-2 text-sm text-gray-500 dark:text-white/50">
+            {rows.length} kayıt
           </p>
         </div>
-        <span className="shrink-0 rounded-full border border-teal-500/30 bg-teal-500/10 px-3 py-1 text-xs font-medium text-teal-700 dark:border-teal-500/40 dark:bg-teal-500/15 dark:text-teal-300">
-          {rows.length} {t("admin.requests.pending")}
-        </span>
+        <div className="flex flex-wrap gap-2">
+          {REQUEST_STATUS_FILTERS.map((opt) => {
+            const isActive = filter === opt.value;
+            const href =
+              opt.value === "pending_moderation"
+                ? "?"
+                : `?status=${opt.value}`;
+            return (
+              <Link
+                key={opt.value}
+                href={href}
+                className={
+                  isActive
+                    ? "rounded-lg bg-teal-500/15 px-3 py-1.5 text-xs font-medium text-teal-700 dark:text-teal-300"
+                    : "rounded-lg px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-100 dark:text-white/60 dark:hover:bg-white/[0.04]"
+                }
+              >
+                {opt.label}
+              </Link>
+            );
+          })}
+        </div>
       </div>
 
       {error ? (
