@@ -71,7 +71,21 @@ export default async function BecomeAProPage({ params }: Props) {
 
   return (
     <PageBackground opacity={0.1}>
-      <div className="mx-auto max-w-6xl px-4 pt-28 sm:px-6">
+      {/* G-UX-1: form üstte, ikna materyali altta. Kullanıcı bu sayfaya
+          zaten "pro ol" demek için geldi; "neden Glatko" alttan referans
+          rolünde kalsın. */}
+      <div className="mx-auto max-w-3xl px-4 pt-28 pb-12 sm:px-6">
+        <BecomeAProWizard
+          userId={user.id}
+          categories={
+            (categories ?? []) as import("@/types/glatko").ServiceCategory[]
+          }
+          userEmail={user.email ?? ""}
+          displayName={accountProfile?.full_name ?? null}
+          initialAvatarUrl={accountProfile?.avatar_url ?? null}
+        />
+      </div>
+      <div className="mx-auto max-w-6xl px-4 pb-12 sm:px-6">
         <GlatkoBentoImages
           title={t("becomePro.whyJoin.title")}
           card1Title={t("becomePro.whyJoin.card1")}
@@ -82,17 +96,6 @@ export default async function BecomeAProPage({ params }: Props) {
           card3Desc={t("becomePro.whyJoin.card3Desc")}
           card4Title={t("becomePro.whyJoin.card4")}
           card4Desc={t("becomePro.whyJoin.card4Desc")}
-        />
-      </div>
-      <div className="mx-auto max-w-3xl px-4 pb-12 sm:px-6">
-        <BecomeAProWizard
-          userId={user.id}
-          categories={
-            (categories ?? []) as import("@/types/glatko").ServiceCategory[]
-          }
-          userEmail={user.email ?? ""}
-          displayName={accountProfile?.full_name ?? null}
-          initialAvatarUrl={accountProfile?.avatar_url ?? null}
         />
       </div>
       <NoiseCTA
