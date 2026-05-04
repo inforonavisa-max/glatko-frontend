@@ -1234,7 +1234,8 @@
         "maxSize": "حتى 5MB؛ JPEG أو PNG أو WebP",
         "uploadSuccess": "تم الرفع",
         "uploadError": "فشل الرفع",
-        "removeSuccess": "تمت الإزالة"
+        "removeSuccess": "تمت الإزالة",
+        "uploadInstruction": "هل المعاينة جيدة؟ الآن انقر زر 'تحميل'."
       },
       "personal": {
         "title": "البيانات الشخصية",

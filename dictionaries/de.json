@@ -1234,7 +1234,8 @@
         "maxSize": "Max. 5MB; JPEG, PNG oder WebP",
         "uploadSuccess": "Foto hochgeladen",
         "uploadError": "Upload fehlgeschlagen",
-        "removeSuccess": "Foto entfernt"
+        "removeSuccess": "Foto entfernt",
+        "uploadInstruction": "Vorschau ok? Klicken Sie jetzt auf 'Hochladen'."
       },
       "personal": {
         "title": "Persönliche Daten",

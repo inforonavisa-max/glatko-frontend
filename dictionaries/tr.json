@@ -1234,7 +1234,8 @@
         "maxSize": "En fazla 5MB; JPEG, PNG veya WebP",
         "uploadSuccess": "Fotoğraf başarıyla yüklendi",
         "uploadError": "Fotoğraf yüklenemedi",
-        "removeSuccess": "Fotoğraf kaldırıldı"
+        "removeSuccess": "Fotoğraf kaldırıldı",
+        "uploadInstruction": "Önizleme tamam mı? Şimdi 'Yükle' butonuna basın."
       },
       "personal": {
         "title": "Kişisel Bilgiler",
