@@ -493,7 +493,7 @@
       "documentsUpload": "Verifizierungsdokumente",
       "comingSoon": "Datei-Upload kommt bald",
       "avatarTitle": "Profilfoto",
-      "avatarHint": "Pflicht — JPG, PNG oder WebP, max. 2 MB.",
+      "avatarHint": "Pflicht — JPG, PNG oder WebP, max. 5 MB.",
       "avatarRequired": "Bitte laden Sie ein Profilfoto hoch, bevor Sie fortfahren oder die Bewerbung absenden.",
       "categoryRequired": "Wählen Sie mindestens einen Servicebereich.",
       "reviewNote": "Ihre Bewerbung wird von unserem Team innerhalb von 24-48 Stunden geprüft."
@@ -1231,7 +1231,7 @@
         "discardPreview": "Vorschau verwerfen",
         "remove": "Foto entfernen",
         "uploading": "Wird hochgeladen…",
-        "maxSize": "Max. 2MB; JPEG, PNG oder WebP",
+        "maxSize": "Max. 5MB; JPEG, PNG oder WebP",
         "uploadSuccess": "Foto hochgeladen",
         "uploadError": "Upload fehlgeschlagen",
         "removeSuccess": "Foto entfernt"

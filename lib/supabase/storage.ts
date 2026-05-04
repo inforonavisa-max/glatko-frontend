@@ -2,7 +2,7 @@ import { createClient } from "@/supabase/browser";
 
 const BUCKET = "glatko-request-photos";
 
-const AVATAR_MAX_BYTES = 2 * 1024 * 1024;
+const AVATAR_MAX_BYTES = 5 * 1024 * 1024;
 const AVATAR_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
 
 /** Public avatar in glatko-request-photos bucket under avatars/{userId}/ */
@@ -14,7 +14,7 @@ export async function uploadProfileAvatar(
     throw new Error("Invalid image type");
   }
   if (file.size > AVATAR_MAX_BYTES) {
-    throw new Error("File too large (max 2MB)");
+    throw new Error("File too large (max 5MB)");
   }
   const supabase = createClient();
   const ext =

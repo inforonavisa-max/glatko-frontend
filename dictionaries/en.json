@@ -493,7 +493,7 @@
       "documentsUpload": "Verification Documents",
       "comingSoon": "File upload coming soon",
       "avatarTitle": "Profile photo",
-      "avatarHint": "Required — JPG, PNG or WebP, max 2 MB.",
+      "avatarHint": "Required — JPG, PNG or WebP, max 5 MB.",
       "avatarRequired": "Please upload a profile photo before continuing or submitting your application.",
       "categoryRequired": "Select at least one service category.",
       "reviewNote": "Your application will be reviewed by our team within 24-48 hours."
@@ -1231,7 +1231,7 @@
         "discardPreview": "Discard preview",
         "remove": "Remove photo",
         "uploading": "Uploading...",
-        "maxSize": "Max 2MB; JPEG, PNG, or WebP",
+        "maxSize": "Max 5MB; JPEG, PNG, or WebP",
         "uploadSuccess": "Photo uploaded successfully",
         "uploadError": "Could not upload photo",
         "removeSuccess": "Photo removed"

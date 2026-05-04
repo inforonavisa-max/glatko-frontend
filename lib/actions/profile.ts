@@ -152,7 +152,7 @@ export async function updateAvatar(formData: FormData) {
     return { error: "no_file" as const };
   }
 
-  if (file.size > 2 * 1024 * 1024) {
+  if (file.size > 5 * 1024 * 1024) {
     return { error: "file_too_large" as const };
   }
 

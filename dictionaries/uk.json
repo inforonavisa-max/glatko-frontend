@@ -493,7 +493,7 @@
       "documentsUpload": "Документи для верифікації",
       "comingSoon": "Завантаження файлів незабаром",
       "avatarTitle": "Фото профілю",
-      "avatarHint": "Обов'язково — JPG, PNG або WebP, до 2 МБ.",
+      "avatarHint": "Обов'язково — JPG, PNG або WebP, до 5 МБ.",
       "avatarRequired": "Завантажте фото профілю перед тим як продовжити або надіслати заявку.",
       "categoryRequired": "Оберіть принаймні одну сферу послуг.",
       "reviewNote": "Вашу заявку буде розглянуто нашою командою протягом 24-48 годин."
@@ -1231,7 +1231,7 @@
         "discardPreview": "Скинути",
         "remove": "Прибрати фото",
         "uploading": "Завантаження…",
-        "maxSize": "До 2MB; JPEG, PNG, WebP",
+        "maxSize": "До 5MB; JPEG, PNG, WebP",
         "uploadSuccess": "Готово",
         "uploadError": "Помилка",
         "removeSuccess": "Фото видалено"
