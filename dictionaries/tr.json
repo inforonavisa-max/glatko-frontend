@@ -493,7 +493,7 @@
       "documentsUpload": "Doğrulama Belgeleri",
       "comingSoon": "Dosya yükleme yakında",
       "avatarTitle": "Profil fotoğrafı",
-      "avatarHint": "Zorunlu — JPG, PNG veya WebP, en fazla 2 MB.",
+      "avatarHint": "Zorunlu — JPG, PNG veya WebP, en fazla 5 MB.",
       "avatarRequired": "Devam etmek ve başvuruyu göndermek için profil fotoğrafı yükleyin.",
       "categoryRequired": "En az bir hizmet alanı seçin.",
       "reviewNote": "Başvurunuz ekibimiz tarafından 24-48 saat içinde incelenecektir."
@@ -1231,7 +1231,7 @@
         "discardPreview": "Önizlemeyi iptal et",
         "remove": "Fotoğrafı kaldır",
         "uploading": "Yükleniyor...",
-        "maxSize": "En fazla 2MB; JPEG, PNG veya WebP",
+        "maxSize": "En fazla 5MB; JPEG, PNG veya WebP",
         "uploadSuccess": "Fotoğraf başarıyla yüklendi",
         "uploadError": "Fotoğraf yüklenemedi",
         "removeSuccess": "Fotoğraf kaldırıldı"

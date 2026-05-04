@@ -9,7 +9,7 @@ import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { updateAvatar } from "@/lib/actions/profile";
 
-const AVATAR_MAX = 2 * 1024 * 1024;
+const AVATAR_MAX = 5 * 1024 * 1024;
 const AVATAR_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 function initials(name: string | null, email: string) {

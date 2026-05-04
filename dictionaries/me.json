@@ -493,7 +493,7 @@
       "documentsUpload": "Dokumenti za verifikaciju",
       "comingSoon": "Otpremanje fajlova uskoro",
       "avatarTitle": "Profilna fotografija",
-      "avatarHint": "Obavezno — JPG, PNG ili WebP, najviše 2 MB.",
+      "avatarHint": "Obavezno — JPG, PNG ili WebP, najviše 5 MB.",
       "avatarRequired": "Otpremite profilnu fotografiju prije nego što nastavite ili pošaljete prijavu.",
       "categoryRequired": "Izaberite bar jednu oblast usluge.",
       "reviewNote": "Vaša prijava biće pregledana od strane našeg tima u roku od 24-48 sati."
@@ -1231,7 +1231,7 @@
         "discardPreview": "Otkaži pregled",
         "remove": "Ukloni foto",
         "uploading": "Otpremanje…",
-        "maxSize": "Do 2MB; JPEG, PNG, WebP",
+        "maxSize": "Do 5MB; JPEG, PNG, WebP",
         "uploadSuccess": "Otpremeno",
         "uploadError": "Greška",
         "removeSuccess": "Uklonjeno"

@@ -493,7 +493,7 @@
       "documentsUpload": "مستندات التحقق",
       "comingSoon": "رفع الملفات قريباً",
       "avatarTitle": "صورة الملف الشخصي",
-      "avatarHint": "إلزامي — JPG أو PNG أو WebP، بحد أقصى 2 ميجابايت.",
+      "avatarHint": "إلزامي — JPG أو PNG أو WebP، بحد أقصى 5 ميجابايت.",
       "avatarRequired": "يرجى رفع صورة للملف الشخصي قبل المتابعة أو إرسال الطلب.",
       "categoryRequired": "اختر مجال خدمة واحداً على الأقل.",
       "reviewNote": "سيتم مراجعة طلبك من قبل فريقنا خلال 24-48 ساعة."
@@ -1231,7 +1231,7 @@
         "discardPreview": "إلغاء المعاينة",
         "remove": "إزالة الصورة",
         "uploading": "جارٍ الرفع…",
-        "maxSize": "حتى 2MB؛ JPEG أو PNG أو WebP",
+        "maxSize": "حتى 5MB؛ JPEG أو PNG أو WebP",
         "uploadSuccess": "تم الرفع",
         "uploadError": "فشل الرفع",
         "removeSuccess": "تمت الإزالة"
