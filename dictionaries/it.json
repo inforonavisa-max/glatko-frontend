@@ -1234,7 +1234,8 @@
         "maxSize": "Max 5MB; JPEG, PNG o WebP",
         "uploadSuccess": "Foto caricata",
         "uploadError": "Caricamento fallito",
-        "removeSuccess": "Foto rimossa"
+        "removeSuccess": "Foto rimossa",
+        "uploadInstruction": "L'anteprima è ok? Ora clicca 'Carica'."
       },
       "personal": {
         "title": "Dati personali",

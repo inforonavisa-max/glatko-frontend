@@ -1234,7 +1234,8 @@
         "maxSize": "До 5MB; JPEG, PNG, WebP",
         "uploadSuccess": "Готово",
         "uploadError": "Помилка",
-        "removeSuccess": "Фото видалено"
+        "removeSuccess": "Фото видалено",
+        "uploadInstruction": "Прев'ю виглядає добре? Тепер натисніть кнопку 'Завантажити'."
       },
       "personal": {
         "title": "Дані",

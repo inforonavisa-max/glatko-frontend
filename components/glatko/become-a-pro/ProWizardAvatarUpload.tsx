@@ -146,6 +146,9 @@ export function ProWizardAvatarUpload({
             </button>
             {pendingFile && (
               <>
+                <p className="w-full text-center text-xs font-medium text-amber-700 dark:text-amber-400 sm:text-left">
+                  ↓ {tAvatar("uploadInstruction")}
+                </p>
                 <button
                   type="button"
                   onClick={confirmUpload}

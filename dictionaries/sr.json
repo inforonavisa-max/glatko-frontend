@@ -1234,7 +1234,8 @@
         "maxSize": "Do 5MB; JPEG, PNG, WebP",
         "uploadSuccess": "Otpremeno",
         "uploadError": "Greška",
-        "removeSuccess": "Uklonjeno"
+        "removeSuccess": "Uklonjeno",
+        "uploadInstruction": "Da li je pregled u redu? Sada kliknite dugme 'Otpremi'."
       },
       "personal": {
         "title": "Lični podaci",

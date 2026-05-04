@@ -1234,7 +1234,8 @@
         "maxSize": "Max 5MB; JPEG, PNG, or WebP",
         "uploadSuccess": "Photo uploaded successfully",
         "uploadError": "Could not upload photo",
-        "removeSuccess": "Photo removed"
+        "removeSuccess": "Photo removed",
+        "uploadInstruction": "Preview looks good? Now click the 'Upload' button."
       },
       "personal": {
         "title": "Personal details",
