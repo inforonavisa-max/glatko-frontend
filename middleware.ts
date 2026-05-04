@@ -108,6 +108,9 @@ export const config = {
         // Skip Next internals, sitemap/robots, image assets, AND font assets
         // (G-CAT-4: /fonts/*.ttf is fetched same-origin by next/og handlers,
         // and would otherwise be 307'd into a locale-prefixed 404).
-        '/((?!_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|llms.txt|fonts/|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ttf|otf|woff|woff2)$).*)',
+        // G-CMS-1: /studio is the embedded Sanity Studio — must NOT be
+        // wrapped in the locale-prefix middleware (Studio expects to live
+        // at exactly /studio without an `/me/` prefix).
+        '/((?!studio|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|llms.txt|fonts/|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ttf|otf|woff|woff2)$).*)',
     ],
 };
