@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { sendEmail } from "@/lib/email/send-email";
 import { getSiteUrl } from "@/lib/email/resend";
+import { getAdminRequestsUrl } from "@/lib/admin/config";
 import {
   coerceEmailLocale,
   getAdminPendingRequestCopy,
@@ -31,7 +32,7 @@ const ADMIN_RECIPIENTS = [
   "info@ronalegal.com",
 ] as const;
 
-const ADMIN_LOCALE = "en"; // ops mailbox reads English
+const ADMIN_EMAIL_CONTENT_LOCALE = "en"; // ops mailbox reads English
 
 /* ─── Admin: pending-request alert ──────────────────────────────────── */
 
@@ -48,13 +49,13 @@ interface AdminPendingArgs {
 export async function sendAdminPendingRequestEmail(
   args: AdminPendingArgs,
 ): Promise<void> {
-  const copy = getAdminPendingRequestCopy(ADMIN_LOCALE);
-  const adminPanelUrl = `${getSiteUrl()}/me/admin/requests`;
+  const copy = getAdminPendingRequestCopy(ADMIN_EMAIL_CONTENT_LOCALE);
+  const adminPanelUrl = getAdminRequestsUrl();
   const requestIdShort = args.requestId.slice(0, 8);
 
   const subject = `${copy.subject} — ${args.categoryName} (${args.city})`;
   const reactBase: Parameters<typeof AdminPendingRequestEmail>[0] = {
-    locale: ADMIN_LOCALE,
+    locale: ADMIN_EMAIL_CONTENT_LOCALE,
     categoryName: args.categoryName,
     city: args.city,
     requestorEmail: args.requestorEmail,

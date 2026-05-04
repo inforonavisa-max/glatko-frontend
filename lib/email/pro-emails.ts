@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { sendEmail } from "@/lib/email/send-email";
 import { getSiteUrl } from "@/lib/email/resend";
+import { getAdminProfessionalsUrl } from "@/lib/admin/config";
 import {
   coerceEmailLocale,
   getAdminProApplicationCopy,
@@ -27,7 +28,7 @@ const ADMIN_RECIPIENTS = [
   "info@ronalegal.com",
 ] as const;
 
-const ADMIN_LOCALE = "en";
+const ADMIN_EMAIL_CONTENT_LOCALE = "en";
 
 /* ─── Admin: pro application alert ──────────────────────────────────── */
 
@@ -43,13 +44,13 @@ interface AdminProApplicationArgs {
 export async function sendAdminProApplicationEmail(
   args: AdminProApplicationArgs,
 ): Promise<void> {
-  const copy = getAdminProApplicationCopy(ADMIN_LOCALE);
-  const adminPanelUrl = `${getSiteUrl()}/me/admin/professionals`;
+  const copy = getAdminProApplicationCopy(ADMIN_EMAIL_CONTENT_LOCALE);
+  const adminPanelUrl = getAdminProfessionalsUrl();
   const proIdShort = args.professionalId.slice(0, 8);
 
   const subject = `${copy.subject} — ${args.professionalName} (${args.city})`;
   const reactBase: Parameters<typeof AdminProApplicationEmail>[0] = {
-    locale: ADMIN_LOCALE,
+    locale: ADMIN_EMAIL_CONTENT_LOCALE,
     professionalName: args.professionalName,
     professionalEmail: args.professionalEmail,
     city: args.city,
