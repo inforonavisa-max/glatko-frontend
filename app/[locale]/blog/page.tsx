@@ -81,7 +81,9 @@ export default async function BlogIndexPage({ params }: Props) {
 
   // Fetch in parallel; tolerate Sanity errors gracefully so the route
   // never 500s when the dataset is empty (just-launched state).
-  const [posts, featured, t] = await Promise.all([
+  // `getTranslations` is awaited for its locale-priming side effect even
+  // though the labels we use on this page are inlined per-locale below.
+  const [posts, featured] = await Promise.all([
     getAllPosts(locale).catch(() => [] as PostListItem[]),
     getFeaturedPosts(locale).catch(() => [] as PostListItem[]),
     getTranslations(),
