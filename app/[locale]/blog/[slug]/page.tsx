@@ -47,7 +47,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   languages["x-default"] = `${SEO_BASE}/en/blog/${slug}`;
 
   return {
-    title: `${title} | Glatko`,
+    title,
     description,
     alternates: {
       canonical: `${SEO_BASE}/${locale}/blog/${slug}`,

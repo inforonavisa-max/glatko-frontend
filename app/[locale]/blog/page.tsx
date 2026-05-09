@@ -17,16 +17,18 @@ interface Props {
   params: Promise<{ locale: string }> | { locale: string };
 }
 
+// Layout's metadata template ("%s | Glatko") appends the site name —
+// keep these strings clean so the rendered <title> doesn't double-suffix.
 const PAGE_TITLES: Record<string, string> = {
-  me: "Blog | Glatko",
-  tr: "Blog | Glatko",
-  en: "Blog | Glatko",
-  ru: "Блог | Glatko",
-  de: "Blog | Glatko",
-  it: "Blog | Glatko",
-  sr: "Blog | Glatko",
-  ar: "مدونة | Glatko",
-  uk: "Блог | Glatko",
+  me: "Blog",
+  tr: "Blog",
+  en: "Blog",
+  ru: "Блог",
+  de: "Blog",
+  it: "Blog",
+  sr: "Blog",
+  ar: "مدونة",
+  uk: "Блог",
 };
 
 const PAGE_DESCRIPTIONS: Record<string, string> = {
@@ -105,7 +107,7 @@ export default async function BlogIndexPage({ params }: Props) {
     <main className="mx-auto max-w-6xl px-4 pb-20 pt-28 sm:px-6 lg:px-8">
       <header className="mb-10">
         <h1 className="font-serif text-4xl font-semibold text-gray-900 dark:text-white md:text-5xl">
-          {title.replace(" | Glatko", "")}
+          {title}
         </h1>
         <p className="mt-3 max-w-2xl text-gray-600 dark:text-white/60">
           {description}
