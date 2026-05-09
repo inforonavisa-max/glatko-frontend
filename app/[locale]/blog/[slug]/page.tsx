@@ -7,23 +7,18 @@ import { setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { PortableText } from "@/components/sanity/PortableText";
-import { getAllPostSlugs, getPostBySlug } from "@/lib/sanity/fetch";
+import { getPostBySlug } from "@/lib/sanity/fetch";
 import { urlFor } from "@/lib/sanity/image";
 import { SEO_BASE, SEO_LOCALES, hreflangForLocale } from "@/lib/seo";
 
+// Dynamic with a short ISR window. The [locale] layout reads the auth
+// session (cookies → dynamic), so the whole tree is dynamic regardless;
+// declaring `generateStaticParams` here just made Next try to pre-render
+// unlisted slugs and 500 with DYNAMIC_SERVER_USAGE.
 export const revalidate = 60;
 
 interface Props {
   params: Promise<{ locale: string; slug: string }> | { locale: string; slug: string };
-}
-
-export async function generateStaticParams() {
-  // Pre-render the ME slug set; other locales get on-demand ISR. ME is
-  // the primary content language so this covers most cold-cache traffic.
-  const slugs = await getAllPostSlugs("me").catch(() => []);
-  return slugs
-    .filter((s) => s.slug)
-    .map((s) => ({ slug: s.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
