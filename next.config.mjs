@@ -73,7 +73,154 @@ const nextConfig = {
         permanent: true,
       },
     ];
-    return [...providersRetired, ...slugRenames];
+
+    // G-I18N-PATHS: pre-localization English slugs → new per-locale slugs.
+    // Mirrors the per-locale entries in `i18n/routing.ts` `pathnames`. EN is
+    // canonical, so no entries for /en/. Each route adds two redirects:
+    // top-level (`/tr/login → /tr/giris-yap`) and parametric child where
+    // applicable (`/tr/services/:slug → /tr/hizmetler/:slug`).
+    const localeSlugs = {
+      "/become-a-pro": {
+        tr: "/profesyonel-ol",
+        de: "/profi-werden",
+        it: "/diventa-professionista",
+        ru: "/stat-professionalom",
+        uk: "/staty-profesionalom",
+        sr: "/postani-profesionalac",
+        me: "/postani-profesionalac",
+        ar: "/kun-muhtarif",
+      },
+      "/login": {
+        tr: "/giris-yap",
+        de: "/anmelden",
+        it: "/accedi",
+        ru: "/vkhod",
+        uk: "/vkhid",
+        sr: "/prijava",
+        me: "/prijava",
+        ar: "/tasjil-al-dukhul",
+      },
+      "/register": {
+        tr: "/kayit-ol",
+        de: "/registrieren",
+        it: "/registrati",
+        ru: "/registratsiya",
+        uk: "/reyestratsiia",
+        sr: "/registracija",
+        me: "/registracija",
+        ar: "/inshaa-hisab",
+      },
+      "/forgot-password": {
+        tr: "/sifremi-unuttum",
+        de: "/passwort-vergessen",
+        it: "/password-dimenticata",
+        ru: "/zabyl-parol",
+        uk: "/zabuv-parol",
+        sr: "/zaboravljena-lozinka",
+        me: "/zaboravljena-lozinka",
+        ar: "/nasit-kalimat-al-murur",
+      },
+      "/reset-password": {
+        tr: "/sifre-sifirla",
+        de: "/passwort-zuruecksetzen",
+        it: "/reimposta-password",
+        ru: "/sbros-parolya",
+        uk: "/skyd-parolya",
+        sr: "/resetovanje-lozinke",
+        me: "/resetovanje-lozinke",
+        ar: "/iaadat-taiin-kalimat-al-murur",
+      },
+      "/services": {
+        tr: "/hizmetler",
+        de: "/dienstleistungen",
+        it: "/servizi",
+        ru: "/uslugi",
+        uk: "/posluhy",
+        sr: "/usluge",
+        me: "/usluge",
+        ar: "/al-khadamat",
+      },
+      "/how-it-works": {
+        tr: "/nasil-calisir",
+        de: "/so-funktioniert-es",
+        it: "/come-funziona",
+        ru: "/kak-eto-rabotaet",
+        uk: "/yak-tse-pratsyuye",
+        sr: "/kako-funkcionise",
+        me: "/kako-funkcionise",
+        ar: "/kayfa-yamal",
+      },
+      "/about": {
+        tr: "/hakkimizda",
+        de: "/ueber-uns",
+        it: "/chi-siamo",
+        ru: "/o-nas",
+        uk: "/pro-nas",
+        sr: "/o-nama",
+        me: "/o-nama",
+        ar: "/man-nahnu",
+      },
+      "/contact": {
+        tr: "/iletisim",
+        de: "/kontakt",
+        it: "/contatti",
+        ru: "/kontakty",
+        uk: "/kontakty",
+        sr: "/kontakt",
+        me: "/kontakt",
+        ar: "/ittasil-bina",
+      },
+      "/privacy": {
+        tr: "/gizlilik",
+        de: "/datenschutz",
+        // it stays "/privacy" (identity in pathnames), no redirect
+        ru: "/konfidentsialnost",
+        uk: "/konfidentsialnist",
+        sr: "/privatnost",
+        me: "/privatnost",
+        ar: "/al-khususiya",
+      },
+      "/terms": {
+        tr: "/kullanim-kosullari",
+        de: "/nutzungsbedingungen",
+        it: "/termini",
+        ru: "/usloviya",
+        uk: "/umovy",
+        sr: "/uslovi",
+        me: "/uslovi",
+        ar: "/al-shuroot",
+      },
+      "/cookies": {
+        tr: "/cerez-politikasi",
+        // de + it stay "/cookies" (identity), no redirect
+        ru: "/fayly-cookie",
+        uk: "/fayly-cookie",
+        sr: "/kolacici",
+        me: "/kolacici",
+        ar: "/al-kukiz",
+      },
+    };
+
+    const localizedRedirects = [];
+    for (const [enSlug, perLocale] of Object.entries(localeSlugs)) {
+      for (const [locale, newSlug] of Object.entries(perLocale)) {
+        // Top-level: /tr/login → /tr/giris-yap
+        localizedRedirects.push({
+          source: `/${locale}${enSlug}`,
+          destination: `/${locale}${newSlug}`,
+          permanent: true,
+        });
+        // Parametric child: /tr/services/:slug → /tr/hizmetler/:slug
+        // Applies to /services and /become-a-pro (which has /founding subroute).
+        localizedRedirects.push({
+          source: `/${locale}${enSlug}/:rest*`,
+          destination: `/${locale}${newSlug}/:rest*`,
+          permanent: true,
+        });
+      }
+    }
+
+    return [...providersRetired, ...slugRenames, ...localizedRedirects];
   },
 };
 
