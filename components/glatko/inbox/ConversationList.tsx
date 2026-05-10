@@ -121,7 +121,7 @@ export function ConversationList({
             transition={{ duration: 0.25, delay: idx * 0.04 }}
           >
             <Link
-              href={`/inbox/${conv.id}`}
+              href={{ pathname: "/inbox/[conversationId]", params: { conversationId: conv.id } }}
               className={cn(
                 "group flex items-start gap-4 rounded-2xl border p-4 backdrop-blur-sm transition-all duration-300 hover:border-teal-500/20 hover:shadow-md md:p-5",
                 "border-gray-200/50 bg-white/70 dark:border-white/[0.08] dark:bg-white/[0.03]",

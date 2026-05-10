@@ -321,7 +321,7 @@ export default function LandingPageClient({
                       </div>
                     </div>
                     <Link
-                      href={`/services/${cat.slug}`}
+                      href={{ pathname: "/services/[slug]", params: { slug: cat.slug } }}
                       className="text-sm font-semibold text-teal-600 hover:underline dark:text-teal-400"
                     >
                       {t("categories.getQuote")} →

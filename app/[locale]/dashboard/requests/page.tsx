@@ -170,7 +170,7 @@ export default async function DashboardRequestsPage({ params }: Props) {
               const bidPct = Math.min(100, ((req.bid_count ?? 0) / maxBids) * 100);
 
               return (
-                <Link key={req.id} href={`/dashboard/requests/${req.id}`}>
+                <Link key={req.id} href={{ pathname: "/dashboard/requests/[id]", params: { id: req.id } }}>
                   <div
                     className="group flex items-start gap-4 rounded-2xl border border-gray-200/50 bg-white/70 p-5 backdrop-blur-sm transition-all duration-300 hover:border-teal-500/20 hover:shadow-lg dark:border-white/[0.08] dark:bg-white/[0.03] dark:hover:border-teal-500/15 md:p-6"
                     style={{ animationDelay: `${i * 50}ms` }}

@@ -512,7 +512,7 @@ export default async function ProviderProfileBySlugPage({ params }: PageProps) {
           </p>
           <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link
-              href={`/request-service?pro=${id}`}
+              href={{ pathname: "/request-service", query: { pro: id } }}
               className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:shadow-xl hover:shadow-teal-500/30"
             >
               {t("pro.profile.requestQuote")}

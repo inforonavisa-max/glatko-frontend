@@ -117,7 +117,7 @@ export function SearchBar({ locale, defaultValue = "", onSearch, fetchSuggestion
             {cats.map((s) => (
               <Link
                 key={s.slug}
-                href={`/services/${s.slug}`}
+                href={{ pathname: "/services/[slug]", params: { slug: s.slug } }}
                 onClick={() => setOpen(false)}
                 className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 transition-colors hover:bg-gray-50 dark:text-white/70 dark:hover:bg-white/[0.04]"
               >
@@ -135,7 +135,7 @@ export function SearchBar({ locale, defaultValue = "", onSearch, fetchSuggestion
             {pros.map((s) => (
               <Link
                 key={s.slug}
-                href={`/provider/${s.slug}`}
+                href={{ pathname: "/provider/[id]", params: { id: s.slug } }}
                 onClick={() => setOpen(false)}
                 className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 transition-colors hover:bg-gray-50 dark:text-white/70 dark:hover:bg-white/[0.04]"
               >

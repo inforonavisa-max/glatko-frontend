@@ -296,7 +296,7 @@ export default async function RequestDetailPage({ params }: Props) {
               </p>
             </div>
             <Link
-              href={`/review/${id}`}
+              href={{ pathname: "/review/[requestId]", params: { requestId: id } }}
               className="shrink-0 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-amber-500/25 transition-all hover:shadow-xl hover:shadow-amber-500/30"
             >
               {t("review.ratePro")}

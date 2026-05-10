@@ -64,7 +64,7 @@ export function ChatHeader({
           <p className="truncate text-xs text-gray-400 dark:text-white/40">
             {requestId ? (
               <Link
-                href={`/dashboard/requests/${requestId}`}
+                href={{ pathname: "/dashboard/requests/[id]", params: { id: requestId } }}
                 className="transition-colors hover:text-teal-500"
               >
                 {requestTitle} &middot; {t("chat.viewRequest")}
@@ -77,7 +77,7 @@ export function ChatHeader({
       </div>
 
       <Link
-        href={`/provider/${otherUser.id}`}
+        href={{ pathname: "/provider/[id]", params: { id: otherUser.id } }}
         className="shrink-0 text-xs font-medium text-gray-400 transition-colors hover:text-teal-500 dark:text-white/40"
       >
         {t("chat.viewProfile")}

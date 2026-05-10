@@ -259,7 +259,7 @@ export default async function CategoryDetailPage({ params }: Props) {
                   return (
                     <Link
                       key={child.id}
-                      href={`/services/${child.slug}`}
+                      href={{ pathname: "/services/[slug]", params: { slug: child.slug } }}
                       className="rounded-full border border-gray-200/50 bg-white/70 px-5 py-2.5 text-sm text-gray-700 backdrop-blur-sm transition-all duration-200 hover:border-teal-500/30 hover:bg-teal-500/5 hover:text-teal-700 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-white/60 dark:hover:border-teal-500/20 dark:hover:text-teal-400"
                     >
                       {childName}
@@ -300,7 +300,7 @@ export default async function CategoryDetailPage({ params }: Props) {
                 return (
                   <Link
                     key={p.id}
-                    href={`/provider/${p.id}`}
+                    href={{ pathname: "/provider/[id]", params: { id: p.id } }}
                     className="group rounded-2xl border border-gray-200/50 bg-white/70 p-5 backdrop-blur-sm transition-all duration-300 hover:border-teal-500/20 hover:shadow-lg dark:border-white/[0.08] dark:bg-white/[0.03]"
                   >
                     <div className="flex items-center gap-3">

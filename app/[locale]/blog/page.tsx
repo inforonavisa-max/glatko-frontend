@@ -159,7 +159,7 @@ function PostCard({ post, locale }: { post: PostListItem; locale: string }) {
   const cover = post.coverImage;
   return (
     <Link
-      href={`/blog/${post.slug}`}
+      href={{ pathname: "/blog/[slug]", params: { slug: post.slug } }}
       className="group block overflow-hidden rounded-2xl border border-gray-200/70 bg-white/80 backdrop-blur-sm transition-all hover:border-teal-500/30 hover:shadow-lg dark:border-white/[0.08] dark:bg-white/[0.04]"
     >
       {cover?.asset ? (

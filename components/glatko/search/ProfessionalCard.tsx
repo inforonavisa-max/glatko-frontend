@@ -174,7 +174,7 @@ export function ProfessionalCard({ pro, locale, index }: ProfessionalCardProps) 
 
         <div className="mt-5 flex gap-2 border-t border-gray-100 pt-5 dark:border-white/[0.06]">
           <Link
-            href={`/provider/${pro.id}`}
+            href={{ pathname: "/provider/[id]", params: { id: pro.id } }}
             className="flex-1 rounded-xl border border-gray-200 py-2.5 text-center text-xs font-medium text-gray-700 transition-all hover:border-teal-500/30 hover:text-teal-600 dark:border-white/[0.1] dark:text-white/70 dark:hover:border-teal-500/30 dark:hover:text-teal-400"
           >
             {t("search.card.viewProfile")}
