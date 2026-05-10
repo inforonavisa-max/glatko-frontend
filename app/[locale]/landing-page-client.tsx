@@ -226,7 +226,7 @@ export default function LandingPageClient({
                 {t("hero.cta")}
               </motion.span>
             </Link>
-            <Link href="/providers">
+            <Link href={{ pathname: "/services", query: { openSearch: "1" } }}>
               <motion.span
                 whileHover={reduced ? undefined : { scale: 1.02, backgroundColor: "rgba(20,184,166,0.1)" }}
                 whileTap={reduced ? undefined : { scale: 0.98 }}

@@ -364,7 +364,7 @@ export default async function CategoryDetailPage({ params }: Props) {
         {/* CTAs */}
         <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
           <Link
-            href="/services?openSearch=1"
+            href={{ pathname: "/services", query: { openSearch: "1" } }}
             className="inline-flex items-center gap-1.5 rounded-xl border border-teal-500/30 px-6 py-3 text-sm font-medium text-teal-700 transition-all hover:border-teal-500/50 hover:bg-teal-500/5 dark:text-teal-300"
           >
             {t("services.viewAllPros")} <ArrowRight className="h-4 w-4" />
