@@ -20,6 +20,7 @@ import type {
   RecentSearch,
 } from "@/types/glatko";
 import { useSearchModal } from "./SearchModalContext";
+import { FoundingProviderBadge } from "@/components/glatko/founding/FoundingProviderBadge";
 import { cn } from "@/lib/utils";
 
 interface SearchModalProps {
@@ -477,6 +478,7 @@ function ResultsList({
   activeIndex: number;
   onSelect: (item: FlatItem) => void;
 }) {
+  const tFounding = useTranslations("founding.badge");
   const profStartIdx = categories.length;
   return (
     <div className="px-2 py-3 sm:px-3">
@@ -545,7 +547,23 @@ function ResultsList({
                       <User className="h-4 w-4 text-gray-600 dark:text-neutral-300" aria-hidden="true" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium">{p.title}</p>
+                      <div className="flex items-center gap-1.5">
+                        <p className="truncate text-sm font-medium">{p.title}</p>
+                        {p.isFoundingProvider ? (
+                          <FoundingProviderBadge
+                            iconOnly
+                            size="sm"
+                            number={p.foundingProviderNumber ?? undefined}
+                            tooltipText={
+                              p.foundingProviderNumber
+                                ? tFounding("tooltip", {
+                                    number: p.foundingProviderNumber,
+                                  })
+                                : undefined
+                            }
+                          />
+                        ) : null}
+                      </div>
                       <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-neutral-300">
                         {typeof p.rating === "number" && p.rating > 0 && (
                           <span className="inline-flex items-center gap-0.5">

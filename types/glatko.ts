@@ -42,6 +42,8 @@ export interface ProfessionalProfile {
   portfolio_images: string[];
   created_at: string;
   updated_at: string;
+  is_founding_provider?: boolean;
+  founding_provider_number?: number | null;
   profile?: {
     full_name: string | null;
     avatar_url: string | null;
@@ -173,6 +175,8 @@ export interface SearchResult {
   city: string | null;
   similarityScore: number;
   matchType: SearchMatchType;
+  isFoundingProvider?: boolean;
+  foundingProviderNumber?: number | null;
 }
 
 export interface SearchResponse {

@@ -22,6 +22,7 @@ import { cn } from "@/lib/utils";
 import { getProfessionalProfile, getPublishedReviews, calculateTrustBadges } from "@/lib/supabase/glatko.server";
 import { TrustBadge } from "@/components/glatko/trust/TrustBadge";
 import { VerifiedBadgeWithProof } from "@/components/glatko/verification/VerifiedBadgeWithProof";
+import { FoundingProviderBadge } from "@/components/glatko/founding/FoundingProviderBadge";
 import type {
   VerificationData,
   VerificationDoc,
@@ -257,6 +258,19 @@ export default async function ProviderProfilePage({ params }: PageProps) {
                     size="md"
                   />
                 )}
+                {profile.is_founding_provider ? (
+                  <FoundingProviderBadge
+                    size="md"
+                    number={profile.founding_provider_number ?? undefined}
+                    tooltipText={
+                      profile.founding_provider_number
+                        ? t("founding.badge.tooltip", {
+                            number: profile.founding_provider_number,
+                          })
+                        : undefined
+                    }
+                  />
+                ) : null}
               </div>
 
               {trustBadges.length > 0 && (
