@@ -14,17 +14,6 @@ const withBundleAnalyzer = bundleAnalyzer({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // TEMPORARY (G-I18N-PATHS): next-intl pathnames generates a strict union
-  // of routing keys and the build-time TS check fails on every literal
-  // `/foo` href and `router.push(stringHelper)` call site. Local `tsc`
-  // doesn't see these errors because Next's typed-routes injection
-  // happens during `next build`. Ignoring build errors here unblocks
-  // the deploy; the runtime is unaffected (next-intl Link/router falls
-  // back to literal href when not in pathnames, and Vercel-side 301
-  // redirects catch any legacy URL). Type cleanup is tracked as
-  // follow-up work — convert remaining literal hrefs and dynamic
-  // pushes to next-intl object form, then remove this flag.
-  typescript: { ignoreBuildErrors: true },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "cjqappdfyxgytdyeytwv.supabase.co" },
