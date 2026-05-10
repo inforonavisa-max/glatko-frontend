@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChevronRight, Search } from "lucide-react";
+import { ChevronRight, Eye, Search, ShieldCheck } from "lucide-react";
 
 import { createAdminClient } from "@/supabase/server";
 import {
@@ -29,6 +29,7 @@ interface UserRow {
   email_confirmed: boolean;
   last_sign_in_at: string | null;
   is_banned: boolean;
+  is_pro: boolean;
 }
 
 async function loadUsers(
@@ -84,6 +85,18 @@ async function loadUsers(
     });
   }
 
+  // Detect which profiles already have a pro profile so we can render
+  // "Pro yap" vs "Pro Görüntüle" per row (G-ADMIN-PROVIDER-CREATE-01).
+  const profileIds = (profiles ?? []).map((p) => p.id as string);
+  const proSet = new Set<string>();
+  if (profileIds.length > 0) {
+    const { data: proRows } = await admin
+      .from("glatko_professional_profiles")
+      .select("id")
+      .in("id", profileIds);
+    for (const r of proRows ?? []) proSet.add(r.id as string);
+  }
+
   const rows: UserRow[] = (profiles ?? []).map((p) => {
     const auth = authMap.get(p.id as string);
     return {
@@ -96,6 +109,7 @@ async function loadUsers(
       email_confirmed: auth?.email_confirmed ?? false,
       last_sign_in_at: auth?.last_sign_in_at ?? null,
       is_banned: auth?.is_banned ?? false,
+      is_pro: proSet.has(p.id as string),
     };
   });
 
@@ -186,30 +200,54 @@ export default async function AdminUsersPage({
           ) : (
             <div className="divide-y divide-gray-100 dark:divide-white/[0.06]">
               {rows.map((u) => (
-                <Link
+                <div
                   key={u.id}
-                  href={`/${locale}/admin/users/${u.id}`}
                   className="flex items-center gap-3 px-4 py-3 transition-colors hover:bg-gray-50 dark:hover:bg-white/[0.02]"
                 >
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="truncate text-sm font-medium text-gray-900 dark:text-white">
-                        {u.full_name || "(isimsiz)"}
-                      </span>
-                      {u.is_banned ? (
-                        <span className="shrink-0 rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-red-700 dark:bg-red-500/15 dark:text-red-300">
-                          banlı
+                  <Link
+                    href={`/${locale}/admin/users/${u.id}`}
+                    className="flex min-w-0 flex-1 items-center gap-3"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="truncate text-sm font-medium text-gray-900 dark:text-white">
+                          {u.full_name || "(isimsiz)"}
                         </span>
-                      ) : null}
+                        {u.is_banned ? (
+                          <span className="shrink-0 rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-red-700 dark:bg-red-500/15 dark:text-red-300">
+                            banlı
+                          </span>
+                        ) : null}
+                        {u.is_pro ? (
+                          <span className="shrink-0 rounded-full bg-teal-100 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-teal-700 dark:bg-teal-500/15 dark:text-teal-300">
+                            pro
+                          </span>
+                        ) : null}
+                      </div>
+                      <div className="mt-0.5 truncate text-xs text-gray-500 dark:text-white/50">
+                        {u.email || "—"}
+                        {u.preferred_locale ? ` · ${u.preferred_locale}` : ""}
+                      </div>
                     </div>
-                    <div className="mt-0.5 truncate text-xs text-gray-500 dark:text-white/50">
-                      {u.email || "—"}
-                      {u.preferred_locale ? ` · ${u.preferred_locale}` : ""}
-                    </div>
-                  </div>
-                  <RoleBadge role={u.role} />
+                    <RoleBadge role={u.role} />
+                  </Link>
+                  {u.is_pro ? (
+                    <Link
+                      href={`/${locale}/provider/${u.id}`}
+                      className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-gray-200 px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:border-teal-500/30 hover:text-teal-700 dark:border-white/[0.08] dark:text-white/70 dark:hover:border-teal-500/40 dark:hover:text-teal-300"
+                    >
+                      <Eye className="h-3 w-3" /> Pro
+                    </Link>
+                  ) : (
+                    <Link
+                      href={`/${locale}/admin/users/${u.id}/promote`}
+                      className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-gradient-to-r from-teal-500 to-teal-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm shadow-teal-500/20 transition-shadow hover:shadow-teal-500/30"
+                    >
+                      <ShieldCheck className="h-3 w-3" /> Pro yap
+                    </Link>
+                  )}
                   <ChevronRight className="h-4 w-4 shrink-0 text-gray-400 dark:text-white/30" />
-                </Link>
+                </div>
               ))}
             </div>
           )}
