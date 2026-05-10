@@ -1738,6 +1738,10 @@
     "success": {
       "title": "Application submitted",
       "message": "We received your application. Our team will review it within 1-2 business days and email you the result."
+    },
+    "legalLink": {
+      "title": "Legal requirements for service providers in Montenegro",
+      "body": "Setting up a DOO, permits, tax in Montenegro? See <link>RoNa Legal</link>'s guides for English-speaking expats and businesses."
     }
   },
   "validation": {
@@ -2078,5 +2082,12 @@
       "disputed": "Customer disputed the completion. Resolve via chat.",
       "cancelled": "This job was cancelled."
     }
+  },
+  "blogTeaser": {
+    "title": "Latest from our blog",
+    "viewAll": "View all articles"
+  },
+  "relatedArticles": {
+    "title": "Related articles"
   }
 }

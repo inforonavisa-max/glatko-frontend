@@ -5,6 +5,7 @@ import { routing, type Locale } from "@/i18n/routing";
 import LandingPageClient, {
   type FeaturedCategoryCard,
 } from "./landing-page-client";
+import { LatestBlogPosts } from "@/components/glatko/landing/LatestBlogPosts";
 import { generateWebSiteSchema, jsonLdScriptProps } from "@/lib/seo/jsonld";
 
 type Props = {
@@ -52,6 +53,7 @@ export default async function LocaleHomePage({ params }: Props) {
         totalCategoryCount={totalCategoryCount ?? 0}
         locale={locale as Locale}
       />
+      <LatestBlogPosts locale={locale} />
     </>
   );
 }

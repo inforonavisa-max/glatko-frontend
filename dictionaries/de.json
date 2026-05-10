@@ -1738,6 +1738,10 @@
     "success": {
       "title": "Bewerbung gesendet",
       "message": "Wir haben Ihre Bewerbung erhalten. Unser Team prüft sie innerhalb von 1-2 Werktagen und benachrichtigt Sie per E-Mail."
+    },
+    "legalLink": {
+      "title": "Rechtliche Anforderungen für Dienstleister in Montenegro",
+      "body": "DOO-Gründung, Genehmigungen, Steuern in Montenegro? Die englischsprachigen Leitfäden von <link>RoNa Legal</link> helfen weiter."
     }
   },
   "validation": {
@@ -2078,5 +2082,12 @@
       "disputed": "Kunde hat den Abschluss angefochten. Klären Sie es per Chat.",
       "cancelled": "Dieser Auftrag wurde storniert."
     }
+  },
+  "blogTeaser": {
+    "title": "Neueste Beiträge aus unserem Blog",
+    "viewAll": "Alle Artikel ansehen"
+  },
+  "relatedArticles": {
+    "title": "Verwandte Artikel"
   }
 }

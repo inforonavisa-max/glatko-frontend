@@ -1738,6 +1738,10 @@
     "success": {
       "title": "Prijava poslata",
       "message": "Primili smo vašu prijavu. Naš tim će je proveriti u 1-2 radna dana i poslati rezultat na email."
+    },
+    "legalLink": {
+      "title": "Pravni zahtevi za pružaoce usluga u Crnoj Gori",
+      "body": "Osnivanje DOO, dozvole i porez u Crnoj Gori? Pogledajte vodiče <link>RoNa Legal</link> za strane stručnjake i firme."
     }
   },
   "validation": {
@@ -2078,5 +2082,12 @@
       "disputed": "Клијент оспорио завршетак. Решите кроз чет.",
       "cancelled": "Овај посао је отказан."
     }
+  },
+  "blogTeaser": {
+    "title": "Najnoviji članci",
+    "viewAll": "Pogledaj sve članke"
+  },
+  "relatedArticles": {
+    "title": "Povezani članci"
   }
 }

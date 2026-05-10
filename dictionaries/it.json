@@ -1738,6 +1738,10 @@
     "success": {
       "title": "Candidatura inviata",
       "message": "Abbiamo ricevuto la tua candidatura. Il team la revisiona in 1-2 giorni e ti scrive il risultato."
+    },
+    "legalLink": {
+      "title": "Requisiti legali per i fornitori di servizi in Montenegro",
+      "body": "Costituzione DOO, permessi e tasse in Montenegro? Consulta le guide di <link>RoNa Legal</link> per professionisti e aziende."
     }
   },
   "validation": {
@@ -2078,5 +2082,12 @@
       "disputed": "Il cliente ha contestato il completamento. Risolvete in chat.",
       "cancelled": "Questo lavoro è stato annullato."
     }
+  },
+  "blogTeaser": {
+    "title": "Ultimi articoli dal blog",
+    "viewAll": "Vedi tutti gli articoli"
+  },
+  "relatedArticles": {
+    "title": "Articoli correlati"
   }
 }

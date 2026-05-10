@@ -98,6 +98,27 @@ export default async function BecomeAProPage({ params }: Props) {
           card4Desc={t("becomePro.whyJoin.card4Desc")}
         />
       </div>
+      <div className="mx-auto max-w-3xl px-4 pb-12 sm:px-6">
+        <div className="rounded-2xl border border-gray-200/60 bg-white/70 p-6 backdrop-blur-sm dark:border-white/[0.06] dark:bg-white/[0.03]">
+          <h3 className="mb-2 font-serif text-lg font-semibold text-gray-900 dark:text-white">
+            {t("becomePro.legalLink.title")}
+          </h3>
+          <p className="text-sm leading-relaxed text-gray-600 dark:text-white/60">
+            {t.rich("becomePro.legalLink.body", {
+              link: (chunks) => (
+                <a
+                  href="https://ronalegal.com"
+                  target="_blank"
+                  rel="noopener"
+                  className="font-medium text-teal-700 underline-offset-2 hover:underline dark:text-teal-300"
+                >
+                  {chunks}
+                </a>
+              ),
+            })}
+          </p>
+        </div>
+      </div>
       <NoiseCTA
         title={t("landing.cta.proTitle")}
         subtitle={t("landing.cta.proSubtitle")}

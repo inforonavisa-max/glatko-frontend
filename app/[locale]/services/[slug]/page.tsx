@@ -15,6 +15,9 @@ import {
   getSubCategories,
   searchProfessionals,
 } from "@/lib/supabase/glatko.server";
+import { getPostsByServiceCategory } from "@/lib/sanity/fetch";
+import { urlFor } from "@/lib/sanity/image";
+import Image from "next/image";
 import { SEO_BASE, SEO_LOCALES, hreflangForLocale } from "@/lib/seo";
 import {
   generateBreadcrumbSchema,
@@ -114,8 +117,9 @@ export default async function CategoryDetailPage({ params }: Props) {
     notFound();
   }
 
-  // Parallel: sub-categories, pro count, cities for areaServed, top pros.
-  const [subCategories, stats, citiesFromPros, { professionals }] =
+  // Parallel: sub-categories, pro count, cities for areaServed, top pros,
+  // related blog posts that link this category via Sanity serviceCategoryRefs.
+  const [subCategories, stats, citiesFromPros, { professionals }, relatedPosts] =
     await Promise.all([
       getSubCategories(category.id),
       getCategoryWithStats(slug),
@@ -126,6 +130,9 @@ export default async function CategoryDetailPage({ params }: Props) {
         sortBy: "rating",
         limit: 6,
       }),
+      getPostsByServiceCategory(slug, locale).catch(
+        () => [] as Awaited<ReturnType<typeof getPostsByServiceCategory>>,
+      ),
     ]);
   const proCount = stats?.proCount ?? 0;
 
@@ -356,6 +363,46 @@ export default async function CategoryDetailPage({ params }: Props) {
                     {entry.a}
                   </p>
                 </details>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Related blog articles (linked via Sanity serviceCategoryRefs) */}
+        {relatedPosts.length > 0 && (
+          <div className="mb-12">
+            <h2 className="mb-6 font-serif text-xl font-semibold text-gray-900 dark:text-white">
+              {t("relatedArticles.title")}
+            </h2>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {relatedPosts.slice(0, 3).map((post) => (
+                <Link
+                  key={post._id}
+                  href={{ pathname: "/blog/[slug]", params: { slug: post.slug } }}
+                  className="group block overflow-hidden rounded-2xl border border-gray-200/50 bg-white/70 backdrop-blur-sm transition-all duration-300 hover:border-teal-500/20 hover:shadow-lg dark:border-white/[0.08] dark:bg-white/[0.03]"
+                >
+                  {post.coverImage?.asset ? (
+                    <div className="relative aspect-[16/9] overflow-hidden">
+                      <Image
+                        src={urlFor(post.coverImage).width(600).height(338).url()}
+                        alt={post.coverImage.alt ?? post.title}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      />
+                    </div>
+                  ) : null}
+                  <div className="p-5">
+                    <h3 className="font-serif text-lg font-semibold text-gray-900 transition-colors group-hover:text-teal-700 dark:text-white dark:group-hover:text-teal-300">
+                      {post.title}
+                    </h3>
+                    {post.excerpt ? (
+                      <p className="mt-2 line-clamp-2 text-sm text-gray-600 dark:text-white/60">
+                        {post.excerpt}
+                      </p>
+                    ) : null}
+                  </div>
+                </Link>
               ))}
             </div>
           </div>

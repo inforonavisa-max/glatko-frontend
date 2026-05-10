@@ -1738,6 +1738,10 @@
     "success": {
       "title": "Başvuru gönderildi",
       "message": "Başvurunu aldık. Ekibimiz 1-2 iş günü içinde inceler ve sonucu sana e-posta ile bildirir."
+    },
+    "legalLink": {
+      "title": "Karadağ'da hizmet sağlayıcı için yasal gereklilikler",
+      "body": "Karadağ'da DOO kurmak, izin almak veya vergi konuları için <link>RoNa Legal</link>'in rehberlerine göz atabilirsiniz."
     }
   },
   "validation": {
@@ -2078,5 +2082,12 @@
       "disputed": "Müşteri tamamlamaya itiraz etti. Sohbet üzerinden çözün.",
       "cancelled": "Bu iş iptal edildi."
     }
+  },
+  "blogTeaser": {
+    "title": "Blog'dan son yazılar",
+    "viewAll": "Tüm makaleleri gör"
+  },
+  "relatedArticles": {
+    "title": "İlgili makaleler"
   }
 }
