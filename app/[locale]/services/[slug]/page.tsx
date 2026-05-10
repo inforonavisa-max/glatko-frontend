@@ -8,6 +8,7 @@ import type { Metadata } from "next";
 
 import { PageBackground } from "@/components/ui/PageBackground";
 import { Breadcrumb, type BreadcrumbCrumb } from "@/components/seo/Breadcrumb";
+import { FoundingProviderBadge } from "@/components/glatko/founding/FoundingProviderBadge";
 import {
   getCategoryBySlug,
   getCategoryWithStats,
@@ -294,6 +295,8 @@ export default async function CategoryDetailPage({ params }: Props) {
                   completed_jobs: number;
                   location_city: string | null;
                   is_verified: boolean;
+                  is_founding_provider?: boolean | null;
+                  founding_provider_number?: number | null;
                   profile?: { full_name: string | null; avatar_url: string | null } | null;
                 };
                 const displayName =
@@ -304,6 +307,7 @@ export default async function CategoryDetailPage({ params }: Props) {
                     ? (initials[0][0] + initials[1][0]).toUpperCase()
                     : (initials[0] || "?").slice(0, 2).toUpperCase();
                 const fullStars = Math.min(5, Math.round(p.avg_rating));
+                const foundingNumber = p.founding_provider_number ?? undefined;
                 return (
                   <Link
                     key={p.id}
@@ -311,9 +315,19 @@ export default async function CategoryDetailPage({ params }: Props) {
                     className="group rounded-2xl border border-gray-200/50 bg-white/70 p-5 backdrop-blur-sm transition-all duration-300 hover:border-teal-500/20 hover:shadow-lg dark:border-white/[0.08] dark:bg-white/[0.03]"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-teal-500/10 text-sm font-semibold text-teal-600 dark:text-teal-400">
-                        {ini}
-                      </div>
+                      {p.profile?.avatar_url ? (
+                        <Image
+                          src={p.profile.avatar_url}
+                          alt=""
+                          width={48}
+                          height={48}
+                          className="h-12 w-12 shrink-0 rounded-full border border-gray-200/60 object-cover dark:border-white/[0.1]"
+                        />
+                      ) : (
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-teal-500/10 text-sm font-semibold text-teal-600 dark:text-teal-400">
+                          {ini}
+                        </div>
+                      )}
                       <div className="min-w-0 flex-1">
                         <p className="truncate font-semibold text-gray-900 dark:text-white">
                           {displayName}
@@ -329,6 +343,21 @@ export default async function CategoryDetailPage({ params }: Props) {
                             {p.avg_rating.toFixed(1)} ({p.total_reviews})
                           </span>
                         </div>
+                        {p.is_founding_provider ? (
+                          <div className="mt-1.5">
+                            <FoundingProviderBadge
+                              size="sm"
+                              number={foundingNumber}
+                              tooltipText={
+                                foundingNumber
+                                  ? t("founding.badge.tooltip", {
+                                      number: foundingNumber,
+                                    })
+                                  : undefined
+                              }
+                            />
+                          </div>
+                        ) : null}
                       </div>
                     </div>
                     <p className="mt-3 text-xs font-medium text-teal-600 opacity-0 transition-opacity group-hover:opacity-100 dark:text-teal-400">

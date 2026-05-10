@@ -1776,6 +1776,9 @@
     "supportNote": "Za pitanja, odgovorite na ovaj email i podrška će vam pomoći."
   },
   "founding": {
+    "badge": {
+      "tooltip": "Jedan od prvih Glatko profesionalaca — #{number} / 50"
+    },
     "counter": {
       "providerTitle": "Osnivački profesionalci",
       "customerTitle": "Osnivački klijenti",

@@ -11,6 +11,12 @@ interface Props {
   size?: Size;
   /** Hide the "Founding Provider" text label, show only the icon + ring. */
   iconOnly?: boolean;
+  /**
+   * Localized hover tooltip override. When provided, replaces the default
+   * "Founding Provider [#N / 50]" string. Callers pass `t('founding.badge.tooltip', { number })`
+   * from the surface that has next-intl access.
+   */
+  tooltipText?: string;
   className?: string;
 }
 
@@ -30,11 +36,13 @@ export function FoundingProviderBadge({
   number,
   size = "md",
   iconOnly = false,
+  tooltipText,
   className,
 }: Props) {
   const s = SIZES[size];
   const label = "Founding Provider";
-  const tooltip = number ? `${label} #${number} / 50` : label;
+  const tooltip =
+    tooltipText ?? (number ? `${label} #${number} / 50` : label);
 
   return (
     <span

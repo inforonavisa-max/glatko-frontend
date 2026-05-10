@@ -1781,6 +1781,38 @@ export async function glatkoSearch(
     if (r.result_type === "category") categories.push(mapped);
     else professionals.push(mapped);
   }
+
+  // Founding provider plumbing (G-LAUNCH-POLISH-01): the `glatko_search` RPC
+  // does not return is_founding_provider / founding_provider_number, so we
+  // backfill them in a single bounded query (max 5 ids) before returning.
+  // Migrating the RPC would be a separate sprint; this overhead is one
+  // index lookup per search and stays under the autocomplete latency budget.
+  if (professionals.length > 0) {
+    const proIds = professionals.map((p) => p.id);
+    const { data: foundingRows } = await supabase
+      .from("glatko_professional_profiles")
+      .select("id, is_founding_provider, founding_provider_number")
+      .in("id", proIds);
+    if (foundingRows) {
+      const byId = new Map(
+        foundingRows.map((r) => [
+          r.id as string,
+          {
+            isFounding: Boolean(r.is_founding_provider),
+            number: (r.founding_provider_number as number | null) ?? null,
+          },
+        ]),
+      );
+      for (const p of professionals) {
+        const f = byId.get(p.id);
+        if (f) {
+          p.isFoundingProvider = f.isFounding;
+          p.foundingProviderNumber = f.number;
+        }
+      }
+    }
+  }
+
   return { categories, professionals };
 }
 
