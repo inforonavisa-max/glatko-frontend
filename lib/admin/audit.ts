@@ -31,7 +31,8 @@ export type AdminActionType =
   | "junction_add"
   | "junction_remove"
   | "category_faq_edit"
-  | "category_status_change";
+  | "category_status_change"
+  | "pro_create_admin";
 
 export type AuditTargetTable =
   | "auth.users"
