@@ -137,10 +137,10 @@ export default async function BlogPostPage({ params }: Props) {
       {post.coverImage?.asset ? (
         <figure className="mb-10 overflow-hidden rounded-2xl border border-gray-200/60 dark:border-white/[0.08]">
           <Image
-            src={urlFor(post.coverImage).width(1600).url()}
+            src={urlFor(post.coverImage).width(1456).url()}
             alt={post.coverImage.alt ?? post.title}
-            width={1600}
-            height={900}
+            width={1456}
+            height={816}
             className="h-auto w-full"
             sizes="(max-width: 768px) 100vw, 768px"
             priority
