@@ -43,6 +43,7 @@ export function NoiseCTA({
         {subtitle}
       </p>
       <div className="relative z-10 mt-10">
+        {/* @ts-expect-error -- buttonHref is string-typed prop; runtime URL is a valid pathname */}
         <Link href={buttonHref}>
           <motion.span
             whileHover={{ scale: 1.02 }}

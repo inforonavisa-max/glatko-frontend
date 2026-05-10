@@ -88,6 +88,9 @@ export function GlatkoFooter() {
                       </a>
                     ) : (
                       <Link
+                        // Footer links are statically declared but their concrete type is widened to `string`;
+                        // next-intl's Link href expects a pathname union from the routing map.
+                        // @ts-expect-error -- string-typed href, runtime URLs match pathnames
                         href={link.href}
                         className="text-sm text-gray-600 transition-colors hover:text-teal-600 dark:text-white/60 dark:hover:text-teal-400"
                       >

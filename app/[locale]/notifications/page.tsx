@@ -126,7 +126,7 @@ export default function NotificationsPage() {
         prev.map((item) => (item.id === n.id ? { ...item, read_at: new Date().toISOString() } : item))
       );
     }
-    router.push(getNotificationHref(n));
+    router.push(getNotificationHref(n) as Parameters<typeof router.push>[0]);
   }
 
   const filtered =

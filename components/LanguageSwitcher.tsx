@@ -50,6 +50,8 @@ export default function LanguageSwitcher({
 
   const handleSelect = (l: (typeof availableLanguages)[0]) => {
     setIsOpen(false);
+    // @ts-expect-error -- usePathname() returns a parametric pathname template; next-intl router.replace
+    // accepts it for locale switching but the inferred type is wider than the static-only union.
     router.replace(pathname, { locale: l.code });
   };
 

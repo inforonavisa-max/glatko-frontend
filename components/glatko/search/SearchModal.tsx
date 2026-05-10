@@ -149,7 +149,7 @@ export function SearchModal({ locale, isAuthenticated = false }: SearchModalProp
             resultSlug: item.data.slug,
           });
         }
-        router.push(`/services/${item.data.slug}`);
+        router.push({ pathname: "/services/[slug]", params: { slug: item.data.slug } });
         closeAndReset();
       } else if (item.kind === "professional") {
         if (isAuthenticated) {
@@ -160,17 +160,17 @@ export function SearchModal({ locale, isAuthenticated = false }: SearchModalProp
             resultSlug: item.data.slug,
           });
         }
-        router.push(`/pro/${item.data.slug}`);
+        router.push({ pathname: "/pros/[slug]", params: { slug: item.data.slug } });
         closeAndReset();
       } else if (item.kind === "trending") {
-        router.push(`/services/${item.data.slug}`);
+        router.push({ pathname: "/services/[slug]", params: { slug: item.data.slug } });
         closeAndReset();
       } else if (item.kind === "recent") {
         if (item.data.resultClicked === "category" && item.data.resultSlug) {
-          router.push(`/services/${item.data.resultSlug}`);
+          router.push({ pathname: "/services/[slug]", params: { slug: item.data.resultSlug } });
           closeAndReset();
         } else if (item.data.resultClicked === "professional" && item.data.resultSlug) {
-          router.push(`/pro/${item.data.resultSlug}`);
+          router.push({ pathname: "/pros/[slug]", params: { slug: item.data.resultSlug } });
           closeAndReset();
         } else {
           // Re-run the saved query

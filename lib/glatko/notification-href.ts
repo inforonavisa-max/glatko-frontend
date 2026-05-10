@@ -25,8 +25,30 @@ export function conversationIdFromNotificationData(
   return "";
 }
 
+/**
+ * Discriminated href union compatible with next-intl `router.push` and
+ * `<Link>` when pathnames are configured. Static routes are bare keys;
+ * parametric routes get the `{ pathname, params }` object form.
+ *
+ * Callers using next-intl `router.push(...)` should cast through the
+ * router's expected param type (next-intl's typed-routes wraps the
+ * intersection with optional query/locale fields):
+ *   router.push(getNotificationHref(n) as Parameters<typeof router.push>[0])
+ */
+export type NotificationHref =
+  | "/dashboard/requests"
+  | "/inbox"
+  | "/pro/dashboard"
+  | "/pro/dashboard/bids"
+  | "/pro/dashboard/profile"
+  | "/pro/dashboard/requests"
+  | "/notifications"
+  | { pathname: "/dashboard/requests/[id]"; params: { id: string } }
+  | { pathname: "/inbox/[conversationId]"; params: { conversationId: string } }
+  | { pathname: "/pro/dashboard/requests/[id]"; params: { id: string } };
+
 /** Locale-prefixed paths for `useRouter` / `Link` from next-intl (no `/${locale}` prefix). */
-export function getNotificationHref(n: NotificationLike): string {
+export function getNotificationHref(n: NotificationLike): NotificationHref {
   const d = n.data ?? undefined;
   const req = requestIdFromNotificationData(d);
   const conv = conversationIdFromNotificationData(d);
@@ -34,12 +56,16 @@ export function getNotificationHref(n: NotificationLike): string {
   switch (n.type) {
     case "new_bid":
     case "status_change":
-      return req ? `/dashboard/requests/${req}` : "/dashboard";
+      return req
+        ? { pathname: "/dashboard/requests/[id]", params: { id: req } }
+        : "/dashboard/requests";
     case "bid_accepted":
     case "bid_rejected":
       return "/pro/dashboard/bids";
     case "message":
-      return conv ? `/inbox/${conv}` : "/inbox";
+      return conv
+        ? { pathname: "/inbox/[conversationId]", params: { conversationId: conv } }
+        : "/inbox";
     case "review":
       return "/pro/dashboard";
     case "verification_approved":
@@ -47,7 +73,9 @@ export function getNotificationHref(n: NotificationLike): string {
     case "verification_rejected":
       return "/pro/dashboard/profile";
     case "new_request_match":
-      return req ? `/pro/dashboard/requests/${req}` : "/pro/dashboard/requests";
+      return req
+        ? { pathname: "/pro/dashboard/requests/[id]", params: { id: req } }
+        : "/pro/dashboard/requests";
     default:
       return "/notifications";
   }

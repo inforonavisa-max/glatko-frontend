@@ -58,7 +58,10 @@ export function BidComparison({ bids, requestId, requestStatus, locale }: Props)
       try {
         const result = await acceptBidAction(bidId, requestId);
         if (result.success && result.conversationId) {
-          router.push(`/inbox/${result.conversationId}`);
+          router.push({
+            pathname: "/inbox/[conversationId]",
+            params: { conversationId: result.conversationId },
+          });
           return;
         }
         if (result.success) {

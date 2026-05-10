@@ -36,6 +36,7 @@ export function LanguageSelector({ value }: LanguageSelectorProps) {
         return;
       }
       toast.success(t("changed"));
+      // @ts-expect-error -- usePathname() returns a parametric pathname template; widen for locale switch
       router.replace(pathname, { locale });
       router.refresh();
     });

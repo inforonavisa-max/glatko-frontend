@@ -170,7 +170,7 @@ export function NotificationBell({ userId }: NotificationBellProps) {
       setUnreadCount((prev) => Math.max(0, prev - 1));
     }
     setOpen(false);
-    router.push(getNotificationHref(n));
+    router.push(getNotificationHref(n) as Parameters<typeof router.push>[0]);
   }
 
   return (

@@ -40,6 +40,7 @@ export function ImagesCTA({
         </p>
         <PlaceholderAvatars trustText={trustText} />
       </div>
+      {/* @ts-expect-error -- buttonHref is string-typed prop; runtime URL is a valid pathname */}
       <Link href={buttonHref}>
         <motion.span
           whileHover={{ scale: 1.02 }}

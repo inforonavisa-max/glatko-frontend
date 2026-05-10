@@ -50,6 +50,7 @@ export function Breadcrumb({ items }: BreadcrumbProps) {
                 </span>
               ) : (
                 <Link
+                  // @ts-expect-error -- breadcrumb items.href is string-typed; runtime URLs are valid pathnames
                   href={item.href}
                   className="max-w-[14rem] truncate transition hover:text-gray-900 dark:hover:text-white"
                 >

@@ -67,7 +67,7 @@ export function ReviewPending({ requestTitle }: ReviewPendingProps) {
       </motion.div>
 
       <Link
-        href="/dashboard"
+        href="/dashboard/requests"
         className="mt-8 inline-flex items-center justify-center rounded-xl border border-gray-200 px-6 py-3 text-sm font-medium text-gray-600 transition-all hover:bg-gray-50 dark:border-white/[0.1] dark:text-white/60 dark:hover:bg-white/[0.05]"
       >
         {t("review.pending.backToDashboard")}

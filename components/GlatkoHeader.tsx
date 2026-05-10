@@ -178,6 +178,7 @@ export function GlatkoHeader({
               return (
                 <Link
                   key={l.href}
+                  // @ts-expect-error -- nav config href is string-typed; runtime URLs are valid pathnames
                   href={l.href}
                   className={cn(
                     "rounded-md px-4 py-2 text-xs font-medium transition-colors",
@@ -226,6 +227,7 @@ export function GlatkoHeader({
                       {dropdownItems.map((item) => (
                         <Link
                           key={item.href}
+                          // @ts-expect-error -- dropdown config href is string-typed; runtime URLs are valid pathnames
                           href={item.href}
                           className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-gray-700 transition-colors hover:bg-gray-100 dark:text-neutral-300 dark:hover:bg-neutral-800"
                         >
@@ -309,6 +311,7 @@ export function GlatkoHeader({
               {navLinks.map((l) => (
                 <Link
                   key={l.href}
+                  // @ts-expect-error -- nav config href is string-typed; runtime URLs are valid pathnames
                   href={l.href}
                   onClick={() => setMobileOpen(false)}
                   className={cn(

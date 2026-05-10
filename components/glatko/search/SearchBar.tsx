@@ -69,7 +69,11 @@ export function SearchBar({ locale, defaultValue = "", onSearch, fetchSuggestion
     if (onSearch) {
       onSearch(value);
     } else {
-      router.push(`/providers?q=${encodeURIComponent(value)}`);
+      // /providers retired (G-CAT-3) → /services with openSearch + query.
+      router.push({
+        pathname: "/services",
+        query: { openSearch: "1", q: value },
+      });
     }
   }
 
