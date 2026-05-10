@@ -18,6 +18,7 @@ const nextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "cjqappdfyxgytdyeytwv.supabase.co" },
       { protocol: "https", hostname: "images.unsplash.com" },
+      { protocol: "https", hostname: "cdn.sanity.io" },
     ],
     formats: ["image/avif", "image/webp"],
     // Compensate for Supabase Storage's `cache-control: no-cache` default —
