@@ -22,8 +22,9 @@ export function hreflangForLocale(locale: string): string {
 
 /**
  * Resolve the locale-specific URL path for a given canonical href via the
- * next-intl `pathnames` map. Falls back to the literal href when no entry
- * exists. The href must be a key in the routing pathnames table.
+ * next-intl `pathnames` map. The returned path already includes the locale
+ * prefix (e.g. "/tr/profesyonel-ol"), so callers should NOT prepend the
+ * locale a second time.
  */
 function localizePath(locale: string, href: string): string {
   // getPathname is typed against the pathnames map; we widen here so callers
@@ -51,22 +52,12 @@ export function buildAlternates(locale: string, pathSuffix: string) {
 
   const languages: Record<string, string> = {};
   for (const l of SEO_LOCALES) {
-    const localized = localizePath(l, canonicalHref);
-    // Root is special — getPathname returns "/" and we don't want a trailing
-    // slash like "/tr/" in alternates.
-    languages[hreflangForLocale(l)] =
-      localized === "/" ? `${SEO_BASE}/${l}` : `${SEO_BASE}/${l}${localized}`;
+    languages[hreflangForLocale(l)] = `${SEO_BASE}${localizePath(l, canonicalHref)}`;
   }
-  const xDefault = localizePath("en", canonicalHref);
-  languages["x-default"] =
-    xDefault === "/" ? `${SEO_BASE}/en` : `${SEO_BASE}/en${xDefault}`;
+  languages["x-default"] = `${SEO_BASE}${localizePath("en", canonicalHref)}`;
 
-  const localizedForCurrent = localizePath(locale, canonicalHref);
   return {
-    canonical:
-      localizedForCurrent === "/"
-        ? `${SEO_BASE}/${locale}`
-        : `${SEO_BASE}/${locale}${localizedForCurrent}`,
+    canonical: `${SEO_BASE}${localizePath(locale, canonicalHref)}`,
     languages,
   };
 }

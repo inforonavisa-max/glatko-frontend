@@ -21,8 +21,9 @@ const LOCALES = SEO_LOCALES;
 type LocaleTuple = (typeof routing.locales)[number];
 
 /**
- * Localize a canonical href via next-intl pathnames. Static href is widened
- * to the routing keys; sitemap callers pass paths we know exist in routing.
+ * Localize a canonical href via next-intl pathnames. The returned path
+ * already includes the locale prefix (e.g. "/tr/profesyonel-ol"), so
+ * callers should NOT prepend the locale separately.
  */
 function localized(locale: LocaleTuple, href: string): string {
   return getPathname({
@@ -34,6 +35,7 @@ function localized(locale: LocaleTuple, href: string): string {
 /**
  * Localize a parametric route (e.g. /services/[slug]) by passing pathname +
  * params. Used for category and pro pages where the slug is dynamic.
+ * Returns the full locale-prefixed path.
  */
 function localizedWithParams(
   locale: LocaleTuple,
@@ -46,18 +48,12 @@ function localizedWithParams(
   });
 }
 
-function localeAbsolute(locale: string, localePath: string): string {
-  return localePath === "/"
-    ? `${SEO_BASE}/${locale}`
-    : `${SEO_BASE}/${locale}${localePath}`;
-}
-
 function makeAlternatesForHref(href: string): Record<string, string> {
   const entries: [string, string][] = LOCALES.map((l) => [
     hreflangForLocale(l),
-    localeAbsolute(l, localized(l as LocaleTuple, href)),
+    `${SEO_BASE}${localized(l as LocaleTuple, href)}`,
   ]);
-  entries.push(["x-default", localeAbsolute("en", localized("en", href))]);
+  entries.push(["x-default", `${SEO_BASE}${localized("en", href)}`]);
   return Object.fromEntries(entries);
 }
 
@@ -67,11 +63,11 @@ function makeAlternatesForParams(
 ): Record<string, string> {
   const entries: [string, string][] = LOCALES.map((l) => [
     hreflangForLocale(l),
-    localeAbsolute(l, localizedWithParams(l as LocaleTuple, pathname, params)),
+    `${SEO_BASE}${localizedWithParams(l as LocaleTuple, pathname, params)}`,
   ]);
   entries.push([
     "x-default",
-    localeAbsolute("en", localizedWithParams("en", pathname, params)),
+    `${SEO_BASE}${localizedWithParams("en", pathname, params)}`,
   ]);
   return Object.fromEntries(entries);
 }
@@ -113,9 +109,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   for (const page of STATIC_PAGES) {
     for (const locale of LOCALES) {
-      const localizedPath = localized(locale as LocaleTuple, page.path);
       routes.push({
-        url: localeAbsolute(locale, localizedPath),
+        url: `${SEO_BASE}${localized(locale as LocaleTuple, page.path)}`,
         lastModified: buildTime,
         changeFrequency: page.changeFrequency,
         priority: page.priority,
@@ -133,13 +128,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // priority hint reflects the catalog hierarchy.
     const priority = category.parent_id === null ? 0.8 : 0.7;
     for (const locale of LOCALES) {
-      const localizedPath = localizedWithParams(
-        locale as LocaleTuple,
-        "/services/[slug]",
-        params,
-      );
       routes.push({
-        url: localeAbsolute(locale, localizedPath),
+        url: `${SEO_BASE}${localizedWithParams(locale as LocaleTuple, "/services/[slug]", params)}`,
         lastModified,
         changeFrequency: "weekly",
         priority,
@@ -156,13 +146,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       ? new Date(pro.updated_at)
       : buildTime;
     for (const locale of LOCALES) {
-      const localizedPath = localizedWithParams(
-        locale as LocaleTuple,
-        "/pros/[slug]",
-        params,
-      );
       routes.push({
-        url: localeAbsolute(locale, localizedPath),
+        url: `${SEO_BASE}${localizedWithParams(locale as LocaleTuple, "/pros/[slug]", params)}`,
         lastModified,
         changeFrequency: "weekly",
         priority: 0.7,
@@ -184,13 +169,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       ? new Date(post.publishedAt)
       : buildTime;
     for (const locale of LOCALES) {
-      const localizedPath = localizedWithParams(
-        locale as LocaleTuple,
-        "/blog/[slug]",
-        params,
-      );
       routes.push({
-        url: localeAbsolute(locale, localizedPath),
+        url: `${SEO_BASE}${localizedWithParams(locale as LocaleTuple, "/blog/[slug]", params)}`,
         lastModified,
         changeFrequency: "weekly",
         priority: 0.6,
