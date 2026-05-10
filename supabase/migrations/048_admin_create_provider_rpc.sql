@@ -13,6 +13,19 @@
 -- DO NOT re-apply once it's in glatko-prod (CREATE OR REPLACE makes the
 -- function idempotent; the index uses IF NOT EXISTS).
 --
+-- ── SECURITY ─────────────────────────────────────────────────────────────
+--
+-- This RPC uses SECURITY DEFINER to perform elevated writes (auth.users,
+-- profiles, glatko_professional_profiles, glatko_pro_services). Therefore
+-- EXECUTE is granted ONLY to service_role. The app-layer requireAdmin()
+-- gate in lib/actions/admin/createProvider.ts is the user-facing access
+-- control; this RPC is invoked via createAdminClient() which
+-- authenticates as service_role.
+--
+-- DO NOT grant EXECUTE to authenticated or anon — that would allow any
+-- logged-in user to bypass requireAdmin() by calling the RPC directly
+-- via PostgREST and write to other users' profiles.
+--
 -- ── Concurrency safety: founding_provider_number race ────────────────────
 --
 -- If two admins promote concurrently with is_founding_provider=true, both
@@ -218,9 +231,10 @@ EXCEPTION
 END;
 $function$;
 
--- 3. Restrict execute to authenticated callers; the server action also
--- enforces requireAdmin() at the app layer. SECURITY DEFINER means the
--- function runs as its owner (the migration runner), so it bypasses RLS;
--- the auth gate at the app layer is the one that matters.
-REVOKE ALL ON FUNCTION public.glatko_admin_create_provider(jsonb) FROM PUBLIC;
-GRANT EXECUTE ON FUNCTION public.glatko_admin_create_provider(jsonb) TO authenticated;
+-- 3. Restrict execute to service_role only (see SECURITY note in the
+-- header). createAdminClient() in the app layer authenticates as
+-- service_role, so the server action keeps working; any other caller
+-- (anon, regular authenticated user via PostgREST) gets
+-- "permission denied for function".
+REVOKE ALL ON FUNCTION public.glatko_admin_create_provider(jsonb) FROM PUBLIC, anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.glatko_admin_create_provider(jsonb) TO service_role;
