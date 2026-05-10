@@ -148,14 +148,23 @@ export function ProviderCreateForm(props: Props) {
   }
 
   function buildPayload(): unknown {
+    // Admin-friendly normalization: accept loosely-formatted input and
+    // canonicalize for the schema/DB. Phone strips whitespace/hyphens/parens
+    // ("+382 69 868 069" → "+38269868069"); location_city falls back to a
+    // slug of city_display when admin only filled the display name.
+    const normalizedPhone = state.phone.replace(/[\s\-().]/g, "");
+    const normalizedLocationCity = state.location_city.trim()
+      ? businessNameToSlug(state.location_city)
+      : businessNameToSlug(state.city_display);
+
     const base = {
       full_name: state.full_name,
-      phone: state.phone,
+      phone: normalizedPhone,
       city_display: state.city_display,
       preferred_locale: state.preferred_locale,
       business_name: state.business_name,
       slug: state.slug,
-      location_city: state.location_city,
+      location_city: normalizedLocationCity,
       bio: state.bio,
       hourly_rate_min: state.hourly_rate_min ? Number(state.hourly_rate_min) : undefined,
       hourly_rate_max: state.hourly_rate_max ? Number(state.hourly_rate_max) : undefined,
@@ -221,7 +230,6 @@ export function ProviderCreateForm(props: Props) {
     !state.slug ||
     !state.phone ||
     !state.city_display ||
-    !state.location_city ||
     state.services.length === 0;
 
   // Photo uploads need a real target_user_id. In create-mode the UID
