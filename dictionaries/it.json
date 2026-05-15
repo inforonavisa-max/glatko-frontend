@@ -78,7 +78,11 @@
       "childcare-family": "Bambini e famiglia",
       "moving-transport": "Trasloco e trasporto",
       "automotive": "Servizi auto",
-      "airbnb-management": "Gestione Airbnb"
+      "airbnb-management": "Gestione Airbnb",
+      "garden-pool": "Giardino e Piscina",
+      "events-wedding": "Eventi & Matrimoni",
+      "photo-video": "Foto e Video",
+      "health-wellness": "Salute e Benessere"
     },
     "view": "Vedi servizi",
     "allHeading": "Tutti i servizi",

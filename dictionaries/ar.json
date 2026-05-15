@@ -78,7 +78,11 @@
       "childcare-family": "رعاية الأطفال",
       "moving-transport": "نقل وانتقال",
       "automotive": "خدمات السيارات",
-      "airbnb-management": "إدارة Airbnb"
+      "airbnb-management": "إدارة Airbnb",
+      "garden-pool": "الحديقة والمسبح",
+      "events-wedding": "الفعاليات والأعراس",
+      "photo-video": "تصوير الصور والفيديو",
+      "health-wellness": "الصحة والعافية"
     },
     "view": "عرض الخدمات",
     "allHeading": "جميع الخدمات",

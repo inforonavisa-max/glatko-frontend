@@ -78,7 +78,11 @@
       "childcare-family": "Childcare & Family",
       "moving-transport": "Moving & Transport",
       "automotive": "Automotive",
-      "airbnb-management": "Airbnb Management"
+      "airbnb-management": "Airbnb Management",
+      "garden-pool": "Garden & Pool",
+      "events-wedding": "Events & Wedding",
+      "photo-video": "Photo & Video",
+      "health-wellness": "Health & Wellness"
     },
     "view": "View services",
     "allHeading": "All services",
