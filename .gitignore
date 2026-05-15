@@ -44,3 +44,6 @@ next-env.d.ts
 
 # supabase CLI link metadata (per-developer, not source-of-truth)
 supabase/.temp/
+
+# Ads & analytics credentials (never commit)
+docs/ads-credentials.md
