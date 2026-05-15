@@ -6,6 +6,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import Script from "next/script";
+import { GoogleTagManager } from "@next/third-parties/google";
 
 // BCP 47 lang tag for the <html lang> attribute. Decoupled from URL prefix
 // so URLs stay short (/me/, /sr/) but crawlers see the explicit script subtag.
@@ -117,6 +119,27 @@ export default async function RootLayout({
           rel="dns-prefetch"
           href="https://cjqappdfyxgytdyeytwv.supabase.co"
         />
+        {/* Consent Mode v2 defaults — must run before GTM loads so denied
+            state is honored. Cookie banner (CookieConsent component) updates
+            consent to granted on user accept. See G-ADS-2. */}
+        <Script id="gtm-consent-default" strategy="beforeInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('consent', 'default', {
+              'ad_storage': 'denied',
+              'ad_user_data': 'denied',
+              'ad_personalization': 'denied',
+              'analytics_storage': 'denied',
+              'functionality_storage': 'denied',
+              'personalization_storage': 'denied',
+              'security_storage': 'granted',
+              'wait_for_update': 500
+            });
+            gtag('set', 'ads_data_redaction', true);
+            gtag('set', 'url_passthrough', true);
+          `}
+        </Script>
       </head>
       <body
         className={`${inter.variable} ${cormorant.variable} font-sans antialiased`}
@@ -132,6 +155,12 @@ export default async function RootLayout({
           <Analytics />
           <SpeedInsights />
         </ThemeProvider>
+        {/* GTM placed outside ThemeProvider — it's a server-rendered <script>
+            wrapper, has no theme/state dependency. Env-gated so dev/test
+            builds without NEXT_PUBLIC_GTM_ID emit no GTM tag. See G-ADS-2. */}
+        {process.env.NEXT_PUBLIC_GTM_ID && (
+          <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID} />
+        )}
       </body>
     </html>
   );

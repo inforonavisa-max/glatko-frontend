@@ -7,16 +7,48 @@ import { Link } from "@/i18n/navigation";
 
 const CONSENT_KEY = "glatko-cookie-consent";
 
+// Push a Consent Mode v2 update to GTM dataLayer. Safe to call even if GTM
+// hasn't loaded yet — dataLayer is a plain array and GTM will replay it on
+// init. Mirrors the default block in app/layout.tsx (gtm-consent-default
+// inline script) so every key set there is updated here.
+// (Window.dataLayer is declared globally by @next/third-parties.)
+function updateConsent(granted: boolean) {
+  if (typeof window === "undefined") return;
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push([
+    "consent",
+    "update",
+    {
+      ad_storage: granted ? "granted" : "denied",
+      ad_user_data: granted ? "granted" : "denied",
+      ad_personalization: granted ? "granted" : "denied",
+      analytics_storage: granted ? "granted" : "denied",
+      functionality_storage: granted ? "granted" : "denied",
+      personalization_storage: granted ? "granted" : "denied",
+    },
+  ]);
+}
+
 export function CookieConsent() {
   const t = useTranslations();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const consent = localStorage.getItem(CONSENT_KEY);
-    if (!consent) setVisible(true);
+    if (consent === "accepted") {
+      // Persist consent on every page load so GTM denied-default flips back
+      // to granted before consent-gated tags fire. G-ADS-5 will extend this
+      // to handle granular states ("rejected", per-category, expired, etc.).
+      updateConsent(true);
+    } else {
+      // Any non-"accepted" value (including null / future "expired") shows
+      // the banner — defensive default until granular UI lands.
+      setVisible(true);
+    }
   }, []);
 
   function accept() {
+    updateConsent(true);
     localStorage.setItem(CONSENT_KEY, "accepted");
     setVisible(false);
   }
