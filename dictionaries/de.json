@@ -78,7 +78,11 @@
       "childcare-family": "Kinderbetreuung",
       "moving-transport": "Umzug & Transport",
       "automotive": "Kfz-Service",
-      "airbnb-management": "Airbnb-Verwaltung"
+      "airbnb-management": "Airbnb-Verwaltung",
+      "garden-pool": "Garten & Pool",
+      "events-wedding": "Events & Hochzeit",
+      "photo-video": "Foto & Video",
+      "health-wellness": "Gesundheit & Wellness"
     },
     "view": "Dienste ansehen",
     "allHeading": "Alle Dienstleistungen",

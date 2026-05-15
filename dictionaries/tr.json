@@ -78,7 +78,11 @@
       "childcare-family": "Çocuk & Aile",
       "moving-transport": "Nakliye & Transport",
       "automotive": "Otomotiv",
-      "airbnb-management": "Airbnb İşletme"
+      "airbnb-management": "Airbnb İşletme",
+      "garden-pool": "Bahçe & Havuz",
+      "events-wedding": "Etkinlik & Düğün",
+      "photo-video": "Foto & Video",
+      "health-wellness": "Sağlık & Wellness"
     },
     "view": "Hizmetleri gör",
     "allHeading": "Tüm hizmetler",

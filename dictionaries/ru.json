@@ -78,7 +78,11 @@
       "childcare-family": "Дети и семья",
       "moving-transport": "Переезд и транспорт",
       "automotive": "Автосервис",
-      "airbnb-management": "Управление Airbnb"
+      "airbnb-management": "Управление Airbnb",
+      "garden-pool": "Сад и бассейн",
+      "events-wedding": "События и свадьбы",
+      "photo-video": "Фото и видео",
+      "health-wellness": "Здоровье и велнес"
     },
     "view": "Смотреть услуги",
     "allHeading": "Все услуги",
