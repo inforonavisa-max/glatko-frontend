@@ -8,6 +8,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
 import { GoogleTagManager } from "@next/third-parties/google";
+import { MetaPixel } from "@/components/glatko/analytics/MetaPixel";
 
 // BCP 47 lang tag for the <html lang> attribute. Decoupled from URL prefix
 // so URLs stay short (/me/, /sr/) but crawlers see the explicit script subtag.
@@ -184,6 +185,12 @@ export default async function RootLayout({
             builds without NEXT_PUBLIC_GTM_ID emit no GTM tag. See G-ADS-2. */}
         {process.env.NEXT_PUBLIC_GTM_ID && (
           <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID} />
+        )}
+        {/* Meta Pixel skeleton — env-gated. When NEXT_PUBLIC_META_PIXEL_ID
+            is empty, MetaPixel renders nothing (no fbq, no script load).
+            See G-ADS-4a. */}
+        {process.env.NEXT_PUBLIC_META_PIXEL_ID && (
+          <MetaPixel pixelId={process.env.NEXT_PUBLIC_META_PIXEL_ID} />
         )}
       </body>
     </html>
