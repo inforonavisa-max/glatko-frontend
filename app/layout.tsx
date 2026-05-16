@@ -140,6 +140,30 @@ export default async function RootLayout({
             gtag('set', 'url_passthrough', true);
           `}
         </Script>
+        {/* Consent mount restore — sync localStorage check before GTM init,
+            BEFORE React hydration. Returning visitors (LS=accepted) get
+            consent flipped to granted within the wait_for_update window so
+            GA4 tracker's first page_view collect is sent with gcs=G111
+            instead of denied. See G-ADS-2.1. */}
+        <Script id="gtm-consent-mount-restore" strategy="beforeInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){window.dataLayer.push(arguments);}
+            try {
+              if (typeof localStorage !== 'undefined' &&
+                  localStorage.getItem('glatko-cookie-consent') === 'accepted') {
+                gtag('consent', 'update', {
+                  'ad_storage': 'granted',
+                  'ad_user_data': 'granted',
+                  'ad_personalization': 'granted',
+                  'analytics_storage': 'granted',
+                  'functionality_storage': 'granted',
+                  'personalization_storage': 'granted'
+                });
+              }
+            } catch(e) {}
+          `}
+        </Script>
       </head>
       <body
         className={`${inter.variable} ${cormorant.variable} font-sans antialiased`}
