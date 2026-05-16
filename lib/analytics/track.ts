@@ -91,3 +91,109 @@ export function trackEvent(
     console.debug("[trackEvent]", eventName, fullParams);
   }
 }
+
+// === Meta Pixel + CAPI paralel send (G-ADS-4a) ===
+
+declare global {
+  interface Window {
+    fbq?: (...args: unknown[]) => void;
+  }
+}
+
+/**
+ * Generate UUID for event deduplication (Pixel + CAPI same event_id).
+ * Browser crypto.randomUUID() supported in modern browsers + Node 19+.
+ */
+function generateEventId(): string {
+  if (typeof crypto !== "undefined" && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  // Fallback for very old browsers
+  return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+
+/**
+ * Same as trackEvent() but also fires:
+ * - Meta Pixel (fbq) browser-side
+ * - Meta CAPI (server-side via /api/meta/capi)
+ *
+ * Use this for conversion events that should be sent to BOTH GA4 and Meta.
+ * Pixel + CAPI share event_id for deduplication.
+ *
+ * Skeleton-mode safe: if NEXT_PUBLIC_META_PIXEL_ID env is empty, Meta parts
+ * are no-op and only GA4 fires. This lets the function ship before Meta
+ * Business Manager setup is complete (G-ADS-4b will populate env + upgrade
+ * existing trackEvent() callsites to trackEventWithMeta).
+ */
+export function trackEventWithMeta(
+  eventName: GlatkoEventName,
+  params: GlatkoEventParams = {},
+): void {
+  // Always fire GA4 (existing behavior)
+  trackEvent(eventName, params);
+
+  if (typeof window === "undefined") return;
+
+  // Skip Meta if Pixel ID missing (skeleton mode)
+  const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
+  if (!pixelId) return;
+
+  // Map Glatko event to Meta standard event name
+  const metaEventMap: Record<GlatkoEventName, string> = {
+    customer_signup: "CompleteRegistration",
+    customer_job_posted: "Lead",
+    customer_contact_clicked: "Contact",
+    customer_bid_accepted: "Purchase",
+    customer_message_sent: "SubmitApplication",
+  };
+  const metaEventName = metaEventMap[eventName];
+  if (!metaEventName) return;
+
+  const eventId = generateEventId();
+
+  // 1. Browser-side Pixel
+  if (typeof window.fbq === "function") {
+    window.fbq(
+      "track",
+      metaEventName,
+      {
+        currency: params.currency ?? "EUR",
+        value: params.value ?? 0,
+        content_category: params.job_category,
+        content_ids: params.job_id ? [params.job_id] : undefined,
+      },
+      { eventID: eventId },
+    );
+  }
+
+  // 2. Server-side CAPI (fire-and-forget, don't block UI)
+  void fetch("/api/meta/capi", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      event_name: metaEventName,
+      event_id: eventId,
+      event_source_url: window.location.href,
+      custom_data: {
+        currency: params.currency ?? "EUR",
+        value: params.value ?? 0,
+        content_category: params.job_category,
+        content_ids: params.job_id ? [params.job_id] : undefined,
+        job_id: params.job_id,
+        job_category: params.job_category,
+        bid_id: params.bid_id,
+        provider_id: params.provider_id,
+        contact_channel: params.contact_channel,
+      },
+    }),
+  }).catch(() => {
+    // CAPI failure is non-blocking — Pixel already fired browser-side
+  });
+
+  if (process.env.NODE_ENV === "development") {
+    // eslint-disable-next-line no-console
+    console.debug("[trackEventWithMeta]", eventName, "→", metaEventName, {
+      eventId,
+    });
+  }
+}

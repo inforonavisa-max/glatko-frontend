@@ -27,6 +27,14 @@ function updateConsent(granted: boolean) {
       personalization_storage: granted ? "granted" : "denied",
     },
   ]);
+
+  // Meta Pixel consent (G-ADS-4a). No-op when fbq is not loaded
+  // (skeleton mode — NEXT_PUBLIC_META_PIXEL_ID env empty → MetaPixel
+  // component renders nothing, fbq stays undefined). Window.fbq global
+  // is declared in lib/analytics/track.ts.
+  if (typeof window.fbq === "function") {
+    window.fbq("consent", granted ? "grant" : "revoke");
+  }
 }
 
 export function CookieConsent() {
