@@ -34,15 +34,13 @@ export function CookieConsent() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    // Consent mount restore for returning visitors is handled SYNCHRONOUSLY
+    // by the inline <Script id="gtm-consent-mount-restore" strategy=
+    // "beforeInteractive"> in app/layout.tsx — before React hydration, before
+    // GTM init. See G-ADS-2.1. This effect now only controls banner visibility
+    // (any non-"accepted" value shows the banner).
     const consent = localStorage.getItem(CONSENT_KEY);
-    if (consent === "accepted") {
-      // Persist consent on every page load so GTM denied-default flips back
-      // to granted before consent-gated tags fire. G-ADS-5 will extend this
-      // to handle granular states ("rejected", per-category, expired, etc.).
-      updateConsent(true);
-    } else {
-      // Any non-"accepted" value (including null / future "expired") shows
-      // the banner — defensive default until granular UI lands.
+    if (consent !== "accepted") {
       setVisible(true);
     }
   }, []);
