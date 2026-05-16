@@ -17,6 +17,7 @@ import {
   confirmQuoteCompletion,
 } from "@/app/[locale]/messages/actions";
 import { ReviewModal } from "@/components/glatko/customer/ReviewModal";
+import { trackEvent } from "@/lib/analytics/track";
 
 interface ThreadMessage {
   id: string;
@@ -69,7 +70,7 @@ export function ChatBox({
   quote,
   isProUser,
   isCustomerUser,
-  counterpartId: _counterpartId,
+  counterpartId,
 }: Props) {
   const t = useTranslations();
   const supabase = createClient();
@@ -91,8 +92,6 @@ export function ChatBox({
   const [confirming, setConfirming] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);
   const [completionError, setCompletionError] = useState<string | null>(null);
-
-  void _counterpartId;
 
   const containerRef = useRef<HTMLDivElement>(null);
   const firstScrollDone = useRef(false);
@@ -203,6 +202,16 @@ export function ChatBox({
         setError(result.error ?? t("messaging.sendError"));
         setBody(trimmed);
       } else {
+        // G-ADS-3: customer_message_sent — only fire for customer-side senders.
+        // isCustomerUser is page-level role flag from messages/[id]/page.tsx.
+        // For provider mesage sends we intentionally skip; provider-side
+        // event tracking is out of G-ADS-3 scope.
+        if (isCustomerUser) {
+          trackEvent("customer_message_sent", {
+            thread_id: threadId,
+            provider_id: counterpartId ?? undefined,
+          });
+        }
         // Replace temp with real id (Realtime will also deliver but dedupe handles it)
         setMessages((prev) =>
           prev.map((m) =>

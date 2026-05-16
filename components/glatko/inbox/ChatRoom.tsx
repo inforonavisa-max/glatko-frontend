@@ -10,6 +10,7 @@ import { sendMessageAction } from "@/app/[locale]/inbox/[conversationId]/actions
 import { ChatHeader } from "./ChatHeader";
 import { MessageBubble } from "./MessageBubble";
 import { ChatInput } from "./ChatInput";
+import { trackEvent } from "@/lib/analytics/track";
 
 interface Message {
   id: string;
@@ -37,6 +38,12 @@ interface ChatRoomProps {
   };
   requestTitle: string | null;
   requestId: string | null;
+  /**
+   * True when currentUser is the customer side of this conversation.
+   * Used by G-ADS-3 to gate `customer_message_sent` events so we don't
+   * pollute the customer funnel with provider-side sends.
+   */
+  isCustomer: boolean;
 }
 
 function getDateLabel(
@@ -77,6 +84,7 @@ export function ChatRoom({
   otherUser,
   requestTitle,
   requestId,
+  isCustomer,
 }: ChatRoomProps) {
   const t = useTranslations();
   const supabase = useMemo(() => createClient(), []);
@@ -144,6 +152,15 @@ export function ChatRoom({
       const result = await sendMessageAction(conversationId, content);
       if (!result.success) {
         toast.error(t("chat.sendFailed"));
+        return;
+      }
+      // G-ADS-3: customer_message_sent — only for customer-side senders.
+      // Provider-side events are out of G-ADS-3 scope.
+      if (isCustomer) {
+        trackEvent("customer_message_sent", {
+          conversation_id: conversationId,
+          provider_id: otherUser.id,
+        });
       }
     } finally {
       setSending(false);
