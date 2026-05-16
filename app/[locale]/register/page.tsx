@@ -8,6 +8,7 @@ import { Loader2, CheckCircle2 } from "lucide-react";
 import { createClient } from "@/supabase/browser";
 import { AuthBrandPanel } from "@/components/glatko/auth/AuthBrandPanel";
 import { cn } from "@/lib/utils";
+import { trackEvent } from "@/lib/analytics/track";
 
 const inputCls = cn(
   "block w-full rounded-xl border border-gray-200 dark:border-white/10",
@@ -44,7 +45,15 @@ export default function RegisterPage() {
         options: { data: { full_name: fullName }, emailRedirectTo: `${baseUrl}/auth/callback?next=/` },
       });
       if (authError) throw authError;
-      if (data.user) { await supabase.from("profiles").upsert({ id: data.user.id, full_name: fullName }); }
+      if (data.user) {
+        await supabase.from("profiles").upsert({ id: data.user.id, full_name: fullName });
+        // G-ADS-3: customer signup conversion event (fired only on success path,
+        // after profile upsert; safe-fail if gtag unavailable).
+        trackEvent("customer_signup", {
+          customer_user_id: data.user.id,
+          signup_method: "email",
+        });
+      }
       setSuccess(true);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : t("common.error"));
