@@ -4,12 +4,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import {
-  CardBody,
-  CardContainer,
-  CardItem,
-} from "@/components/aceternity/3d-card";
-import { FocusCards, type FocusCard } from "@/components/aceternity/focus-cards";
+import type { FocusCard } from "@/components/aceternity/focus-cards";
 import type { TooltipItem } from "@/components/aceternity/animated-tooltip";
 import { resolveIcon } from "@/lib/utils/categoryIcon";
 import { getSeasonalBadge } from "@/lib/utils/seasonalBadge";
@@ -55,25 +50,24 @@ export function CategoryGrid({ cards }: { cards: P0CategoryCard[] }) {
   const t = useTranslations();
 
   return (
-    <FocusCards<P0CategoryCard>
-      cards={cards}
-      renderCard={(card, index, hovered, setHovered) => {
-        const isOtherHovered = hovered !== null && hovered !== index;
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 w-full">
+      {cards.map((card, index) => {
         const seasonal = getSeasonalBadge({
           seasonal: card.seasonal,
           active_months: card.active_months,
         });
         const Icon = resolveIcon(card.icon);
-        const proItems: TooltipItem[] = card.pro_count > 0
-          ? [
-              {
-                id: card.id,
-                name: t("pros.activeCount", { count: card.pro_count }),
-                designation: t("pros.headline"),
-                image: PLACEHOLDER_AVATAR,
-              },
-            ]
-          : [];
+        const proItems: TooltipItem[] =
+          card.pro_count > 0
+            ? [
+                {
+                  id: card.id,
+                  name: t("pros.activeCount", { count: card.pro_count }),
+                  designation: t("pros.headline"),
+                  image: PLACEHOLDER_AVATAR,
+                },
+              ]
+            : [];
 
         return (
           <Link
@@ -85,96 +79,73 @@ export function CategoryGrid({ cards }: { cards: P0CategoryCard[] }) {
               "motion-reduce:transition-none",
             )}
           >
-            <CardContainer
-              containerClassName="!p-0 w-full motion-reduce:[transform:none]"
-              className="w-full motion-reduce:[transform:none] motion-reduce:transition-none"
-            >
-              <CardBody className="relative w-full">
-                <div
-                  onMouseEnter={() => setHovered(index)}
-                  onMouseLeave={() => setHovered(null)}
-                  className={cn(
-                    "relative overflow-hidden rounded-2xl bg-gray-100 dark:bg-neutral-900 h-72 md:h-80 w-full",
-                    "transition-[filter,transform] duration-300 ease-out",
-                    "motion-reduce:transition-none",
-                    isOtherHovered &&
-                      "blur-sm scale-[0.98] motion-reduce:blur-none motion-reduce:scale-100",
-                  )}
-                >
-                  <CardItem translateZ={40} className="absolute inset-0">
-                    <Image
-                      src={card.src}
-                      alt={card.title}
-                      fill
-                      sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                      className="object-cover"
-                      priority={index < 4}
-                    />
-                  </CardItem>
+            <div className="relative w-full overflow-hidden rounded-2xl bg-gray-100 dark:bg-neutral-900 h-72 md:h-80">
+              <Image
+                src={card.src}
+                alt={card.title}
+                fill
+                sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                className={cn(
+                  "object-cover will-change-transform",
+                  "transition-transform duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)]",
+                  "[@media(hover:hover)]:group-hover:scale-[1.05]",
+                  "motion-reduce:transition-none motion-reduce:[transform:none]",
+                )}
+                priority={index < 4}
+              />
 
-                  {/* Bottom gradient + content overlay */}
-                  <CardItem
-                    translateZ={60}
-                    className="absolute inset-x-0 bottom-0 z-10 p-5 bg-gradient-to-t from-black/85 via-black/55 to-transparent"
-                  >
-                    <div className="flex items-center gap-2.5 mb-2">
-                      <Icon className="h-5 w-5 text-teal-300 shrink-0" aria-hidden />
-                      <h3 className="text-white font-serif text-lg sm:text-xl font-semibold leading-tight">
-                        {card.title}
-                      </h3>
-                    </div>
-                    {card.subs.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 mb-3">
-                        {card.subs.slice(0, 3).map((sub) => (
-                          <span
-                            key={sub.slug}
-                            className="rounded-full bg-white/15 backdrop-blur-sm px-2.5 py-0.5 text-[11px] font-medium text-white/90"
-                          >
-                            {sub.label}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-teal-300">
-                      {t("categories.view")} →
-                    </span>
-                  </CardItem>
-
-                  {/* Seasonal badge — top-right */}
-                  {seasonal && (
-                    <CardItem
-                      translateZ={80}
-                      className="absolute top-3 right-3 z-20"
-                    >
-                      <HoverBorderGradient
-                        as="div"
-                        containerClassName="text-[11px]"
-                        className="!px-3 !py-1 text-[11px] font-semibold whitespace-nowrap"
-                        aria-label={t(`seasonal.${seasonal.status}`)}
-                      >
-                        <span aria-hidden>{seasonal.emoji}</span>
-                        <span className="ml-1.5">
-                          {t(`seasonal.${seasonal.status}`)}
-                        </span>
-                      </HoverBorderGradient>
-                    </CardItem>
-                  )}
-
-                  {/* Pro count tooltip — top-left */}
-                  {proItems.length > 0 && (
-                    <CardItem
-                      translateZ={70}
-                      className="absolute top-3 left-3 z-20 flex items-center"
-                    >
-                      <AnimatedTooltip items={proItems} />
-                    </CardItem>
-                  )}
+              {/* Bottom gradient + content overlay */}
+              <div className="absolute inset-x-0 bottom-0 z-10 p-5 bg-gradient-to-t from-black/85 via-black/45 to-black/10">
+                <div className="flex items-center gap-2.5 mb-2">
+                  <Icon className="h-5 w-5 text-teal-300 shrink-0" aria-hidden />
+                  <h3 className="text-white font-serif text-lg sm:text-xl font-bold leading-tight tracking-tight drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]">
+                    {card.title}
+                  </h3>
                 </div>
-              </CardBody>
-            </CardContainer>
+                {card.subs.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 mb-3">
+                    {card.subs.slice(0, 3).map((sub) => (
+                      <span
+                        key={sub.slug}
+                        className="rounded-full bg-white/25 backdrop-blur-md border border-white/10 px-2.5 py-0.5 text-[11px] font-medium text-white"
+                      >
+                        {sub.label}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <span className="inline-flex items-center gap-1 text-xs font-semibold text-teal-300">
+                  {t("categories.view")} →
+                </span>
+              </div>
+
+              {/* Seasonal badge — top-right */}
+              {seasonal && (
+                <div className="absolute top-3 right-3 z-20">
+                  <HoverBorderGradient
+                    as="div"
+                    containerClassName="text-[11px]"
+                    className="!px-3 !py-1 text-[11px] font-semibold whitespace-nowrap"
+                    aria-label={t(`seasonal.${seasonal.status}`)}
+                  >
+                    <span aria-hidden>{seasonal.emoji}</span>
+                    <span className="ml-1.5">
+                      {t(`seasonal.${seasonal.status}`)}
+                    </span>
+                  </HoverBorderGradient>
+                </div>
+              )}
+
+              {/* Pro count tooltip — top-left */}
+              {proItems.length > 0 && (
+                <div className="absolute top-3 left-3 z-20 flex items-center">
+                  <AnimatedTooltip items={proItems} />
+                </div>
+              )}
+            </div>
           </Link>
         );
-      }}
-    />
+      })}
+    </div>
   );
 }
