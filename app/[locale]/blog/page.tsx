@@ -7,7 +7,7 @@ import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { getAllPosts, getFeaturedPosts } from "@/lib/sanity/fetch";
 import { urlFor } from "@/lib/sanity/image";
-import { SEO_BASE, SEO_LOCALES, hreflangForLocale } from "@/lib/seo";
+import { buildAlternates } from "@/lib/seo";
 import type { PostListItem } from "@/lib/sanity/types";
 import Image from "next/image";
 
@@ -49,25 +49,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const title = PAGE_TITLES[locale] ?? PAGE_TITLES.me;
   const description = PAGE_DESCRIPTIONS[locale] ?? PAGE_DESCRIPTIONS.me;
-
-  // 9-locale hreflang (memory item 25 — every page).
-  const languages: Record<string, string> = {};
-  for (const l of SEO_LOCALES) {
-    languages[hreflangForLocale(l)] = `${SEO_BASE}/${l}/blog`;
-  }
-  languages["x-default"] = `${SEO_BASE}/en/blog`;
+  const alternates = buildAlternates(locale, "/blog");
 
   return {
     title,
     description,
-    alternates: {
-      canonical: `${SEO_BASE}/${locale}/blog`,
-      languages,
-    },
+    alternates,
     openGraph: {
       title,
       description,
-      url: `${SEO_BASE}/${locale}/blog`,
+      url: alternates.canonical,
       siteName: "Glatko",
       locale,
       type: "website",

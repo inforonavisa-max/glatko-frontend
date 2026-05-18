@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
+import { buildAlternates } from "@/lib/seo";
 import { PageBackground } from "@/components/ui/PageBackground";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { GlassmorphCard } from "@/components/ui/GlassmorphCard";
@@ -16,12 +17,14 @@ const ALL_SECTIONS = ["s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8"] as const;
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await Promise.resolve(params);
   if (!hasLocale(routing.locales, locale)) return {};
+  const alternates = buildAlternates(locale, "/privacy");
   return {
     title: "Privacy Policy — Glatko",
     description: "Glatko privacy policy — GDPR compliant data collection, usage and user rights.",
+    alternates,
     openGraph: {
       title: "Privacy Policy — Glatko",
-      url: `https://glatko.app/${locale}/privacy`,
+      url: alternates.canonical,
       siteName: "Glatko",
       locale,
       type: "website",

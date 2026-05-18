@@ -35,7 +35,7 @@ import type {
 import { ReviewSection } from "@/components/glatko/review/ReviewSection";
 import { QuoteReviewsSection } from "@/components/glatko/pro/QuoteReviewsSection";
 import { ProviderSchema } from "@/components/seo/ProviderSchema";
-import { buildAlternates, SEO_BASE } from "@/lib/seo";
+import { buildAlternates } from "@/lib/seo";
 import type { Metadata } from "next";
 import type { MultiLangText, ProService } from "@/types/glatko";
 
@@ -94,16 +94,27 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     profile.profile?.full_name?.trim() ||
     "Professional";
   const city = profile.location_city || "Montenegro";
-  const alternates = buildAlternates(locale, `/pros/${slug}`);
+  // Force EN canonical: provider profiles store a single locale-neutral row
+  // (business_name + bio + services columns are not per-locale). Without a
+  // single canonical, 9 locale URLs serve near-identical content and Google
+  // bins them as "Crawled — currently not indexed". The hreflang languages
+  // still advertise every locale URL, so per-locale users land on their
+  // localized UI, but indexing signals consolidate onto /en/pros/<slug>.
+  // See docs/audits/gsc-audit-2026-05-18.md, Bug F (Option 1).
+  const alts = buildAlternates(locale, "/pros/[slug]", { slug });
+  const canonical = alts.languages["en"];
 
   return {
     title: `${name} — Glatko`,
     description: `${name} — verified professional in ${city}. ${profile.avg_rating.toFixed(1)}★ rating, ${profile.completed_jobs} jobs completed.`,
-    alternates,
+    alternates: {
+      canonical,
+      languages: alts.languages,
+    },
     openGraph: {
       title: `${name} — Glatko`,
       description: `Verified professional in ${city}. Get a quote on Glatko.`,
-      url: alternates.canonical,
+      url: canonical,
       siteName: "Glatko",
       locale,
       type: "profile",
@@ -251,7 +262,9 @@ export default async function ProviderProfileBySlugPage({ params }: PageProps) {
     { value: rating.toFixed(1), label: t("pro.profile.rating"), icon: Star },
   ];
 
-  const canonicalUrl = `${SEO_BASE}/${locale}/pros/${slug}`;
+  // Mirror generateMetadata: provider profile schema points at the EN canonical
+  // so JSON-LD @id matches the <link rel="canonical"> Google selects.
+  const canonicalUrl = buildAlternates(locale, "/pros/[slug]", { slug }).languages["en"];
 
   return (
     <PageBackground opacity={0.06}>

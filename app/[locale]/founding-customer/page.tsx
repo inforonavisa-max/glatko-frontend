@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ArrowRight, Gift, Star, Users } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
+import { buildAlternates } from "@/lib/seo";
 import { PageBackground } from "@/components/ui/PageBackground";
 import { FoundingCounter } from "@/components/glatko/founding/FoundingCounter";
 import { createAdminClient } from "@/supabase/server";
@@ -18,14 +19,16 @@ export async function generateMetadata({
   const { locale } = await Promise.resolve(params);
   if (!hasLocale(routing.locales, locale)) return {};
   const t = await getTranslations({ locale, namespace: "founding.customer" });
+  const alternates = buildAlternates(locale, "/founding-customer");
   return {
     title: `${t("hero.title")} — Glatko`,
     description: t("hero.subtitle"),
+    alternates,
     openGraph: {
       title: `${t("hero.title")} — Glatko`,
       description: t("hero.subtitle"),
       type: "website",
-      url: `https://glatko.app/${locale}/founding-customer`,
+      url: alternates.canonical,
       siteName: "Glatko",
       locale,
     },

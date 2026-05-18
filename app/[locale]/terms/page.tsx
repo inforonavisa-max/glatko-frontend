@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
+import { buildAlternates } from "@/lib/seo";
 import { PageBackground } from "@/components/ui/PageBackground";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { GlassmorphCard } from "@/components/ui/GlassmorphCard";
@@ -16,12 +17,14 @@ const ALL_SECTIONS = ["s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await Promise.resolve(params);
   if (!hasLocale(routing.locales, locale)) return {};
+  const alternates = buildAlternates(locale, "/terms");
   return {
     title: "Terms of Service — Glatko",
     description: "Glatko platform terms of service, user responsibilities and legal terms.",
+    alternates,
     openGraph: {
       title: "Terms of Service — Glatko",
-      url: `https://glatko.app/${locale}/terms`,
+      url: alternates.canonical,
       siteName: "Glatko",
       locale,
       type: "website",

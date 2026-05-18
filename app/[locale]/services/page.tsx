@@ -11,7 +11,7 @@ import {
   generateItemListSchema,
   jsonLdScriptProps,
 } from "@/lib/seo/jsonld";
-import { SEO_BASE, SEO_LOCALES, hreflangForLocale } from "@/lib/seo";
+import { buildAlternates } from "@/lib/seo";
 
 type Props = {
   params: Promise<{ locale: string }> | { locale: string };
@@ -23,22 +23,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const t = await getTranslations({ locale });
   const title = t("seo.servicesTitle");
   const description = t("seo.servicesDesc");
-
-  // 9-locale hreflang in metadata (memory item 25 — every page).
-  const languages: Record<string, string> = {};
-  for (const l of SEO_LOCALES) {
-    languages[hreflangForLocale(l)] = `${SEO_BASE}/${l}/services`;
-  }
-  languages["x-default"] = `${SEO_BASE}/en/services`;
+  const alternates = buildAlternates(locale, "/services");
 
   return {
     title,
     description,
-    alternates: { canonical: `${SEO_BASE}/${locale}/services`, languages },
+    alternates,
     openGraph: {
       title,
       description,
-      url: `${SEO_BASE}/${locale}/services`,
+      url: alternates.canonical,
       siteName: "Glatko",
       locale,
       type: "website",

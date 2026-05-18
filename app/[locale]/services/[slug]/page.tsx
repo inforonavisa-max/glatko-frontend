@@ -19,7 +19,7 @@ import {
 import { getPostsByServiceCategory } from "@/lib/sanity/fetch";
 import { urlFor } from "@/lib/sanity/image";
 import Image from "next/image";
-import { SEO_BASE, SEO_LOCALES, hreflangForLocale } from "@/lib/seo";
+import { SEO_BASE, buildAlternates } from "@/lib/seo";
 import {
   generateBreadcrumbSchema,
   generateCategoryLocalBusinessSchema,
@@ -62,25 +62,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     pickLocalized(category.description, locale, "") ||
     t("services.metaDescription", { name });
 
-  // 9-locale hreflang (memory item 25 — every page; layout-level
-  // <HreflangLinks> is a defensive duplicate that crawlers tolerate).
-  const languages: Record<string, string> = {};
-  for (const l of SEO_LOCALES) {
-    languages[hreflangForLocale(l)] = `${SEO_BASE}/${l}/services/${slug}`;
-  }
-  languages["x-default"] = `${SEO_BASE}/en/services/${slug}`;
+  const alternates = buildAlternates(locale, "/services/[slug]", { slug });
 
   return {
     title: `${name} — Glatko`,
     description,
-    alternates: {
-      canonical: `${SEO_BASE}/${locale}/services/${slug}`,
-      languages,
-    },
+    alternates,
     openGraph: {
       title: `${name} — Glatko`,
       description,
-      url: `${SEO_BASE}/${locale}/services/${slug}`,
+      url: alternates.canonical,
       siteName: "Glatko",
       locale,
       type: "website",

@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
+import { buildAlternates } from "@/lib/seo";
 import { PageBackground } from "@/components/ui/PageBackground";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { GlassmorphCard } from "@/components/ui/GlassmorphCard";
@@ -14,12 +15,14 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await Promise.resolve(params);
   if (!hasLocale(routing.locales, locale)) return {};
+  const alternates = buildAlternates(locale, "/gdpr");
   return {
     title: "GDPR Rights — Glatko",
     description: "Your GDPR data protection rights on the Glatko platform.",
+    alternates,
     openGraph: {
       title: "GDPR Rights — Glatko",
-      url: `https://glatko.app/${locale}/gdpr`,
+      url: alternates.canonical,
       siteName: "Glatko",
       locale,
       type: "website",
