@@ -3,6 +3,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
+import { buildAlternates } from "@/lib/seo";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { GlatkoHeader } from "@/components/GlatkoHeader";
 import { GlatkoFooter } from "@/components/GlatkoFooter";
@@ -35,6 +36,10 @@ export async function generateMetadata({
   const t = await getTranslations({ locale });
   const title = t("seo.landingTitle");
   const description = t("seo.landingDesc");
+  // Locale homepage canonical + 9-locale hreflang via the single helper.
+  // See docs/audits/gsc-audit-2026-05-18.md Bugs A/C for the prior
+  // double-emission pattern this replaces.
+  const alternates = buildAlternates(locale, "/");
   return {
     metadataBase: new URL("https://glatko.app"),
     title: {
@@ -42,13 +47,11 @@ export async function generateMetadata({
       template: "%s | Glatko",
     },
     description,
-    alternates: {
-      canonical: `/${locale}`,
-    },
+    alternates,
     openGraph: {
       title,
       description,
-      url: `https://glatko.app/${locale}`,
+      url: alternates.canonical,
       siteName: "Glatko",
       locale,
       type: "website",
