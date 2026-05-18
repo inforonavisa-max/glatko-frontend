@@ -9,7 +9,7 @@ import { routing } from "@/i18n/routing";
 import { PortableText } from "@/components/sanity/PortableText";
 import { getPostBySlug } from "@/lib/sanity/fetch";
 import { urlFor } from "@/lib/sanity/image";
-import { SEO_BASE, SEO_LOCALES, hreflangForLocale } from "@/lib/seo";
+import { buildAlternates } from "@/lib/seo";
 
 // Dynamic with a short ISR window. The [locale] layout reads the auth
 // session (cookies → dynamic), so the whole tree is dynamic regardless;
@@ -37,26 +37,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ? urlFor(post.coverImage).width(1200).height(630).url()
       : undefined;
 
-  // Build hreflang only for locales that have content for this article;
-  // sending hreflang for empty translations would mislead crawlers.
-  // (Day 1 ships ME-only, so the others fall back to the canonical.)
-  const languages: Record<string, string> = {};
-  for (const l of SEO_LOCALES) {
-    languages[hreflangForLocale(l)] = `${SEO_BASE}/${l}/blog/${slug}`;
-  }
-  languages["x-default"] = `${SEO_BASE}/en/blog/${slug}`;
+  const alternates = buildAlternates(locale, "/blog/[slug]", { slug });
 
   return {
     title,
     description,
-    alternates: {
-      canonical: `${SEO_BASE}/${locale}/blog/${slug}`,
-      languages,
-    },
+    alternates,
     openGraph: {
       title,
       description: description ?? undefined,
-      url: `${SEO_BASE}/${locale}/blog/${slug}`,
+      url: alternates.canonical,
       siteName: "Glatko",
       type: "article",
       publishedTime: post.publishedAt,

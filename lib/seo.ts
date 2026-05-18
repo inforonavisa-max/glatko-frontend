@@ -1,5 +1,5 @@
 import { getPathname } from "@/i18n/navigation";
-import { routing } from "@/i18n/routing";
+import { routing, type Locale } from "@/i18n/routing";
 
 export const SEO_LOCALES = ["tr", "en", "de", "it", "ru", "uk", "sr", "me", "ar"] as const;
 export const SEO_BASE = "https://glatko.app";
@@ -21,43 +21,62 @@ export function hreflangForLocale(locale: string): string {
 }
 
 /**
- * Resolve the locale-specific URL path for a given canonical href via the
- * next-intl `pathnames` map. The returned path already includes the locale
- * prefix (e.g. "/tr/profesyonel-ol"), so callers should NOT prepend the
- * locale a second time.
+ * Set of routes declared in `i18n/routing.ts` `pathnames`. Sourced at compile
+ * time so adding a new route to the map auto-extends this union — callers of
+ * `buildAlternates` cannot drift from the routing config without a type error.
  */
-function localizePath(locale: string, href: string): string {
-  // getPathname is typed against the pathnames map; we widen here so callers
-  // can pass dynamic strings (e.g. "/services/boat-services") without
-  // restructuring everything as `{ pathname, params }` objects.
-  return getPathname({
-    locale: locale as (typeof routing.locales)[number],
-    href: href as Parameters<typeof getPathname>[0]["href"],
-  });
-}
+export type Href = keyof typeof routing.pathnames;
+
+type GetPathnameHref = Parameters<typeof getPathname>[0]["href"];
 
 /**
- * Build canonical + hreflang languages map for a given path. The path should
- * be the locale-less canonical href (e.g. "/become-a-pro", "/services", "/"
- * for the locale homepage). hreflang URLs are resolved through the
- * next-intl pathnames map, so /tr/become-a-pro emits /tr/profesyonel-ol.
+ * Build canonical + 9-locale hreflang alternates for a route.
+ *
+ *   const alts = buildAlternates(locale, "/services/[slug]", { slug });
+ *
+ * Each locale's URL is resolved through next-intl's `pathnames` map, so
+ * `/de/services/[slug]` → `/de/dienstleistungen/<slug>` automatically. This is
+ * the single source of truth — any page emitting canonical/hreflang must use
+ * this helper. Double-emission (one set here, one set in a separate component)
+ * was the root cause of the 2026-05-18 GSC duplicate-canonical incident
+ * (see docs/audits/gsc-audit-2026-05-18.md, Bug A).
+ *
+ * Parametric routes (paths containing `[`) require `params`. The runtime guard
+ * throws fail-fast instead of silently emitting `/[slug]` literals into URLs.
+ *
+ * `x-default` mirrors the EN alternate by convention.
  */
-export function buildAlternates(locale: string, pathSuffix: string) {
-  const canonicalHref =
-    pathSuffix === "" || pathSuffix === "/"
-      ? "/"
-      : pathSuffix.startsWith("/")
-        ? pathSuffix
-        : `/${pathSuffix}`;
+export function buildAlternates(
+  locale: string,
+  href: Href,
+  params?: Record<string, string>,
+): {
+  canonical: string;
+  languages: Record<string, string>;
+} {
+  const isParametric =
+    typeof href === "string" && (href.includes("[") || href.includes(":"));
+  if (isParametric && !params) {
+    throw new Error(
+      `buildAlternates: route "${href}" is parametric but no params were provided`,
+    );
+  }
+
+  const hrefArg: GetPathnameHref = (params
+    ? { pathname: href, params }
+    : href) as GetPathnameHref;
 
   const languages: Record<string, string> = {};
   for (const l of SEO_LOCALES) {
-    languages[hreflangForLocale(l)] = `${SEO_BASE}${localizePath(l, canonicalHref)}`;
+    languages[hreflangForLocale(l)] =
+      `${SEO_BASE}${getPathname({ locale: l as Locale, href: hrefArg })}`;
   }
-  languages["x-default"] = `${SEO_BASE}${localizePath("en", canonicalHref)}`;
+  // x-default points at the EN alternate by project convention; keeps Google
+  // from having to guess when a locale is unsupported in the user's region.
+  languages["x-default"] = languages["en"];
 
   return {
-    canonical: `${SEO_BASE}${localizePath(locale, canonicalHref)}`,
+    canonical: `${SEO_BASE}${getPathname({ locale: locale as Locale, href: hrefArg })}`,
     languages,
   };
 }

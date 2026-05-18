@@ -2,7 +2,6 @@ import { hasLocale } from "next-intl";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { headers } from "next/headers";
 import { routing } from "@/i18n/routing";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { GlatkoHeader } from "@/components/GlatkoHeader";
@@ -11,7 +10,6 @@ import { createClient } from "@/supabase/server";
 import { isAdminEmail } from "@/lib/admin";
 import { CookieConsent } from "@/components/glatko/CookieConsent";
 import { OnboardingWelcomeBanner } from "@/components/glatko/onboarding/OnboardingWelcomeBanner";
-import { HreflangLinks } from "@/components/seo/HreflangLinks";
 import { SentryUserScope } from "@/components/monitoring/SentryUserScope";
 import { YandexMetrica } from "@/components/seo/YandexMetrica";
 import { SearchModalProvider } from "@/components/glatko/search/SearchModalContext";
@@ -21,15 +19,6 @@ import {
   jsonLdScriptProps,
 } from "@/lib/seo/jsonld";
 import type { Metadata } from "next";
-
-/** Path segment after `/${locale}` for hreflang URLs (set by middleware `x-pathname`). */
-function hreflangPathForRequest(locale: string): string {
-  const pathname = headers().get("x-pathname") ?? "";
-  const prefix = `/${locale}`;
-  if (pathname === prefix || pathname === `${prefix}/`) return "";
-  if (pathname.startsWith(`${prefix}/`)) return pathname.slice(prefix.length);
-  return "";
-}
 
 type Props = {
   children: React.ReactNode;
@@ -142,14 +131,11 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   const isAdmin = user ? isAdminEmail(user.email) : false;
 
-  const hreflangPath = hreflangPathForRequest(locale);
-
   return (
     <NextIntlClientProvider messages={messages}>
       <NuqsAdapter>
         <SearchModalProvider>
           <script {...jsonLdScriptProps(generateOrganizationSchema(locale))} />
-          <HreflangLinks locale={locale} path={hreflangPath} />
           <SentryUserScope userId={userId} email={user?.email} />
           <div className="flex min-h-screen flex-col" dir={dir}>
             <a

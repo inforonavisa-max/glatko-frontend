@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
+import { buildAlternates } from "@/lib/seo";
 import { PageBackground } from "@/components/ui/PageBackground";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { GlassmorphCard } from "@/components/ui/GlassmorphCard";
@@ -16,12 +17,14 @@ const ALL_SECTIONS = ["s1", "s2", "s3", "s4"] as const;
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await Promise.resolve(params);
   if (!hasLocale(routing.locales, locale)) return {};
+  const alternates = buildAlternates(locale, "/cookies");
   return {
     title: "Cookie Policy — Glatko",
     description: "Cookie policy for the Glatko platform — types and management.",
+    alternates,
     openGraph: {
       title: "Cookie Policy — Glatko",
-      url: `https://glatko.app/${locale}/cookies`,
+      url: alternates.canonical,
       siteName: "Glatko",
       locale,
       type: "website",

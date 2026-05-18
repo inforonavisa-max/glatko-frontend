@@ -33,6 +33,13 @@ export default function robots(): MetadataRoute.Robots {
           "/*?sort=*",
           "/*?view=*",
           "/*?page=*",
+          // Next.js dynamic OG/Twitter image routes serve PNG, not HTML.
+          // Google still tried to crawl them as pages and logged 61 "Not
+          // found (404)" entries in GSC (audit 2026-05-18, Bug E). Block
+          // crawl so the OG meta tag value is still usable but the route
+          // itself never enters the index.
+          "/*/opengraph-image*",
+          "/*/twitter-image*",
         ],
       },
       { userAgent: "Yandex", allow: ["/ru/", "/uk/", "/me/", "/sr/", "/"] },

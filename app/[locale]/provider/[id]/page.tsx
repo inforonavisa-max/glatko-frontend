@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
+import { buildAlternates } from "@/lib/seo";
 import { PageBackground } from "@/components/ui/PageBackground";
 import type { Locale } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
@@ -82,26 +83,21 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const name = profile.business_name?.trim() || profile.profile?.full_name?.trim() || "Professional";
   const city = profile.location_city || "Montenegro";
 
-  // G-SEO-FOUNDATION: legacy UUID URL points canonical at the new
-  // /pros/{slug} surface so Google consolidates indexing signals onto the
-  // SEO-friendly route. Hreflang alternates also resolve to the slug URLs.
-  const baseUrl =
-    process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") || "https://glatko.app";
-  const slugPath = profile.slug ? `/pros/${profile.slug}` : `/provider/${id}`;
-  const languageAlternates: Record<string, string> = {};
-  for (const loc of routing.locales) {
-    languageAlternates[loc] = `${baseUrl}/${loc}${slugPath}`;
-  }
-  languageAlternates["x-default"] = `${baseUrl}/en${slugPath}`;
-
-  const canonical = `${baseUrl}/${locale}${slugPath}`;
+  // G-SEO-FOUNDATION: legacy UUID URL routes its canonical at the new
+  // /pros/<slug> surface when the pro has a slug, so Google consolidates
+  // signals onto the SEO-friendly route. Sprint A: force EN canonical (see
+  // pros/[slug]/page.tsx for rationale — provider rows are locale-neutral).
+  const alts = profile.slug
+    ? buildAlternates(locale, "/pros/[slug]", { slug: profile.slug })
+    : buildAlternates(locale, "/provider/[id]", { id });
+  const canonical = alts.languages["en"];
 
   return {
     title: `${name} — Glatko`,
     description: `${name} — verified professional in ${city}. ${profile.avg_rating.toFixed(1)}★ rating, ${profile.completed_jobs} jobs completed.`,
     alternates: {
       canonical,
-      languages: languageAlternates,
+      languages: alts.languages,
     },
     openGraph: {
       title: `${name} — Glatko`,
