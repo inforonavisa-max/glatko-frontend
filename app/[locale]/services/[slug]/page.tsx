@@ -165,12 +165,12 @@ export default async function CategoryDetailPage({ params }: Props) {
     );
     breadcrumbCrumbs.push({
       name: parentName,
-      href: `/services/${category.parent_slug}`,
+      href: { pathname: "/services/[slug]", params: { slug: category.parent_slug } },
     });
   }
   breadcrumbCrumbs.push({
     name: categoryName,
-    href: `/services/${slug}`,
+    href: { pathname: "/services/[slug]", params: { slug } },
   });
 
   const breadcrumbSchemaItems: JsonLdBreadcrumbItem[] = [
