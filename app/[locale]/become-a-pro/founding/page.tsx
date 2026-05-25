@@ -20,7 +20,7 @@ export async function generateMetadata({
   if (!hasLocale(routing.locales, locale)) return {};
   const t = await getTranslations({ locale, namespace: "founding.pro" });
   return {
-    title: `${t("hero.title")} — Glatko`,
+    title: t("hero.title"),
     description: t("hero.subtitle"),
     openGraph: {
       title: `${t("hero.title")} — Glatko`,

@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await Promise.resolve(params);
   if (!hasLocale(routing.locales, locale)) return {};
   return {
-    title: "Contact — Glatko",
+    title: "Contact",
     description: "Contact the Glatko team — email, WhatsApp, Viber and office hours.",
     alternates: buildAlternates(locale, "/contact"),
     openGraph: {

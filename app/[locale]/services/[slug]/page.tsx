@@ -65,7 +65,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const alternates = buildAlternates(locale, "/services/[slug]", { slug });
 
   return {
-    title: `${name} — Glatko`,
+    title: name,
     description,
     alternates,
     openGraph: {

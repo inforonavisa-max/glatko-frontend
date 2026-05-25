@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!hasLocale(routing.locales, locale)) return {};
   const alternates = buildAlternates(locale, "/terms");
   return {
-    title: "Terms of Service — Glatko",
+    title: "Terms of Service",
     description: "Glatko platform terms of service, user responsibilities and legal terms.",
     alternates,
     openGraph: {

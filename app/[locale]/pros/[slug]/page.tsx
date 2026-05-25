@@ -105,7 +105,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const canonical = alts.languages["en"];
 
   return {
-    title: `${name} — Glatko`,
+    title: name,
     description: `${name} — verified professional in ${city}. ${profile.avg_rating.toFixed(1)}★ rating, ${profile.completed_jobs} jobs completed.`,
     alternates: {
       canonical,
