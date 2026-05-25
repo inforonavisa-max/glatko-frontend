@@ -1,9 +1,12 @@
+import type { Metadata } from "next";
 import { hasLocale } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { createClient } from "@/supabase/server";
 import { routing, type Locale } from "@/i18n/routing";
 import LandingPageClient, {
   type FeaturedCategoryCard,
+  type RootCategoryLink,
 } from "./landing-page-client";
 import { LatestBlogPosts } from "@/components/glatko/landing/LatestBlogPosts";
 import { generateWebSiteSchema, jsonLdScriptProps } from "@/lib/seo/jsonld";
@@ -11,6 +14,13 @@ import { generateWebSiteSchema, jsonLdScriptProps } from "@/lib/seo/jsonld";
 type Props = {
   params: Promise<{ locale: string }> | { locale: string };
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await Promise.resolve(params);
+  if (!hasLocale(routing.locales, locale)) return {};
+  const t = await getTranslations({ locale });
+  return { title: t("seo.homeTitle") };
+}
 
 const FEATURED_CATEGORY_SLUGS = [
   "boat-services",
@@ -45,12 +55,27 @@ export default async function LocaleHomePage({ params }: Props) {
     .is("parent_id", null)
     .eq("is_active", true);
 
+  // All active root categories → crawlable internal links from home (incl.
+  // provider-less roots, which stay indexable). Mirrors the totalCategoryCount
+  // filter; not gated on is_p0 (which curates the /services grid, not links).
+  const { data: rootRows } = await supabase
+    .from("glatko_service_categories")
+    .select("slug, name")
+    .is("parent_id", null)
+    .eq("is_active", true)
+    .order("badge_priority", { ascending: true, nullsFirst: false });
+  const allCategories: RootCategoryLink[] = (rootRows ?? []).map((r) => ({
+    slug: r.slug as string,
+    name: r.name as RootCategoryLink["name"],
+  }));
+
   return (
     <>
       <script {...jsonLdScriptProps(generateWebSiteSchema(locale))} />
       <LandingPageClient
         featuredCategories={featuredCategories}
         totalCategoryCount={totalCategoryCount ?? 0}
+        allCategories={allCategories}
         locale={locale as Locale}
       />
       <LatestBlogPosts locale={locale} />

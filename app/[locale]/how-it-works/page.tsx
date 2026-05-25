@@ -26,7 +26,7 @@ export async function generateMetadata({
   if (!hasLocale(routing.locales, locale)) return {};
   const t = await getTranslations({ locale, namespace: "howItWorks" });
   return {
-    title: `${t("hero.title")} — Glatko`,
+    title: t("hero.title"),
     description: t("hero.subtitle"),
     alternates: buildAlternates(locale, "/how-it-works"),
     openGraph: {

@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!hasLocale(routing.locales, locale)) return {};
   const t = await getTranslations({ locale });
   return {
-    title: `${t("legal.about")} — Glatko`,
+    title: t("legal.about"),
     description: t("legal.aboutContent.intro"),
     alternates: buildAlternates(locale, "/about"),
     openGraph: {

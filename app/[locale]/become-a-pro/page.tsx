@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const t = await getTranslations({ locale });
   const alternates = buildAlternates(locale, "/become-a-pro");
   return {
-    title: `${t("nav.becomeAPro")} — Glatko`,
+    title: t("nav.becomeAPro"),
     description: t("seo.landingDesc"),
     alternates,
     openGraph: {

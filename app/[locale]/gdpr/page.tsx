@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!hasLocale(routing.locales, locale)) return {};
   const alternates = buildAlternates(locale, "/gdpr");
   return {
-    title: "GDPR Rights — Glatko",
+    title: "GDPR Rights",
     description: "Your GDPR data protection rights on the Glatko platform.",
     alternates,
     openGraph: {

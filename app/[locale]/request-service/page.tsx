@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!hasLocale(routing.locales, locale)) return {};
   const t = await getTranslations({ locale });
   return {
-    title: `${t("request.title")} — Glatko`,
+    title: t("request.title"),
     description: t("request.subtitle"),
     alternates: buildAlternates(locale, "/request-service"),
     robots: { index: true, follow: true },
