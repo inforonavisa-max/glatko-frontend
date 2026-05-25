@@ -21,11 +21,11 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "founding.customer" });
   const alternates = buildAlternates(locale, "/founding-customer");
   return {
-    title: t("hero.title"),
+    title: { absolute: t("hero.title") },
     description: t("hero.subtitle"),
     alternates,
     openGraph: {
-      title: `${t("hero.title")} — Glatko`,
+      title: t("hero.title"),
       description: t("hero.subtitle"),
       type: "website",
       url: alternates.canonical,
