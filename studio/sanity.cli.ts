@@ -13,4 +13,7 @@ export default defineCliConfig({
     dataset: "production",
   },
   studioHost: "glatko",
+  deployment: {
+    appId: "kgdqjpmc9uewezh5xmw03xgy",
+  },
 });
