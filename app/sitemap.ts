@@ -5,8 +5,13 @@ import {
   getApprovedProviderCategoryIds,
   getProfessionalsForSitemap,
 } from "@/lib/supabase/glatko.server";
-import { getAllPostSlugs } from "@/lib/sanity/fetch";
-import { SEO_BASE, SEO_LOCALES, hreflangForLocale } from "@/lib/seo";
+import { getAllPostSlugsWithTranslations } from "@/lib/sanity/fetch";
+import {
+  buildPostAlternates,
+  SEO_BASE,
+  SEO_LOCALES,
+  hreflangForLocale,
+} from "@/lib/seo";
 import { getPathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 
@@ -98,13 +103,17 @@ const STATIC_PAGES = [
  * deduplicate locale variants.
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [categories, professionals, blogSlugs, approvedCatIds] =
+  const [categories, professionals, blogPostsByLocale, approvedCatIds] =
     await Promise.all([
       getAllActiveCategories(),
       getProfessionalsForSitemap(),
-      // Sanity fetch — tolerate failure so a CMS hiccup never breaks
-      // the catalog half of the sitemap.
-      getAllPostSlugs("me").catch(() => []),
+      // Sanity fetch — per locale, tolerating failure per locale so a single
+      // CMS hiccup never zeroes out the whole blog half of the sitemap.
+      Promise.all(
+        LOCALES.map((l) =>
+          getAllPostSlugsWithTranslations(l).catch(() => []),
+        ),
+      ),
       getApprovedProviderCategoryIds(),
     ]);
   const buildTime = new Date();
@@ -187,25 +196,38 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   }
 
-  // G-CMS-1: Sanity blog posts. ME is the primary locale; until per-locale
-  // sitemap fetches are wired we surface the ME slug (which equals the URL
-  // path on /me/blog/[slug]). Other locales serving the same article via
-  // their own slug join the canonical via hreflang on the post page.
-  for (const post of blogSlugs) {
-    if (!post.slug) continue;
-    const params = { slug: post.slug };
-    const lastModified = post.publishedAt
-      ? new Date(post.publishedAt)
-      : buildTime;
-    for (const locale of LOCALES) {
+  // G-CMS-1 / SEO-SITEMAP-FIX: Sanity blog posts.
+  //
+  // Each locale's posts are fetched separately (Promise.all above) and emitted
+  // at THEIR OWN slug. The previous implementation took ME slugs only and
+  // cross-spread each across all nine locale prefixes — for any post whose
+  // non-ME slug differed (i.e. every post since the SEO-HREFLANG-FIX migration)
+  // that produced 404-bound sitemap entries and hid the real per-locale URLs.
+  //
+  // For alternates we reuse `buildPostAlternates`, which consumes the post's
+  // `translations` array (a [{locale, slug}] list resolved by
+  // ALL_POST_SLUGS_WITH_TRANSLATIONS_QUERY) and returns the same hreflang
+  // cluster the blog page itself emits in its <head>. Sitemap + page now agree
+  // by construction.
+  for (let i = 0; i < LOCALES.length; i++) {
+    const locale = LOCALES[i] as LocaleTuple;
+    const localePosts = blogPostsByLocale[i] ?? [];
+    for (const post of localePosts) {
+      if (!post.slug) continue;
+      const lastModified = post.publishedAt
+        ? new Date(post.publishedAt)
+        : buildTime;
+      const { canonical, languages } = buildPostAlternates(
+        locale,
+        post.slug,
+        post.translations ?? [],
+      );
       routes.push({
-        url: `${SEO_BASE}${localizedWithParams(locale as LocaleTuple, "/blog/[slug]", params)}`,
+        url: canonical,
         lastModified,
         changeFrequency: "weekly",
         priority: 0.6,
-        alternates: {
-          languages: makeAlternatesForParams("/blog/[slug]", params),
-        },
+        alternates: { languages },
       });
     }
   }
