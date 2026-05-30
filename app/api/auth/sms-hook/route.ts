@@ -179,6 +179,8 @@ export async function POST(request: NextRequest) {
     return jsonError(result.error, 502);
   }
 
-  // Success: Supabase only needs a 2xx with an empty body.
-  return new NextResponse(null, { status: 200 });
+  // Success: GoTrue requires the hook response to carry
+  // `Content-Type: application/json` (a bare 200 is rejected with
+  // hook_payload_invalid_content_type). An empty JSON object satisfies it.
+  return NextResponse.json({}, { status: 200 });
 }
