@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
+import { CITY_NAMES } from "@/lib/glatko/cities";
 
 interface FilterBarProps {
   category: string;
@@ -17,7 +18,8 @@ interface FilterBarProps {
   hasActiveFilters: boolean;
 }
 
-const cities = ["Budva", "Kotor", "Tivat", "Podgorica", "Herceg Novi", "Bar", "Ulcinj"];
+// Single source of truth (lib/glatko/cities.ts) — all 25 municipalities.
+const cities = CITY_NAMES;
 
 export function FilterBar({
   category,
