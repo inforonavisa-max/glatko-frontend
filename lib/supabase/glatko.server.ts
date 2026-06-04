@@ -1294,6 +1294,50 @@ export async function createNotification(data: {
     return;
   }
 
+  // ── In-app dedup (Faz 0-A) ──────────────────────────────────────────────
+  // High-frequency message / thread_message notifications: suppress a NEW
+  // in-app row when one for the same conversation/thread already exists in the
+  // last 5 minutes. Guards BOTH the action path and the notifyNewMessages cron
+  // (re-activated by migration 054) from flooding the notification bell.
+  //
+  // The email-side equivalent in lib/email/dispatch.ts counts AFTER the row is
+  // inserted (threshold `> 1`); here we run BEFORE the insert, so any existing
+  // same-key row in the window means skip — net effect is identical: ≤ 1 row
+  // per conversation/thread per 5 min. Only message / thread_message are
+  // deduped; every other notification type always inserts.
+  if (data.type === "message" || data.type === "thread_message") {
+    const payload = data.data;
+    const dedupeKey =
+      data.type === "message"
+        ? String(payload?.conversationId ?? payload?.conversation_id ?? "").trim()
+        : String(payload?.threadId ?? payload?.thread_id ?? "").trim();
+
+    if (dedupeKey) {
+      const since = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+      const { data: recentRows } = await admin
+        .from("glatko_notifications")
+        .select("id, data")
+        .eq("user_id", data.user_id)
+        .eq("type", data.type)
+        .gte("created_at", since);
+
+      const alreadyNotified = (recentRows ?? []).some((row) => {
+        const rowData = row.data as Record<string, unknown> | null;
+        const key =
+          data.type === "message"
+            ? String(
+                rowData?.conversationId ?? rowData?.conversation_id ?? "",
+              ).trim()
+            : String(rowData?.threadId ?? rowData?.thread_id ?? "").trim();
+        return key === dedupeKey;
+      });
+
+      if (alreadyNotified) {
+        return;
+      }
+    }
+  }
+
   const { error } = await admin.from("glatko_notifications").insert(data);
   if (error) {
     console.error("[GLATKO:notifications] createNotification insert failed:", error);
