@@ -1,4 +1,5 @@
 import { dispatchNotificationEmail } from "@/lib/email/dispatch";
+import { dispatchExternalNotification } from "@/lib/notifications/external-dispatch";
 import { glatkoCaptureException } from "@/lib/sentry/glatko-capture";
 import { checkMessageSendRateLimit } from "@/lib/ratelimit/message-rate-limit";
 import { createClient, createAdminClient } from "@/supabase/server";
@@ -1343,6 +1344,19 @@ export async function createNotification(data: {
     console.error("[GLATKO:notifications] createNotification insert failed:", error);
     return;
   }
+
+  // Faz 2-A: external-channel (SMS/Viber/WhatsApp) dispatch — fire-and-forget,
+  // AFTER the in-app row so it never blocks/breaks in-app. Off by default (env
+  // kill-switch). Talks to the Infobip Messages API directly — NEVER through the
+  // email provider (no recursion). Chat messages are skipped here (delivered by
+  // the unread-gated cron in Faz 2-C).
+  void dispatchExternalNotification({
+    user_id: data.user_id,
+    type: data.type,
+    title: data.title,
+    body: data.body,
+    data: data.data,
+  }).catch(() => {});
 
   try {
     await dispatchNotificationEmail({
