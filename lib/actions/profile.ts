@@ -34,11 +34,12 @@ export type UserProfileRow = {
   preferred_locale: string | null;
   is_active: boolean | null;
   notification_prefs: ReturnType<typeof normalizeNotificationPrefs>;
+  notification_channel: "whatsapp" | "viber" | null;
   is_deleted: boolean | null;
 };
 
 export async function getProfileSettings(): Promise<
-  | { ok: true; profile: UserProfileRow; email: string }
+  | { ok: true; profile: UserProfileRow; email: string; hasPhone: boolean }
   | { ok: false; error: string }
 > {
   const supabase = createClient();
@@ -53,7 +54,7 @@ export async function getProfileSettings(): Promise<
   const { data: profile, error } = await supabase
     .from("profiles")
     .select(
-      "id, full_name, avatar_url, phone, city, bio, preferred_locale, is_active, notification_prefs, is_deleted"
+      "id, full_name, avatar_url, phone, city, bio, preferred_locale, is_active, notification_prefs, notification_channel, is_deleted"
     )
     .eq("id", user.id)
     .maybeSingle();
@@ -72,6 +73,8 @@ export async function getProfileSettings(): Promise<
     preferred_locale: profile?.preferred_locale ?? "tr",
     is_active: profile?.is_active ?? true,
     notification_prefs: normalizeNotificationPrefs(profile?.notification_prefs),
+    notification_channel:
+      (profile?.notification_channel as "whatsapp" | "viber" | null) ?? null,
     is_deleted: profile?.is_deleted ?? false,
   };
 
@@ -83,6 +86,7 @@ export async function getProfileSettings(): Promise<
     ok: true,
     profile: row,
     email: user.email ?? "",
+    hasPhone: Boolean(user.phone),
   };
 }
 
@@ -330,6 +334,54 @@ export async function updateNotificationPreference(
   if ("error" in result && result.error) {
     return { error: result.error };
   }
+  return { success: true };
+}
+
+/**
+ * Faz 1-A: set the user's preferred notification channel. Faz 2's dispatcher
+ * reads profiles.notification_channel to pick the primary channel; NULL means
+ * "not chosen" → it runs the Viber→WhatsApp→SMS failover instead.
+ *
+ * Phone gate: WhatsApp/Viber/SMS all deliver to the phone number, which lives on
+ * auth.users.phone — NOT profiles.phone (phone-OTP signups never populate the
+ * profiles column). Without a phone there is no address to message, so the
+ * channel cannot be set; the Faz 1-B UI must route the user to add a phone first.
+ */
+export async function updateNotificationChannel(
+  channel: "whatsapp" | "viber",
+): Promise<{ success: true } | { error: string }> {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return { error: "unauthorized" };
+  }
+
+  const validChannels: readonly string[] = ["whatsapp", "viber"];
+  if (!validChannels.includes(channel)) {
+    return { error: "invalid_channel" };
+  }
+
+  // Phone gate — auth.users.phone is the authoritative destination number
+  // (profiles.phone is NULL for phone-OTP signups). No phone → nothing to message.
+  if (!user.phone) {
+    return { error: "no_phone" };
+  }
+
+  const { error } = await supabase
+    .from("profiles")
+    .update({
+      notification_channel: channel,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", user.id);
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  revalidateProfile();
   return { success: true };
 }
 
