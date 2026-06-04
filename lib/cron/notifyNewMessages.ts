@@ -1,5 +1,27 @@
 import { createAdminClient } from "@/supabase/server";
 import { createNotification } from "@/lib/supabase/glatko.server";
+import { dispatchExternalNotification } from "@/lib/notifications/external-dispatch";
+
+/** Faz 2-C: per-thread external (SMS) cooldown so an active unread thread can't
+ *  trigger a send on every 5-min cron run. Default 60 min (env-configurable). */
+const DEFAULT_EXTERNAL_MESSAGE_COOLDOWN_MIN = 60;
+function externalCooldownMs(): number {
+  const n = Number(process.env.EXTERNAL_MESSAGE_COOLDOWN_MINUTES);
+  const min =
+    Number.isInteger(n) && n > 0 ? n : DEFAULT_EXTERNAL_MESSAGE_COOLDOWN_MIN;
+  return min * 60 * 1000;
+}
+
+/** Spam-cooldown decision (exported for tests): true if this thread has never
+ *  had an external send, or the last one is older than the cooldown window. */
+export function externalCooldownElapsed(
+  externalNotifiedAt: string | null,
+): boolean {
+  if (!externalNotifiedAt) return true;
+  return (
+    Date.now() - new Date(externalNotifiedAt).getTime() >= externalCooldownMs()
+  );
+}
 
 interface ThreadRow {
   id: string;
@@ -10,6 +32,7 @@ interface ThreadRow {
   last_message_at: string | null;
   last_message_preview: string | null;
   last_message_sender_id: string | null;
+  external_notified_at: string | null;
   glatko_service_requests: { title: string | null } | null;
   glatko_professional_profiles: { business_name: string | null } | null;
 }
@@ -40,6 +63,7 @@ export async function notifyNewMessages(
       last_message_at,
       last_message_preview,
       last_message_sender_id,
+      external_notified_at,
       glatko_service_requests ( title ),
       glatko_professional_profiles ( business_name )
       `,
@@ -93,6 +117,36 @@ export async function notifyNewMessages(
       notified += 1;
     } catch (err) {
       console.error("[GLATKO:cron-msgs] notify failed:", err);
+    }
+
+    // Faz 2-C: external SMS for this still-unread thread — delayed (cron) +
+    // unread-gated (we only reach here while unread) + per-thread cooldown
+    // (default 60 min) so an active unread thread isn't SMS'd every 5-min run.
+    // Marker is set ONLY on a real send, so flag-off / cap / quiet-hours /
+    // no-phone leave external_notified_at NULL and the next run can retry.
+    // thread_message is non-critical → cap + quiet hours apply (no bypass). The
+    // in-app createNotification above also calls dispatchExternalNotification
+    // (without fromCron) but that defers, so this fromCron call is the only
+    // external attempt (no double-send).
+    try {
+      if (externalCooldownElapsed(t.external_notified_at)) {
+        const ext = await dispatchExternalNotification({
+          user_id: recipientId,
+          type: "thread_message",
+          fromCron: true,
+          title: senderName,
+          body: preview,
+          data: { threadId: t.id, requestTitle },
+        });
+        if (ext.sent) {
+          await admin
+            .from("glatko_message_threads")
+            .update({ external_notified_at: new Date().toISOString() })
+            .eq("id", t.id);
+        }
+      }
+    } catch (err) {
+      console.error("[GLATKO:cron-msgs] external send failed:", err);
     }
   }
 

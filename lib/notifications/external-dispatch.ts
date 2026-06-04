@@ -99,13 +99,19 @@ export type ExternalDecision =
 export async function shouldSendExternal(params: {
   user_id: string;
   type: string;
+  /** Faz 2-C: the unread-gated cron path. Bypasses ONLY the chat-message defer
+   *  so message/thread_message can go external (delayed + cooldown-guarded by the
+   *  cron). Every other gate (flag/allowlist/no-phone/quiet/cap) still applies;
+   *  thread_message is non-critical, so cap + quiet hours are enforced. */
+  fromCron?: boolean;
 }): Promise<ExternalDecision> {
   // 1) SAFETY kill-switch — off unless explicitly enabled (no admin calls either).
   if (process.env.EXTERNAL_NOTIFICATIONS_ENABLED !== "true") {
     return { send: false, reason: "flag_off" };
   }
   // 2) Chat messages → external via the unread-gated cron (Faz 2-C), not instantly.
-  if (DEFERRED_TO_CRON.has(params.type)) {
+  //    The cron opts in with fromCron:true.
+  if (!params.fromCron && DEFERRED_TO_CRON.has(params.type)) {
     return { send: false, reason: "deferred_to_cron" };
   }
 
@@ -167,7 +173,9 @@ function composeSmsText(title: string, body?: string): string {
 }
 
 /**
- * Fire-and-forget external dispatch. Never throws (caller uses `void … .catch`).
+ * Fire-and-forget external dispatch. Never throws. Returns { sent } so the
+ * Faz 2-C cron can set its per-thread cooldown marker ONLY on a real send; the
+ * instant `void dispatchExternalNotification(...)` call ignores the result.
  */
 export async function dispatchExternalNotification(params: {
   user_id: string;
@@ -175,14 +183,17 @@ export async function dispatchExternalNotification(params: {
   title: string;
   body?: string;
   data?: Record<string, unknown>;
-}): Promise<void> {
+  /** Faz 2-C cron path — see shouldSendExternal. */
+  fromCron?: boolean;
+}): Promise<{ sent: boolean }> {
   try {
     const decision = await shouldSendExternal({
       user_id: params.user_id,
       type: params.type,
+      fromCron: params.fromCron,
     });
     if (!decision.send) {
-      return;
+      return { sent: false };
     }
 
     // Faz 2-A: deliver via the proven SMS API (sendSms, POST /sms/3/messages —
@@ -194,15 +205,17 @@ export async function dispatchExternalNotification(params: {
       console.log(
         `[GLATKO:external] sent type=${params.type} order=${decision.order.join(">")} via=SMS messageId=${res.messageId}`,
       );
-    } else {
-      console.error(
-        `[GLATKO:external] send failed type=${params.type} error=${res.error}`,
-      );
+      return { sent: true };
     }
+    console.error(
+      `[GLATKO:external] send failed type=${params.type} error=${res.error}`,
+    );
+    return { sent: false };
   } catch (err) {
     glatkoCaptureException(err, {
       module: "external-dispatch",
       type: params.type,
     });
+    return { sent: false };
   }
 }
