@@ -35,7 +35,7 @@ import type {
 import { ReviewSection } from "@/components/glatko/review/ReviewSection";
 import { QuoteReviewsSection } from "@/components/glatko/pro/QuoteReviewsSection";
 import { ProviderSchema } from "@/components/seo/ProviderSchema";
-import { buildAlternates } from "@/lib/seo";
+import { buildAlternates, hreflangForLocale } from "@/lib/seo";
 import type { Metadata } from "next";
 import type { MultiLangText, ProService } from "@/types/glatko";
 
@@ -84,6 +84,19 @@ type PageProps = {
     | { locale: string; slug: string };
 };
 
+/**
+ * Provider profiles are locale-neutral: business_name + bio + services are a
+ * single untranslated row, so all 9 locale URLs serve near-identical content.
+ * We consolidate indexing onto ONE canonical to avoid duplicate-content
+ * dilution ("Crawled — currently not indexed"); the hreflang alternates still
+ * advertise every locale URL, so per-locale users land on their localized UI.
+ * Target = "me" — Glatko's primary market (Montenegro) — so provider SERPs
+ * consolidate to the local URL rather than English.
+ * See docs/audits/gsc-audit-2026-05-18.md Bug F; G-CANONICAL-FIX (2026-06-02)
+ * switched the consolidation target /en → /me.
+ */
+const PROVIDER_CANONICAL_LOCALE = "me";
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale, slug } = await Promise.resolve(params);
   if (!hasLocale(routing.locales, locale)) return {};
@@ -94,15 +107,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     profile.profile?.full_name?.trim() ||
     "Professional";
   const city = profile.location_city || "Montenegro";
-  // Force EN canonical: provider profiles store a single locale-neutral row
-  // (business_name + bio + services columns are not per-locale). Without a
-  // single canonical, 9 locale URLs serve near-identical content and Google
-  // bins them as "Crawled — currently not indexed". The hreflang languages
-  // still advertise every locale URL, so per-locale users land on their
-  // localized UI, but indexing signals consolidate onto /en/pros/<slug>.
-  // See docs/audits/gsc-audit-2026-05-18.md, Bug F (Option 1).
+  // Consolidate canonical onto the primary-market locale (see the
+  // PROVIDER_CANONICAL_LOCALE note above). hreflang alternates are unchanged —
+  // every locale URL is still advertised; only the indexing target moves.
   const alts = buildAlternates(locale, "/pros/[slug]", { slug });
-  const canonical = alts.languages["en"];
+  const canonical =
+    alts.languages[hreflangForLocale(PROVIDER_CANONICAL_LOCALE)];
 
   return {
     title: name,
@@ -262,9 +272,10 @@ export default async function ProviderProfileBySlugPage({ params }: PageProps) {
     { value: rating.toFixed(1), label: t("pro.profile.rating"), icon: Star },
   ];
 
-  // Mirror generateMetadata: provider profile schema points at the EN canonical
-  // so JSON-LD @id matches the <link rel="canonical"> Google selects.
-  const canonicalUrl = buildAlternates(locale, "/pros/[slug]", { slug }).languages["en"];
+  // Mirror generateMetadata: JSON-LD @id must match the <link rel="canonical">
+  // Google selects — both consolidate onto the primary-market locale.
+  const canonicalUrl = buildAlternates(locale, "/pros/[slug]", { slug })
+    .languages[hreflangForLocale(PROVIDER_CANONICAL_LOCALE)];
 
   return (
     <PageBackground opacity={0.06}>
