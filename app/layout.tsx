@@ -117,6 +117,40 @@ export default async function RootLayout({
   return (
     <html lang={htmlLang} dir={dir} suppressHydrationWarning>
       <head>
+        {/* LCP hero-font preload — Cormorant Garamond (latin subset), the font
+            of the landing hero <h1> (font-serif font-light; see
+            landing-page-client.tsx). next/font emits a static <head> preload
+            only for Inter-latin; the Cormorant-latin file otherwise arrives as
+            a late React Flight "HL" hint, so the serif hero font is discovered
+            only after the RSC stream is processed. Hoisting it here lets the
+            preload scanner fetch it immediately, so the swap off the
+            size-adjusted fallback happens sooner (mainly less FOUT — the hero
+            already paints in the metric-matched fallback at FCP, so the LCP
+            delta is small but the discovery is strictly earlier).
+
+            The filename is the DETERMINISTIC content hash next/font derives
+            from the Cormorant config below (subsets + weights) on the pinned
+            Next.js version — stable across builds, NOT random. If you change
+            the Cormorant config or upgrade Next.js, regenerate the path:
+              curl -s https://glatko.app/me \
+                | grep -oE '/_next/static/media/[a-z0-9]+-s\.p\.woff2'
+            then pick the Cormorant *latin* file (the @font-face whose
+            unicode-range is u+00?? in the linked /_next/static/css/*.css). A
+            stale path 404s silently — no breakage, just no benefit. (G-CWV-FIX-1A)
+
+            Gated to production: `next dev` serves fonts under different
+            (un-hashed) paths, so this prod hash would 404 in local dev. Vercel
+            production AND preview builds are both NODE_ENV=production and share
+            this deterministic hash, so the preload is active on every deploy. */}
+        {process.env.NODE_ENV === "production" && (
+          <link
+            rel="preload"
+            href="/_next/static/media/7b89a4fd5e90ede0-s.p.woff2"
+            as="font"
+            type="font/woff2"
+            crossOrigin="anonymous"
+          />
+        )}
         {/* Preconnect to Supabase: warms TLS so the first client-side
             REST/auth call (after hydration) doesn't pay the handshake cost. */}
         <link
