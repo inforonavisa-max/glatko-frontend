@@ -2262,5 +2262,12 @@
     "errorGeneric": "Nešto je pošlo naopako. Pokušajte ponovo.",
     "codeSentToast": "Verifikacioni kod je poslat",
     "verifiedToast": "Broj telefona je verifikovan"
+  },
+  "servicesCity": {
+    "titlePattern": "{service} — {city}",
+    "metaDescription": "{service} — {city}, Crna Gora. Uporedite ponude proverenih stručnjaka na Glatku.",
+    "comingSoonTitle": "Uskoro",
+    "comingSoonBody": "Ova stranica je u pripremi. U međuvremenu možete pregledati stručnjake i zatražiti ponudu.",
+    "browseCategory": "Pogledaj sve stručnjake: {service}"
   }
 }

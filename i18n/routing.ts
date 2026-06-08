@@ -136,6 +136,23 @@ export const routing = defineRouting({
       ar: "/al-khadamat/[slug]",
     },
 
+    // Service × city (programmatic SEO — G-PSEO-FOUNDATION). Slug + city are
+    // locale-neutral identifiers (category slug + city slug from
+    // lib/glatko/cities.ts); only the path prefix is localized, mirroring
+    // "/services/[slug]". Registering here lets buildAlternates/localizedUrl/
+    // Link resolve canonical + 9-locale hreflang from the single source.
+    "/services/[slug]/[city]": {
+      tr: "/hizmetler/[slug]/[city]",
+      en: "/services/[slug]/[city]",
+      de: "/dienstleistungen/[slug]/[city]",
+      it: "/servizi/[slug]/[city]",
+      ru: "/uslugi/[slug]/[city]",
+      uk: "/posluhy/[slug]/[city]",
+      sr: "/usluge/[slug]/[city]",
+      me: "/usluge/[slug]/[city]",
+      ar: "/al-khadamat/[slug]/[city]",
+    },
+
     // Static info pages
     "/how-it-works": {
       tr: "/nasil-calisir",

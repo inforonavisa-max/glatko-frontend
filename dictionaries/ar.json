@@ -2259,5 +2259,12 @@
     "errorGeneric": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
     "codeSentToast": "تم إرسال رمز التحقق",
     "verifiedToast": "تم التحقق من رقم الهاتف"
+  },
+  "servicesCity": {
+    "titlePattern": "{service} — {city}",
+    "metaDescription": "{service} — {city}، الجبل الأسود. قارن عروض المحترفين الموثوقين على Glatko.",
+    "comingSoonTitle": "قريبًا",
+    "comingSoonBody": "هذه الصفحة قيد الإعداد. في هذه الأثناء، يمكنك تصفح المحترفين وطلب عرض سعر.",
+    "browseCategory": "تصفّح جميع محترفي {service}"
   }
 }
