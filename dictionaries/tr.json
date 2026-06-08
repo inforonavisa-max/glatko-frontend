@@ -2262,5 +2262,12 @@
     "errorGeneric": "Bir şeyler ters gitti. Lütfen tekrar deneyin.",
     "codeSentToast": "Doğrulama kodu gönderildi",
     "verifiedToast": "Telefon numarası doğrulandı"
+  },
+  "servicesCity": {
+    "titlePattern": "{service} — {city}",
+    "metaDescription": "{service} — {city}, Karadağ. Doğrulanmış profesyonellerin tekliflerini Glatko üzerinden karşılaştırın.",
+    "comingSoonTitle": "Çok yakında",
+    "comingSoonBody": "Bu sayfa hazırlanıyor. Bu sırada profesyonelleri inceleyebilir ve teklif isteyebilirsiniz.",
+    "browseCategory": "Tüm {service} profesyonellerini gör"
   }
 }

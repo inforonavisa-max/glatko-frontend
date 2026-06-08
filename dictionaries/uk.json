@@ -2259,5 +2259,12 @@
     "errorGeneric": "Щось пішло не так. Спробуйте ще раз.",
     "codeSentToast": "Код підтвердження надіслано",
     "verifiedToast": "Номер телефону підтверджено"
+  },
+  "servicesCity": {
+    "titlePattern": "{service} — {city}",
+    "metaDescription": "{service} — {city}, Чорногорія. Порівняйте пропозиції перевірених фахівців на Glatko.",
+    "comingSoonTitle": "Незабаром",
+    "comingSoonBody": "Ця сторінка готується. Тим часом ви можете переглянути фахівців і запросити пропозицію.",
+    "browseCategory": "Переглянути всіх фахівців: {service}"
   }
 }

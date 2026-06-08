@@ -2259,5 +2259,12 @@
     "errorGeneric": "Qualcosa è andato storto. Riprova.",
     "codeSentToast": "Codice di verifica inviato",
     "verifiedToast": "Numero di telefono verificato"
+  },
+  "servicesCity": {
+    "titlePattern": "{service} — {city}",
+    "metaDescription": "{service} — {city}, Montenegro. Confronta i preventivi di professionisti verificati su Glatko.",
+    "comingSoonTitle": "Prossimamente",
+    "comingSoonBody": "Questa pagina è in preparazione. Nel frattempo puoi consultare i professionisti e richiedere un preventivo.",
+    "browseCategory": "Vedi tutti i professionisti di {service}"
   }
 }

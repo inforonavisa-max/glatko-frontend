@@ -2259,5 +2259,12 @@
     "errorGeneric": "Something went wrong. Please try again.",
     "codeSentToast": "Verification code sent",
     "verifiedToast": "Phone number verified"
+  },
+  "servicesCity": {
+    "titlePattern": "{service} — {city}",
+    "metaDescription": "{service} — {city}, Montenegro. Compare quotes from verified professionals on Glatko.",
+    "comingSoonTitle": "Coming soon",
+    "comingSoonBody": "This page is being prepared. In the meantime, you can browse professionals and request a quote.",
+    "browseCategory": "Browse all {service} professionals"
   }
 }
