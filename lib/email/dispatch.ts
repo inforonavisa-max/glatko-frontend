@@ -201,7 +201,7 @@ async function buildEmailForType(params: {
       const copy = getStatusChangeEmailCopy(locale);
       const requestUrl = requestId
         ? buildLocalizedPath(locale, `/dashboard/requests/${requestId}`)
-        : buildLocalizedPath(locale, "/dashboard");
+        : buildLocalizedPath(locale, "/dashboard/requests");
       return {
         subject: copy.subject,
         react: createElement(StatusChangeEmail, {

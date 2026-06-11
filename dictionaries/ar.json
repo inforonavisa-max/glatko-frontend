@@ -29,7 +29,8 @@
     "userProfile": "ملفي الشخصي",
     "businessProfile": "ملف النشاط التجاري",
     "settings": "الإعدادات",
-    "adminPanel": "لوحة الإدارة"
+    "adminPanel": "لوحة الإدارة",
+    "leads": "فرص العمل"
   },
   "hero": {
     "title": "محترفون موثوقون في الجبل الأسود",
@@ -2159,6 +2160,7 @@
       "noQuotesYetBody": "تم إخطار المحترفين في منطقتك. ستظهر العروض الجديدة هنا.",
       "bestPrice": "أفضل سعر",
       "foundingTooltip": "مزوّد مؤسس — عضو مبكر بفترة إبراز ممتدة.",
+      "foundingLabel": "مؤسس",
       "completedJobs": "أعمال منجزة",
       "pricingModel": {
         "hourly": "بالساعة",
@@ -2194,6 +2196,7 @@
   "messaging": {
     "inboxTitle": "الرسائل",
     "inboxSubtitle": "محادثاتك مع المحترفين الذين قدّموا عروضًا على طلباتك",
+    "inboxSubtitlePro": "محادثاتك مع العملاء حول الطلبات التي قدّمت عروضًا عليها",
     "inboxEmptyTitle": "لا توجد رسائل بعد",
     "inboxEmptyBody": "ستظهر محادثاتك مع المحترفين هنا بمجرد بدء واحدة من بطاقة عرض السعر.",
     "threadFromRequest": "الموضوع",

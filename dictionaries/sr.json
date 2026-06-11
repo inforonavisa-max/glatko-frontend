@@ -29,7 +29,8 @@
     "userProfile": "Moj profil",
     "businessProfile": "Poslovni profil",
     "settings": "Подешавања",
-    "adminPanel": "Admin panel"
+    "adminPanel": "Admin panel",
+    "leads": "Poslovne prilike"
   },
   "hero": {
     "title": "Pouzdani profesionalci u Crnoj Gori",
@@ -2162,6 +2163,7 @@
       "noQuotesYetBody": "Професионалци у вашој области су обавештени. Нове понуде ће се појавити овде.",
       "bestPrice": "Најбоља цена",
       "foundingTooltip": "Оснивачки провајдер — рани приступач с продуженим истицањем.",
+      "foundingLabel": "Osnivački",
       "completedJobs": "завршених послова",
       "pricingModel": {
         "hourly": "по сату",
@@ -2197,6 +2199,7 @@
   "messaging": {
     "inboxTitle": "Поруке",
     "inboxSubtitle": "Разговори са професионалцима који су послали понуде за ваше захтеве",
+    "inboxSubtitlePro": "Разговори са клијентима о захтевима за које сте послали понуду",
     "inboxEmptyTitle": "Још нема порука",
     "inboxEmptyBody": "Ваши разговори са професионалцима појавиће се овде када их покренете са картице понуде.",
     "threadFromRequest": "Тема",

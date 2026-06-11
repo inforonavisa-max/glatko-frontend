@@ -42,13 +42,12 @@ export function resolveExternalLink(
   const d = data ?? {};
   const requestId = firstString(d, "requestId", "request_id");
   const threadId = firstString(d, "threadId", "thread_id");
-  const conversationId = firstString(d, "conversationId", "conversation_id");
 
   switch (type) {
     case "new_quote":
       return localizedUrl(
         locale,
-        requestId ? `/my-requests/${requestId}` : "/my-requests",
+        requestId ? `/my-requests/${requestId}` : "/dashboard/requests",
       );
     case "new_request_match":
       return localizedUrl(
@@ -69,15 +68,7 @@ export function resolveExternalLink(
         requestId ? `/dashboard/requests/${requestId}` : "/dashboard/requests",
       );
     case "bid_accepted":
-      // Accepting a bid always creates a conversation (conversationId in data),
-      // so open it. Safe fallback to the request detail if it is ever absent.
-      if (conversationId) {
-        return localizedUrl(locale, `/inbox/${conversationId}`);
-      }
-      return localizedUrl(
-        locale,
-        requestId ? `/dashboard/requests/${requestId}` : "/pro/dashboard",
-      );
+      return localizedUrl(locale, "/messages");
     case "bid_rejected":
       // Template intent "new requests list" — aligned with the email route.
       return localizedUrl(locale, "/pro/dashboard/requests");

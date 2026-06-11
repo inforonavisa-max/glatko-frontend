@@ -48,7 +48,6 @@ export function threadIdFromNotificationData(
  */
 export type NotificationHref =
   | "/dashboard/requests"
-  | "/inbox"
   | "/pro/dashboard"
   | "/pro/dashboard/bids"
   | "/pro/dashboard/profile"
@@ -56,7 +55,6 @@ export type NotificationHref =
   | "/notifications"
   | "/messages"
   | { pathname: "/dashboard/requests/[id]"; params: { id: string } }
-  | { pathname: "/inbox/[conversationId]"; params: { conversationId: string } }
   | { pathname: "/pro/dashboard/requests/[id]"; params: { id: string } }
   | { pathname: "/messages/[id]"; params: { id: string } }
   | { pathname: "/my-requests/[id]"; params: { id: string } };
@@ -65,7 +63,6 @@ export type NotificationHref =
 export function getNotificationHref(n: NotificationLike): NotificationHref {
   const d = n.data ?? undefined;
   const req = requestIdFromNotificationData(d);
-  const conv = conversationIdFromNotificationData(d);
 
   switch (n.type) {
     case "new_bid":
@@ -77,9 +74,7 @@ export function getNotificationHref(n: NotificationLike): NotificationHref {
     case "bid_rejected":
       return "/pro/dashboard/bids";
     case "message":
-      return conv
-        ? { pathname: "/inbox/[conversationId]", params: { conversationId: conv } }
-        : "/inbox";
+      return "/messages";
     case "review":
       return "/pro/dashboard";
     case "verification_approved":

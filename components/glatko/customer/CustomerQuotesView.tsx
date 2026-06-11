@@ -326,7 +326,7 @@ export function CustomerQuotesView({
                     >
                       <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 rounded text-xs font-medium cursor-help">
                         <Crown className="h-3 w-3" />
-                        Founding
+                        {t("customer.quotes.foundingLabel")}
                         {pro.founding_provider_number != null
                           ? ` #${pro.founding_provider_number}`
                           : ""}

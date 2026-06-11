@@ -34,6 +34,8 @@ interface Props {
   >;
   currentUserId: string;
   locale: string;
+  /** Approved pro → subtitle speaks from the quoting side, not the customer side. */
+  isPro?: boolean;
 }
 
 function relTime(iso: string | null, locale: string): string {
@@ -57,6 +59,7 @@ export function ThreadList({
   profileById,
   currentUserId,
   locale,
+  isPro = false,
 }: Props) {
   const t = useTranslations();
 
@@ -82,7 +85,7 @@ export function ThreadList({
         {t("messaging.inboxTitle")}
       </h1>
       <p className="text-gray-600 dark:text-neutral-400 mb-8">
-        {t("messaging.inboxSubtitle")}
+        {t(isPro ? "messaging.inboxSubtitlePro" : "messaging.inboxSubtitle")}
       </p>
 
       <div className="rounded-xl border border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900 overflow-hidden divide-y divide-gray-200 dark:divide-neutral-800">

@@ -212,17 +212,16 @@ export function ChatBox({
             provider_id: counterpartId ?? undefined,
           });
         }
-        // Replace temp with real id (Realtime will also deliver but dedupe handles it)
-        setMessages((prev) =>
-          prev.map((m) =>
-            m.id === tempId
-              ? {
-                  ...m,
-                  id: result.data?.message_id ?? m.id,
-                }
-              : m,
-          ),
-        );
+        // Replace temp with real id. If the Realtime echo already delivered
+        // the real row (it can win the race against this action result),
+        // drop the temp instead — otherwise two bubbles share the real id.
+        setMessages((prev) => {
+          const realId = result.data?.message_id;
+          if (!realId) return prev;
+          return prev.some((m) => m.id === realId)
+            ? prev.filter((m) => m.id !== tempId)
+            : prev.map((m) => (m.id === tempId ? { ...m, id: realId } : m));
+        });
       }
     } catch (err) {
       setMessages((prev) => prev.filter((m) => m.id !== tempId));
@@ -379,13 +378,13 @@ export function ChatBox({
               rows={1}
               maxLength={5000}
               placeholder={t("messaging.composerPlaceholder")}
-              className="flex-1 resize-none px-4 py-2 rounded-2xl border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-1 resize-none px-4 py-2 rounded-2xl border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
             <button
               type="submit"
               disabled={sending || !body.trim()}
               aria-label={t("messaging.send")}
-              className="p-3 rounded-full bg-blue-600 text-white disabled:opacity-50 hover:bg-blue-700 shrink-0"
+              className="p-3 rounded-full bg-teal-600 text-white disabled:opacity-50 hover:bg-teal-700 shrink-0"
             >
               <Send className="h-4 w-4" />
             </button>
