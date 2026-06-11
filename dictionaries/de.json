@@ -29,7 +29,8 @@
     "userProfile": "Mein Profil",
     "businessProfile": "Geschäftsprofil",
     "settings": "Einstellungen",
-    "adminPanel": "Admin-Panel"
+    "adminPanel": "Admin-Panel",
+    "leads": "Jobaufträge"
   },
   "hero": {
     "title": "Vertrauenswürdige Fachleute in Montenegro",
@@ -2159,6 +2160,7 @@
       "noQuotesYetBody": "Die Profis in Ihrer Region wurden benachrichtigt. Neue Angebote erscheinen hier.",
       "bestPrice": "Bester Preis",
       "foundingTooltip": "Gründungsanbieter — Early Adopter mit verlängerter Hervorhebung.",
+      "foundingLabel": "Founding",
       "completedJobs": "abgeschlossene Aufträge",
       "pricingModel": {
         "hourly": "pro Stunde",
@@ -2194,6 +2196,7 @@
   "messaging": {
     "inboxTitle": "Nachrichten",
     "inboxSubtitle": "Gespräche mit den Profis, die Angebote zu Ihren Anfragen abgegeben haben",
+    "inboxSubtitlePro": "Gespräche mit Kunden zu Anfragen, für die Sie Angebote abgegeben haben",
     "inboxEmptyTitle": "Noch keine Nachrichten",
     "inboxEmptyBody": "Ihre Gespräche mit Profis erscheinen hier, sobald Sie eines von einer Angebotskarte aus starten.",
     "threadFromRequest": "Betreff",

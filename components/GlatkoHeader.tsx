@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { Menu, X, Mail, LogOut, User, Settings, ChevronDown, Briefcase } from "lucide-react";
+import { Menu, X, Mail, LogOut, User, Settings, ChevronDown, Briefcase, Target } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -92,13 +92,14 @@ export function GlatkoHeader({
     { href: "/services", label: t("nav.services") },
     { href: "/dashboard/requests", label: t("nav.requests") },
     { href: "/become-a-pro", label: t("nav.becomeAPro") },
-    { href: "/inbox", label: t("nav.inbox"), hasIcon: true },
+    { href: "/messages", label: t("nav.inbox"), hasIcon: true },
   ];
 
   const proLinks = [
     { href: "/services", label: t("nav.services") },
     { href: "/pro/dashboard", label: t("nav.proDashboard") },
-    { href: "/inbox", label: t("nav.inbox"), hasIcon: true },
+    { href: "/pro/dashboard/leads", label: t("nav.leads"), hasLeadsIcon: true },
+    { href: "/messages", label: t("nav.inbox"), hasIcon: true },
   ];
 
   const baseNavLinks = !userId ? guestLinks : isPro ? proLinks : customerLinks;
@@ -117,7 +118,8 @@ export function GlatkoHeader({
   const baseDropdownItems = isPro
     ? [
         { href: "/pro/dashboard", label: t("nav.proDashboard") },
-        { href: "/inbox", label: t("nav.inbox") },
+        { href: "/pro/dashboard/leads", label: t("nav.leads"), icon: Target },
+        { href: "/messages", label: t("nav.inbox") },
         { href: "/settings/profile", label: t("nav.userProfile"), icon: User },
         { href: "/pro/dashboard/profile", label: t("nav.businessProfile") },
         { href: "/settings/notifications", label: t("nav.settings") },
@@ -125,7 +127,7 @@ export function GlatkoHeader({
     : [
         { href: "/dashboard/requests", label: t("nav.requests") },
         { href: "/become-a-pro", label: t("nav.becomeAPro"), icon: Briefcase },
-        { href: "/inbox", label: t("nav.inbox") },
+        { href: "/messages", label: t("nav.inbox") },
         { href: "/settings/profile", label: t("nav.userProfile"), icon: User },
         { href: "/settings/notifications", label: t("nav.settings") },
       ];
@@ -182,7 +184,7 @@ export function GlatkoHeader({
                   href={l.href}
                   className={cn(
                     "rounded-md px-4 py-2 text-xs font-medium transition-colors",
-                    "hasIcon" in l || "hasAdminIcon" in l
+                    "hasIcon" in l || "hasAdminIcon" in l || "hasLeadsIcon" in l
                       ? "flex items-center gap-1.5 text-teal-600 dark:text-teal-400"
                       : isActive
                         ? "bg-gray-100 text-gray-900 dark:bg-neutral-800 dark:text-white"
@@ -191,8 +193,9 @@ export function GlatkoHeader({
                 >
                   {"hasIcon" in l && <Mail className="h-3.5 w-3.5" />}
                   {"hasAdminIcon" in l && <Settings className="h-3.5 w-3.5" />}
+                  {"hasLeadsIcon" in l && <Target className="h-3.5 w-3.5" />}
                   {l.label}
-                  {userId && l.href === "/inbox" ? <InboxUnreadBadge /> : null}
+                  {userId && l.href === "/messages" ? <InboxUnreadBadge /> : null}
                 </Link>
               );
             })}
@@ -316,7 +319,7 @@ export function GlatkoHeader({
                   onClick={() => setMobileOpen(false)}
                   className={cn(
                     "border-b border-gray-100 py-3 text-lg font-medium dark:border-white/5",
-                    "hasIcon" in l || "hasAdminIcon" in l
+                    "hasIcon" in l || "hasAdminIcon" in l || "hasLeadsIcon" in l
                       ? "flex items-center gap-2 text-teal-600 dark:text-teal-400"
                       : "text-gray-900 dark:text-white"
                   )}
@@ -325,8 +328,9 @@ export function GlatkoHeader({
                   {"hasAdminIcon" in l && (
                     <Settings className="h-5 w-5 shrink-0 text-teal-600 dark:text-teal-400" />
                   )}
+                  {"hasLeadsIcon" in l && <Target className="h-5 w-5" />}
                   {l.label}
-                  {userId && l.href === "/inbox" ? <InboxUnreadBadge /> : null}
+                  {userId && l.href === "/messages" ? <InboxUnreadBadge /> : null}
                 </Link>
               ))}
 

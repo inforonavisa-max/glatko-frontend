@@ -29,7 +29,8 @@
     "userProfile": "Profilim",
     "businessProfile": "İşletme profili",
     "settings": "Ayarlar",
-    "adminPanel": "Yönetim Paneli"
+    "adminPanel": "Yönetim Paneli",
+    "leads": "İş Fırsatları"
   },
   "hero": {
     "title": "Karadağ'da Güvenilir Profesyoneller",
@@ -2162,6 +2163,7 @@
       "noQuotesYetBody": "Bölgenizdeki profesyonellere bildirim gönderildi. Yeni teklifler burada görünecek.",
       "bestPrice": "En iyi fiyat",
       "foundingTooltip": "Kurucu sağlayıcı — uzatılmaki öne çıkma süresine sahip erken üye.",
+      "foundingLabel": "Kurucu",
       "completedJobs": "tamamlanan iş",
       "pricingModel": {
         "hourly": "saatlik",
@@ -2197,6 +2199,7 @@
   "messaging": {
     "inboxTitle": "Mesajlar",
     "inboxSubtitle": "Talebinize teklif veren profesyonellerle yazışmalar",
+    "inboxSubtitlePro": "Teklif verdiğiniz taleplerdeki müşterilerle yazışmalar",
     "inboxEmptyTitle": "Henüz mesaj yok",
     "inboxEmptyBody": "Bir teklif kartından sohbet başlattığınızda yazışmalarınız burada görünecek.",
     "threadFromRequest": "Konu",

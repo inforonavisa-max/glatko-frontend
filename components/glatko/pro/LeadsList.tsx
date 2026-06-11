@@ -59,7 +59,11 @@ export interface Lead {
   viewed_at: string | null;
   quote_id: string | null;
   glatko_service_requests: LeadRequest;
-  glatko_request_quotes: LeadQuote[] | null;
+  /**
+   * PostgREST embeds this via the notifications.quote_id FK (many-to-one),
+   * so it arrives as a single object — older code assumed an array.
+   */
+  glatko_request_quotes: LeadQuote | LeadQuote[] | null;
 }
 
 interface ThreadInfo {
@@ -133,7 +137,9 @@ export function LeadsList({
       <div className="grid gap-4">
         {leads.map((lead) => {
           const request = lead.glatko_service_requests;
-          const sentQuote = lead.glatko_request_quotes?.[0];
+          const sentQuote = Array.isArray(lead.glatko_request_quotes)
+            ? lead.glatko_request_quotes[0]
+            : (lead.glatko_request_quotes ?? undefined);
           const isPrimary = lead.is_primary;
           const matchPercent = Math.round(Number(lead.match_score) * 100);
           const categoryName = pickCategoryName(

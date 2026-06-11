@@ -17,6 +17,15 @@ export default async function MessagesInboxPage({ params }: Props) {
   } = await supabase.auth.getUser();
   if (!user) redirect(`/${locale}/login?redirect=/messages`);
 
+  // Same approved-pro check as the root layout — drives the pro-perspective
+  // subtitle in ThreadList.
+  const { data: proProfile } = await supabase
+    .from("glatko_professional_profiles")
+    .select("id, verification_status")
+    .eq("id", user.id)
+    .maybeSingle();
+  const isPro = !!proProfile && proProfile.verification_status === "approved";
+
   const { data: threads, error } = await supabase
     .from("glatko_message_threads")
     .select(
@@ -83,6 +92,7 @@ export default async function MessagesInboxPage({ params }: Props) {
       profileById={profileById}
       currentUserId={user.id}
       locale={locale}
+      isPro={isPro}
     />
   );
 }

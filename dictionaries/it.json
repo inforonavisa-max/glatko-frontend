@@ -29,7 +29,8 @@
     "userProfile": "Il mio profilo",
     "businessProfile": "Profilo attività",
     "settings": "Impostazioni",
-    "adminPanel": "Pannello admin"
+    "adminPanel": "Pannello admin",
+    "leads": "Opportunità di lavoro"
   },
   "hero": {
     "title": "Professionisti affidabili in Montenegro",
@@ -2159,6 +2160,7 @@
       "noQuotesYetBody": "I professionisti nella tua zona sono stati notificati. Nuovi preventivi appariranno qui.",
       "bestPrice": "Miglior prezzo",
       "foundingTooltip": "Provider fondatore — early adopter con visibilità estesa.",
+      "foundingLabel": "Founding",
       "completedJobs": "lavori completati",
       "pricingModel": {
         "hourly": "all'ora",
@@ -2194,6 +2196,7 @@
   "messaging": {
     "inboxTitle": "Messaggi",
     "inboxSubtitle": "Conversazioni con i professionisti che hanno inviato preventivi per le tue richieste",
+    "inboxSubtitlePro": "Conversazioni con i clienti per le richieste a cui hai inviato un preventivo",
     "inboxEmptyTitle": "Nessun messaggio ancora",
     "inboxEmptyBody": "Le tue conversazioni con i professionisti appariranno qui non appena ne avvii una da una scheda preventivo.",
     "threadFromRequest": "Oggetto",

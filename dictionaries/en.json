@@ -29,7 +29,8 @@
     "userProfile": "My profile",
     "businessProfile": "Business profile",
     "settings": "Settings",
-    "adminPanel": "Admin Panel"
+    "adminPanel": "Admin Panel",
+    "leads": "Business Opportunities"
   },
   "hero": {
     "title": "Trusted Professionals in Montenegro",
@@ -2159,6 +2160,7 @@
       "noQuotesYetBody": "Pros in your area have been notified. New quotes will appear here as they arrive.",
       "bestPrice": "Best price",
       "foundingTooltip": "Founding provider — early adopter with extended featured listing.",
+      "foundingLabel": "Founding",
       "completedJobs": "completed jobs",
       "pricingModel": {
         "hourly": "per hour",
@@ -2194,6 +2196,7 @@
   "messaging": {
     "inboxTitle": "Messages",
     "inboxSubtitle": "Conversations with the pros who quoted on your requests",
+    "inboxSubtitlePro": "Conversations with customers about the requests you quoted on",
     "inboxEmptyTitle": "No messages yet",
     "inboxEmptyBody": "Your conversations with pros will show up here once you start one from a quote card.",
     "threadFromRequest": "Re",

@@ -1,10 +1,10 @@
 import { permanentRedirect } from "next/navigation";
 
-export default async function InboxPage({
+export default async function MyRequestsListPage({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  permanentRedirect(`/${locale}/messages`);
+  permanentRedirect(`/${locale}/dashboard/requests`);
 }

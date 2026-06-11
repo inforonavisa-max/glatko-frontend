@@ -112,7 +112,7 @@ export function QuoteSendForm({ lead }: Props) {
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             disabled={submitting}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
             placeholder="50"
           />
         </div>
@@ -131,7 +131,7 @@ export function QuoteSendForm({ lead }: Props) {
               setPricingModel(e.target.value as PricingModel)
             }
             disabled={submitting}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
           >
             {PRICING_MODELS.map((pm) => (
               <option key={pm} value={pm}>
@@ -154,7 +154,7 @@ export function QuoteSendForm({ lead }: Props) {
             onChange={(e) => setMessage(e.target.value)}
             disabled={submitting}
             rows={6}
-            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
             placeholder={t("pro.leads.messagePlaceholder")}
           />
           <p
