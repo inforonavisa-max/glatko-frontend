@@ -2,10 +2,12 @@
  * G-WA-OPTOUT: Infobip WhatsApp inbound (MO) webhook receiver.
  *
  * Infobip forwards every message a user sends to our WhatsApp sender
- * (447860089253) here as an HTTPS POST (per-sender "Forward to HTTP"
- * configuration). Unlike Resend there is no Svix signing — auth is a shared
- * secret we configure as a custom header on the Infobip side:
- *   x-glatko-webhook-secret: <INFOBIP_INBOUND_WEBHOOK_SECRET>
+ * (447860089253) here as an HTTPS POST, routed through a CPaaS-X inbound
+ * subscription + notification profile. Infobip's subscription auth offers only
+ * Basic / HMAC / OAuth (no arbitrary custom header), so we use HTTP Basic:
+ *   Authorization: Basic base64("glatko-webhook:<INFOBIP_INBOUND_WEBHOOK_SECRET>")
+ * The username is the fixed constant below; the password is the shared secret
+ * (same INFOBIP_INBOUND_WEBHOOK_SECRET env, reused — no separate credential).
  *
  * What we do per inbound message (lib/notifications/wa-stop-keywords.ts):
  *   stop  → set messaging_opt_in=false (+at, source='whatsapp_stop') for ALL
@@ -37,11 +39,39 @@ type InfobipInboundMessage = {
 
 type InfobipInboundPayload = { results?: InfobipInboundMessage[] };
 
-function secretMatches(provided: string | null, expected: string): boolean {
-  if (!provided) return false;
+/** Fixed Basic-auth username configured on the Infobip subscription side. */
+const BASIC_AUTH_USERNAME = "glatko-webhook";
+
+/** Constant-time string equality (avoids length-leak short-circuit). */
+function safeEqual(provided: string, expected: string): boolean {
   const a = Buffer.from(provided);
   const b = Buffer.from(expected);
   return a.length === b.length && timingSafeEqual(a, b);
+}
+
+/**
+ * Verify the `Authorization: Basic ...` header against the fixed username +
+ * the shared secret (password). Returns false for any missing/malformed header
+ * or credential mismatch. Both fields are compared in constant time.
+ */
+function basicAuthMatches(header: string | null, secret: string): boolean {
+  if (!header) return false;
+  const [scheme, encoded] = header.split(" ");
+  if (scheme !== "Basic" || !encoded) return false;
+  let decoded: string;
+  try {
+    decoded = Buffer.from(encoded, "base64").toString("utf8");
+  } catch {
+    return false;
+  }
+  const sep = decoded.indexOf(":");
+  if (sep < 0) return false;
+  const user = decoded.slice(0, sep);
+  const pass = decoded.slice(sep + 1);
+  // Evaluate both halves regardless of the first result (no early-out leak).
+  const userOk = safeEqual(user, BASIC_AUTH_USERNAME);
+  const passOk = safeEqual(pass, secret);
+  return userOk && passOk;
 }
 
 export async function POST(request: NextRequest) {
@@ -52,7 +82,7 @@ export async function POST(request: NextRequest) {
     );
     return NextResponse.json({ error: "not_configured" }, { status: 503 });
   }
-  if (!secretMatches(request.headers.get("x-glatko-webhook-secret"), expected)) {
+  if (!basicAuthMatches(request.headers.get("authorization"), expected)) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
