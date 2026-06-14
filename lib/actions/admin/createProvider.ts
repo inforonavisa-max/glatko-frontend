@@ -94,42 +94,51 @@ async function writeProviderProfileForPromote(
   }
 
   const nowIso = new Date().toISOString();
-  // verification_status is the source of truth for the verified flag.
+  // verification_status is the source of truth for the verified flag here:
+  // is_verified is DERIVED from it, NOT taken from the form's independent
+  // is_verified toggle. NOTE this diverges from create-mode (the RPC writes
+  // the raw is_verified toggle), so the two flows persist different values
+  // only when an admin desyncs the two controls; the default (approved +
+  // verified) agrees. Intentional per spec — revisit if create-mode is aligned.
   const isVerified = input.verification_status === "approved";
 
-  // ── UPSERT the professional profile (CREATE when the row is missing) ─
+  // ── INSERT the professional profile (CREATE — the caller guarantees no
+  // existing row via the DUPLICATE_PRO guard). A plain INSERT, NOT an upsert:
+  // the guard read and this write are not atomic, and the public become-a-pro
+  // wizard (become-a-pro/actions.ts) also upserts this table by id. An
+  // `onConflict:"id"` upsert would silently UPDATE-clobber a row that appeared
+  // in that TOCTOU window — and the compensating DELETE below could then wipe
+  // it. INSERT instead raises a PK unique_violation (23505), surfaced as
+  // UNIQUE_VIOLATION below, exactly as the migration-048 RPC's plain INSERT does.
   const { error: ppErr } = await admin
     .from("glatko_professional_profiles")
-    .upsert(
-      {
-        id: userId,
-        business_name: input.business_name || null,
-        slug,
-        phone: resolvedPhone || null,
-        bio: input.bio || null,
-        hourly_rate_min: input.hourly_rate_min ?? null,
-        hourly_rate_max: input.hourly_rate_max ?? null,
-        years_experience: input.years_experience ?? null,
-        location_city: input.location_city || null,
-        service_radius_km: input.service_radius_km,
-        languages: input.languages,
-        is_verified: isVerified,
-        verified_at: isVerified ? nowIso : null,
-        is_active: input.is_active,
-        verification_status: input.verification_status,
-        verification_tier: input.verification_tier,
-        insurance_status: "none",
-        portfolio_images: input.portfolio_images ?? [],
-        is_founding_provider: input.is_founding_provider,
-        founding_provider_at: input.is_founding_provider ? nowIso : null,
-        founding_provider_number: foundingNumber,
-      },
-      { onConflict: "id" },
-    );
+    .insert({
+      id: userId,
+      business_name: input.business_name || null,
+      slug,
+      phone: resolvedPhone || null,
+      bio: input.bio || null,
+      hourly_rate_min: input.hourly_rate_min ?? null,
+      hourly_rate_max: input.hourly_rate_max ?? null,
+      years_experience: input.years_experience ?? null,
+      location_city: input.location_city || null,
+      service_radius_km: input.service_radius_km,
+      languages: input.languages,
+      is_verified: isVerified,
+      verified_at: isVerified ? nowIso : null,
+      is_active: input.is_active,
+      verification_status: input.verification_status,
+      verification_tier: input.verification_tier,
+      insurance_status: "none",
+      portfolio_images: input.portfolio_images ?? [],
+      is_founding_provider: input.is_founding_provider,
+      founding_provider_at: input.is_founding_provider ? nowIso : null,
+      founding_provider_number: foundingNumber,
+    });
   if (ppErr) {
     glatkoCaptureException(ppErr, {
       module: "admin-create-provider",
-      op: "promote-upsert-profile",
+      op: "promote-insert-profile",
       userId,
     });
     return {
