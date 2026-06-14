@@ -14,24 +14,31 @@ interface Props {
 
 async function loadPrefillUser(userId: string): Promise<PrefillUser | null> {
   const admin = createAdminClient();
-  const { data: profile } = await admin
-    .from("profiles")
-    .select(
-      "id, email, full_name, phone, city, preferred_locale, avatar_url",
-    )
-    .eq("id", userId)
-    .maybeSingle();
+  // Contact (email/phone) resolves auth-first. A phone-OTP user has a NULL
+  // email AND NULL phone in profiles — the number lives only on
+  // auth.users.phone — so a profiles-only read leaves the form blank and the
+  // admin would have to re-type the phone by hand.
+  const [{ data: profile }, { data: authData }] = await Promise.all([
+    admin
+      .from("profiles")
+      .select("id, email, full_name, phone, city, preferred_locale, avatar_url")
+      .eq("id", userId)
+      .maybeSingle(),
+    admin.auth.admin.getUserById(userId),
+  ]);
 
-  if (!profile) return null;
+  const authUser = authData?.user ?? null;
+  // The user must exist in auth.users; the profiles row may be absent/sparse.
+  if (!authUser && !profile) return null;
 
   return {
-    id: profile.id as string,
-    email: (profile.email as string) ?? "",
-    full_name: (profile.full_name as string | null) ?? null,
-    phone: (profile.phone as string | null) ?? null,
-    city: (profile.city as string | null) ?? null,
-    preferred_locale: (profile.preferred_locale as string | null) ?? null,
-    avatar_url: (profile.avatar_url as string | null) ?? null,
+    id: userId,
+    email: authUser?.email ?? (profile?.email as string | null) ?? "",
+    full_name: (profile?.full_name as string | null) ?? null,
+    phone: authUser?.phone ?? (profile?.phone as string | null) ?? null,
+    city: (profile?.city as string | null) ?? null,
+    preferred_locale: (profile?.preferred_locale as string | null) ?? null,
+    avatar_url: (profile?.avatar_url as string | null) ?? null,
   };
 }
 

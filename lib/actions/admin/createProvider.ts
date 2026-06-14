@@ -40,10 +40,18 @@ async function requireAdmin(): Promise<
  *   - mode="promote": existing user_id → upgrade to pro
  *   - mode="create":  brand-new email + admin-set password → user + pro
  *
- * The atomic write happens inside the glatko_admin_create_provider RPC
- * (migration 048). This action is the orchestration around it: auth gate,
- * Zod parse, account creation in create-mode, RPC call, audit log,
- * cache revalidation.
+ * Both flows resolve a user_id + expected_email and then call the SAME atomic
+ * RPC glatko_admin_create_provider (migrations 048 + 065). The RPC does all
+ * the writes in one transaction (profiles UPDATE + glatko_professional_profiles
+ * INSERT + glatko_pro_services INSERT) with its own pre-flight guards; this
+ * action is the orchestration around it: auth gate, Zod parse, account
+ * creation in create-mode, the user lookup in promote-mode, RPC call, audit
+ * log, cache revalidation.
+ *
+ * Phone-OTP note (G-ADMIN-PROMOTE-PHONE-OTP): a phone-only signup has a NULL
+ * email in BOTH auth.users and profiles. The promote lookup therefore resolves
+ * the user by id (never by email) and the RPC (migration 065) checks profile
+ * existence by row, not by email-null, and sources contact from auth.users.
  *
  * Audit log is best-effort (lib/admin/audit.ts); a failure to log never
  * blocks the success path.
@@ -68,40 +76,38 @@ export async function createProviderAction(
 
   const admin = createAdminClient();
 
-  // ── Resolve user_id by mode ────────────────────────────────────────
+  // ── Resolve user_id + expected_email by mode ───────────────────────
   let userId: string;
   let expectedEmail: string;
 
   if (input.mode === "promote") {
     userId = input.promote_user_id;
-    // Look up the email from auth.users so the RPC's email-match guard
-    // has something authoritative to compare against.
+
+    // Resolve the auth user by id — NEVER by email. A phone-OTP signup has a
+    // NULL email in auth.users AND profiles, so an email lookup spuriously
+    // "not found"s a user that exists. The id is authoritative (it comes from
+    // the /admin/users/[id] route). Existence is checked on the user, not on
+    // its email.
     const { data: authData, error: authErr } =
       await admin.auth.admin.getUserById(userId);
-    if (authErr || !authData?.user?.email) {
+    if (authErr) {
       return {
         success: false,
-        error: "User not found in auth.users",
+        error: `Failed to load auth user ${userId}: ${authErr.message}`,
+        code: "AUTH_LOOKUP_FAILED",
+      };
+    }
+    if (!authData?.user) {
+      return {
+        success: false,
+        error: `auth user not found for id ${userId}`,
         code: "USER_NOT_FOUND",
       };
     }
-    expectedEmail = authData.user.email;
-
-    // Defence: refuse to promote a user that already has a pro profile.
-    // The RPC also checks this, but failing earlier with a friendlier
-    // message is worth the extra round-trip.
-    const { data: existingPro } = await admin
-      .from("glatko_professional_profiles")
-      .select("id")
-      .eq("id", userId)
-      .maybeSingle();
-    if (existingPro) {
-      return {
-        success: false,
-        error: "Bu kullanıcı zaten bir profesyonel profile sahip.",
-        code: "DUPLICATE_PRO",
-      };
-    }
+    // Empty when the user has no email (phone-OTP) → the RPC skips its
+    // email-match guard. For an email user this is their email and the RPC
+    // confirms it matches profiles.email.
+    expectedEmail = authData.user.email ?? "";
   } else {
     // mode === "create"
     const { data: created, error: createErr } =
@@ -126,7 +132,10 @@ export async function createProviderAction(
     // runs below, profiles will be populated. No race window.
   }
 
-  // ── Build RPC payload ──────────────────────────────────────────────
+  // ── Build RPC payload (identical shape for both modes) ─────────────
+  // is_verified is passed through from the form's own toggle (the RPC honors
+  // it independently of verification_status), so promote and create persist
+  // identical data for identical input.
   const payload = {
     user_id: userId,
     expected_email: expectedEmail,
@@ -155,7 +164,7 @@ export async function createProviderAction(
     services: input.services,
   };
 
-  // ── Call atomic RPC ────────────────────────────────────────────────
+  // ── Call the atomic RPC ────────────────────────────────────────────
   const { data: rpcResult, error: rpcErr } = await admin.rpc(
     "glatko_admin_create_provider",
     { payload },
@@ -168,10 +177,10 @@ export async function createProviderAction(
       userId,
     });
 
-    // If we created an auth user but the pro profile insert failed, the
-    // auth user is now orphaned. Compensate by deleting it so the admin
-    // can retry with the same email. The trigger-created profiles row
-    // cascades via auth.users.id FK.
+    // If we created an auth user (create-mode) but the pro write failed, the
+    // auth user is now orphaned. Compensate by deleting it so the admin can
+    // retry with the same email; the trigger-created profiles row cascades via
+    // the auth.users.id FK. Promote-mode never created the user, so leave it.
     if (input.mode === "create") {
       try {
         await admin.auth.admin.deleteUser(userId);
@@ -184,11 +193,7 @@ export async function createProviderAction(
       }
     }
 
-    return {
-      success: false,
-      error: rpcErr.message,
-      code: "RPC_FAILED",
-    };
+    return { success: false, error: rpcErr.message, code: "RPC_FAILED" };
   }
 
   const result = rpcResult as {
@@ -200,9 +205,9 @@ export async function createProviderAction(
   };
 
   if (!result.success) {
-    // RPC-level rejection (e.g. DUPLICATE_SLUG, EMAIL_MISMATCH). Roll back
-    // the just-created auth user in create mode so the admin can fix the
-    // input and retry.
+    // RPC-level rejection (e.g. DUPLICATE_SLUG, DUPLICATE_PRO, EMAIL_MISMATCH).
+    // Roll back the just-created auth user in create-mode so the admin can fix
+    // the input and retry; promote-mode has nothing to roll back.
     if (input.mode === "create") {
       try {
         await admin.auth.admin.deleteUser(userId);
