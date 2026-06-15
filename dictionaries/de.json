@@ -2425,7 +2425,7 @@
   "verticals": {
     "ariaLabel": "Glatko-Bereiche",
     "services": "Dienstleistungen",
-    "career": "Arbeit & Karriere",
+    "career": "Arbeit",
     "health": "Gesundheit",
     "soon": "Bald"
   },
@@ -2470,8 +2470,8 @@
     }
   },
   "careerVertical": {
-    "seoTitle": "Arbeit & Karriere — Bald verfügbar",
-    "title": "Arbeit & Karriere kommt",
+    "seoTitle": "Arbeit — Bald verfügbar",
+    "title": "Arbeit kommt",
     "subtitle": "Wir bauen eine vertrauenswürdige Verbindung zwischen Arbeitgebern und Arbeitskräften in Montenegro auf. Dieser Bereich folgt in Kürze.",
     "backHome": "Zur Startseite"
   }

@@ -2425,7 +2425,7 @@
   "verticals": {
     "ariaLabel": "Sezioni di Glatko",
     "services": "Servizi",
-    "career": "Lavoro & Carriera",
+    "career": "Lavoro",
     "health": "Salute",
     "soon": "Presto"
   },
@@ -2470,8 +2470,8 @@
     }
   },
   "careerVertical": {
-    "seoTitle": "Lavoro & Carriera — In arrivo",
-    "title": "Lavoro & Carriera sta arrivando",
+    "seoTitle": "Lavoro — In arrivo",
+    "title": "Lavoro sta arrivando",
     "subtitle": "Stiamo costruendo un modo affidabile per mettere in contatto datori di lavoro e lavoratori in Montenegro. Questa sezione arriverà presto.",
     "backHome": "Torna alla home"
   }

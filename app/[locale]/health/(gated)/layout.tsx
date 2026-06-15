@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { isHealthVerticalEnabled } from "@/lib/health/flags";
+import { isHealthVerticalEnabled } from "@/lib/saglik/flags";
 
 // Defense-in-depth behind the middleware guard (see middleware.ts H0 block):
 // if a request ever reaches a gated health route while the flag is off —

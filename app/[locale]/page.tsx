@@ -17,7 +17,7 @@ import {
 } from "@/lib/seo/jsonld";
 import { HOME_FAQ_KEYS } from "@/lib/glatko/home-faq";
 import { VerticalsNav } from "@/components/glatko/verticals/VerticalsNav";
-import { isHealthVerticalEnabled } from "@/lib/health/flags";
+import { isHealthVerticalEnabled } from "@/lib/saglik/flags";
 
 type Props = {
   params: Promise<{ locale: string }> | { locale: string };

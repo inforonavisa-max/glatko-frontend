@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { updateSession } from '@/supabase/middleware';
 import { enforceRateLimit } from '@/lib/rateLimit';
 import { locales, routing } from '@/i18n/routing';
-import { isHealthVerticalEnabled } from '@/lib/health/flags';
+import { isHealthVerticalEnabled } from '@/lib/saglik/flags';
 import {
   HEALTH_FIRST_SEGMENTS,
   HEALTH_COMING_SOON_BARE_PATHS,

@@ -27,20 +27,24 @@ const config: Config = {
           950: "#333333",
           DEFAULT: "#333333",
         },
-        // Vertical accent tokens (MASTER_PLAN §1.5, K7-r2): wayfinding only —
-        // tab icons/active indicators, section tints (50), small factual
-        // badges. NEVER buttons/CTAs/links/focus rings (those stay teal).
-        // health = sky (medical blue); career = amber.
-        health: {
+        // Sub-brand accent tokens — SINGLE SOURCE per vertical (MASTER_PLAN
+        // §1.5 + v1.3 Glatko Sağlık sub-brand). Each vertical draws its accent
+        // ONLY from its own group; no scattered hex elsewhere. Wayfinding use
+        // only: tab icon + active indicator, hero 50-tint, category icons,
+        // factual badges/chips. Buttons/CTAs/links/focus rings stay teal.
+        //
+        // DEFAULT = sky-600 (#0284C7). Contrast on white is 4.10:1 — fine for
+        // icons/large UI but BELOW the 4.5:1 AA text floor, so DEFAULT is
+        // NEVER used for body/label text. Text uses brandHealth-700 (5.93:1).
+        // The carve-out flips this group to `primary` (EXTRACTION.md).
+        brandHealth: {
+          DEFAULT: "#0284C7", // sky-600
           50: "#F0F9FF",
-          100: "#E0F2FE",
-          600: "#0284C7",
           700: "#0369A1",
         },
-        career: {
+        brandCareer: {
+          DEFAULT: "#D97706", // amber-600
           50: "#FFFBEB",
-          100: "#FEF3C7",
-          600: "#D97706",
           700: "#B45309",
         },
         teal: {

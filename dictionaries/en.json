@@ -2425,7 +2425,7 @@
   "verticals": {
     "ariaLabel": "Glatko sections",
     "services": "Services",
-    "career": "Work & Career",
+    "career": "Jobs",
     "health": "Health",
     "soon": "Soon"
   },
@@ -2470,8 +2470,8 @@
     }
   },
   "careerVertical": {
-    "seoTitle": "Work & Career — Coming Soon",
-    "title": "Work & Career is coming",
+    "seoTitle": "Jobs — Coming Soon",
+    "title": "Jobs is coming",
     "subtitle": "We're building a trusted way to connect employers and workers in Montenegro. This section is coming soon.",
     "backHome": "Back to home"
   }

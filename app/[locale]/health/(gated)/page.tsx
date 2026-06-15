@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { HeartPulse, MapPin, Search, Stethoscope } from "lucide-react";
 import { routing } from "@/i18n/routing";
+import { VerticalBrand } from "@/components/glatko/verticals/VerticalBrand";
 
 type Props = {
   params: Promise<{ locale: string }> | { locale: string };
@@ -32,11 +33,13 @@ export default async function HealthHomePage({ params }: Props) {
   const t = await getTranslations();
 
   return (
-    <div className="bg-health-50/60 dark:bg-transparent">
+    <div className="bg-brandHealth-50/60 dark:bg-transparent">
       <section className="mx-auto max-w-3xl px-4 pb-24 pt-32 text-center">
-        <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-health-100 dark:bg-health-600/15">
-          <HeartPulse className="h-7 w-7 text-health-600" />
+        <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-brandHealth-50 dark:bg-brandHealth/15">
+          <HeartPulse className="h-7 w-7 text-brandHealth" />
         </div>
+        {/* Named sub-brand lockup (§1.6) as the hero brand eyebrow */}
+        <VerticalBrand vertical="health" size="md" className="mb-3" />
         <h1 className="font-serif text-4xl font-light tracking-tight text-gray-900 dark:text-white sm:text-5xl">
           {t("healthVertical.landing.title")}
         </h1>
@@ -85,7 +88,7 @@ export default async function HealthHomePage({ params }: Props) {
           {POPULAR_SPECIALTY_KEYS.map((key) => (
             <span
               key={key}
-              className="rounded-full border border-health-100 bg-white px-4 py-1.5 text-sm text-health-700 dark:border-health-600/30 dark:bg-white/5 dark:text-health-600"
+              className="rounded-full border border-brandHealth-50 bg-white px-4 py-1.5 text-sm text-brandHealth-700 dark:border-brandHealth/30 dark:bg-white/5 dark:text-brandHealth"
             >
               {t(`healthVertical.specialties.${key}`)}
             </span>

@@ -1,17 +1,21 @@
 import { routing } from "@/i18n/routing";
+import { HEALTH_ROUTES } from "@/lib/saglik/config";
 
 /**
  * Localized URL segments for the vertical surfaces, derived from the
  * i18n/routing.ts pathnames map so middleware guards can never drift from
  * the slugs next-intl actually serves (single source — same rationale as
- * buildAlternates in lib/seo.ts).
+ * buildAlternates in lib/seo.ts). Route KEYS come from lib/saglik/config so
+ * the health module owns its own paths (carve-out: EXTRACTION.md).
  */
 function firstSegments(entry: string | Record<string, string>): Set<string> {
   const paths = typeof entry === "string" ? [entry] : Object.values(entry);
   return new Set(paths.map((p) => p.split("/")[1]));
 }
 
-export const HEALTH_FIRST_SEGMENTS = firstSegments(routing.pathnames["/health"]);
+export const HEALTH_FIRST_SEGMENTS = firstSegments(
+  routing.pathnames[HEALTH_ROUTES.home],
+);
 
 export const CAREER_FIRST_SEGMENTS = firstSegments(routing.pathnames["/career"]);
 
@@ -20,7 +24,7 @@ export const CAREER_FIRST_SEGMENTS = firstSegments(routing.pathnames["/career"])
  * route that stays reachable while HEALTH_VERTICAL_ENABLED=false (K2).
  */
 export const HEALTH_COMING_SOON_BARE_PATHS: ReadonlySet<string> = new Set(
-  Object.values(routing.pathnames["/health/coming-soon"]),
+  Object.values(routing.pathnames[HEALTH_ROUTES.comingSoon]),
 );
 
 /**

@@ -2428,7 +2428,7 @@
   "verticals": {
     "ariaLabel": "Glatko sekcije",
     "services": "Usluge",
-    "career": "Posao i karijera",
+    "career": "Posao",
     "health": "Zdravlje",
     "soon": "Uskoro"
   },
@@ -2473,8 +2473,8 @@
     }
   },
   "careerVertical": {
-    "seoTitle": "Posao i karijera — uskoro",
-    "title": "Posao i karijera stiže",
+    "seoTitle": "Posao — uskoro",
+    "title": "Posao stiže",
     "subtitle": "Gradimo pouzdan način povezivanja poslodavaca i radnika u Crnoj Gori. Ova sekcija stiže uskoro.",
     "backHome": "Nazad na početnu"
   }

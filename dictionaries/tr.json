@@ -2428,7 +2428,7 @@
   "verticals": {
     "ariaLabel": "Glatko bölümleri",
     "services": "Hizmetler",
-    "career": "İş & Kariyer",
+    "career": "İş",
     "health": "Sağlık",
     "soon": "Yakında"
   },
@@ -2473,8 +2473,8 @@
     }
   },
   "careerVertical": {
-    "seoTitle": "İş & Kariyer — Yakında",
-    "title": "İş & Kariyer geliyor",
+    "seoTitle": "İş — Yakında",
+    "title": "İş geliyor",
     "subtitle": "Karadağ'da işverenlerle güvenilir çalışanları buluşturacağız. Bu bölüm çok yakında.",
     "backHome": "Ana sayfaya dön"
   }

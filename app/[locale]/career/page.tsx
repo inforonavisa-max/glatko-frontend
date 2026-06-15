@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { Briefcase } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
+import { VerticalBrand } from "@/components/glatko/verticals/VerticalBrand";
 
 type Props = {
   params: Promise<{ locale: string }> | { locale: string };
@@ -34,16 +35,20 @@ export default async function CareerComingSoonPage({ params }: Props) {
   const t = await getTranslations();
 
   return (
-    <div className="bg-career-50/60 dark:bg-transparent">
+    <div className="bg-brandCareer-50/60 dark:bg-transparent">
       <div className="mx-auto max-w-2xl px-4 pb-24 pt-32 text-center">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-career-100 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-career-700 dark:bg-career-600/15 dark:text-career-600">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-brandCareer-50 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-brandCareer-700 dark:bg-brandCareer/15 dark:text-brandCareer">
           <Briefcase className="h-3.5 w-3.5" />
           {t("verticals.soon")}
         </span>
-        <h1 className="mt-6 font-serif text-4xl font-light tracking-tight text-gray-900 dark:text-white sm:text-5xl">
-          {t("careerVertical.title")}
+        {/* Named sub-brand lockup (§1.6) is the coming-soon hero */}
+        <h1 className="mt-6">
+          <VerticalBrand vertical="career" size="lg" />
         </h1>
-        <p className="mx-auto mt-4 max-w-xl text-gray-600 dark:text-white/60">
+        <p className="mx-auto mt-3 text-lg text-gray-700 dark:text-white/80">
+          {t("careerVertical.title")}
+        </p>
+        <p className="mx-auto mt-3 max-w-xl text-gray-600 dark:text-white/60">
           {t("careerVertical.subtitle")}
         </p>
         <div className="mt-10">

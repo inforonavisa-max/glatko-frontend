@@ -5,7 +5,8 @@ import { notFound } from "next/navigation";
 import { HeartPulse } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
-import { HealthWaitlistForm } from "@/components/glatko/health/HealthWaitlistForm";
+import { HealthWaitlistForm } from "@/components/glatko-saglik/HealthWaitlistForm";
+import { VerticalBrand } from "@/components/glatko/verticals/VerticalBrand";
 
 type Props = {
   params: Promise<{ locale: string }> | { locale: string };
@@ -30,17 +31,21 @@ export default async function HealthComingSoonPage({ params }: Props) {
   const t = await getTranslations();
 
   return (
-    <div className="bg-health-50/60 dark:bg-transparent">
+    <div className="bg-brandHealth-50/60 dark:bg-transparent">
       <div className="mx-auto max-w-2xl px-4 pb-24 pt-32">
         <div className="text-center">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-health-100 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-health-700 dark:bg-health-600/15 dark:text-health-600">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-brandHealth-50 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-brandHealth-700 dark:bg-brandHealth/15 dark:text-brandHealth">
             <HeartPulse className="h-3.5 w-3.5" />
             {t("healthVertical.comingSoon.badge")}
           </span>
-          <h1 className="mt-6 font-serif text-4xl font-light tracking-tight text-gray-900 dark:text-white sm:text-5xl">
-            {t("healthVertical.comingSoon.title")}
+          {/* Named sub-brand lockup (§1.6) is the coming-soon hero */}
+          <h1 className="mt-6">
+            <VerticalBrand vertical="health" size="lg" />
           </h1>
-          <p className="mx-auto mt-4 max-w-xl text-gray-600 dark:text-white/60">
+          <p className="mx-auto mt-3 text-lg text-gray-700 dark:text-white/80">
+            {t("healthVertical.comingSoon.title")}
+          </p>
+          <p className="mx-auto mt-3 max-w-xl text-gray-600 dark:text-white/60">
             {t("healthVertical.comingSoon.subtitle")}
           </p>
         </div>

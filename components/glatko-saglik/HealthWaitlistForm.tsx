@@ -61,7 +61,7 @@ export function HealthWaitlistForm({ locale }: { locale: Locale }) {
 
   if (status === "success") {
     return (
-      <div className="mt-6 flex items-center gap-3 rounded-xl bg-health-50 p-4 text-sm text-health-700 dark:bg-health-600/10 dark:text-health-600">
+      <div className="mt-6 flex items-center gap-3 rounded-xl bg-brandHealth-50 p-4 text-sm text-brandHealth-700 dark:bg-brandHealth/10 dark:text-brandHealth">
         <CheckCircle2 className="h-5 w-5 shrink-0" />
         {t("waitlist.success")}
       </div>

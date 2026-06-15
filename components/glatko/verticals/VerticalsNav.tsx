@@ -7,31 +7,56 @@ import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { cn } from "@/lib/utils";
+import { VERTICAL_TABS, type VerticalKey } from "@/lib/verticals/config";
 
 /**
- * H0: 3-tab vertical navigation (Hizmetler · İş & Kariyer · Sağlık) —
- * Airbnb-style scroll collapse adapted from the Fijaka header pattern
+ * H0: 3-tab vertical navigation (Hizmetler · İş · Sağlık) — Airbnb-style
+ * scroll collapse adapted from the Fijaka header pattern
  * (sahibinden-ai-frontend/frontend/components/header/{index,CategoryTabs}.tsx):
  * hysteresis thresholds prevent state oscillation, icons collapse via
  * AnimatePresence, the active underline is a layoutId spring.
  *
- * Color rules (MASTER_PLAN §1.5, K7-r2): accents appear ONLY on tab icons,
- * active indicators and the small "soon" badges — services keeps the
- * existing teal brand, health uses the `health` (sky) tokens, career the
- * `career` (amber) tokens. Buttons/links everywhere else stay teal.
+ * Tabs come from lib/verticals/config (single source — no href literals here,
+ * 1e). Labels stay SHORT (the bare vertical word); the named sub-brand lockup
+ * lives in VerticalBrand on section heroes (§1.6). Color rules (§1.5): accents
+ * appear ONLY on tab icons, active indicators and the small "soon" badges,
+ * drawn exclusively from each vertical's brand-token group — services keeps
+ * teal, health uses brandHealth (sky), career brandCareer (amber).
  */
 
 const COMPACT_AT = 60; // scroll DOWN past this → compact
 const TOP_AT = 20; // scroll UP past this → back to expanded
 
-type VerticalTab = {
-  key: "services" | "career" | "health";
-  icon: LucideIcon;
-  soonBadge: boolean;
-  // Static class strings so the Tailwind content scanner sees them.
-  iconActive: string;
-  underline: string;
-  badge: string;
+const ICONS: Record<VerticalKey, LucideIcon> = {
+  services: Wrench,
+  career: Briefcase,
+  health: HeartPulse,
+};
+
+// Static class strings per accent group so the Tailwind content scanner
+// keeps them. Text-bearing badge uses the 700 shade (AA contrast); the
+// DEFAULT sky-600 is for icons/indicators only (§1.5 contrast note).
+const ACCENT_CLASSES: Record<
+  "teal" | "brandHealth" | "brandCareer",
+  { icon: string; underline: string; badge: string }
+> = {
+  teal: {
+    icon: "text-teal-600 dark:text-teal-400",
+    underline: "bg-teal-500",
+    badge: "",
+  },
+  brandHealth: {
+    icon: "text-brandHealth dark:text-brandHealth",
+    underline: "bg-brandHealth",
+    badge:
+      "bg-brandHealth-50 text-brandHealth-700 dark:bg-brandHealth/15 dark:text-brandHealth",
+  },
+  brandCareer: {
+    icon: "text-brandCareer dark:text-brandCareer",
+    underline: "bg-brandCareer",
+    badge:
+      "bg-brandCareer-50 text-brandCareer-700 dark:bg-brandCareer/15 dark:text-brandCareer",
+  },
 };
 
 export function VerticalsNav({ healthEnabled }: { healthEnabled: boolean }) {
@@ -64,38 +89,30 @@ export function VerticalsNav({ healthEnabled }: { healthEnabled: boolean }) {
     return () => clearTimeout(timer);
   }, [compact]);
 
-  const tabs: Array<VerticalTab & { href: "/" | "/career" | "/health" | "/health/coming-soon" }> = [
-    {
-      key: "services",
-      href: "/",
-      icon: Wrench,
-      soonBadge: false,
-      iconActive: "text-teal-600 dark:text-teal-400",
-      underline: "bg-teal-500",
-      badge: "",
-    },
-    {
-      key: "career",
-      href: "/career",
-      icon: Briefcase,
-      soonBadge: true,
-      iconActive: "text-career-600",
-      underline: "bg-career-600",
-      badge: "bg-career-100 text-career-700 dark:bg-career-600/15 dark:text-career-600",
-    },
-    {
-      key: "health",
-      href: healthEnabled ? "/health" : "/health/coming-soon",
-      icon: HeartPulse,
-      soonBadge: !healthEnabled,
-      iconActive: "text-health-600",
-      underline: "bg-health-600",
-      badge: "bg-health-100 text-health-700 dark:bg-health-600/15 dark:text-health-600",
-    },
-  ];
+  const tabs = VERTICAL_TABS.map((tab) => {
+    // Health swings between the live homepage and the coming-soon placeholder
+    // based on the flag (K2); the other verticals have a single target.
+    const href =
+      tab.key === "health"
+        ? healthEnabled
+          ? tab.liveHref
+          : tab.comingSoonHref
+        : tab.liveHref;
+    // "Soon" badge: career always; health only while dark.
+    const soonBadge =
+      tab.key === "career" || (tab.key === "health" && !healthEnabled);
+    return {
+      ...tab,
+      href,
+      soonBadge,
+      accentClasses: ACCENT_CLASSES[tab.accent],
+    };
+  });
 
   const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname?.startsWith(href.split("/").slice(0, 2).join("/"));
+    href === "/"
+      ? pathname === "/"
+      : pathname?.startsWith(href.split("/").slice(0, 2).join("/"));
 
   return (
     <nav
@@ -118,7 +135,7 @@ export function VerticalsNav({ healthEnabled }: { healthEnabled: boolean }) {
       >
         {tabs.map((tab) => {
           const active = isActive(tab.href);
-          const Icon = tab.icon;
+          const Icon = ICONS[tab.key];
           return (
             <Link
               key={tab.key}
@@ -142,7 +159,7 @@ export function VerticalsNav({ healthEnabled }: { healthEnabled: boolean }) {
                       className={cn(
                         "h-5 w-5 transition-colors duration-200",
                         active
-                          ? tab.iconActive
+                          ? tab.accentClasses.icon
                           : "text-gray-400 dark:text-white/40",
                       )}
                       strokeWidth={1.5}
@@ -169,7 +186,7 @@ export function VerticalsNav({ healthEnabled }: { healthEnabled: boolean }) {
                   <span
                     className={cn(
                       "rounded-full px-1.5 py-px text-[8px] font-bold uppercase leading-none tracking-wider",
-                      tab.badge,
+                      tab.accentClasses.badge,
                     )}
                   >
                     {t("soon")}
@@ -182,7 +199,7 @@ export function VerticalsNav({ healthEnabled }: { healthEnabled: boolean }) {
                   layoutId="verticalsNavUnderline"
                   className={cn(
                     "absolute -bottom-1 left-1 right-1 h-[2.5px] rounded-full",
-                    tab.underline,
+                    tab.accentClasses.underline,
                   )}
                   transition={
                     reduced

@@ -1,4 +1,4 @@
-# GLATKO SAĞLIK (Health Vertical) — Master Uygulama Planı v1.1
+# GLATKO SAĞLIK (Health Vertical) — Master Uygulama Planı v1.3
 
 > Doktortakvimi.com mantığında, Glatko.app içinde ayrı bir bölüm olarak inşa edilecek
 > sağlık randevu sistemi. Bu doküman Claude Code'a sprint sprint verilecek tek kaynak plandır.
@@ -9,6 +9,12 @@
 > varsayımı kodla çelişiyordu (gerçek marka rengi teal `#14B8A6/#0D9488`,
 > `tailwind.config.ts`). Rohat onayıyla renk haritası revize edildi (Bölüm 1.5);
 > H0 uygulama notları H0 bölümünün sonuna eklendi.
+> **v1.3 (15.06.2026):** "Glatko Sağlık" alt-marka (sub-brand) mimarisi eklendi
+> (yeni Bölüm 1.6, Getir modeli: isim + modülerlik + ayrılabilirlik, bugün ayrı
+> altyapı YOK). §1.5 tek-kaynak `brandHealth`/`brandCareer` token'larına geçti
+> (eski `health-*`/`career-*` → yeniden adlandırıldı) + sky-600 metin-kontrast
+> notu. Carve-out checklist: `docs/health/EXTRACTION.md`. Tüm planda
+> **"İş & Kariyer" → "İş"** (switcher etiketi kısaldı, K1 hedefi değişmedi).
 
 ---
 
@@ -85,7 +91,8 @@ app/api/health/
 
 ### 1.2 Anasayfa: 3 sekmeli kapanır navigasyon (Airbnb tarzı)
 
-- Sekmeler: **Hizmetler** (mevcut reverse marketplace) · **İş & Kariyer** · **Sağlık**
+- Sekmeler: **Hizmetler** (mevcut reverse marketplace) · **İş** · **Sağlık**
+  (switcher etiketleri kısa; adlandırılmış lockup için bkz. §1.6)
 - Davranış: Anasayfanın en üstünde büyük ikonlu sekmeler; scroll'da küçülüp sticky
   header satırına gömülür (Fijaka'daki implementasyon birebir referans — Claude Code
   `/Users/Shared/dev/` altındaki Fijaka repo'sundan pattern'i inceleyebilir).
@@ -95,8 +102,8 @@ app/api/health/
   coming-soon sayfasına gider (doktor bekleme listesi e-posta formu = launch öncesi
   arz toplama). Flag ON olunca gerçek sağlık ana sayfasına gider.
   *(K2 onaylandı: "Yakında" + doktor bekleme listesi.)*
-- **İş & Kariyer hedefi (K1 onaylandı):** kendi coming-soon sayfası — işçi temin
-  vertical'ı için yer tutucu.
+- **İş hedefi (K1 onaylandı):** kendi coming-soon sayfası — işçi temin
+  vertical'ı için yer tutucu (switcher etiketi "İş", v1.3'te "& Kariyer" düştü).
 
 ### 1.3 Veritabanı yapısı
 
@@ -142,8 +149,19 @@ yalnız "ortam" seviyesinde kısıtlı bir vurgu rengi alır:
 | Vertical | Vurgu | Ton kuralı |
 |---|---|---|
 | Hizmetler | Teal (mevcut marka) | mevcut sistem aynen |
-| Sağlık | Medikal Mavi `#0284C7` (sky-600, `health-*` token) | ikon/rozet: 600 · metin gerekirse: 700 · zemin tint: health-50 |
-| İş & Kariyer | Amber `#D97706` (amber-600, `career-*` token) | aynı kural (50 / 600 / 700) |
+| Sağlık | Medikal Mavi `#0284C7` (sky-600, **`brandHealth`** token) | ikon/gösterge: DEFAULT · **metin: 700 (ZORUNLU)** · zemin tint: brandHealth-50 |
+| İş | Amber `#D97706` (amber-600, **`brandCareer`** token) | aynı kural (50 / DEFAULT / 700) |
+
+> **v1.3 token değişimi:** Vurgu artık her vertical için **tek kaynak** bir token
+> grubundan gelir — `brandHealth { DEFAULT:#0284C7, 50, 700 }`, `brandCareer
+> { DEFAULT:#D97706, 50, 700 }` (`tailwind.config.ts`). Saçılmış sky/amber hex
+> YASAK. Eski `health-*`/`career-*` grupları yeniden adlandırıldı. Carve-out'ta
+> `brandHealth` → `primary` olur, gerisi otomatik döner (Bölüm 1.6 + EXTRACTION.md).
+>
+> **Kontrast notu (ZORUNLU):** sky-600 (DEFAULT) beyaz üzerinde 4.10:1 → AA metin
+> eşiği 4.5:1'in ALTINDA. DEFAULT yalnız ikon/gösterge/zemin için; **okunur metinde
+> ASLA** kullanma — metin gerekiyorsa `brandHealth-700` (5.93:1). `VerticalBrand`
+> lockup'ındaki dikey kelime de 700 kullanır.
 
 Vurgu rengin **izin verilen** yerleri (tam liste — başkası yasak):
 
@@ -151,6 +169,7 @@ Vurgu rengin **izin verilen** yerleri (tam liste — başkası yasak):
 2. Vertical hero/bölüm zemin tint'i (yalnız 50 tonu)
 3. Vertical içi kategori/uzmanlık ikonları
 4. Bilgilendirici küçük rozet ve chip'ler ("Doğrulanmış", müsait saat chip'leri)
+5. `VerticalBrand` lockup'ında dikey kelimesi (yalnız 700 — kontrast notu)
 
 **Yasak yerler:** butonlar/CTA'lar (her zaman teal), linkler, form focus
 ring'leri, header/footer, logo. Gerekçe: tek etkileşim dili (teal) marka
@@ -158,8 +177,45 @@ bütünlüğünü korur; vurgu renkleri yalnız yön bulma (wayfinding) işlevi 
 Airbnb'nin vertical modeli. Medikal mavi ayrıca sağlık bölümüne Doktortakvimi
 benzeri "medikal güven" hissini doğal olarak verir.
 
-Implementasyon: Tailwind config'e `health` ve `career` token grupları; vurgu
-sınıfları yalnız ilgili route group'larında kullanılır (lint/review'da denetlenir).
+Implementasyon: Tailwind config'e `brandHealth` ve `brandCareer` token grupları;
+vurgu sınıfları yalnız ilgili route group'larında kullanılır (lint/review'da
+denetlenir). Health bölümü aksanını YALNIZ `brandHealth-*` sınıflarından alır.
+
+### 1.6 "Glatko Sağlık" alt-marka (sub-brand) mimarisi — Getir modeli
+
+**Amaç:** Sağlık ve İş bölümleri Glatko şemsiyesi altında **isimlendirilmiş**
+alt-markalar; ileride bağımsız ayrılabilir/satılabilir (ayrı tüzel kişilik,
+domain, ortaklık). **Bugün ayrı repo/DB/altyapı YOK** — yalnız (a) isim,
+(b) kod modülerliği, (c) tek-kaynak renk token'ı, (d) carve-out dokümanı.
+Getir'in "Getir / GetirYemek / GetirBüyük" yapısı gibi: tek ana marka + adlandırılmış
+dikeyler. (Subdomain/ayrı domain ŞİMDİ KURULMAZ; yalnız hardcode önlenir.)
+
+**(a) İsim + lockup.** `<VerticalBrand vertical="health|career" />`
+(`components/glatko/verticals/VerticalBrand.tsx`) "Glatko" wordmark + yerelleşmiş
+dikey kelimesini birleştirir (9 locale: Sağlık/Health/Zdravlje/Gesundheit/Salute/
+Здоровье/Здоровʼя/الصحة; İş/Jobs/Posao/Arbeit/Lavoro/Работа/Робота/العمل). Dahili
+sabit ad: **"Glatko Sağlık"** (`HEALTH_INTERNAL_NAME`, loglar/admin/analytics).
+**Switcher sekme etiketleri KISA kalır** (Hizmetler · İş · Sağlık); adlandırılmış
+lockup yalnız bölüm hero'larında + coming-soon sayfalarında görünür.
+
+**(b) Modülerlik (ayrılabilirlik).** Sağlığa özel kod namespace'li:
+`lib/saglik/` (flag, path config) + `components/glatko-saglik/` (formlar). Cross-vertical
+switcher glue ayrı: `lib/verticals/` + `components/glatko/verticals/`. İlke: sağlık
+kodu yalnız paylaşılan primitive'lere (`components/ui`, `lib/utils`, i18n, Supabase
+client factory) bağlanır; App-spesifik marketplace component'lerine ASLA. Health
+şeması core `public.*`'a FK vermez (`auth.users` tek bilinçli istisna).
+
+**(c) Tek-kaynak renk.** §1.5'teki `brandHealth`/`brandCareer` token grupları.
+Saçılmış hex YOK.
+
+**(d) Path config.** `lib/saglik/config.ts` → `HEALTH_ROUTES` (rota anahtarları)
++ `HEALTH_HOST` (bugün `null` = ana app altında; carve-out'ta `saglik.glatko.app`).
+`/saglik` literal'i hiçbir component'e gömülmez.
+
+**Carve-out (ileride ayırma) adımları:** `docs/health/EXTRACTION.md` — neyin izole
+neyin paylaşılan olduğu + 6 adımlı ayırma sırası (token→primary, `pg_dump --schema=health`,
+kod paketle, domain bağla, kullanıcı export, servis anahtarları). Her H-sprint sonunda
+"yeni paylaşılan bağ ekledim mi?" diye oraya bakılır.
 
 ---
 
@@ -425,7 +481,7 @@ service-role client üzerinden — anon key ile doğrudan tablo yazımı kapalı
 - `HEALTH_VERTICAL_ENABLED` env (Vercel: Production=false, Preview=true, Dev=true).
 - Middleware guard: flag OFF iken `/[locale]/saglik/*` ve `/saglik-pro/*` → 404
   (yakinda sayfası hariç). Defense-in-depth: layout'ta da kontrol.
-- 3 sekmeli kapanır kategori navigasyonu (Hizmetler · İş & Kariyer · Sağlık),
+- 3 sekmeli kapanır kategori navigasyonu (Hizmetler · İş · Sağlık),
   Airbnb tarzı scroll-collapse, Fijaka pattern'i referans. 9 locale string'leri.
   Sekme ikonları ve aktif sekme göstergesi Bölüm 1.5 vurgu renklerini kullanır.
 - `/saglik/yakinda` coming-soon sayfası: kısa değer önerisi + doktor bekleme
@@ -634,13 +690,13 @@ Bölüm 6'daki checklist'in TAMAMI yeşil olmadan flag açılmaz.
 
 | # | Konu | Karar |
 |---|---|---|
-| K1 | "İş & Kariyer" sekmesi hedefi | Kendi coming-soon sayfası (işçi temin vertical'ı için yer tutucu) |
+| K1 | "İş" sekmesi hedefi (v1.3: "& Kariyer" düştü) | Kendi coming-soon sayfası (işçi temin vertical'ı için yer tutucu) |
 | K2 | Sağlık sekmesi, prod'da flag OFF iken | "Yakında" sayfası + doktor bekleme listesi formu |
 | K3 | İlk provider tipleri ve şehirler | Diş hekimi + pratisyen + psikolog; Budva/Tivat/Kotor → Podgorica |
 | K4 | Fiyat gösterimi | Opsiyonel (`price_eur` NULL = gösterme) |
 | K5 | Public yorum sistemi | v1'de YOK — yalnız özel geri bildirim; LJKCG cevabı sonrası tekrar değerlendirilir |
 | K6 | Health sayfalarında analytics | Mevcut altyapı + PII'siz event'ler; cookie banner metni güncellenir |
-| K7 | Renk sistemi | **REVİZE → Hibrit:** Indigo ana marka + vertical vurguları (Sağlık=teal, İş & Kariyer=amber) — tam kurallar Bölüm 1.5 |
+| K7 | Renk sistemi | **REVİZE (r2/v1.3):** teal ana marka + tek-kaynak vertical token'ları (Sağlık=`brandHealth` sky, İş=`brandCareer` amber) — tam kurallar Bölüm 1.5 + 1.6 |
 
 Ek karar: **tasarım referansı = Doktortakvimi sadelik sözleşmesi (Bölüm 1.4);**
 tüm public health UI'ları bu spesifikasyona uyar.
