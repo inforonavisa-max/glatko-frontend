@@ -218,6 +218,30 @@ export const routing = defineRouting({
       me: "/zdravlje/randevu/[holdId]",
       ar: "/al-sihha/randevu/[holdId]",
     },
+    // Booking confirmation (H5b). [token] = appointment manage_token (server-issued).
+    "/health/randevu/onay/[token]": {
+      tr: "/saglik/randevu/onay/[token]",
+      en: "/health/randevu/onay/[token]",
+      de: "/gesundheit/randevu/onay/[token]",
+      it: "/salute/randevu/onay/[token]",
+      ru: "/zdorove/randevu/onay/[token]",
+      uk: "/zdorovya/randevu/onay/[token]",
+      sr: "/zdravlje/randevu/onay/[token]",
+      me: "/zdravlje/randevu/onay/[token]",
+      ar: "/al-sihha/randevu/onay/[token]",
+    },
+    // Short appointment-manage link (H5b). [token] = manage_token; cancel from here.
+    "/health/r/[token]": {
+      tr: "/saglik/r/[token]",
+      en: "/health/r/[token]",
+      de: "/gesundheit/r/[token]",
+      it: "/salute/r/[token]",
+      ru: "/zdorove/r/[token]",
+      uk: "/zdorovya/r/[token]",
+      sr: "/zdravlje/r/[token]",
+      me: "/zdravlje/r/[token]",
+      ar: "/al-sihha/r/[token]",
+    },
 
     // Work & career vertical placeholder (K1 — own coming-soon page)
     "/career": {

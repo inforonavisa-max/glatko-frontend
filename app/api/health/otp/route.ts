@@ -120,7 +120,17 @@ export async function PUT(request: Request) {
   });
 
   if (result.ok) {
-    return NextResponse.json({ ok: true, patientId: result.patientId });
+    const res = NextResponse.json({ ok: true, patientId: result.patientId });
+    // Bind the verified patient to this browser session (httpOnly) so the H5b
+    // booking step takes the patient from the cookie, not a client-supplied id.
+    res.cookies.set("glatko_hpatient", result.patientId, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      path: "/",
+      maxAge: 60 * 60,
+    });
+    return res;
   }
   return NextResponse.json(
     { ok: false, reason: result.reason, attemptsLeft: result.attemptsLeft },

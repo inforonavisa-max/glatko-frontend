@@ -2554,7 +2554,25 @@
       "verifiedBody": "Ihr Termin wird bestätigt. Der Bestätigungsschritt wird sehr bald aktiviert.",
       "verifiedTitle": "Telefon bestätigt ✓",
       "verify": "Bestätigen",
-      "verifying": "Wird überprüft…"
+      "verifying": "Wird überprüft…",
+      "completeCta": "Termin abschließen",
+      "completing": "Wird abgeschlossen…",
+      "bookSlotTaken": "Diese Uhrzeit wurde gerade vergeben. Bitte wählen Sie eine andere Uhrzeit.",
+      "bookExpired": "Die Zeit ist abgelaufen. Bitte wählen Sie erneut eine Uhrzeit.",
+      "bookFailed": "Der Termin konnte nicht abgeschlossen werden. Bitte versuchen Sie es erneut.",
+      "confirmedTitle": "Ihr Termin ist bestätigt ✓",
+      "confirmedBody": "Wir haben die Termindaten auch per SMS gesendet. Die Details finden Sie unten.",
+      "manageCta": "Termin verwalten",
+      "cancelledBadge": "Storniert",
+      "manageTitle": "Terminverwaltung",
+      "cancelCta": "Termin stornieren",
+      "cancelConfirm": "Möchten Sie den Termin wirklich stornieren?",
+      "cancelConfirmCta": "Ja, stornieren",
+      "keepCta": "Abbrechen",
+      "cancelling": "Wird storniert…",
+      "cancelledTitle": "Termin storniert",
+      "cancelledBody": "Ihr Termin wurde storniert. Diese Uhrzeit ist wieder verfügbar.",
+      "cancelError": "Stornierung fehlgeschlagen. Bitte versuchen Sie es erneut."
     }
   },
   "careerVertical": {
