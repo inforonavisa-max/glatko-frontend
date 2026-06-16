@@ -20,7 +20,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await Promise.resolve(params);
   if (!hasLocale(routing.locales, locale)) return {};
   const t = await getTranslations({ locale });
-  return { title: t("healthVertical.seoTitle") };
+  // Live directory home — its own title (NOT healthVertical.seoTitle, which is
+  // the coming-soon "— Yakında/Coming Soon" string still used by the gated
+  // coming-soon page). C1: the home is the published directory, not a teaser.
+  return { title: t("healthVertical.directory.seoTitle") };
 }
 
 const POPULAR_COUNT = 8;

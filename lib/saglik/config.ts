@@ -16,6 +16,14 @@
 export const HEALTH_ROUTES = {
   home: "/health",
   comingSoon: "/health/coming-soon",
+  /**
+   * Target of the health header's "are you a doctor? join" link. Today this is
+   * the public provider waitlist (the coming-soon page). When the pro
+   * application ships, flip THIS one constant to its route key
+   * (e.g. "/health-pro/apply") — the header derives the href from here only and
+   * never hardcodes "/saglik/yakinda".
+   */
+  providerJoin: "/health/coming-soon",
 } as const;
 
 /**
