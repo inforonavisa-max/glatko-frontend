@@ -205,6 +205,19 @@ export const routing = defineRouting({
       me: "/zdravlje/uzman/[slug]",
       ar: "/al-sihha/uzman/[slug]",
     },
+    // Booking flow (H5a). [holdId] is a server-issued opaque UUID; gated +
+    // noindex (SEO quarantine), so 'randevu' stays constant like 'uzman'.
+    "/health/randevu/[holdId]": {
+      tr: "/saglik/randevu/[holdId]",
+      en: "/health/randevu/[holdId]",
+      de: "/gesundheit/randevu/[holdId]",
+      it: "/salute/randevu/[holdId]",
+      ru: "/zdorove/randevu/[holdId]",
+      uk: "/zdorovya/randevu/[holdId]",
+      sr: "/zdravlje/randevu/[holdId]",
+      me: "/zdravlje/randevu/[holdId]",
+      ar: "/al-sihha/randevu/[holdId]",
+    },
 
     // Work & career vertical placeholder (K1 — own coming-soon page)
     "/career": {

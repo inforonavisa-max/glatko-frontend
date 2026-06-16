@@ -62,6 +62,21 @@
 > deep-link `?slot=`. Saat tıklama H4'te SEÇER (hold YOK → H5); CTA disabled "yakında".
 > `me`/`sr` Intl tarih formatı Latin Sırpça'ya maplenir (`lib/saglik/intl.ts`). Flag
 > prod=false KALIR.
+> **v1.8 (16.06.2026, H5a):** Booking giriş kapısı (hold + hasta formu + OTP). GERÇEK
+> REZERVASYON YOK — `book_appointment` H5b'de. `070_health_h5a_hold_otp_rpcs.sql`
+> (prod'da; additive, 066-069 intact, advisor 0 yeni bulgu): 5 SECURITY DEFINER
+> write-RPC (`health_create_hold` 5dk + gist EXCLUDE→SLOT_HELD + confirmed çakışma→
+> SLOT_TAKEN + süresi-geçmiş hold sweep / `health_release_hold` / `health_get_hold`
+> PII'siz özet / `health_create_otp` / `health_verify_otp` 3-deneme + geçince patient
+> INSERT) + Vault secret `health_pii_key` (rastgele, repo'da DEĞİL). EXECUTE yalnız
+> service_role (anon ASLA). **KARAR: patient kaydı OTP doğrulanınca oluşur** (consent
+> damgalarıyla; telefon/email pgcrypto+Vault şifreli); appointment H5b. PII şifreli
+> (raw SELECT kanıtı), OTP kodu sha256 hash'li (plain ASLA). Rate-limit: middleware
+> `/api/health/*` public-form 12/dk IP + `lib/saglik/otp-rate-limit.ts` per-telefon
+> 3/saat (mevcut Upstash mekanizması, fail-open). Infobip `sendSms` (iki-katman).
+> UI: BookingWidget "Randevu Al" aktif → `/saglik/randevu/[holdId]` (5dk geri sayım +
+> özet + form + 2 ayrı PDPL consent + OTP); doğrulanınca "Telefon doğrulandı ✓" +
+> disabled "Randevuyu Tamamla — yakında" (H5b hook). 43 yeni i18n key ×9. Flag prod=false.
 
 ---
 

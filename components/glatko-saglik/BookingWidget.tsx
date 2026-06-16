@@ -7,7 +7,9 @@ import {
   CalendarClock,
   ChevronLeft,
   ChevronRight,
+  Loader2,
 } from "lucide-react";
+import { useRouter } from "@/i18n/navigation";
 import type {
   DaySlots,
   HealthBookingLocation,
@@ -83,6 +85,9 @@ export function BookingWidget({
 }: BookingWidgetProps) {
   const t = useTranslations("healthVertical");
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const [reserving, setReserving] = useState(false);
+  const [reserveError, setReserveError] = useState<string | null>(null);
 
   // Varsayılan hizmet = ilk (sunucu en kısayı başa koyar), varsayılan lokasyon = ilk.
   const [selectedServiceId, setSelectedServiceId] = useState<string>(
@@ -237,6 +242,48 @@ export function BookingWidget({
     setSelectedLocationId(id);
     setSelectedSlotIso(null);
   }, []);
+
+  // "Randevu Al" → 5dk hold oluştur → booking sayfasına git. SLOT_TAKEN/SLOT_HELD
+  // (409) → "az önce alındı" + slotları yenile. (Gerçek rezervasyon H5b.)
+  const reserve = useCallback(async () => {
+    if (!selectedSlot || !selectedServiceId || !selectedLocationId) return;
+    const svc = services.find((s) => s.id === selectedServiceId);
+    if (!svc) return;
+    const slotEnd = new Date(
+      new Date(selectedSlot.startUtc).getTime() + svc.durationMin * 60_000,
+    ).toISOString();
+    setReserveError(null);
+    setReserving(true);
+    try {
+      const res = await fetch("/api/health/holds", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          providerId,
+          serviceId: selectedServiceId,
+          locationId: selectedLocationId,
+          slotStart: selectedSlot.startUtc,
+          slotEnd,
+        }),
+      });
+      if (res.ok) {
+        const data = (await res.json()) as { holdId: string };
+        router.push({ pathname: "/health/randevu/[holdId]", params: { holdId: data.holdId } });
+        return;
+      }
+      if (res.status === 409) {
+        setReserveError(t("booking.holdTaken"));
+        setSelectedSlotIso(null);
+        setRetryNonce((n) => n + 1); // availability'yi tazele
+      } else {
+        setReserveError(t("booking.holdFailed"));
+      }
+    } catch {
+      setReserveError(t("booking.holdFailed"));
+    } finally {
+      setReserving(false);
+    }
+  }, [selectedSlot, selectedServiceId, selectedLocationId, services, providerId, router, t]);
 
   return (
     <div className="lg:sticky lg:top-24 rounded-2xl border border-gray-200 bg-white p-5 shadow-premium-sm dark:border-white/10 dark:bg-white/5">
@@ -438,11 +485,18 @@ export function BookingWidget({
               </p>
               <button
                 type="button"
-                disabled
-                className="mt-3 w-full rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-4 py-3 text-sm font-semibold text-white opacity-60 disabled:cursor-not-allowed"
+                onClick={reserve}
+                disabled={reserving}
+                className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:shadow-teal-500/40 disabled:opacity-60"
               >
-                {t("booking.bookSoon")}
+                {reserving && <Loader2 className="h-4 w-4 animate-spin" />}
+                {reserving ? t("booking.reserving") : t("booking.reserve")}
               </button>
+              {reserveError && (
+                <p role="alert" className="mt-2 text-sm text-red-600 dark:text-red-300">
+                  {reserveError}
+                </p>
+              )}
             </div>
           )}
         </>
