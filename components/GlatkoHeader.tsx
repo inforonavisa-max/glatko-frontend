@@ -11,6 +11,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 import { useTheme } from "next-themes";
 import { useReducedMotion } from "@/lib/hooks/use-reduced-motion";
 import { useActiveVertical } from "@/lib/verticals/useActiveVertical";
+import { HEALTH_ROUTES } from "@/lib/saglik/config";
 import { cn } from "@/lib/utils";
 import { UnreadBadge } from "@/components/glatko/messaging/UnreadBadge";
 import { SearchTrigger } from "@/components/glatko/search/SearchTrigger";
@@ -42,10 +43,15 @@ export function GlatkoHeader({
   const pathname = usePathname();
   const { resolvedTheme } = useTheme();
   const reduced = useReducedMotion();
-  // KATMAN 2 is vertical-aware: the active vertical is exposed as a data
-  // attribute so per-vertical header content can be added later without more
-  // plumbing. Content is unchanged this sprint (shared header everywhere).
+  // KATMAN 2 is vertical-aware (data-vertical attr below). Content branches per
+  // vertical: SERVICES keeps the full reverse-marketplace header; HEALTH/CAREER
+  // get a minimal header — no reverse-marketplace links, no in-header search, no
+  // "request service" CTA (those are meaningless outside services). HEALTH also
+  // surfaces a provider-join link. Global chrome (language, theme, login/profile,
+  // notifications) stays on every vertical.
   const activeVertical = useActiveVertical();
+  const isServices = activeVertical === "services";
+  const isHealth = activeVertical === "health";
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [headerOpacity, setHeaderOpacity] = useState(0);
@@ -173,6 +179,7 @@ export function GlatkoHeader({
             <span className="mt-1 h-1.5 w-1.5 rounded-full bg-teal-500" />
           </Link>
 
+          {isServices && (
           <nav className="hidden items-center gap-1 md:flex">
             {navLinks.map((l) => {
               const isActive = pathname === l.href;
@@ -210,9 +217,18 @@ export function GlatkoHeader({
               );
             })}
           </nav>
+          )}
 
           <div className="hidden items-center gap-3 md:flex">
-            <SearchTrigger className="w-40 lg:w-56" />
+            {isServices && <SearchTrigger className="w-40 lg:w-56" />}
+            {isHealth && (
+              <Link
+                href={HEALTH_ROUTES.providerJoin}
+                className="rounded-md px-4 py-2 text-xs font-medium text-teal-600 transition-colors hover:bg-teal-50 hover:text-teal-700 dark:text-teal-400 dark:hover:bg-teal-500/10"
+              >
+                {t("nav.healthProviderJoin")}
+              </Link>
+            )}
             {userId && <NotificationBell userId={userId} />}
             <LanguageSwitcher />
             <ThemeToggle />
@@ -270,21 +286,23 @@ export function GlatkoHeader({
                 >
                   {t("nav.login")}
                 </Link>
-                <Link
-                  href="/request-service"
-                  className={cn(
-                    "rounded-lg bg-gradient-to-r from-teal-500 to-teal-600 px-4 py-2 text-xs font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:shadow-teal-500/40",
-                    !reduced && "animate-teal-pulse"
-                  )}
-                >
-                  {t("nav.requestService")}
-                </Link>
+                {isServices && (
+                  <Link
+                    href="/request-service"
+                    className={cn(
+                      "rounded-lg bg-gradient-to-r from-teal-500 to-teal-600 px-4 py-2 text-xs font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:shadow-teal-500/40",
+                      !reduced && "animate-teal-pulse"
+                    )}
+                  >
+                    {t("nav.requestService")}
+                  </Link>
+                )}
               </>
             )}
           </div>
 
           <div className="flex items-center gap-1 md:hidden">
-            <SearchTrigger variant="icon" />
+            {isServices && <SearchTrigger variant="icon" />}
             <button
               className="p-2 text-gray-700 dark:text-white"
               onClick={() => setMobileOpen(true)}
@@ -321,7 +339,7 @@ export function GlatkoHeader({
               </button>
             </div>
             <nav className="flex flex-1 flex-col gap-1 px-4 py-6">
-              {navLinks.map((l) => (
+              {isServices && navLinks.map((l) => (
                 <Link
                   key={l.href}
                   // @ts-expect-error -- nav config href is string-typed; runtime URLs are valid pathnames
@@ -343,6 +361,16 @@ export function GlatkoHeader({
                   {userId && l.href === "/messages" ? <UnreadBadge /> : null}
                 </Link>
               ))}
+
+              {isHealth && (
+                <Link
+                  href={HEALTH_ROUTES.providerJoin}
+                  onClick={() => setMobileOpen(false)}
+                  className="border-b border-gray-100 py-3 text-lg font-medium text-teal-600 dark:border-white/5 dark:text-teal-400"
+                >
+                  {t("nav.healthProviderJoin")}
+                </Link>
+              )}
 
               {userId && (
                 <>
@@ -392,13 +420,15 @@ export function GlatkoHeader({
                     >
                       {t("nav.login")}
                     </Link>
-                    <Link
-                      href="/request-service"
-                      onClick={() => setMobileOpen(false)}
-                      className="w-full rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 py-3 text-center text-sm font-semibold uppercase tracking-wider text-white shadow-lg shadow-teal-500/30"
-                    >
-                      {t("nav.requestService")}
-                    </Link>
+                    {isServices && (
+                      <Link
+                        href="/request-service"
+                        onClick={() => setMobileOpen(false)}
+                        className="w-full rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 py-3 text-center text-sm font-semibold uppercase tracking-wider text-white shadow-lg shadow-teal-500/30"
+                      >
+                        {t("nav.requestService")}
+                      </Link>
+                    )}
                   </>
                 )}
               </div>
