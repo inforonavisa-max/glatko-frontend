@@ -14,8 +14,11 @@ type Props = {
     | { locale: string; token: string };
 };
 
-// Per-request (token-scoped, PII-adjacent) + noindex (quarantine).
-export const dynamic = "force-dynamic";
+// Dynamic-on-demand: the uncached read-RPC fetch makes every request dynamic, so no
+// build-time static render (no DYNAMIC_SERVER_USAGE) and no caching of token data —
+// but NOT force-dynamic, so notFound() on an unknown token returns a real 404
+// (force-dynamic streams the response and commits a 200 before notFound() runs). noindex.
+export const revalidate = 0;
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 export default async function BookingConfirmationPage({ params }: Props) {

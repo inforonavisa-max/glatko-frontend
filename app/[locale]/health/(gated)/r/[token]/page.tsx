@@ -15,8 +15,10 @@ type Props = {
     | { locale: string; token: string };
 };
 
-// Manage/cancel is per-request (live appointment status) + noindex (quarantine).
-export const dynamic = "force-dynamic";
+// Dynamic-on-demand (live appointment status via the uncached read-RPC) + noindex.
+// NOT force-dynamic, so notFound() on an unknown token returns a real 404 instead of
+// a streamed 200 (force-dynamic commits the status before notFound() runs).
+export const revalidate = 0;
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 export default async function ManageAppointmentPage({ params }: Props) {
