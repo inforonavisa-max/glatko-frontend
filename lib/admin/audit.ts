@@ -31,7 +31,15 @@ export type AdminActionType =
   | "junction_remove"
   | "category_faq_edit"
   | "category_status_change"
-  | "pro_create_admin";
+  | "pro_create_admin"
+  // H8 — health provider admin actions. The canonical health audit row is written
+  // INSIDE the 079 RPC (health.audit_log, the H8 viewer source); this app-side
+  // glatko_admin_audit_log row mirrors it with IP/UA for the unified admin trail.
+  | "health_provider_approve"
+  | "health_provider_reject"
+  | "health_provider_unpublish"
+  | "health_provider_publish"
+  | "health_provider_set_tier";
 
 export type AuditTargetTable =
   | "auth.users"
@@ -39,7 +47,8 @@ export type AuditTargetTable =
   | "glatko_professional_profiles"
   | "glatko_pro_services"
   | "glatko_service_requests"
-  | "glatko_service_categories";
+  | "glatko_service_categories"
+  | "health.providers";
 
 export interface LogAdminActionParams {
   actionType: AdminActionType;

@@ -8,6 +8,7 @@ import {
   FolderTree,
   LayoutDashboard,
   Star,
+  Stethoscope,
   Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -63,6 +64,11 @@ export function AdminSidebar({ locale, adminEmail }: Props) {
       href: `/${locale}/admin/categories`,
       label: "Kategoriler",
       icon: FolderTree,
+    },
+    {
+      href: `/${locale}/admin/saglik`,
+      label: "Sağlık",
+      icon: Stethoscope,
     },
   ];
 
