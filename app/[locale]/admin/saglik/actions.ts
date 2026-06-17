@@ -15,7 +15,10 @@ import {
 import type { HealthProviderTier } from "@/lib/saglik/admin-metrics";
 import { isValidTier } from "@/lib/saglik/admin-metrics";
 import { sendEmail } from "@/lib/email/send-email";
-import { HealthProviderDecisionEmail } from "@/lib/email/templates/health-provider-decision";
+import {
+  HealthProviderDecisionEmail,
+  HEALTH_PROVIDER_DECISION_EMAIL_SUBJECT,
+} from "@/lib/email/templates/health-provider-decision";
 import { coerceEmailLocale } from "@/lib/email/templates/translations";
 import { getSiteUrl } from "@/lib/email/resend";
 import { glatkoCaptureException } from "@/lib/sentry/glatko-capture";
@@ -85,18 +88,17 @@ async function notifyDecision(args: {
   const base = getSiteUrl();
   // Approved → public provider profile (/health/uzman/[slug]); rejected → onboarding
   // (/saglik-pro/basvuru) to fix & resubmit. Built directly (no client-supplied URL).
+  // Use emailLocale (coerced) for the path so body language and link path always agree.
   const ctaUrl =
     args.decision === "approved"
-      ? `${base}/${locale}/health/uzman/${args.slug}`
-      : `${base}/${locale}/saglik-pro/basvuru`;
+      ? `${base}/${emailLocale}/health/uzman/${args.slug}`
+      : `${base}/${emailLocale}/saglik-pro/basvuru`;
 
   try {
     await sendEmail({
       to: email,
-      subject:
-        args.decision === "approved"
-          ? "Glatko — profiliniz onaylandı"
-          : "Glatko — başvurunuz hakkında",
+      // Locale-keyed subject (mirrors HEALTH_*_EMAIL_SUBJECT convention).
+      subject: HEALTH_PROVIDER_DECISION_EMAIL_SUBJECT[args.decision][emailLocale],
       react: HealthProviderDecisionEmail({
         locale: emailLocale,
         providerName: args.providerName,
@@ -121,6 +123,20 @@ function revalidateHealthAdmin(providerId?: string): void {
   revalidatePath(`/[locale]/admin/saglik/audit`, "page");
 }
 
+/**
+ * Revalidate the PUBLIC health surfaces after a publish-state change so a newly
+ * approved/(un)published provider does not wait out the 1h ISR window. Mirrors the
+ * existing admin convention (lib/actions/admin/updateProvider.ts revalidates the public
+ * /pros/[slug]). The literal `[locale]` segment revalidates every locale variant.
+ */
+function revalidateHealthPublic(slug: string): void {
+  if (slug) revalidatePath(`/[locale]/health/uzman/${slug}`, "page");
+  // Directory home + specialty/city listings read the same approved+published rows.
+  revalidatePath(`/[locale]/health`, "page");
+  revalidatePath(`/[locale]/health/[specialty]`, "page");
+  revalidatePath(`/[locale]/health/[specialty]/[city]`, "page");
+}
+
 /** APPROVE a pending provider → live (is_published=true) + notify. */
 export async function approveProvider(providerId: string): Promise<AdminActionResult> {
   const supabase = createClient();
@@ -131,8 +147,8 @@ export async function approveProvider(providerId: string): Promise<AdminActionRe
     return { success: false, error: "Unauthorized" };
   }
 
-  // Need slug for the notify CTA; the detail RPC also confirms existence.
-  const detail = await getProviderDetail(providerId, "en" as Locale);
+  // The decide RPC confirms existence + returns userId/fullName/slug in one round-trip,
+  // so we no longer fetch the secret-bearing detail RPC just to read the slug.
   const result = await decideProvider(user.id, providerId, "approve", null);
   if (!result.ok) return { success: false, error: errorMessage(result.code) };
 
@@ -147,12 +163,15 @@ export async function approveProvider(providerId: string): Promise<AdminActionRe
   await notifyDecision({
     userId: result.userId,
     providerName: result.fullName,
-    slug: detail?.slug ?? "",
+    slug: result.slug,
     decision: "approved",
     reason: null,
   });
 
   revalidateHealthAdmin(providerId);
+  // Approve sets is_published=true → make the provider visible on the public surfaces now,
+  // not after the 1h ISR window.
+  revalidateHealthPublic(result.slug);
   return { success: true };
 }
 
@@ -170,7 +189,6 @@ export async function rejectProvider(
   }
 
   const cleanReason = reason.trim() || null;
-  const detail = await getProviderDetail(providerId, "en" as Locale);
   const result = await decideProvider(user.id, providerId, "reject", cleanReason);
   if (!result.ok) return { success: false, error: errorMessage(result.code) };
 
@@ -185,7 +203,7 @@ export async function rejectProvider(
   await notifyDecision({
     userId: result.userId,
     providerName: result.fullName,
-    slug: detail?.slug ?? "",
+    slug: result.slug,
     decision: "rejected",
     reason: cleanReason,
   });
@@ -219,6 +237,8 @@ export async function setProviderPublishedAction(
   });
 
   revalidateHealthAdmin(providerId);
+  // Publish/unpublish flips public visibility → refresh the public surfaces immediately.
+  revalidateHealthPublic(result.slug);
   return { success: true };
 }
 

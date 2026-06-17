@@ -58,6 +58,39 @@ const COPY_REJECTED: Record<EmailLocale, Copy> = {
   ar: { preview: "بخصوص طلبك", headline: "لم تتم الموافقة على طلبك", intro: "لم تتم الموافقة على طلبك كمقدم رعاية صحية في الوقت الحالي. يرجى مراجعة السبب أدناه وتحديث بياناتك وإعادة الإرسال.", reasonLabel: "السبب", cta: "تعديل طلبي" },
 };
 
+/**
+ * Locale-keyed subject lines for the decision email. Mirrors the established
+ * HEALTH_*_EMAIL_SUBJECT: Record<Locale,string> convention (lib/saglik/reminder-templates.ts)
+ * so a non-TR provider never receives a localized body under a hardcoded Turkish subject.
+ */
+export const HEALTH_PROVIDER_DECISION_EMAIL_SUBJECT: Record<
+  "approved" | "rejected",
+  Record<EmailLocale, string>
+> = {
+  approved: {
+    tr: "Profiliniz onaylandı — Glatko Sağlık",
+    en: "Your profile is approved — Glatko Health",
+    de: "Ihr Profil wurde freigegeben — Glatko Health",
+    it: "Il tuo profilo è approvato — Glatko Health",
+    ru: "Ваш профиль одобрен — Glatko Health",
+    uk: "Ваш профіль схвалено — Glatko Health",
+    sr: "Vaš profil je odobren — Glatko Zdravlje",
+    me: "Vaš profil je odobren — Glatko Zdravlje",
+    ar: "تمت الموافقة على ملفك — Glatko الصحة",
+  },
+  rejected: {
+    tr: "Başvurunuz hakkında — Glatko Sağlık",
+    en: "About your application — Glatko Health",
+    de: "Zu Ihrer Bewerbung — Glatko Health",
+    it: "Riguardo alla tua candidatura — Glatko Health",
+    ru: "О вашей заявке — Glatko Health",
+    uk: "Про вашу заявку — Glatko Health",
+    sr: "O vašoj prijavi — Glatko Zdravlje",
+    me: "O vašoj prijavi — Glatko Zdravlje",
+    ar: "بخصوص طلبك — Glatko الصحة",
+  },
+};
+
 export function HealthProviderDecisionEmail({
   locale,
   providerName,

@@ -180,7 +180,7 @@ export async function decideProvider(
   providerId: string,
   decision: "approve" | "reject",
   reason: string | null,
-): Promise<AdminWriteResult<{ userId: string | null; fullName: string }>> {
+): Promise<AdminWriteResult<{ userId: string | null; fullName: string; slug: string }>> {
   const supabase = createAdminClient();
   const { data, error } = await supabase.rpc("health_admin_decide_provider", {
     p_actor_id: actorId,
@@ -189,8 +189,8 @@ export async function decideProvider(
     p_reason: reason,
   });
   if (error) return { ok: false, code: parseAdminError(error.message) };
-  const d = data as { ok: boolean; userId: string | null; fullName: string };
-  return { ok: true, userId: d.userId ?? null, fullName: d.fullName };
+  const d = data as { ok: boolean; userId: string | null; fullName: string; slug: string };
+  return { ok: true, userId: d.userId ?? null, fullName: d.fullName, slug: d.slug };
 }
 
 /** Unpublish (false) / re-publish (true; only approved providers). */
@@ -198,7 +198,7 @@ export async function setProviderPublished(
   actorId: string,
   providerId: string,
   published: boolean,
-): Promise<AdminWriteResult<{ isPublished: boolean }>> {
+): Promise<AdminWriteResult<{ isPublished: boolean; slug: string }>> {
   const supabase = createAdminClient();
   const { data, error } = await supabase.rpc("health_admin_set_published", {
     p_actor_id: actorId,
@@ -206,8 +206,8 @@ export async function setProviderPublished(
     p_published: published,
   });
   if (error) return { ok: false, code: parseAdminError(error.message) };
-  const d = data as { ok: boolean; isPublished: boolean };
-  return { ok: true, isPublished: d.isPublished };
+  const d = data as { ok: boolean; isPublished: boolean; slug: string };
+  return { ok: true, isPublished: d.isPublished, slug: d.slug };
 }
 
 /** Tier change (validated free/premium/business in-RPC). */

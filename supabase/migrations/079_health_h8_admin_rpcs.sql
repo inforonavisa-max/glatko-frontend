@@ -69,6 +69,8 @@
 --     -- ONAYLA → approved + is_published=true + verified_at + audit + userId döner:
 --     v_res := public.health_admin_decide_provider(v_actor, v_pid, 'approve', null);
 --     raise notice 'decide ok = %, userId set = %', v_res->>'ok', (v_res->>'userId') is not null;  -- true / t
+--     -- (H8 audit refine) decide artık slug döndürüyor (action approve/reject CTA + public revalidate için):
+--     raise notice 'decide slug anahtarı var = %', v_res ? 'slug';  -- t
 --     raise notice 'approved+published = %', exists(
 --       select 1 from health.providers
 --       where id=v_pid and verification_status='approved' and is_published=true and verified_at is not null);  -- t
@@ -83,6 +85,8 @@
 --     -- unpublish → is_published=false + audit:
 --     v_res := public.health_admin_set_published(v_actor, v_pid, false);
 --     raise notice 'unpublished = %', exists(select 1 from health.providers where id=v_pid and is_published=false);  -- t
+--     -- (H8 audit refine) set_published artık slug döndürüyor (public surface revalidate için):
+--     raise notice 'set_published slug anahtarı var = %', v_res ? 'slug';  -- t
 --     -- tier change (geçerli) → 'business'; geçersiz → INVALID_TIER:
 --     v_res := public.health_admin_set_tier(v_actor, v_pid, 'business');
 --     raise notice 'tier=business = %', exists(select 1 from health.providers where id=v_pid and subscription_tier='business');  -- t
@@ -333,7 +337,8 @@ begin
                                'reason', v_reason));
   end if;
 
-  return jsonb_build_object('ok', true, 'userId', v_prov.user_id, 'fullName', v_prov.full_name);
+  return jsonb_build_object('ok', true, 'userId', v_prov.user_id,
+                            'fullName', v_prov.full_name, 'slug', v_prov.slug);
 end $$;
 revoke all on function public.health_admin_decide_provider(uuid,uuid,text,text)
   from public, anon, authenticated;
@@ -373,7 +378,7 @@ begin
           'providers', v_prov.id,
           jsonb_build_object('from', v_prov.is_published, 'to', p_published));
 
-  return jsonb_build_object('ok', true, 'isPublished', p_published);
+  return jsonb_build_object('ok', true, 'isPublished', p_published, 'slug', v_prov.slug);
 end $$;
 revoke all on function public.health_admin_set_published(uuid,uuid,boolean)
   from public, anon, authenticated;
