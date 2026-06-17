@@ -2485,7 +2485,6 @@
       "allSpecialties": "Alle Fachgebiete",
       "browseBySpecialty": "Nach Fachgebiet",
       "seoTitle": "Glatko Gesundheit — Finden Sie Ihren Arzt, buchen Sie online",
-      "searchSoonNote": "Die Suche folgt bald — wählen Sie vorerst unten ein Fachgebiet.",
       "specialtyIntro": "Verifizierte Fachkräfte in Montenegro",
       "emptyTitle": "Noch keine Fachkräfte",
       "emptyBody": "Wir nehmen verifizierte Fachkräfte in diesem Bereich auf. Bitte schauen Sie bald wieder vorbei.",
@@ -2515,14 +2514,12 @@
         "locationDenied": "Standort nicht verfügbar. Bitte wählen Sie eine Stadt.",
         "radiusLabel": "Umkreis",
         "radiusKm": "{km} km",
-        "apply": "Anwenden",
         "clearFilters": "Filter zurücksetzen",
         "resultsCount": "{count} Fachleute",
         "distanceAway": "{km} km entfernt",
         "emptyFilteredTitle": "Keine Treffer",
         "emptyFilteredBody": "Keine Fachleute entsprechen diesen Filtern. Setzen Sie die Filter zurück oder versuchen Sie eine nahe Stadt.",
-        "nearbyCities": "Städte in der Nähe",
-        "inCity": "in {city}"
+        "nearbyCities": "Städte in der Nähe"
       }
     },
     "booking": {

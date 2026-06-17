@@ -2485,7 +2485,6 @@
       "allSpecialties": "كل التخصصات",
       "browseBySpecialty": "تصفّح حسب التخصص",
       "seoTitle": "Glatko الصحة — اعثر على طبيبك واحجز عبر الإنترنت",
-      "searchSoonNote": "البحث قريباً — اختر تخصصاً من الأسفل الآن.",
       "specialtyIntro": "مختصون موثّقون في الجبل الأسود",
       "emptyTitle": "لا يوجد مختصون بعد",
       "emptyBody": "نضيف مختصين موثّقين في هذا التخصص. عُد قريباً.",
@@ -2515,14 +2514,12 @@
         "locationDenied": "تعذّر تحديد موقعك. اختر مدينة بدلاً من ذلك.",
         "radiusLabel": "ضمن",
         "radiusKm": "{km} كم",
-        "apply": "تطبيق",
         "clearFilters": "مسح عوامل التصفية",
         "resultsCount": "{count} متخصص",
         "distanceAway": "على بُعد {km} كم",
         "emptyFilteredTitle": "لا توجد نتائج",
         "emptyFilteredBody": "لا يوجد متخصصون مطابقون لعوامل التصفية هذه. جرّب مسحها أو مدينة قريبة.",
-        "nearbyCities": "مدن قريبة",
-        "inCity": "في {city}"
+        "nearbyCities": "مدن قريبة"
       }
     },
     "booking": {

@@ -52,6 +52,7 @@ type Labels = {
   locating: string;
   locationDenied: string;
   radiusLabel: string;
+  radiusKm: string; // "{km} km" — localized unit (ru/uk "{km} км", ar "{km} كم")
   clearFilters: string;
   cityNames: Record<string, string>; // slug → localized city name
   langNames: Record<string, string>; // lang code → localized label
@@ -59,9 +60,21 @@ type Labels = {
 
 export function HealthFilterBar({
   specialtySlug,
+  currentCity,
   labels,
 }: {
   specialtySlug: string;
+  /**
+   * The active city on the CANONICAL route /health/[specialty]/[city], where the
+   * city is a PATH segment (not ?city=). useSearchParams only sees the query
+   * string, so without this the bar's city would always read null on a city page
+   * → the <select> would show "All cities" and changing any other filter would
+   * navigate() to /health/[specialty] WITHOUT the city, silently dropping it. The
+   * server (SpecialtyDirectory) already forces the path city into its filters and
+   * threads it here so the bar's state matches reality. null on /health/[specialty]
+   * (where city, if any, IS a query param and parseHealthFilters picks it up).
+   */
+  currentCity: string | null;
   labels: Labels;
 }) {
   const modeLabels: Record<HealthMode, string> = {
@@ -78,7 +91,10 @@ export function HealthFilterBar({
   const [nearText, setNearText] = useState("");
 
   // Initial state from the URL (defensive parse — stale/garbage params dropped).
-  const filters = parseHealthFilters(searchParams);
+  // The city is the one filter that can live in the PATH (canonical city route),
+  // which useSearchParams cannot see → fall back to the server-supplied path city.
+  const parsed = parseHealthFilters(searchParams);
+  const filters: HealthFilters = { ...parsed, city: currentCity ?? parsed.city };
 
   /** Navigate to the canonical route for these filters (city = path segment). */
   const navigate = useCallback(
@@ -346,7 +362,7 @@ export function HealthFilterBar({
               >
                 {RADIUS_OPTIONS_KM.map((km) => (
                   <option key={km} value={km}>
-                    {km} km
+                    {labels.radiusKm.replace("{km}", String(km))}
                   </option>
                 ))}
               </select>

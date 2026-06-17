@@ -74,6 +74,11 @@ function clampRadiusKm(raw: string | null): number {
   return Math.min(RADIUS_MAX_KM, Math.max(RADIUS_MIN_KM, Math.round(n)));
 }
 
+/** Geçerli enlem [-90,90] / boylam [-180,180] kontrolü (reverseGeocode ile aynı). */
+function isValidLatLng(lat: number, lng: number): boolean {
+  return lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180;
+}
+
 function parseCoord(raw: string | null): number | null {
   if (raw == null || raw.trim() === "") return null;
   const n = Number(raw);
@@ -117,11 +122,14 @@ export function parseHealthFilters(sp: SearchParamsLike): HealthFilters {
   const availRaw = readParam(sp, "avail");
   const avail = availRaw === AVAIL_WEEK ? AVAIL_WEEK : null;
 
-  // near — 'near' bayrağı VEYA lat+lng ikilisi. Geçerli koordinat ikilisi şart.
+  // near — lat+lng ikilisi. Geçerli + MENZİL-İÇİ koordinat ikilisi şart: bayat/garbage
+  // link (?lat=999&lng=999) anlamsız mesafe üretmesin diye [-90,90]/[-180,180] dışı
+  // koordinat sessizce düşer (reverseGeocode ile aynı sözleşme — defansif parse).
   const lat = parseCoord(readParam(sp, "lat"));
   const lng = parseCoord(readParam(sp, "lng"));
   const radiusKm = clampRadiusKm(readParam(sp, "r"));
-  const near = lat != null && lng != null ? { lat, lng, radiusKm } : null;
+  const near =
+    lat != null && lng != null && isValidLatLng(lat, lng) ? { lat, lng, radiusKm } : null;
 
   return { city, langs, mode, avail, near };
 }
@@ -285,8 +293,12 @@ export function applyClientFilters<T extends FilterableProvider>(
   let out = providers.filter((p) => {
     if (f.city && p.citySlug !== f.city) return false;
     if (f.langs.length > 0) {
+      // OR / overlap — provider must speak AT LEAST ONE selected language. This
+      // mirrors the server RPC (074 `p.languages && p_langs`, PostgreSQL array
+      // overlap), the live source of truth for the lang filter; the pure helper
+      // must stay bitwise-consistent with it (DoD: filter-combination parity).
       const set = new Set(p.languages.map((l) => l.toLowerCase()));
-      if (!f.langs.every((l) => set.has(l))) return false;
+      if (!f.langs.some((l) => set.has(l))) return false;
     }
     if (f.mode && !p.modes.includes(f.mode)) return false;
     if (f.near) {

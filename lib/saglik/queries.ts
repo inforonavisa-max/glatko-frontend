@@ -99,20 +99,20 @@ export async function listSpecialties(locale: Locale): Promise<HealthSpecialty[]
   return (data as HealthSpecialty[] | null) ?? [];
 }
 
-/** Published+approved providers for one specialty slug (directory list cards). */
+/**
+ * Published+approved providers for one specialty slug (directory list cards),
+ * UNFILTERED. H3 routes the directory through searchProviders (074 RPC); an
+ * unfiltered search returns the identical card shape + publish filter as the 068
+ * health_providers_by_specialty RPC (074 is documented as its exact superset).
+ * To avoid two divergent "providers for a specialty" query paths, this is now a
+ * thin alias over searchProviders(emptyFilters) — a single source. (068's RPC
+ * stays applied in prod but is superseded; new callers should use searchProviders.)
+ */
 export async function providersBySpecialty(
   specialtySlug: string,
   locale: Locale,
 ): Promise<HealthProviderCard[]> {
-  const supabase = createAdminClient();
-  const { data, error } = await supabase.rpc("health_providers_by_specialty", {
-    p_specialty_slug: specialtySlug,
-    p_locale: locale,
-  });
-  if (error) {
-    throw new Error(`health_providers_by_specialty failed: ${error.message}`);
-  }
-  return (data as HealthProviderCard[] | null) ?? [];
+  return searchProviders(specialtySlug, locale, emptyFilters());
 }
 
 /**
@@ -312,7 +312,7 @@ export async function getNextSlotsBySpecialty(
 // Cookie-free admin client → ISR-safe (H2 dersi).
 // ─────────────────────────────────────────────────────────────────────────────
 
-import type { HealthFilters } from "@/lib/saglik/filters";
+import { emptyFilters, type HealthFilters } from "@/lib/saglik/filters";
 import { getCityNameBySlug } from "@/lib/glatko/cities";
 
 /** Kart + opsiyonel mesafe (geo araması). 068 kartının üst kümesi. */

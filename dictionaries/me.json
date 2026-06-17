@@ -2488,7 +2488,6 @@
       "allSpecialties": "Sve specijalnosti",
       "browseBySpecialty": "Po specijalnosti",
       "seoTitle": "Glatko Zdravlje — Pronađite svog ljekara, zakažite online",
-      "searchSoonNote": "Pretraga uskoro — za sada izaberite specijalnost ispod.",
       "specialtyIntro": "Verifikovani stručnjaci u Crnoj Gori",
       "emptyTitle": "Još nema stručnjaka",
       "emptyBody": "Dodajemo verifikovane stručnjake u ovoj specijalnosti. Navratite uskoro.",
@@ -2518,14 +2517,12 @@
         "locationDenied": "Lokacija nije dostupna. Izaberite grad.",
         "radiusLabel": "U krugu",
         "radiusKm": "{km} km",
-        "apply": "Primijeni",
         "clearFilters": "Obriši filtere",
         "resultsCount": "{count} stručnjaka",
         "distanceAway": "{km} km daleko",
         "emptyFilteredTitle": "Nema rezultata",
         "emptyFilteredBody": "Nijedan stručnjak ne odgovara ovim filterima. Obrišite ih ili izaberite obližnji grad.",
-        "nearbyCities": "Obližnji gradovi",
-        "inCity": "u gradu {city}"
+        "nearbyCities": "Obližnji gradovi"
       }
     },
     "booking": {

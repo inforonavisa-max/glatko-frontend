@@ -10,8 +10,12 @@
 -- 068.health_providers_by_specialty'nin BİREBİR genişletilmişi: aynı kart şekli
 -- (slug/fullName/title/photoUrl/providerType/verified/languages/specialtyName +
 -- birincil lokasyon) + şu opsiyonel yüklemler:
---   • p_city    — birincil lokasyon şehri (ILIKE, unaccent yok; eşleşme TS'te de
---                  GLATKO_CITIES.name ile yapılır, şehir adları aksansız Latin)
+--   • p_city    — birincil lokasyon şehri. AKSAN-DUYARSIZ eşleşme: iki taraf da
+--                  extensions.unaccent + lower ile normalize edilir. Sebep: SSOT
+--                  GLATKO_CITIES.name aksan taşır (Nikšić, Rožaje, Kolašin, Žabljak,
+--                  Plužine, Šavnik…); provider'ın serbest-metin location.city'si
+--                  aksansız ('Niksic') saklanmışsa düz ILIKE eşleşmezdi → provider
+--                  sessizce kaybolurdu. unaccent extensions şemasında KURULU (1.1).
 --   • p_langs   — diller (overlap &&; provider.languages text[] ile kesişim)
 --   • p_mode    — aktif bir hizmetin modu (in_person|video|home_visit) var mı
 --   • p_lat/p_lng/p_radius_m — "yakınımda": birincil lokasyon koordinatından
@@ -35,7 +39,10 @@
 --
 -- GÜVENLİK: SECURITY DEFINER + SET search_path='' (066/068/069 deseniyle birebir — pinli,
 -- mutable değil; tüm health.* + extensions.* objeleri şema-qualified; lower/&&/jsonb_*
--- pg_catalog → search_path'ten bağımsız).
+-- pg_catalog → search_path'ten bağımsız). unaccent İKİ ARGÜMANLI çağrılır
+-- (extensions.unaccent('extensions.unaccent'::regdictionary, …)): tek-argümanlı form
+-- sözlüğü search_path'ten çözmeye çalışır → '' altında IMMUTABLE değil/başarısız;
+-- regdictionary şema-qualified hali pinlidir.
 --
 -- ⚠️ PROD'A UYGULANMADI. Bu dosya yalnız yazıldı + aşağıdaki BEGIN/ROLLBACK dry-run
 -- planı ile doğrulanır; ana oturum (main session) uygular. (Demir Kural: migration
@@ -114,8 +121,14 @@ as $$
     where sp.slug = p_specialty_slug
       and p.is_published = true
       and p.verification_status = 'approved'
-      -- city: birincil lokasyon şehri (ILIKE tam eşleşme; aksan yok)
-      and (p_city is null or loc.city ilike p_city)
+      -- city: birincil lokasyon şehri — AKSAN-DUYARSIZ tam eşleşme. İki taraf da
+      -- unaccent + lower ile normalize (SSOT şehir adları aksan taşır; provider'ın
+      -- serbest-metin şehri aksansız saklanmış olabilir).
+      and (
+        p_city is null
+        or extensions.unaccent('extensions.unaccent'::regdictionary, lower(loc.city))
+           = extensions.unaccent('extensions.unaccent'::regdictionary, lower(p_city))
+      )
       -- diller: provider.languages ile kesişim
       and (p_langs is null or array_length(p_langs, 1) is null or p.languages && p_langs)
       -- mode: o moddan aktif bir hizmet var mı
@@ -144,26 +157,35 @@ grant execute on function public.health_search_providers(text,text,text,text[],t
 -- DRY-RUN PLANI (ana oturum uygular; bu BUILD agent apply ETMEZ)
 -- ═══════════════════════════════════════════════════════════════════════════
 -- Aşağıdaki blok BEGIN/ROLLBACK ile prod'da hiçbir kalıcı değişiklik yapmadan
--- fonksiyonun derlendiğini + 4 senaryoyu döndürdüğünü kanıtlar. Prod verisi:
--- 2 yayınlı provider (psiholog/Podgorica @42.4304,19.2594; stomatolog/Budva @42.2911,18.8401).
+-- fonksiyonun derlendiğini + senaryoları döndürdüğünü kanıtlar. Prod verisi (TEYİTLİ):
+--   • psiholog: dr-test-psiholog-podgorica, city 'Podgorica' @42.4304,19.2594
+--   • dis-hekimi (DİŞ HEKİMİ — slug 'stomatolog' DEĞİL): dr-test-stomatolog-budva,
+--     city 'Budva' @42.2911,18.8401
+-- (Bu blok BUILD agent tarafından prod'da fiilen koşturuldu + rollback edildi; sonuçlar
+--  aşağıdaki beklenen değerlerle bire bir tuttu.)
 --
 --   begin;
---     -- (1) fonksiyon derleniyor mu + filtresiz tüm psikologlar
---     create or replace function public.health_search_providers(...) ...;  -- bu dosyanın gövdesi
---     -- (2) filtresiz: psiholog → 1 kart (distance_km YOK)
---     select jsonb_array_length(public.health_search_providers('psikolog','en')) as n_all;     -- beklenen 1
---     -- (3) city=Tivat (eşleşme yok) → 0
---     select jsonb_array_length(public.health_search_providers('psikolog','en', p_city => 'Tivat')) as n_city0; -- 0
---     -- (4) geo: Kotor merkezi (42.4247,18.7712), 20km → stomatolog (Budva ~16km) IN; distance_km dolu
---     select public.health_search_providers('stomatolog','en',
---              p_lat => 42.4247, p_lng => 18.7712, p_radius_m => 20000); -- 1 kart, distanceKm ~15.9
---     -- (5) geo: aynı nokta 5km → stomatolog OUT
---     select jsonb_array_length(public.health_search_providers('stomatolog','en',
---              p_lat => 42.4247, p_lng => 18.7712, p_radius_m => 5000)) as n_geo0;              -- 0
+--     -- (0) fonksiyonu yarat (bu dosyanın gövdesi)
+--     create or replace function public.health_search_providers(...) ...;
+--     -- (1) filtresiz: psiholog → 1 kart (distanceKm YOK)
+--     select jsonb_array_length(public.health_search_providers('psikolog','en'));               -- 1
+--     -- (2) city=Podgorica (SSOT adı) → 1  ; case-insensitive: 'podGORICA' → 1
+--     select jsonb_array_length(public.health_search_providers('psikolog','en', p_city => 'Podgorica')); -- 1
+--     -- (3) AKSAN-DUYARSIZLIK KANITI: dis-hekimi'nin stored city'sini geçici olarak
+--     --     aksansız/farklı-case 'budva' yap; SSOT sorgusu 'Budva' yine de EŞLEŞMELİ.
+--     update health.locations set city = 'budva'
+--       where id in (select pl.location_id from health.provider_locations pl
+--                    join health.providers p on p.id=pl.provider_id
+--                    where p.slug='dr-test-stomatolog-budva');
+--     select jsonb_array_length(public.health_search_providers('dis-hekimi','en', p_city => 'Budva')); -- 1 (düz ILIKE'ta 0 olurdu)
+--     -- (4) geo: Kotor (42.4247,18.7712) 20km → dis-hekimi (Budva ~15.9km) IN; distanceKm dolu
+--     select public.health_search_providers('dis-hekimi','en',
+--              p_lat => 42.4247, p_lng => 18.7712, p_radius_m => 20000);                          -- 1 kart, distanceKm 15.9
+--     -- (5) geo: aynı nokta 5km → OUT
+--     select jsonb_array_length(public.health_search_providers('dis-hekimi','en',
+--              p_lat => 42.4247, p_lng => 18.7712, p_radius_m => 5000));                          -- 0
 --     -- (6) dil filtresi: olmayan dil → 0
---     select jsonb_array_length(public.health_search_providers('psikolog','en', p_langs => array['xx'])) as n_lang0; -- 0
---     -- (7) mode filtresi: olmayan mod kombinasyonu → 0/azalır
---     select jsonb_array_length(public.health_search_providers('psikolog','en', p_mode => 'home_visit')) as n_mode;
+--     select jsonb_array_length(public.health_search_providers('psikolog','en', p_langs => array['xx'])); -- 0
 --   rollback;
 --
 -- Beklenen: tüm SELECT'ler hatasız döner, sayılar yukarıdaki yorumlarla tutar,

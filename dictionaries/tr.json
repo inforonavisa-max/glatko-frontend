@@ -2488,7 +2488,6 @@
       "allSpecialties": "Tüm uzmanlıklar",
       "browseBySpecialty": "Uzmanlığa göre gör",
       "seoTitle": "Glatko Sağlık — Doktorunu bul, online randevu al",
-      "searchSoonNote": "Arama yakında — şimdilik aşağıdan bir uzmanlık seçin.",
       "specialtyIntro": "Karadağ’da doğrulanmış uzmanlar",
       "emptyTitle": "Henüz uzman yok",
       "emptyBody": "Bu uzmanlıkta doğrulanmış uzmanları ekliyoruz. Yakında tekrar bakın.",
@@ -2518,14 +2517,12 @@
         "locationDenied": "Konumunuz alınamadı. Bir şehir seçin.",
         "radiusLabel": "Mesafe",
         "radiusKm": "{km} km",
-        "apply": "Uygula",
         "clearFilters": "Filtreleri temizle",
         "resultsCount": "{count} uzman",
         "distanceAway": "{km} km uzakta",
         "emptyFilteredTitle": "Sonuç yok",
         "emptyFilteredBody": "Bu filtrelere uyan uzman yok. Filtreleri temizleyin veya yakın bir şehir deneyin.",
-        "nearbyCities": "Yakındaki şehirler",
-        "inCity": "{city} şehrinde"
+        "nearbyCities": "Yakındaki şehirler"
       }
     },
     "booking": {

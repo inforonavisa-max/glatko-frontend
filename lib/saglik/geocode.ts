@@ -51,22 +51,23 @@ export function matchCity(q: string): GlatkoCity | null {
 }
 
 // ── Kota tripwire (cold-start lokal; best-effort) ─────────────────────────────
-const MAPBOX_MONTHLY_FREE = Number(process.env.MAPBOX_MONTHLY_FREE ?? "100000");
 const QUOTA_ALARM_RATIO = 0.8;
 let mapboxCallCount = 0;
 let quotaAlarmFired = false;
 
+/** Aylık ücretsiz kota eşiği — çağrı anında okunur (test edilebilir; varsayılan 100k). */
+function monthlyFreeQuota(): number {
+  return Number(process.env.MAPBOX_MONTHLY_FREE ?? "100000");
+}
+
 /** Gerçek (cache-miss) Mapbox çağrısında çağrılır; eşik aşılırsa bir kez Sentry. */
 function recordMapboxCall(): void {
   mapboxCallCount += 1;
-  if (
-    !quotaAlarmFired &&
-    MAPBOX_MONTHLY_FREE > 0 &&
-    mapboxCallCount >= MAPBOX_MONTHLY_FREE * QUOTA_ALARM_RATIO
-  ) {
+  const quota = monthlyFreeQuota();
+  if (!quotaAlarmFired && quota > 0 && mapboxCallCount >= quota * QUOTA_ALARM_RATIO) {
     quotaAlarmFired = true;
     glatkoCaptureMessage(
-      `Mapbox geocode quota tripwire: ${mapboxCallCount} calls this cold-start (>=80% of ${MAPBOX_MONTHLY_FREE}). Check the Mapbox dashboard — this counter is best-effort (per-instance).`,
+      `Mapbox geocode quota tripwire: ${mapboxCallCount} calls this cold-start (>=80% of ${quota}). Check the Mapbox dashboard — this counter is best-effort (per-instance).`,
       "warning",
       { feature: "health-geocode", tripwire: "mapbox-quota-80" },
     );
@@ -78,12 +79,34 @@ export function _geocodeCounters(): { calls: number; alarmFired: boolean } {
   return { calls: mapboxCallCount, alarmFired: quotaAlarmFired };
 }
 
+/** Test izolasyonu için sayaç sıfırlama (vitest). Üretim yolunda ÇAĞRILMAZ. */
+export function _resetGeocodeCounters(): void {
+  mapboxCallCount = 0;
+  quotaAlarmFired = false;
+}
+
 const MAPBOX_TIMEOUT_MS = 3000;
 
-/** L2 — tek Mapbox geocode çağrısı; her başarısızlıkta null (atmaz). */
+/**
+ * Sentinel thrown by fetchMapbox on a TRANSIENT failure (timeout / network /
+ * non-2xx). unstable_cache memoizes resolved values but NOT thrown errors, so
+ * throwing on transient failures keeps a one-off Mapbox outage OUT of the 24h
+ * cache (cachedMapbox catches it → null to the caller, page still degrades).
+ * A DEFINITIVE "no result" (200 with zero/invalid features) returns null and IS
+ * cacheable — that answer is stable, caching it spares quota (the cache's job).
+ */
+class MapboxTransientError extends Error {}
+
+/**
+ * L2 — tek Mapbox geocode çağrısı.
+ *   • token yok            → null (cacheable; deterministik "yapılandırılmamış")
+ *   • 200 + sıfır/bozuk    → null (DEFINITIVE no-result; cacheable)
+ *   • timeout/network/!ok  → THROW MapboxTransientError (cache'lenMEZ; bir-kerelik
+ *                            kesinti 24h boyunca fallback'i zehirlemesin)
+ */
 async function fetchMapbox(query: string): Promise<GeoPoint | null> {
   const token = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
-  if (!token || token.trim() === "") return null; // token yok → fallback
+  if (!token || token.trim() === "") return null; // token yok → fallback (cacheable)
 
   recordMapboxCall();
 
@@ -94,13 +117,15 @@ async function fetchMapbox(query: string): Promise<GeoPoint | null> {
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json` +
       `?country=ME&types=place,locality&limit=1&access_token=${encodeURIComponent(token)}`;
     const res = await fetch(url, { signal: controller.signal });
-    if (!res.ok) return null;
+    if (!res.ok) throw new MapboxTransientError(`mapbox ${res.status}`); // transient → don't cache
     const json: unknown = await res.json();
     const center = extractCenter(json);
+    // 200 ulaştı: sonuç ister var ister yok, bu KESİN bir yanıt → cache'lenebilir null.
     if (!center) return null;
     return { lat: center.lat, lng: center.lng, source: "mapbox" };
-  } catch {
-    return null; // timeout / network / parse → zarafetli fallback
+  } catch (err) {
+    if (err instanceof MapboxTransientError) throw err; // cache'e null yazılmasın
+    throw new MapboxTransientError("mapbox fetch failed"); // timeout/network/parse → transient
   } finally {
     clearTimeout(timer);
   }
@@ -121,14 +146,24 @@ function extractCenter(json: unknown): { lat: number; lng: number } | null {
   return { lat, lng };
 }
 
-/** L1 — cache'li Mapbox sarıcı (key = normalize(query)). */
-function cachedMapbox(query: string): Promise<GeoPoint | null> {
+/**
+ * L1 — cache'li Mapbox sarıcı (key = normalize(query)). fetchMapbox transient
+ * hatada ATAR → unstable_cache o değeri CACHE'LEMEZ (yalnız resolve'ları cache'ler)
+ * ve re-throw eder; burada yakalanıp null'a çevrilir (zarafetli fallback, Demir
+ * Kural — sayfa Mapbox kesintisinde de çalışır + kesinti 24h cache'i zehirlemez).
+ * DEFINITIVE null (sonuç yok / token yok) ise atılmadığı için normal cache'lenir.
+ */
+async function cachedMapbox(query: string): Promise<GeoPoint | null> {
   const key = normalizeQuery(query);
-  return unstable_cache(
-    () => fetchMapbox(query),
-    ["health-mapbox-geocode", key],
-    { revalidate: 86_400, tags: ["mapbox-geocode"] },
-  )();
+  try {
+    return await unstable_cache(
+      () => fetchMapbox(query),
+      ["health-mapbox-geocode", key],
+      { revalidate: 86_400, tags: ["mapbox-geocode"] },
+    )();
+  } catch {
+    return null; // transient outage → fallback, NOT cached
+  }
 }
 
 /**

@@ -2485,7 +2485,6 @@
       "allSpecialties": "All specialties",
       "browseBySpecialty": "Browse by specialty",
       "seoTitle": "Glatko Health — Find your doctor, book online",
-      "searchSoonNote": "Full search is coming soon — for now, pick a specialty below.",
       "specialtyIntro": "Verified professionals in Montenegro",
       "emptyTitle": "No professionals yet",
       "emptyBody": "We’re onboarding verified professionals in this specialty. Please check back soon.",
@@ -2515,14 +2514,12 @@
         "locationDenied": "Couldn’t get your location. Pick a city instead.",
         "radiusLabel": "Within",
         "radiusKm": "{km} km",
-        "apply": "Apply",
         "clearFilters": "Clear filters",
         "resultsCount": "{count} professionals",
         "distanceAway": "{km} km away",
         "emptyFilteredTitle": "No matches",
         "emptyFilteredBody": "No professionals match these filters. Try clearing them or a nearby city.",
-        "nearbyCities": "Nearby cities",
-        "inCity": "in {city}"
+        "nearbyCities": "Nearby cities"
       }
     },
     "booking": {

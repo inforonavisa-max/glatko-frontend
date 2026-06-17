@@ -32,9 +32,15 @@ export async function GET(request: Request) {
   if (!point) {
     return NextResponse.json({ result: null });
   }
+  // Cache window keyed by source so CDN behavior reflects Mapbox load: deterministic
+  // GLATKO_CITIES hits (zero Mapbox usage, stable) get a long immutable cache; live
+  // Mapbox hits get a short 5-min shared cache. Both are public + safe to share.
+  const cacheControl =
+    point.source === "cities"
+      ? "public, max-age=86400, immutable"
+      : "public, max-age=300";
   return NextResponse.json(
     { lat: point.lat, lng: point.lng, source: point.source },
-    // Geocode results are public + stable; allow a short shared cache.
-    { headers: { "Cache-Control": "public, max-age=300" } },
+    { headers: { "Cache-Control": cacheControl } },
   );
 }

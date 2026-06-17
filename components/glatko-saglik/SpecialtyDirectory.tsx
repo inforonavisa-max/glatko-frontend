@@ -165,6 +165,7 @@ export async function SpecialtyDirectory({
 
         <HealthFilterBar
           specialtySlug={specialtySlug}
+          currentCity={filters.city}
           labels={{
             filtersTitle: s("filtersTitle"),
             cityLabel: s("cityLabel"),
@@ -183,6 +184,7 @@ export async function SpecialtyDirectory({
             locating: s("locating"),
             locationDenied: s("locationDenied"),
             radiusLabel: s("radiusLabel"),
+            radiusKm: s("radiusKm"),
             clearFilters: s("clearFilters"),
             cityNames,
             langNames,

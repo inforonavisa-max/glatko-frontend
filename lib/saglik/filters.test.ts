@@ -92,6 +92,19 @@ describe("parseHealthFilters — defensive parse", () => {
     });
   });
 
+  it("near rejects out-of-range coords (garbage link ?lat=999&lng=999 → null)", () => {
+    expect(parseHealthFilters({ lat: "999", lng: "999" }).near).toBeNull();
+    expect(parseHealthFilters({ lat: "91", lng: "19" }).near).toBeNull();
+    expect(parseHealthFilters({ lat: "42", lng: "181" }).near).toBeNull();
+    expect(parseHealthFilters({ lat: "-91", lng: "0" }).near).toBeNull();
+    // Boundary values are valid (inclusive range).
+    expect(parseHealthFilters({ lat: "90", lng: "-180" }).near).toEqual({
+      lat: 90,
+      lng: -180,
+      radiusKm: RADIUS_DEFAULT_KM,
+    });
+  });
+
   it("URLSearchParams and plain-record readers agree; array param takes first", () => {
     const rec = parseHealthFilters({ city: ["budva", "kotor"], mode: "video" });
     expect(rec.city).toBe("budva");
@@ -171,11 +184,19 @@ describe("applyClientFilters — combination correctness", () => {
     ]);
   });
 
-  it("multiple languages = AND (provider must have ALL)", () => {
+  it("multiple languages = OR / overlap (provider must speak ANY — mirrors SQL `&&`)", () => {
+    // en∪me → pod-psy(en,me) + bud-dent(me,sr,en); kot-physio(de) excluded.
     expect(applyClientFilters(FIX, f({ langs: ["en", "me"] })).map((p) => p.slug)).toEqual(
       ["pod-psy", "bud-dent"],
     );
-    expect(applyClientFilters(FIX, f({ langs: ["de", "en"] }))).toHaveLength(0);
+    // de∪en → every provider speaks one of them (kot-physio via de, the rest via en).
+    expect(applyClientFilters(FIX, f({ langs: ["de", "en"] })).map((p) => p.slug)).toEqual([
+      "pod-psy",
+      "bud-dent",
+      "kot-physio",
+    ]);
+    // A language no provider speaks → none.
+    expect(applyClientFilters(FIX, f({ langs: ["ar"] }))).toHaveLength(0);
   });
 
   it("mode filter", () => {

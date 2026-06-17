@@ -6,11 +6,19 @@ vi.mock("next/cache", () => ({
   unstable_cache: (fn: (...a: unknown[]) => unknown) => fn,
 }));
 
+// Sentry capture is non-blocking + side-effecting; spy on it for the quota tripwire.
+const captureSpy = vi.fn();
+vi.mock("@/lib/sentry/glatko-capture", () => ({
+  glatkoCaptureMessage: (...args: unknown[]) => captureSpy(...args),
+}));
+
 import {
   geocodeCity,
   reverseGeocode,
   normalizeQuery,
   matchCity,
+  _geocodeCounters,
+  _resetGeocodeCounters,
 } from "./geocode";
 
 const TOKEN_KEY = "NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN";
@@ -41,6 +49,8 @@ describe("geocodeCity — two-layer + graceful fallback", () => {
 
   beforeEach(() => {
     delete process.env[TOKEN_KEY];
+    _resetGeocodeCounters();
+    captureSpy.mockClear();
   });
   afterEach(() => {
     globalThis.fetch = realFetch;
@@ -103,6 +113,60 @@ describe("geocodeCity — two-layer + graceful fallback", () => {
 
   it("empty input → null", async () => {
     expect(await geocodeCity("   ")).toBeNull();
+  });
+
+  it("a real (cache-miss) Mapbox call increments the quota counter; no alarm under threshold", async () => {
+    process.env[TOKEN_KEY] = "pk.test";
+    globalThis.fetch = vi.fn(async () => ({
+      ok: true,
+      json: async () => ({ features: [{ center: [18.7712, 42.4247] }] }),
+    })) as unknown as typeof fetch;
+    expect(_geocodeCounters().calls).toBe(0);
+    await geocodeCity("a place that increments");
+    expect(_geocodeCounters().calls).toBe(1);
+    expect(_geocodeCounters().alarmFired).toBe(false);
+    expect(captureSpy).not.toHaveBeenCalled();
+  });
+
+  it("quota 80% tripwire fires EXACTLY once at the threshold (latched)", async () => {
+    process.env[TOKEN_KEY] = "pk.test";
+    process.env.MAPBOX_MONTHLY_FREE = "2"; // 80% of 2 = 1.6 → fires on the 2nd call
+    globalThis.fetch = vi.fn(async () => ({
+      ok: true,
+      json: async () => ({ features: [{ center: [18.7712, 42.4247] }] }),
+    })) as unknown as typeof fetch;
+    try {
+      await geocodeCity("call one not in cities");
+      expect(captureSpy).not.toHaveBeenCalled(); // 1 < 1.6
+      await geocodeCity("call two not in cities");
+      expect(_geocodeCounters().alarmFired).toBe(true);
+      expect(captureSpy).toHaveBeenCalledTimes(1);
+      await geocodeCity("call three not in cities");
+      // Latched: a second crossing does NOT re-fire.
+      expect(captureSpy).toHaveBeenCalledTimes(1);
+    } finally {
+      delete process.env.MAPBOX_MONTHLY_FREE;
+    }
+  });
+
+  it("transient failure (non-200) is NOT cached — a later success resolves", async () => {
+    // The negative-cache distinction: fetchMapbox throws on transient failure so
+    // unstable_cache does not memoize the outage; geocodeCity still returns null.
+    process.env[TOKEN_KEY] = "pk.test";
+    let call = 0;
+    globalThis.fetch = vi.fn(async () => {
+      call += 1;
+      if (call === 1) return { ok: false, json: async () => ({}) };
+      return { ok: true, json: async () => ({ features: [{ center: [18.7712, 42.4247] }] }) };
+    }) as unknown as typeof fetch;
+    // 1st: transient → graceful null (not thrown to caller).
+    expect(await geocodeCity("flaky place query")).toBeNull();
+    // 2nd: Mapbox recovered → real result (would be impossible if null had been cached).
+    expect(await geocodeCity("flaky place query")).toEqual({
+      lat: 42.4247,
+      lng: 18.7712,
+      source: "mapbox",
+    });
   });
 });
 
