@@ -194,6 +194,22 @@ export const routing = defineRouting({
       me: "/zdravlje/[specialty]",
       ar: "/al-sihha/[specialty]",
     },
+    // Health directory specialty × city (H3 — the canonical SEO form of the city
+    // filter: a clean path segment, not ?city=). [specialty]=specialty slug,
+    // [city]=GLATKO_CITIES slug — both locale-neutral; only the prefix is
+    // localized, mirroring "/health/[specialty]" + "/services/[slug]/[city]".
+    // Gated + noindex (SEO quarantine) until launch (H11).
+    "/health/[specialty]/[city]": {
+      tr: "/saglik/[specialty]/[city]",
+      en: "/health/[specialty]/[city]",
+      de: "/gesundheit/[specialty]/[city]",
+      it: "/salute/[specialty]/[city]",
+      ru: "/zdorove/[specialty]/[city]",
+      uk: "/zdorovya/[specialty]/[city]",
+      sr: "/zdravlje/[specialty]/[city]",
+      me: "/zdravlje/[specialty]/[city]",
+      ar: "/al-sihha/[specialty]/[city]",
+    },
     "/health/uzman/[slug]": {
       tr: "/saglik/uzman/[slug]",
       en: "/health/uzman/[slug]",
