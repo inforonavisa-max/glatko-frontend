@@ -8,7 +8,8 @@ import type { RescheduleErrorCode } from "@/lib/saglik/booking";
  *   SLOT_TAKEN / RESCHEDULE_SCOPE_MISMATCH / OLD_NOT_CANCELLABLE → 409
  *   HOLD_EXPIRED / OLD_SLOT_PASSED                               → 410 (gone)
  *   NOT_FOUND                                                    → 404
- *   HOLD_NOT_OWNED / PATIENT_NOT_VERIFIED / PATIENT_INVALID      → 403
+ *   HOLD_NOT_OWNED / PATIENT_NOT_VERIFIED / PATIENT_INVALID /
+ *   RESCHEDULE_IDENTITY_MISMATCH                                 → 403
  *   ERROR (+ anything else)                                      → 503
  */
 export function statusFor(code: RescheduleErrorCode): number {
@@ -25,6 +26,7 @@ export function statusFor(code: RescheduleErrorCode): number {
     case "HOLD_NOT_OWNED":
     case "PATIENT_NOT_VERIFIED":
     case "PATIENT_INVALID":
+    case "RESCHEDULE_IDENTITY_MISMATCH":
       return 403;
     default:
       return 503;

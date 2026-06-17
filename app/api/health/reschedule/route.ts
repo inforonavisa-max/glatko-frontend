@@ -95,14 +95,28 @@ export async function POST(request: Request) {
     return res;
   }
 
+  // Idempotent replay (double-submit / network retry): the move + its notice already
+  // happened on the first call, so the RPC returns ONLY the new token. Short-circuit —
+  // redirect to the existing new appointment WITHOUT re-dispatching / re-enqueuing.
+  if (result.idempotent) {
+    const res = NextResponse.json({ ok: true, manageToken: result.newManageToken });
+    clearPatientCookie(res);
+    return res;
+  }
+
   // ONE coherent patient move notice (SMS + email), immediate + best-effort. No standalone
   // 'cancelled' is ever queued for the old appointment (cancel_reason='reschedule' + the
   // cancel route — the sole caller of enqueueCancelledNotice — is never invoked here).
-  await dispatchRescheduleConfirm(result, locale);
-
-  // Provider move notice (defensive re-enqueue; the RPC already inserted the row). Queues
-  // a single 'reschedule_provider' email — NOT provider_new_booking (no double-notice).
-  await enqueueRescheduleProviderNotice(result.newAppointmentId, result.oldAppointmentId);
+  // Defensive try/catch: the move is already committed in the DB; a render/send hiccup
+  // must never 500 the request (the H6 cron still delivers the queued 'reschedule' rows).
+  try {
+    await dispatchRescheduleConfirm(result, locale);
+    // Provider move notice (defensive re-enqueue; the RPC already inserted the row).
+    // Queues a single 'reschedule_provider' email — NOT provider_new_booking.
+    await enqueueRescheduleProviderNotice(result.newAppointmentId, result.oldAppointmentId);
+  } catch (e) {
+    console.error("[health-reschedule] dispatch failed:", e instanceof Error ? e.message : "unknown");
+  }
 
   const res = NextResponse.json({ ok: true, manageToken: result.newManageToken });
   // The new appointment is booked + the move is done; clear the one-shot patient binding.

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { createClient } from "@/supabase/server";
 import { PageBackground } from "@/components/ui/PageBackground";
@@ -31,6 +31,12 @@ export default async function AppointmentsSettingsPage({
   const l = locale as Locale;
   const t = await getTranslations();
 
+  // Flag-guard (Demir Kural 1): this is a health-vertical surface living OUTSIDE the
+  // health (gated) layout, so it does NOT inherit its 404-when-off behavior. Mirror it
+  // here — with the flag off (prod) the route 404s, so it ships dark like the rest of
+  // the vertical; in Preview/Development (flag on) it is reachable.
+  if (!isHealthVerticalEnabled()) notFound();
+
   // Auth-gated (same pattern as the other settings tabs).
   const supabase = createClient();
   const {
@@ -40,16 +46,13 @@ export default async function AppointmentsSettingsPage({
     redirect(`/${locale}/login?redirect=/settings/appointments`);
   }
 
-  // Health-specific data is flag-gated: when the vertical is off (or the user has no
-  // linked patient row yet) the list is simply empty — never a crash, never a 404.
+  // The user may have no linked patient row yet → an empty list (never a crash).
   let appointments: UserAppointment[] = [];
-  if (isHealthVerticalEnabled()) {
-    try {
-      appointments = await listUserAppointments(user.id, l);
-    } catch {
-      // A read-RPC hiccup degrades to an empty list (the account page must still render).
-      appointments = [];
-    }
+  try {
+    appointments = await listUserAppointments(user.id, l);
+  } catch {
+    // A read-RPC hiccup degrades to an empty list (the account page must still render).
+    appointments = [];
   }
 
   return (

@@ -459,6 +459,7 @@ export type RescheduleErrorCode =
   | "OLD_NOT_CANCELLABLE"
   | "OLD_SLOT_PASSED"
   | "RESCHEDULE_SCOPE_MISMATCH"
+  | "RESCHEDULE_IDENTITY_MISMATCH"
   | "NOT_FOUND";
 
 const RESCHEDULE_ERROR_CODES: RescheduleErrorCode[] = [
@@ -470,6 +471,7 @@ const RESCHEDULE_ERROR_CODES: RescheduleErrorCode[] = [
   "OLD_NOT_CANCELLABLE",
   "OLD_SLOT_PASSED",
   "RESCHEDULE_SCOPE_MISMATCH",
+  "RESCHEDULE_IDENTITY_MISMATCH",
   "NOT_FOUND",
 ];
 
@@ -480,6 +482,15 @@ function parseRescheduleReason(reason: string): RescheduleErrorCode {
 export type RescheduleResult =
   | {
       ok: true;
+      /**
+       * false on a first, real move: dispatch/summary are present and the route sends
+       * the move notice. true on an idempotent replay (the old appointment was already
+       * cancelled+rescheduled — a double-submit / network retry): the move already
+       * happened on the first call, so the RPC returns ONLY the new token (no
+       * dispatch/summary) and the route MUST short-circuit — redirect to newManageToken
+       * WITHOUT re-dispatching (the notice already went out). See migration 075/076.
+       */
+      idempotent: false;
       oldAppointmentId: string;
       newAppointmentId: string;
       newManageToken: string;
@@ -489,6 +500,7 @@ export type RescheduleResult =
       dispatch: BookDispatch;
       summary: BookSummary;
     }
+  | { ok: true; idempotent: true; newManageToken: string }
   | { ok: false; code: RescheduleErrorCode };
 
 /**
@@ -522,19 +534,29 @@ export async function rescheduleAppointment(args: {
     return { ok: false, code: "ERROR" };
   }
   const d = data as
-    | ({ ok: true } & Omit<Extract<RescheduleResult, { ok: true }>, "ok">)
+    | ({ ok: true; idempotent?: boolean } & Partial<
+        Omit<Extract<RescheduleResult, { ok: true; idempotent: false }>, "ok" | "idempotent">
+      >)
     | { ok: false; reason: string };
   if (d.ok) {
+    // Idempotent replay (double-submit / retry): the RPC returns ONLY the new token
+    // (no dispatch/summary), because the move + its notice already happened on the
+    // first call. Map to the distinct variant so the route short-circuits instead of
+    // dereferencing the absent dispatch/summary (which would 500 the retry).
+    if (d.idempotent === true && d.newManageToken) {
+      return { ok: true, idempotent: true, newManageToken: d.newManageToken };
+    }
     return {
       ok: true,
-      oldAppointmentId: d.oldAppointmentId,
-      newAppointmentId: d.newAppointmentId,
-      newManageToken: d.newManageToken,
-      slotStart: d.slotStart,
-      slotEnd: d.slotEnd,
-      oldSlotStart: d.oldSlotStart,
-      dispatch: d.dispatch,
-      summary: d.summary,
+      idempotent: false,
+      oldAppointmentId: d.oldAppointmentId!,
+      newAppointmentId: d.newAppointmentId!,
+      newManageToken: d.newManageToken!,
+      slotStart: d.slotStart!,
+      slotEnd: d.slotEnd!,
+      oldSlotStart: d.oldSlotStart!,
+      dispatch: d.dispatch!,
+      summary: d.summary!,
     };
   }
   return { ok: false, code: parseRescheduleReason(d.reason) };
@@ -549,7 +571,7 @@ export async function rescheduleAppointment(args: {
  * Best-effort & two-layer: a notification hiccup never fails the reschedule.
  */
 export async function dispatchRescheduleConfirm(
-  result: Extract<RescheduleResult, { ok: true }>,
+  result: Extract<RescheduleResult, { ok: true; idempotent: false }>,
   locale: Locale,
 ): Promise<void> {
   const newDateTime = formatAppointmentDateTime(result.slotStart, locale);

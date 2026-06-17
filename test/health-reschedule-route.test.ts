@@ -28,6 +28,7 @@ describe("statusFor — code → HTTP status", () => {
     ["HOLD_NOT_OWNED", 403],
     ["PATIENT_NOT_VERIFIED", 403],
     ["PATIENT_INVALID", 403],
+    ["RESCHEDULE_IDENTITY_MISMATCH", 403],
     ["ERROR", 503],
   ];
   for (const [code, status] of cases) {
@@ -45,7 +46,7 @@ describe("isTerminalFailure — drops the patient cookie only when the move can 
   });
 
   it("non-terminal: identity/scope/transport errors keep the binding for a retry", () => {
-    for (const c of ["HOLD_NOT_OWNED", "PATIENT_NOT_VERIFIED", "PATIENT_INVALID", "RESCHEDULE_SCOPE_MISMATCH", "ERROR"] as const) {
+    for (const c of ["HOLD_NOT_OWNED", "PATIENT_NOT_VERIFIED", "PATIENT_INVALID", "RESCHEDULE_SCOPE_MISMATCH", "RESCHEDULE_IDENTITY_MISMATCH", "ERROR"] as const) {
       expect(isTerminalFailure(c)).toBe(false);
     }
   });

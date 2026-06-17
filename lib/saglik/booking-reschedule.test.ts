@@ -61,18 +61,21 @@ beforeEach(() => {
 });
 
 describe("rescheduleAppointment — success mapping", () => {
-  it("maps a success jsonb to {ok:true, newManageToken, oldSlotStart, dispatch, summary}", async () => {
+  it("maps a success jsonb to {ok:true, idempotent:false, newManageToken, oldSlotStart, dispatch, summary}", async () => {
     rpc.mockResolvedValueOnce({ data: OK_PAYLOAD, error: null });
     const res = await rescheduleAppointment(ARGS);
     expect(res.ok).toBe(true);
     if (res.ok) {
-      expect(res.newManageToken).toBe(OK_PAYLOAD.newManageToken);
-      expect(res.newAppointmentId).toBe(OK_PAYLOAD.newAppointmentId);
-      expect(res.oldAppointmentId).toBe(OK_PAYLOAD.oldAppointmentId);
-      expect(res.oldSlotStart).toBe(OK_PAYLOAD.oldSlotStart);
-      expect(res.slotStart).toBe(OK_PAYLOAD.slotStart);
-      expect(res.dispatch.confirmSmsReminderId).toBe(OK_PAYLOAD.dispatch.confirmSmsReminderId);
-      expect(res.summary.providerSlug).toBe("dr-helena-novak");
+      expect(res.idempotent).toBe(false);
+      if (!res.idempotent) {
+        expect(res.newManageToken).toBe(OK_PAYLOAD.newManageToken);
+        expect(res.newAppointmentId).toBe(OK_PAYLOAD.newAppointmentId);
+        expect(res.oldAppointmentId).toBe(OK_PAYLOAD.oldAppointmentId);
+        expect(res.oldSlotStart).toBe(OK_PAYLOAD.oldSlotStart);
+        expect(res.slotStart).toBe(OK_PAYLOAD.slotStart);
+        expect(res.dispatch.confirmSmsReminderId).toBe(OK_PAYLOAD.dispatch.confirmSmsReminderId);
+        expect(res.summary.providerSlug).toBe("dr-helena-novak");
+      }
     }
     expect(rpc).toHaveBeenCalledWith("health_reschedule_appointment", {
       p_old_manage_token: ARGS.oldManageToken,
@@ -82,6 +85,32 @@ describe("rescheduleAppointment — success mapping", () => {
       p_note: null,
       p_locale: "me",
     });
+  });
+
+  it("maps the idempotent-replay payload (no dispatch/summary) to {ok:true, idempotent:true, newManageToken} without throwing", async () => {
+    // The RPC's no-double-cancel branch (075/076): old appointment already cancelled +
+    // rescheduled_to set → minimal payload. The TS layer MUST NOT try to read the absent
+    // dispatch/summary (that crashed the route → 500 on a double-submit before the fix).
+    const IDEMPOTENT_PAYLOAD = {
+      ok: true,
+      idempotent: true,
+      oldAppointmentId: "00000000-0000-0000-0000-0000000000a1",
+      newAppointmentId: "00000000-0000-0000-0000-0000000000b2",
+      newManageToken: "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee0",
+      // NO slotStart/slotEnd/oldSlotStart/dispatch/summary.
+    };
+    rpc.mockResolvedValueOnce({ data: IDEMPOTENT_PAYLOAD, error: null });
+    const res = await rescheduleAppointment(ARGS);
+    expect(res.ok).toBe(true);
+    if (res.ok) {
+      expect(res.idempotent).toBe(true);
+      if (res.idempotent) {
+        expect(res.newManageToken).toBe(IDEMPOTENT_PAYLOAD.newManageToken);
+        // The idempotent variant has NO dispatch/summary — the route short-circuits on it.
+        expect("dispatch" in res).toBe(false);
+        expect("summary" in res).toBe(false);
+      }
+    }
   });
 });
 
@@ -95,6 +124,7 @@ describe("rescheduleAppointment — graceful reason → union code", () => {
     ["OLD_NOT_CANCELLABLE", "OLD_NOT_CANCELLABLE"],
     ["OLD_SLOT_PASSED", "OLD_SLOT_PASSED"],
     ["RESCHEDULE_SCOPE_MISMATCH", "RESCHEDULE_SCOPE_MISMATCH"],
+    ["RESCHEDULE_IDENTITY_MISMATCH", "RESCHEDULE_IDENTITY_MISMATCH"],
     ["NOT_FOUND", "NOT_FOUND"],
   ];
   for (const [reason, code] of cases) {

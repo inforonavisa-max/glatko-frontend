@@ -106,9 +106,12 @@ export function RescheduleFlow({
     if (!/^\d{6}$/.test(code.trim())) return setError(t("errCodeInvalid"));
     setBusy(true);
     try {
-      // Re-verify binds glatko_hpatient (httpOnly) for this session. We re-send the
-      // health-data consent (required by the verify RPC) — the patient already gave
-      // it at the original booking; this is the same identity, only a time change.
+      // Re-verify binds glatko_hpatient (httpOnly) for this session as a LIVENESS proof
+      // only. The new appointment is booked against the ORIGINAL appointment's patient
+      // (migration 076), and the reschedule RPC requires this re-verified phone to match
+      // the original patient's phone_hash — so the real name/email/phone carry over and a
+      // token-holder can't move a stranger's slot. The placeholder `fullName` is therefore
+      // never used for the new appointment; it only satisfies the verify RPC's name field.
       const res = await fetch("/api/health/otp", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
