@@ -2559,7 +2559,25 @@
       "verifiedBody": "Your appointment is being confirmed. The confirmation step will be enabled very soon.",
       "verifiedTitle": "Phone verified ✓",
       "verify": "Verify",
-      "verifying": "Verifying…"
+      "verifying": "Verifying…",
+      "completeCta": "Complete Booking",
+      "completing": "Completing…",
+      "bookSlotTaken": "This time was just taken. Please choose another time.",
+      "bookExpired": "Time expired. Please choose a time again.",
+      "bookFailed": "The booking couldn't be completed. Please try again.",
+      "confirmedTitle": "Your appointment is confirmed ✓",
+      "confirmedBody": "We've also sent the appointment details by SMS. Details are below.",
+      "manageCta": "Manage appointment",
+      "cancelledBadge": "Cancelled",
+      "manageTitle": "Appointment management",
+      "cancelCta": "Cancel Appointment",
+      "cancelConfirm": "Are you sure you want to cancel the appointment?",
+      "cancelConfirmCta": "Yes, cancel",
+      "keepCta": "Keep it",
+      "cancelling": "Cancelling…",
+      "cancelledTitle": "Appointment cancelled",
+      "cancelledBody": "Your appointment has been cancelled. This time is available again.",
+      "cancelError": "Couldn't cancel. Please try again."
     }
   },
   "careerVertical": {

@@ -2562,7 +2562,25 @@
       "verifiedBody": "Vaš termin se potvrđuje. Korak potvrde biće omogućen vrlo uskoro.",
       "verifiedTitle": "Telefon potvrđen ✓",
       "verify": "Potvrdi",
-      "verifying": "Provjera…"
+      "verifying": "Provjera…",
+      "completeCta": "Završi zakazivanje",
+      "completing": "Završavanje…",
+      "bookSlotTaken": "Ovaj termin je upravo zauzet. Molimo izaberite drugo vrijeme.",
+      "bookExpired": "Vrijeme je isteklo. Molimo ponovo izaberite vrijeme.",
+      "bookFailed": "Zakazivanje nije moglo da se završi. Molimo pokušajte ponovo.",
+      "confirmedTitle": "Vaš termin je potvrđen ✓",
+      "confirmedBody": "Detalje o terminu poslali smo i SMS-om. Detalji su ispod.",
+      "manageCta": "Upravljaj terminom",
+      "cancelledBadge": "Otkazano",
+      "manageTitle": "Upravljanje terminom",
+      "cancelCta": "Otkaži termin",
+      "cancelConfirm": "Jeste li sigurni da želite da otkažete termin?",
+      "cancelConfirmCta": "Da, otkaži",
+      "keepCta": "Odustani",
+      "cancelling": "Otkazivanje…",
+      "cancelledTitle": "Termin je otkazan",
+      "cancelledBody": "Vaš termin je otkazan. Ovo vrijeme je ponovo dostupno.",
+      "cancelError": "Otkazivanje nije uspjelo. Molimo pokušajte ponovo."
     }
   },
   "careerVertical": {

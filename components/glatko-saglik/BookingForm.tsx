@@ -85,6 +85,9 @@ export function BookingForm({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [completing, setCompleting] = useState(false);
+  const [completeError, setCompleteError] = useState<string | null>(null);
+
   function mapApiError(status: number, payload: { error?: string; reason?: string; attemptsLeft?: number }): string {
     if (payload.error === "rate_limited") {
       return payload.reason === "ip_hourly" ? b("errRateLimitedIp") : b("errRateLimitedPhone");
@@ -159,6 +162,31 @@ export function BookingForm({
     }
   }
 
+  const complete = useCallback(async () => {
+    setCompleteError(null);
+    setCompleting(true);
+    try {
+      const res = await fetch("/api/health/bookings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ holdId, note: note.trim() || undefined, locale }),
+      });
+      const payload = await res.json().catch(() => ({}));
+      if (res.ok && payload.ok) {
+        router.push({ pathname: "/health/randevu/onay/[token]", params: { token: payload.manageToken } });
+        return;
+      }
+      if (res.status === 409) setCompleteError(b("bookSlotTaken"));
+      else if (res.status === 410) setCompleteError(b("bookExpired"));
+      else setCompleteError(b("bookFailed"));
+    } catch {
+      setCompleteError(b("bookFailed"));
+    } finally {
+      setCompleting(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [holdId, note, locale, router]);
+
   const inputCls =
     "mt-1 w-full rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-500/30 dark:border-white/15 dark:bg-white/5 dark:text-white dark:placeholder:text-white/30";
   const labelCls = "text-sm font-medium text-gray-700 dark:text-white/80";
@@ -176,11 +204,18 @@ export function BookingForm({
         </p>
         <button
           type="button"
-          disabled
-          className="mt-5 w-full rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-4 py-3 text-sm font-semibold text-white opacity-60 disabled:cursor-not-allowed"
+          onClick={complete}
+          disabled={completing}
+          className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:shadow-teal-500/40 disabled:opacity-60"
         >
-          {b("bookingComingSoon")}
+          {completing && <Loader2 className="h-4 w-4 animate-spin" />}
+          {completing ? b("completing") : b("completeCta")}
         </button>
+        {completeError && (
+          <p role="alert" className="mt-3 text-sm text-red-600 dark:text-red-300">
+            {completeError}
+          </p>
+        )}
       </section>
     );
   }

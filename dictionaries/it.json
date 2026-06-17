@@ -2559,7 +2559,25 @@
       "verifiedBody": "Il tuo appuntamento è in fase di conferma. Il passaggio di conferma sarà attivato molto presto.",
       "verifiedTitle": "Telefono verificato ✓",
       "verify": "Verifica",
-      "verifying": "Verifica in corso…"
+      "verifying": "Verifica in corso…",
+      "completeCta": "Completa la prenotazione",
+      "completing": "Completamento in corso…",
+      "bookSlotTaken": "Questo orario è appena stato occupato. Scegli un altro orario.",
+      "bookExpired": "Tempo scaduto. Scegli di nuovo un orario.",
+      "bookFailed": "Impossibile completare la prenotazione. Riprova.",
+      "confirmedTitle": "Il tuo appuntamento è confermato ✓",
+      "confirmedBody": "Abbiamo inviato i dettagli dell'appuntamento anche via SMS. I dettagli sono qui sotto.",
+      "manageCta": "Gestisci appuntamento",
+      "cancelledBadge": "Annullato",
+      "manageTitle": "Gestione appuntamento",
+      "cancelCta": "Annulla appuntamento",
+      "cancelConfirm": "Sei sicuro di voler annullare l'appuntamento?",
+      "cancelConfirmCta": "Sì, annulla",
+      "keepCta": "Mantieni",
+      "cancelling": "Annullamento in corso…",
+      "cancelledTitle": "Appuntamento annullato",
+      "cancelledBody": "Il tuo appuntamento è stato annullato. Questo orario è di nuovo disponibile.",
+      "cancelError": "Annullamento non riuscito. Riprova."
     }
   },
   "careerVertical": {
