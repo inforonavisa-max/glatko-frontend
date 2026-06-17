@@ -10,6 +10,9 @@ import {
   manageUrl,
 } from "@/lib/saglik/reminder-format";
 import { HEALTH_CONFIRM_SMS, HEALTH_CONFIRM_EMAIL_SUBJECT } from "@/lib/saglik/reminder-templates";
+import { HealthRescheduleEmail } from "@/lib/email/templates/health-reschedule";
+import { HEALTH_RESCHEDULE_SMS, HEALTH_RESCHEDULE_EMAIL_SUBJECT } from "@/lib/saglik/reminder-templates";
+import { coerceEmailLocale } from "@/lib/email/templates/translations";
 import type { Locale } from "@/i18n/routing";
 
 /**
@@ -152,6 +155,13 @@ export async function verifyOtp(args: {
   email: string | null;
   consentHealth: boolean;
   consentMarketing: boolean;
+  /**
+   * H9: when an authenticated Supabase session exists at verify time, the OTP route
+   * passes the user's id so the encrypted patient row is stamped with user_id (enables
+   * "Randevularım"). Guests (no session) pass null and the row stays user_id NULL.
+   * Always sent → the 8-arg migration-075 overload is selected.
+   */
+  userId: string | null;
 }): Promise<VerifyOtpResult> {
   const supabase = createAdminClient();
   const { data, error } = await supabase.rpc("health_verify_otp", {
@@ -162,6 +172,7 @@ export async function verifyOtp(args: {
     p_email: args.email,
     p_consent_health: args.consentHealth,
     p_consent_marketing: args.consentMarketing,
+    p_user_id: args.userId,
   });
   if (error) {
     // No PII in logs (phone/email/name never logged).
@@ -391,6 +402,11 @@ export type AppointmentSummary = {
   locationAddress: string;
   locationCity: string;
   manageToken: string;
+  /** H9: original service/location ids so the reschedule widget can pre-select them. */
+  serviceId: string;
+  locationId: string;
+  /** H9: when this appointment was rescheduled, the NEW appointment's manage_token (else null). */
+  rescheduledTo: string | null;
 };
 
 /** Appointment summary by manage_token (onay + manage pages). PII-free. null = not found. */
@@ -426,4 +442,215 @@ export async function cancelAppointment(manageToken: string): Promise<CancelResu
   if (d.ok) return { ok: true, status: "cancelled" };
   const reason = d.reason === "NOT_FOUND" || d.reason === "NOT_CANCELLABLE" ? d.reason : "ERROR";
   return { ok: false, reason };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// H9 — atomic reschedule (book-new-then-cancel-old) + the single patient move
+// notice + the provider move notice. The reschedule RPC (migration 075) reuses
+// health.book_appointment for the NEW appointment (atomicity not duplicated) and
+// sets the OLD appointment's cancel_reason='reschedule', so the standalone
+// 'cancelled' patient notice is NEVER queued — the patient gets ONE coherent
+// "moved from X to Y" message, the provider gets a distinct change notice.
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Reschedule failure codes = the book codes ∪ the reschedule-specific ones. */
+export type RescheduleErrorCode =
+  | BookErrorCode
+  | "OLD_NOT_CANCELLABLE"
+  | "OLD_SLOT_PASSED"
+  | "RESCHEDULE_SCOPE_MISMATCH"
+  | "NOT_FOUND";
+
+const RESCHEDULE_ERROR_CODES: RescheduleErrorCode[] = [
+  "SLOT_TAKEN",
+  "HOLD_EXPIRED",
+  "HOLD_NOT_OWNED",
+  "PATIENT_NOT_VERIFIED",
+  "PATIENT_INVALID",
+  "OLD_NOT_CANCELLABLE",
+  "OLD_SLOT_PASSED",
+  "RESCHEDULE_SCOPE_MISMATCH",
+  "NOT_FOUND",
+];
+
+function parseRescheduleReason(reason: string): RescheduleErrorCode {
+  return RESCHEDULE_ERROR_CODES.find((c) => reason.includes(c)) ?? "ERROR";
+}
+
+export type RescheduleResult =
+  | {
+      ok: true;
+      oldAppointmentId: string;
+      newAppointmentId: string;
+      newManageToken: string;
+      slotStart: string; // new
+      slotEnd: string; // new
+      oldSlotStart: string;
+      dispatch: BookDispatch;
+      summary: BookSummary;
+    }
+  | { ok: false; code: RescheduleErrorCode };
+
+/**
+ * Atomic reschedule via the migration-075 RPC. The new slot is held first (the
+ * caller passes a fresh hold id) and booked BEFORE the old one is cancelled, so a
+ * SLOT_TAKEN aborts the whole tx and the old appointment stays confirmed (no data
+ * loss). Maps the RPC's {ok:false,reason} graceful payload to the discriminated
+ * union. The RPC raises nothing on a business failure (it returns a payload), but a
+ * genuine PostgREST/transport error maps to ERROR.
+ */
+export async function rescheduleAppointment(args: {
+  oldManageToken: string;
+  newHoldId: string;
+  sessionKey: string;
+  patientId: string;
+  note: string | null;
+  locale: Locale;
+}): Promise<RescheduleResult> {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase.rpc("health_reschedule_appointment", {
+    p_old_manage_token: args.oldManageToken,
+    p_new_hold_id: args.newHoldId,
+    p_session_key: args.sessionKey,
+    p_patient_id: args.patientId,
+    p_note: args.note,
+    p_locale: args.locale,
+  });
+  if (error) {
+    // No token/PII in logs — the token is the appointment's only credential.
+    console.error("[health-booking] reschedule failed:", error.message);
+    return { ok: false, code: "ERROR" };
+  }
+  const d = data as
+    | ({ ok: true } & Omit<Extract<RescheduleResult, { ok: true }>, "ok">)
+    | { ok: false; reason: string };
+  if (d.ok) {
+    return {
+      ok: true,
+      oldAppointmentId: d.oldAppointmentId,
+      newAppointmentId: d.newAppointmentId,
+      newManageToken: d.newManageToken,
+      slotStart: d.slotStart,
+      slotEnd: d.slotEnd,
+      oldSlotStart: d.oldSlotStart,
+      dispatch: d.dispatch,
+      summary: d.summary,
+    };
+  }
+  return { ok: false, code: parseRescheduleReason(d.reason) };
+}
+
+/**
+ * Sends the SINGLE patient move notice immediately (SMS always, email if present),
+ * then marks the new appointment's confirm reminder rows sent/failed — exactly like
+ * dispatchConfirm, but with the explicit "moved from {old} to {new}" copy (option B).
+ * The RPC inserted plain 'confirm' rows for the new appointment, so reusing their ids
+ * keeps the outbox truthful; we just render the reschedule body instead of confirm.
+ * Best-effort & two-layer: a notification hiccup never fails the reschedule.
+ */
+export async function dispatchRescheduleConfirm(
+  result: Extract<RescheduleResult, { ok: true }>,
+  locale: Locale,
+): Promise<void> {
+  const newDateTime = formatAppointmentDateTime(result.slotStart, locale);
+  const oldDateTime = formatAppointmentDateTime(result.oldSlotStart, locale);
+  const doctor = formatDoctor(result.summary.providerTitle, result.summary.providerName);
+  const url = manageUrl(result.newManageToken, locale);
+
+  // SMS move notice (PII: phone/name not logged).
+  try {
+    const sms = await sendSms({
+      to: result.dispatch.phoneE164,
+      text: HEALTH_RESCHEDULE_SMS[locale](oldDateTime, newDateTime, doctor, url),
+    });
+    await markReminder(result.dispatch.confirmSmsReminderId, sms.ok ? "sent" : "failed", sms.ok ? sms.messageId : null);
+  } catch (e) {
+    console.error("[health-booking] reschedule sms failed:", e instanceof Error ? e.message : "unknown");
+    await markReminder(result.dispatch.confirmSmsReminderId, "failed", null);
+  }
+
+  // Email move notice (only when the patient provided an email).
+  if (result.dispatch.email && result.dispatch.confirmEmailReminderId) {
+    try {
+      const sent = await sendEmail({
+        to: result.dispatch.email,
+        subject: HEALTH_RESCHEDULE_EMAIL_SUBJECT[locale],
+        react: HealthRescheduleEmail({
+          locale: coerceEmailLocale(locale),
+          patientName: result.dispatch.patientName,
+          doctor,
+          oldDateTime,
+          newDateTime,
+          serviceName: result.summary.serviceName,
+          manageUrl: url,
+        }),
+      });
+      await markReminder(
+        result.dispatch.confirmEmailReminderId,
+        sent.success ? "sent" : "failed",
+        sent.success ? sent.messageId ?? null : null,
+      );
+    } catch (e) {
+      console.error("[health-booking] reschedule email failed:", e instanceof Error ? e.message : "unknown");
+      await markReminder(result.dispatch.confirmEmailReminderId, "failed", null);
+    }
+  }
+}
+
+/**
+ * H9: queue the provider's reschedule notice (one channel='email' 'reschedule_provider'
+ * row carrying the move). The RPC already inserts this row in the same tx, so this is a
+ * defensive idempotent re-enqueue for callers that book then enqueue separately. Mirrors
+ * enqueueBookingFollowups: best-effort & never-throw — a queue hiccup never fails the move.
+ */
+export async function enqueueRescheduleProviderNotice(
+  newAppointmentId: string,
+  oldAppointmentId: string,
+): Promise<void> {
+  const supabase = createAdminClient();
+  try {
+    const { error } = await supabase.rpc("health_enqueue_reschedule_provider", {
+      p_new_appointment_id: newAppointmentId,
+      p_old_appointment_id: oldAppointmentId,
+    });
+    if (error) console.error("[health-booking] enqueue_reschedule_provider failed:", error.message);
+  } catch (e) {
+    console.error("[health-booking] enqueue_reschedule_provider threw:", e instanceof Error ? e.message : "unknown");
+  }
+}
+
+export type UserAppointment = {
+  manageToken: string;
+  status: "confirmed" | "cancelled" | "completed" | "no_show";
+  slotStart: string;
+  slotEnd: string;
+  providerName: string;
+  providerTitle: string | null;
+  providerSlug: string;
+  serviceName: string;
+  serviceDurationMin: number;
+  servicePriceEur: number | null;
+  locationLabel: string;
+  locationCity: string;
+};
+
+/**
+ * H9 "Randevularım": PII-free upcoming+past appointment summaries for a logged-in
+ * user, via the migration-075 read-RPC filtered STRICTLY on patients.user_id. The
+ * caller MUST pass the server-verified getUser().id (never a client value), so one
+ * patient can never list another's appointments. Returns [] when nothing is linked.
+ */
+export async function listUserAppointments(
+  userId: string,
+  locale: Locale,
+): Promise<UserAppointment[]> {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase.rpc("health_list_user_appointments", {
+    p_user_id: userId,
+    p_locale: locale,
+  });
+  if (error) {
+    throw new Error(`health_list_user_appointments failed: ${error.message}`);
+  }
+  return (data as UserAppointment[] | null) ?? [];
 }

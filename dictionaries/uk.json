@@ -1462,7 +1462,8 @@
       "profile": "Профіль",
       "notifications": "Сповіщення",
       "security": "Безпека",
-      "ariaLabel": "Розділи налаштувань"
+      "ariaLabel": "Розділи налаштувань",
+      "appointments": "Записи"
     },
     "security": {
       "title": "Безпека",
@@ -2597,7 +2598,36 @@
       "cancelling": "Скасування…",
       "cancelledTitle": "Запис скасовано",
       "cancelledBody": "Ваш запис скасовано. Цей час знову доступний.",
-      "cancelError": "Не вдалося скасувати. Будь ласка, спробуйте ще раз."
+      "cancelError": "Не вдалося скасувати. Будь ласка, спробуйте ще раз.",
+      "rescheduleCta": "Перенести",
+      "passedTitle": "Цей запис минув",
+      "passedBody": "Час цього запису вже минув, і його більше не можна змінити.",
+      "rescheduleTitle": "Перенести запис",
+      "rescheduleIntro": "Виберіть новий час для того самого спеціаліста та послуги.",
+      "rescheduleCurrentLabel": "Поточний запис",
+      "rescheduleVerifyTitle": "Підтвердьте, що це ви",
+      "rescheduleVerifyBody": "Введіть номер телефону з вашого запису — ми надішлемо код підтвердження.",
+      "rescheduleVerifyName": "Пацієнт",
+      "rescheduleConfirmTitle": "Підтвердьте новий час",
+      "rescheduleConfirmBody": "Ваш поточний запис буде перенесено на вибраний час.",
+      "rescheduleConfirmCta": "Підтвердити перенесення",
+      "rescheduleUnavailableTitle": "Перенесення недоступне",
+      "rescheduleUnavailableBody": "Цей запис більше не можна перенести. Ви все ще можете керувати ним на сторінці запису.",
+      "backToManage": "Назад до запису"
+    },
+    "account": {
+      "title": "Мої записи",
+      "subtitle": "Переглядайте записи до лікарів і керуйте ними.",
+      "upcomingTitle": "Майбутні",
+      "pastTitle": "Минулі",
+      "emptyTitle": "Записів поки немає",
+      "emptyBody": "Коли ви запишетеся на прийом, він з'явиться тут.",
+      "status": {
+        "confirmed": "Підтверджено",
+        "cancelled": "Скасовано",
+        "completed": "Завершено",
+        "no_show": "Пропущено"
+      }
     }
   },
   "careerVertical": {

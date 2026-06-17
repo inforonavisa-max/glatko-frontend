@@ -9,6 +9,8 @@ import { HealthReminderEmail } from "@/lib/email/templates/health-reminder";
 import { HealthCancelledEmail } from "@/lib/email/templates/health-cancelled";
 import { HealthProviderNewBookingEmail } from "@/lib/email/templates/health-provider-new-booking";
 import { HealthFollowupEmail } from "@/lib/email/templates/health-followup";
+import { HealthRescheduleEmail } from "@/lib/email/templates/health-reschedule";
+import { HealthRescheduleProviderEmail } from "@/lib/email/templates/health-reschedule-provider";
 import { coerceEmailLocale } from "@/lib/email/templates/translations";
 import {
   formatAppointmentDateTime,
@@ -28,6 +30,10 @@ import {
   HEALTH_PROVIDER_NEW_BOOKING_EMAIL_SUBJECT,
   HEALTH_FOLLOWUP_SMS,
   HEALTH_FOLLOWUP_EMAIL_SUBJECT,
+  HEALTH_RESCHEDULE_SMS,
+  HEALTH_RESCHEDULE_EMAIL_SUBJECT,
+  HEALTH_RESCHEDULE_PROVIDER_SMS,
+  HEALTH_RESCHEDULE_PROVIDER_EMAIL_SUBJECT,
 } from "@/lib/saglik/reminder-templates";
 import { HealthBookingConfirmEmail } from "@/lib/email/templates/health-booking-confirm";
 import { locales, type Locale } from "@/i18n/routing";
@@ -65,6 +71,8 @@ export type ClaimedReminder = {
   appointmentStatus: string;
   slotStart: string;
   slotEnd: string;
+  /** H9: for reschedule rows, the OLD appointment's slot start ("from" time); null otherwise. */
+  oldSlotStart: string | null;
   manageToken: string;
   patientLocale: string;
   providerLocale: string;
@@ -139,7 +147,8 @@ function coerceLocale(raw: string): Locale {
  * SMS variant for the row (e.g. an email-only enqueue). Pure.
  */
 export function renderSmsBody(r: ClaimedReminder): string | null {
-  const locale = coerceLocale(r.template === "provider_new_booking" ? r.providerLocale : r.patientLocale);
+  const providerFacing = r.template === "provider_new_booking" || r.template === "reschedule_provider";
+  const locale = coerceLocale(providerFacing ? r.providerLocale : r.patientLocale);
   const dt = formatAppointmentDateTime(r.slotStart, locale);
   const doctor = formatDoctor(r.providerTitle, r.providerName);
   const url = manageUrl(r.manageToken, locale);
@@ -156,6 +165,17 @@ export function renderSmsBody(r: ClaimedReminder): string | null {
       return HEALTH_FOLLOWUP_SMS[locale](dt, doctor, url);
     case "provider_new_booking":
       return HEALTH_PROVIDER_NEW_BOOKING_SMS[locale](dt, firstName(r.patientName), url);
+    case "reschedule": {
+      // Patient move notice: "{oldDt} → {newDt}". If the old slot is missing (data
+      // gap) fall back to the plain confirm copy so the patient still gets a notice.
+      if (!r.oldSlotStart) return HEALTH_CONFIRM_SMS[locale](dt, doctor, url);
+      const oldDt = formatAppointmentDateTime(r.oldSlotStart, locale);
+      return HEALTH_RESCHEDULE_SMS[locale](oldDt, dt, doctor, url);
+    }
+    case "reschedule_provider": {
+      const oldDt = r.oldSlotStart ? formatAppointmentDateTime(r.oldSlotStart, locale) : dt;
+      return HEALTH_RESCHEDULE_PROVIDER_SMS[locale](oldDt, dt, firstName(r.patientName));
+    }
     default:
       return null;
   }
@@ -230,6 +250,39 @@ export function renderEmail(
           feedbackUrl: url,
         }),
       };
+    case "reschedule": {
+      // Patient move email. Old time → new time + new manage url. Falls back to a
+      // confirm email when the old slot is missing (so the patient still gets a notice).
+      if (!r.oldSlotStart) {
+        return {
+          subject: HEALTH_CONFIRM_EMAIL_SUBJECT[patientLocale],
+          react: HealthBookingConfirmEmail({
+            locale: emailLocale,
+            patientName: r.patientName,
+            doctor,
+            dateTime: dt,
+            serviceName,
+            locationLabel: r.locationLabel,
+            locationAddress: r.locationAddress,
+            locationCity: r.locationCity,
+            manageUrl: url,
+          }),
+        };
+      }
+      const oldDt = formatAppointmentDateTime(r.oldSlotStart, patientLocale);
+      return {
+        subject: HEALTH_RESCHEDULE_EMAIL_SUBJECT[patientLocale],
+        react: HealthRescheduleEmail({
+          locale: emailLocale,
+          patientName: r.patientName,
+          doctor,
+          oldDateTime: oldDt,
+          newDateTime: dt,
+          serviceName,
+          manageUrl: url,
+        }),
+      };
+    }
     case "provider_new_booking": {
       const providerLocale = coerceLocale(r.providerLocale);
       const providerEmailLocale = coerceEmailLocale(providerLocale);
@@ -246,6 +299,25 @@ export function renderEmail(
           locationLabel: r.locationLabel,
           // Intentionally NO detailsUrl: the only link we have is the patient's
           // manage_token (their cancel credential) — never send it to the provider.
+        }),
+      };
+    }
+    case "reschedule_provider": {
+      const providerLocale = coerceLocale(r.providerLocale);
+      const providerEmailLocale = coerceEmailLocale(providerLocale);
+      const pNewDt = formatAppointmentDateTime(r.slotStart, providerLocale);
+      const pOldDt = r.oldSlotStart ? formatAppointmentDateTime(r.oldSlotStart, providerLocale) : pNewDt;
+      return {
+        subject: HEALTH_RESCHEDULE_PROVIDER_EMAIL_SUBJECT[providerLocale],
+        react: HealthRescheduleProviderEmail({
+          locale: providerEmailLocale,
+          providerName: formatDoctor(r.providerTitle, r.providerName),
+          patientFirstName: firstName(r.patientName),
+          oldDateTime: pOldDt,
+          newDateTime: pNewDt,
+          // Service name in the PROVIDER's locale (not the patient's).
+          serviceName: r.serviceNameProvider ?? "",
+          locationLabel: r.locationLabel,
         }),
       };
     }
@@ -327,9 +399,10 @@ export async function dispatchOne(
       return "skipped";
     }
 
-    // provider_new_booking is delivered to the provider, never the patient. The
-    // provider has no contact column (066) → resolve from auth.users; skip if absent.
-    if (r.template === "provider_new_booking") {
+    // provider_new_booking + reschedule_provider are delivered to the provider, never
+    // the patient. The provider has no contact column (066) → resolve from auth.users;
+    // skip if absent.
+    if (r.template === "provider_new_booking" || r.template === "reschedule_provider") {
       const providerEmail = await deps.resolveProviderEmail(r.providerUserId);
       if (!providerEmail) {
         await deps.mark(r.reminderId, "skipped", null, false); // nothing to deliver to → close the row

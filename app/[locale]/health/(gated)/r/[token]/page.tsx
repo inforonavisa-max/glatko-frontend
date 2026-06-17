@@ -81,6 +81,7 @@ export default async function ManageAppointmentPage({ params }: Props) {
           token={appt.manageToken}
           initialStatus={appt.status}
           locale={l}
+          slotPassed={Date.parse(appt.slotStart) <= Date.now()}
         />
 
         <Link

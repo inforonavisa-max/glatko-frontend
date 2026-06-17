@@ -48,6 +48,14 @@ type BookingWidgetProps = {
   services: HealthBookingService[];
   locations: HealthBookingLocation[];
   locale: string;
+  /**
+   * H9 reschedule reuse: when set, a successful hold calls this instead of routing
+   * to the new-booking page (the reschedule flow takes over from here). The widget
+   * stays the single slot-picker; only the post-hold destination differs.
+   */
+  onHoldCreated?: (holdId: string) => void;
+  /** H9: hide the service/location pickers (reschedule is locked to the original). */
+  lockSelectors?: boolean;
 };
 
 function pad2(n: number): string {
@@ -82,6 +90,8 @@ export function BookingWidget({
   services,
   locations,
   locale,
+  onHoldCreated,
+  lockSelectors = false,
 }: BookingWidgetProps) {
   const t = useTranslations("healthVertical");
   const searchParams = useSearchParams();
@@ -268,6 +278,11 @@ export function BookingWidget({
       });
       if (res.ok) {
         const data = (await res.json()) as { holdId: string };
+        // H9 reschedule: hand the hold to the parent flow instead of the new-booking page.
+        if (onHoldCreated) {
+          onHoldCreated(data.holdId);
+          return;
+        }
         router.push({ pathname: "/health/randevu/[holdId]", params: { holdId: data.holdId } });
         return;
       }
@@ -283,7 +298,7 @@ export function BookingWidget({
     } finally {
       setReserving(false);
     }
-  }, [selectedSlot, selectedServiceId, selectedLocationId, services, providerId, router, t]);
+  }, [selectedSlot, selectedServiceId, selectedLocationId, services, providerId, router, t, onHoldCreated]);
 
   return (
     <div className="lg:sticky lg:top-24 rounded-2xl border border-gray-200 bg-white p-5 shadow-premium-sm dark:border-white/10 dark:bg-white/5">
@@ -308,8 +323,8 @@ export function BookingWidget({
         </div>
       ) : (
         <>
-          {/* Service selector (>1) */}
-          {services.length > 1 && (
+          {/* Service selector (>1) — hidden when locked to the original (reschedule). */}
+          {!lockSelectors && services.length > 1 && (
             <div className="mt-4">
               <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/40">
                 {t("booking.serviceLabel")}
@@ -340,8 +355,8 @@ export function BookingWidget({
             </div>
           )}
 
-          {/* Location selector (>1) */}
-          {locations.length > 1 && (
+          {/* Location selector (>1) — hidden when locked to the original (reschedule). */}
+          {!lockSelectors && locations.length > 1 && (
             <div className="mt-4">
               <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-white/40">
                 {t("booking.locationLabel")}

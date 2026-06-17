@@ -1462,7 +1462,8 @@
       "profile": "الملف الشخصي",
       "notifications": "الإشعارات",
       "security": "الأمان",
-      "ariaLabel": "أقسام الإعدادات"
+      "ariaLabel": "أقسام الإعدادات",
+      "appointments": "المواعيد"
     },
     "security": {
       "title": "الأمان",
@@ -2597,7 +2598,36 @@
       "cancelling": "جارٍ الإلغاء…",
       "cancelledTitle": "تم إلغاء الموعد",
       "cancelledBody": "تم إلغاء موعدك. هذا الوقت متاح مرة أخرى.",
-      "cancelError": "تعذّر الإلغاء. يرجى المحاولة مرة أخرى."
+      "cancelError": "تعذّر الإلغاء. يرجى المحاولة مرة أخرى.",
+      "rescheduleCta": "إعادة الجدولة",
+      "passedTitle": "انتهى هذا الموعد",
+      "passedBody": "لقد مرّ وقت هذا الموعد ولم يعد بالإمكان تغييره.",
+      "rescheduleTitle": "إعادة جدولة الموعد",
+      "rescheduleIntro": "اختر وقتاً جديداً لنفس المختص والخدمة.",
+      "rescheduleCurrentLabel": "الموعد الحالي",
+      "rescheduleVerifyTitle": "تأكيد هويتك",
+      "rescheduleVerifyBody": "أدخل رقم الهاتف الخاص بحجزك — سنرسل رمز تحقق.",
+      "rescheduleVerifyName": "المريض",
+      "rescheduleConfirmTitle": "تأكيد الوقت الجديد",
+      "rescheduleConfirmBody": "سيتم نقل موعدك الحالي إلى الوقت المحدد.",
+      "rescheduleConfirmCta": "تأكيد إعادة الجدولة",
+      "rescheduleUnavailableTitle": "إعادة الجدولة غير متاحة",
+      "rescheduleUnavailableBody": "لم يعد بالإمكان إعادة جدولة هذا الموعد. لا يزال بإمكانك إدارته من صفحة الموعد.",
+      "backToManage": "العودة إلى الموعد"
+    },
+    "account": {
+      "title": "مواعيدي",
+      "subtitle": "اعرض وأدر مواعيدك الصحية.",
+      "upcomingTitle": "القادمة",
+      "pastTitle": "السابقة",
+      "emptyTitle": "لا توجد مواعيد بعد",
+      "emptyBody": "عند حجز موعد صحي، سيظهر هنا.",
+      "status": {
+        "confirmed": "مؤكد",
+        "cancelled": "ملغى",
+        "completed": "مكتمل",
+        "no_show": "فائت"
+      }
     }
   },
   "careerVertical": {

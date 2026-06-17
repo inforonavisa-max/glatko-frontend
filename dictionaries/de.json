@@ -1462,7 +1462,8 @@
       "profile": "Profil",
       "notifications": "Benachrichtigungen",
       "security": "Sicherheit",
-      "ariaLabel": "Einstellungsbereiche"
+      "ariaLabel": "Einstellungsbereiche",
+      "appointments": "Termine"
     },
     "security": {
       "title": "Sicherheit",
@@ -2597,7 +2598,36 @@
       "cancelling": "Wird storniert…",
       "cancelledTitle": "Termin storniert",
       "cancelledBody": "Ihr Termin wurde storniert. Diese Uhrzeit ist wieder verfügbar.",
-      "cancelError": "Stornierung fehlgeschlagen. Bitte versuchen Sie es erneut."
+      "cancelError": "Stornierung fehlgeschlagen. Bitte versuchen Sie es erneut.",
+      "rescheduleCta": "Verschieben",
+      "passedTitle": "Dieser Termin ist vorbei",
+      "passedBody": "Dieser Termin liegt in der Vergangenheit und kann nicht mehr geändert werden.",
+      "rescheduleTitle": "Termin verschieben",
+      "rescheduleIntro": "Wählen Sie eine neue Zeit für dieselbe Fachperson und Leistung.",
+      "rescheduleCurrentLabel": "Aktueller Termin",
+      "rescheduleVerifyTitle": "Bestätigen Sie Ihre Identität",
+      "rescheduleVerifyBody": "Geben Sie die Telefonnummer aus Ihrer Buchung ein — wir senden einen Bestätigungscode.",
+      "rescheduleVerifyName": "Patient",
+      "rescheduleConfirmTitle": "Neue Zeit bestätigen",
+      "rescheduleConfirmBody": "Ihr aktueller Termin wird auf die gewählte Zeit verschoben.",
+      "rescheduleConfirmCta": "Verschiebung bestätigen",
+      "rescheduleUnavailableTitle": "Verschieben nicht möglich",
+      "rescheduleUnavailableBody": "Dieser Termin kann nicht mehr verschoben werden. Sie können ihn weiterhin auf der Terminseite verwalten.",
+      "backToManage": "Zurück zum Termin"
+    },
+    "account": {
+      "title": "Meine Termine",
+      "subtitle": "Sehen und verwalten Sie Ihre Gesundheitstermine.",
+      "upcomingTitle": "Bevorstehend",
+      "pastTitle": "Vergangen",
+      "emptyTitle": "Noch keine Termine",
+      "emptyBody": "Sobald Sie einen Gesundheitstermin buchen, erscheint er hier.",
+      "status": {
+        "confirmed": "Bestätigt",
+        "cancelled": "Storniert",
+        "completed": "Abgeschlossen",
+        "no_show": "Verpasst"
+      }
     }
   },
   "careerVertical": {

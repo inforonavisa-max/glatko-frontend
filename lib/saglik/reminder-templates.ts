@@ -22,6 +22,14 @@ import type { Locale } from "@/i18n/routing";
 export type SmsBuilder = (dt: string, dr: string, url: string) => string;
 /** provider_new_booking is provider-facing: (dt, dr=patient first name, url). */
 export type ProviderSmsBuilder = (dt: string, patientFirstName: string, url: string) => string;
+/** reschedule (patient): the move from {oldDt} → {newDt}, the doctor, the new manage url. */
+export type RescheduleSmsBuilder = (oldDt: string, newDt: string, dr: string, url: string) => string;
+/** reschedule_provider: the move {oldDt} → {newDt} + patient first name (no manage url to provider). */
+export type RescheduleProviderSmsBuilder = (
+  oldDt: string,
+  newDt: string,
+  patientFirstName: string,
+) => string;
 
 // ─── confirm (patient) ───────────────────────────────────────────────────────
 export const HEALTH_CONFIRM_SMS: Record<Locale, SmsBuilder> = {
@@ -171,4 +179,59 @@ export const HEALTH_FOLLOWUP_EMAIL_SUBJECT: Record<Locale, string> = {
   sr: "Kako je prošao vaš termin? — Glatko Zdravlje",
   me: "Kako je prošao vaš termin? — Glatko Zdravlje",
   ar: "كيف كان موعدك؟ — Glatko الصحة",
+};
+
+// ─── reschedule (patient — H9: appointment MOVED, not cancelled+rebooked) ─────
+// One coherent notice: the old time → the new time, with the (new) manage link.
+// Fires IMMEDIATELY from the reschedule route (like confirm) → NOT slot-relative.
+export const HEALTH_RESCHEDULE_SMS: Record<Locale, RescheduleSmsBuilder> = {
+  tr: (o, n, dr, url) => `Glatko Sağlık: Randevunuz ${o} tarihinden ${n} tarihine taşındı — ${dr}. Yönet/iptal: ${url}`,
+  en: (o, n, dr, url) => `Glatko Health: Your appointment moved from ${o} to ${n} — ${dr}. Manage/cancel: ${url}`,
+  de: (o, n, dr, url) => `Glatko Health: Ihr Termin wurde von ${o} auf ${n} verschoben — ${dr}. Verwalten/stornieren: ${url}`,
+  it: (o, n, dr, url) => `Glatko Health: Appuntamento spostato dal ${o} al ${n} — ${dr}. Gestisci/annulla: ${url}`,
+  ru: (o, n, dr, url) => `Glatko Health: Запись перенесена с ${o} на ${n} — ${dr}. Управление/отмена: ${url}`,
+  uk: (o, n, dr, url) => `Glatko Health: Запис перенесено з ${o} на ${n} — ${dr}. Керування/скасування: ${url}`,
+  sr: (o, n, dr, url) => `Glatko Zdravlje: Termin pomjeren sa ${o} na ${n} — ${dr}. Upravljaj/otkaži: ${url}`,
+  me: (o, n, dr, url) => `Glatko Zdravlje: Termin pomjeren sa ${o} na ${n} — ${dr}. Upravljaj/otkaži: ${url}`,
+  ar: (o, n, dr, url) => `Glatko الصحة: تم نقل موعدك من ${o} إلى ${n} — ${dr}. الإدارة/الإلغاء: ${url}`,
+};
+
+export const HEALTH_RESCHEDULE_EMAIL_SUBJECT: Record<Locale, string> = {
+  tr: "Randevunuz taşındı — Glatko Sağlık",
+  en: "Your appointment was moved — Glatko Health",
+  de: "Ihr Termin wurde verschoben — Glatko Health",
+  it: "Il tuo appuntamento è stato spostato — Glatko Health",
+  ru: "Ваша запись перенесена — Glatko Health",
+  uk: "Ваш запис перенесено — Glatko Health",
+  sr: "Vaš termin je pomjeren — Glatko Zdravlje",
+  me: "Vaš termin je pomjeren — Glatko Zdravlje",
+  ar: "تم نقل موعدك — Glatko الصحة",
+};
+
+// ─── reschedule_provider (provider-facing — H9: a patient moved their slot) ───
+// Rendered in providerLocale. Minimal PII: patient FIRST name only. No manage url
+// to the provider (the only link is the patient's cancel credential). Fires
+// immediately (not slot-relative).
+export const HEALTH_RESCHEDULE_PROVIDER_SMS: Record<Locale, RescheduleProviderSmsBuilder> = {
+  tr: (o, n, pn) => `Glatko Sağlık: Randevu taşındı — ${o} → ${n}, ${pn}.`,
+  en: (o, n, pn) => `Glatko Health: Appointment moved — ${o} → ${n}, ${pn}.`,
+  de: (o, n, pn) => `Glatko Health: Termin verschoben — ${o} → ${n}, ${pn}.`,
+  it: (o, n, pn) => `Glatko Health: Appuntamento spostato — ${o} → ${n}, ${pn}.`,
+  ru: (o, n, pn) => `Glatko Health: Запись перенесена — ${o} → ${n}, ${pn}.`,
+  uk: (o, n, pn) => `Glatko Health: Запис перенесено — ${o} → ${n}, ${pn}.`,
+  sr: (o, n, pn) => `Glatko Zdravlje: Termin pomjeren — ${o} → ${n}, ${pn}.`,
+  me: (o, n, pn) => `Glatko Zdravlje: Termin pomjeren — ${o} → ${n}, ${pn}.`,
+  ar: (o, n, pn) => `Glatko الصحة: تم نقل الموعد — ${o} ← ${n}، ${pn}.`,
+};
+
+export const HEALTH_RESCHEDULE_PROVIDER_EMAIL_SUBJECT: Record<Locale, string> = {
+  tr: "Randevu taşındı — Glatko Sağlık",
+  en: "Appointment moved — Glatko Health",
+  de: "Termin verschoben — Glatko Health",
+  it: "Appuntamento spostato — Glatko Health",
+  ru: "Запись перенесена — Glatko Health",
+  uk: "Запис перенесено — Glatko Health",
+  sr: "Termin pomjeren — Glatko Zdravlje",
+  me: "Termin pomjeren — Glatko Zdravlje",
+  ar: "تم نقل الموعد — Glatko الصحة",
 };

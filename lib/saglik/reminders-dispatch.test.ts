@@ -22,6 +22,8 @@ import {
   HEALTH_PROVIDER_NEW_BOOKING_EMAIL_SUBJECT,
   HEALTH_FOLLOWUP_EMAIL_SUBJECT,
   HEALTH_CONFIRM_EMAIL_SUBJECT,
+  HEALTH_RESCHEDULE_PROVIDER_EMAIL_SUBJECT,
+  HEALTH_RESCHEDULE_EMAIL_SUBJECT,
 } from "@/lib/saglik/reminder-templates";
 import { locales, type Locale } from "@/i18n/routing";
 import { formatAppointmentDateTime } from "@/lib/saglik/reminder-format";
@@ -41,6 +43,7 @@ function makeRow(overrides: Partial<ClaimedReminder> = {}): ClaimedReminder {
     appointmentStatus: "confirmed",
     slotStart: "2026-06-18T08:00:00.000Z",
     slotEnd: "2026-06-18T08:30:00.000Z",
+    oldSlotStart: null,
     manageToken: "abc123def456abc123def456abc123def456abc123def456",
     patientLocale: "tr",
     providerLocale: "en",
@@ -412,6 +415,102 @@ describe("renderEmail — provider_new_booking uses the PROVIDER-locale service 
     expect(out).not.toBeNull();
     // The provider email must not embed the patient's manage_token (cancel credential).
     expect(out?.subject).toEqual(HEALTH_PROVIDER_NEW_BOOKING_EMAIL_SUBJECT.me);
+  });
+});
+
+describe("H9 reschedule templates + dispatch", () => {
+  it("reschedule_provider SMS uses provider locale, move arrows, patient FIRST name only", () => {
+    const out = renderSmsBody(
+      makeRow({
+        template: "reschedule_provider",
+        providerLocale: "en",
+        patientLocale: "tr",
+        slotStart: "2026-06-20T09:00:00.000Z",
+        oldSlotStart: "2026-06-18T08:00:00.000Z",
+        patientName: "Marko Petrović",
+      }),
+    );
+    expect(out).not.toBeNull();
+    expect(out).toContain("Marko");
+    expect(out).not.toContain("Petrović"); // last name never leaks to provider
+  });
+
+  it("reschedule (patient) SMS renders the old→new move in the patient locale", () => {
+    const out = renderSmsBody(
+      makeRow({
+        template: "reschedule",
+        patientLocale: "en",
+        slotStart: "2026-06-20T09:00:00.000Z",
+        oldSlotStart: "2026-06-18T08:00:00.000Z",
+      }),
+    );
+    expect(out).toContain("Glatko");
+    expect(out).toContain("https://"); // manage url present
+  });
+
+  it("reschedule (patient) SMS falls back to confirm copy when oldSlotStart is missing", () => {
+    const out = renderSmsBody(makeRow({ template: "reschedule", patientLocale: "en", oldSlotStart: null }));
+    expect(out).toContain("confirmed"); // confirm copy fallback (en)
+  });
+
+  it("reschedule + reschedule_provider email subjects exist in all 9 locales", () => {
+    for (const map of [HEALTH_RESCHEDULE_EMAIL_SUBJECT, HEALTH_RESCHEDULE_PROVIDER_EMAIL_SUBJECT]) {
+      expect(Object.keys(map).sort()).toEqual([...locales].sort());
+      for (const l of locales) expect(map[l].trim().length).toBeGreaterThan(0);
+    }
+  });
+
+  it("reschedule_provider email uses the PROVIDER-locale subject + serviceNameProvider", () => {
+    const out = renderEmail(
+      makeRow({
+        template: "reschedule_provider",
+        channel: "email",
+        providerLocale: "me",
+        patientLocale: "tr",
+        oldSlotStart: "2026-06-18T08:00:00.000Z",
+        serviceName: "Diş muayenesi",
+        serviceNameProvider: "Stomatološki pregled",
+      }),
+    );
+    expect(out).not.toBeNull();
+    expect(out?.subject).toEqual(HEALTH_RESCHEDULE_PROVIDER_EMAIL_SUBJECT.me);
+  });
+
+  it("reschedule (patient) email uses the patient-locale reschedule subject", () => {
+    const out = renderEmail(
+      makeRow({ template: "reschedule", channel: "email", patientLocale: "en", oldSlotStart: "2026-06-18T08:00:00.000Z" }),
+    );
+    expect(out?.subject).toEqual(HEALTH_RESCHEDULE_EMAIL_SUBJECT.en);
+  });
+
+  it("reschedule + reschedule_provider are NEVER treated as stale (fire immediately)", () => {
+    const past = "2000-01-01T00:00:00.000Z";
+    const after = Date.parse("2026-06-19T08:00:00.000Z");
+    expect(isStaleOrIrrelevant(makeRow({ template: "reschedule", slotStart: past }), after)).toBe(false);
+    expect(isStaleOrIrrelevant(makeRow({ template: "reschedule_provider", slotStart: past }), after)).toBe(false);
+  });
+
+  it("reschedule_provider resolves the provider email + delivers (not the patient)", async () => {
+    const { deps, email, sms } = makeDeps({ providerEmail: "doc@example.com" });
+    const outcome = await dispatchOne(
+      makeRow({ template: "reschedule_provider", channel: "email", oldSlotStart: "2026-06-18T08:00:00.000Z" }),
+      deps,
+    );
+    expect(outcome).toBe("sent");
+    expect(email).toHaveBeenCalledTimes(1);
+    expect(email.mock.calls[0]?.[0].to).toBe("doc@example.com");
+    expect(sms).not.toHaveBeenCalled();
+  });
+
+  it("reschedule_provider with no resolvable provider email → skipped", async () => {
+    const { deps, email, mark } = makeDeps({ providerEmail: null });
+    const outcome = await dispatchOne(
+      makeRow({ template: "reschedule_provider", oldSlotStart: "2026-06-18T08:00:00.000Z" }),
+      deps,
+    );
+    expect(outcome).toBe("skipped");
+    expect(email).not.toHaveBeenCalled();
+    expect(mark).toHaveBeenCalledWith(expect.any(String), "skipped", null, false);
   });
 });
 

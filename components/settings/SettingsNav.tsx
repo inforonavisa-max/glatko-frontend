@@ -2,11 +2,12 @@
 
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
-import { User, Bell, Shield } from "lucide-react";
+import { User, Bell, Shield, CalendarClock } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const TABS = [
   { href: "/settings/profile", labelKey: "profile", icon: User },
+  { href: "/settings/appointments", labelKey: "appointments", icon: CalendarClock },
   { href: "/settings/notifications", labelKey: "notifications", icon: Bell },
   { href: "/settings/security", labelKey: "security", icon: Shield },
 ] as const;

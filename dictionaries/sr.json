@@ -1462,7 +1462,8 @@
       "profile": "Profil",
       "notifications": "Obaveštenja",
       "security": "Bezbednost",
-      "ariaLabel": "Sekcije podešavanja"
+      "ariaLabel": "Sekcije podešavanja",
+      "appointments": "Termini"
     },
     "security": {
       "title": "Bezbednost",
@@ -2600,7 +2601,36 @@
       "cancelling": "Otkazivanje…",
       "cancelledTitle": "Termin je otkazan",
       "cancelledBody": "Vaš termin je otkazan. Ovo vreme je ponovo dostupno.",
-      "cancelError": "Otkazivanje nije uspelo. Molimo pokušajte ponovo."
+      "cancelError": "Otkazivanje nije uspelo. Molimo pokušajte ponovo.",
+      "rescheduleCta": "Pomjeri",
+      "passedTitle": "Ovaj termin je prošao",
+      "passedBody": "Vrijeme ovog termina je već prošlo i više se ne može mijenjati.",
+      "rescheduleTitle": "Pomjeri termin",
+      "rescheduleIntro": "Izaberite novo vrijeme za istog specijalistu i uslugu.",
+      "rescheduleCurrentLabel": "Trenutni termin",
+      "rescheduleVerifyTitle": "Potvrdite da ste to vi",
+      "rescheduleVerifyBody": "Unesite broj telefona sa vaše rezervacije — poslaćemo kod za potvrdu.",
+      "rescheduleVerifyName": "Pacijent",
+      "rescheduleConfirmTitle": "Potvrdite novo vrijeme",
+      "rescheduleConfirmBody": "Vaš trenutni termin biće pomjeren na izabrano vrijeme.",
+      "rescheduleConfirmCta": "Potvrdi pomjeranje",
+      "rescheduleUnavailableTitle": "Pomjeranje nije dostupno",
+      "rescheduleUnavailableBody": "Ovaj termin se više ne može pomjeriti. I dalje ga možete upravljati sa stranice termina.",
+      "backToManage": "Nazad na termin"
+    },
+    "account": {
+      "title": "Moji termini",
+      "subtitle": "Pregledajte i upravljajte svojim zdravstvenim terminima.",
+      "upcomingTitle": "Predstojeći",
+      "pastTitle": "Prošli",
+      "emptyTitle": "Još nema termina",
+      "emptyBody": "Kada zakažete zdravstveni termin, pojaviće se ovdje.",
+      "status": {
+        "confirmed": "Potvrđen",
+        "cancelled": "Otkazan",
+        "completed": "Završen",
+        "no_show": "Propušten"
+      }
     }
   },
   "careerVertical": {

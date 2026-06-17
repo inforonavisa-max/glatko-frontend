@@ -1462,7 +1462,8 @@
       "profile": "Profile",
       "notifications": "Notifications",
       "security": "Security",
-      "ariaLabel": "Settings sections"
+      "ariaLabel": "Settings sections",
+      "appointments": "Appointments"
     },
     "security": {
       "title": "Security",
@@ -2597,7 +2598,36 @@
       "cancelling": "Cancelling…",
       "cancelledTitle": "Appointment cancelled",
       "cancelledBody": "Your appointment has been cancelled. This time is available again.",
-      "cancelError": "Couldn't cancel. Please try again."
+      "cancelError": "Couldn't cancel. Please try again.",
+      "rescheduleCta": "Reschedule",
+      "passedTitle": "This appointment has passed",
+      "passedBody": "This appointment time has already passed and can no longer be changed.",
+      "rescheduleTitle": "Reschedule appointment",
+      "rescheduleIntro": "Pick a new time for the same specialist and service.",
+      "rescheduleCurrentLabel": "Current appointment",
+      "rescheduleVerifyTitle": "Verify it's you",
+      "rescheduleVerifyBody": "Enter the phone number from your booking — we'll send a verification code.",
+      "rescheduleVerifyName": "Patient",
+      "rescheduleConfirmTitle": "Confirm the new time",
+      "rescheduleConfirmBody": "Your current appointment will be moved to the selected time.",
+      "rescheduleConfirmCta": "Confirm reschedule",
+      "rescheduleUnavailableTitle": "Reschedule unavailable",
+      "rescheduleUnavailableBody": "This appointment can no longer be rescheduled. You can still manage it from the appointment page.",
+      "backToManage": "Back to appointment"
+    },
+    "account": {
+      "title": "My appointments",
+      "subtitle": "View and manage your health appointments.",
+      "upcomingTitle": "Upcoming",
+      "pastTitle": "Past",
+      "emptyTitle": "No appointments yet",
+      "emptyBody": "When you book a health appointment, it will appear here.",
+      "status": {
+        "confirmed": "Confirmed",
+        "cancelled": "Cancelled",
+        "completed": "Completed",
+        "no_show": "Missed"
+      }
     }
   },
   "careerVertical": {

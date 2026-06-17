@@ -2,17 +2,21 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { CircleSlash, Loader2 } from "lucide-react";
+import { CircleSlash, Clock, Loader2 } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 
 /**
- * Glatko Sağlık — H5b appointment manage/cancel (Client Component).
+ * Glatko Sağlık — H5b/H9 appointment manage (cancel + reschedule) (Client Component).
  *
- * Patient self-service action reached from the confirm SMS/email manage link.
- * Only a 'confirmed' appointment is cancellable: a destructive CTA opens an
- * are-you-sure step, which POSTs the opaque manage_token to /api/health/cancel.
- * On success the card flips to a terminal 'cancelled' state in place (no reload).
- * Any non-200/throw surfaces a generic, aria-live cancel error. completed/no_show
- * show no action — nothing here is reversible from the patient side.
+ * Patient self-service actions reached from the confirm SMS/email manage link.
+ * A 'confirmed' appointment whose slot is still in the FUTURE offers two CTAs:
+ *   - Reschedule → /health/r/[token]/reschedule (pick a new slot, same provider/
+ *     service/location; the move is atomic — see migration 075).
+ *   - Cancel → an are-you-sure step that POSTs the opaque manage_token to
+ *     /api/health/cancel; on success the card flips to a terminal 'cancelled' state.
+ * Once the slot has PASSED (slotPassed) — or the appointment is no longer
+ * 'confirmed' — both actions are INERT: a graceful "this appointment has passed /
+ * can no longer be changed" message, no CTA (defense-in-depth; the RPCs also reject).
  */
 
 type AppointmentStatus = "confirmed" | "cancelled" | "completed" | "no_show";
@@ -20,10 +24,13 @@ type AppointmentStatus = "confirmed" | "cancelled" | "completed" | "no_show";
 export function ManageAppointment({
   token,
   initialStatus,
+  slotPassed,
 }: {
   token: string;
   initialStatus: AppointmentStatus;
   locale: string;
+  /** True when the appointment slot has already started → actions are inert. */
+  slotPassed: boolean;
 }) {
   const t = useTranslations("healthVertical.booking");
 
@@ -70,12 +77,27 @@ export function ManageAppointment({
     );
   }
 
+  // ── Inert: slot already passed (confirmed but in the past) → graceful, no action ──
+  if (status === "confirmed" && slotPassed) {
+    return (
+      <section className="mt-6 rounded-2xl border border-gray-200 bg-gray-50 p-6 text-center dark:border-white/10 dark:bg-white/5">
+        <Clock className="mx-auto h-9 w-9 text-gray-400 dark:text-white/40" />
+        <h2 className="mt-3 text-lg font-semibold text-gray-900 dark:text-white">
+          {t("passedTitle")}
+        </h2>
+        <p className="mx-auto mt-1 max-w-sm text-sm text-gray-600 dark:text-white/70">
+          {t("passedBody")}
+        </p>
+      </section>
+    );
+  }
+
   // ── Non-confirmed, non-cancelled (completed / no_show): no action ──────────
   if (status !== "confirmed") {
     return null;
   }
 
-  // ── Confirmed: cancellable ─────────────────────────────────────────────────
+  // ── Confirmed + future: reschedule + cancel ────────────────────────────────
   return (
     <section className="mt-6">
       {error && (
@@ -114,13 +136,23 @@ export function ManageAppointment({
           </div>
         </div>
       ) : (
-        <button
-          type="button"
-          onClick={() => setConfirming(true)}
-          className="rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-sm font-semibold text-red-700 hover:bg-red-100 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300"
-        >
-          {t("cancelCta")}
-        </button>
+        <div className="flex flex-col gap-2 sm:flex-row">
+          {/* Reschedule (primary, teal) → the new-slot sub-page. */}
+          <Link
+            href={{ pathname: "/health/r/[token]/reschedule", params: { token } }}
+            className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-teal-500/25 transition-all hover:shadow-teal-500/40"
+          >
+            {t("rescheduleCta")}
+          </Link>
+          {/* Cancel (destructive, opens confirm step). */}
+          <button
+            type="button"
+            onClick={() => setConfirming(true)}
+            className="rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-sm font-semibold text-red-700 hover:bg-red-100 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300"
+          >
+            {t("cancelCta")}
+          </button>
+        </div>
       )}
     </section>
   );

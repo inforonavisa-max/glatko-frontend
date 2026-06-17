@@ -1462,7 +1462,8 @@
       "profile": "Profil",
       "notifications": "Bildirimler",
       "security": "Güvenlik",
-      "ariaLabel": "Ayarlar bölümleri"
+      "ariaLabel": "Ayarlar bölümleri",
+      "appointments": "Randevular"
     },
     "security": {
       "title": "Güvenlik",
@@ -2600,7 +2601,36 @@
       "cancelling": "İptal ediliyor…",
       "cancelledTitle": "Randevu iptal edildi",
       "cancelledBody": "Randevunuz iptal edildi. Bu saat tekrar müsait.",
-      "cancelError": "İptal edilemedi. Lütfen tekrar deneyin."
+      "cancelError": "İptal edilemedi. Lütfen tekrar deneyin.",
+      "rescheduleCta": "Ertele",
+      "passedTitle": "Bu randevu geçti",
+      "passedBody": "Bu randevu zamanı geçti ve artık değiştirilemez.",
+      "rescheduleTitle": "Randevuyu ertele",
+      "rescheduleIntro": "Aynı uzman ve hizmet için yeni bir zaman seçin.",
+      "rescheduleCurrentLabel": "Mevcut randevu",
+      "rescheduleVerifyTitle": "Kimliğinizi doğrulayın",
+      "rescheduleVerifyBody": "Randevunuzdaki telefon numarasını girin — bir doğrulama kodu göndereceğiz.",
+      "rescheduleVerifyName": "Hasta",
+      "rescheduleConfirmTitle": "Yeni zamanı onaylayın",
+      "rescheduleConfirmBody": "Mevcut randevunuz seçtiğiniz zamana taşınacak.",
+      "rescheduleConfirmCta": "Ertelemeyi onayla",
+      "rescheduleUnavailableTitle": "Erteleme yapılamıyor",
+      "rescheduleUnavailableBody": "Bu randevu artık ertelenemez. Randevu sayfasından yine de yönetebilirsiniz.",
+      "backToManage": "Randevuya dön"
+    },
+    "account": {
+      "title": "Randevularım",
+      "subtitle": "Sağlık randevularınızı görüntüleyin ve yönetin.",
+      "upcomingTitle": "Yaklaşan",
+      "pastTitle": "Geçmiş",
+      "emptyTitle": "Henüz randevu yok",
+      "emptyBody": "Bir sağlık randevusu aldığınızda burada görünecek.",
+      "status": {
+        "confirmed": "Onaylandı",
+        "cancelled": "İptal edildi",
+        "completed": "Tamamlandı",
+        "no_show": "Gelinmedi"
+      }
     }
   },
   "careerVertical": {

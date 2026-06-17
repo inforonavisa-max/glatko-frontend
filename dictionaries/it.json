@@ -1462,7 +1462,8 @@
       "profile": "Profilo",
       "notifications": "Notifiche",
       "security": "Sicurezza",
-      "ariaLabel": "Sezioni delle impostazioni"
+      "ariaLabel": "Sezioni delle impostazioni",
+      "appointments": "Appuntamenti"
     },
     "security": {
       "title": "Sicurezza",
@@ -2597,7 +2598,36 @@
       "cancelling": "Annullamento in corso…",
       "cancelledTitle": "Appuntamento annullato",
       "cancelledBody": "Il tuo appuntamento è stato annullato. Questo orario è di nuovo disponibile.",
-      "cancelError": "Annullamento non riuscito. Riprova."
+      "cancelError": "Annullamento non riuscito. Riprova.",
+      "rescheduleCta": "Riprogramma",
+      "passedTitle": "Questo appuntamento è passato",
+      "passedBody": "L'orario di questo appuntamento è già passato e non può più essere modificato.",
+      "rescheduleTitle": "Riprogramma appuntamento",
+      "rescheduleIntro": "Scegli un nuovo orario per lo stesso specialista e servizio.",
+      "rescheduleCurrentLabel": "Appuntamento attuale",
+      "rescheduleVerifyTitle": "Verifica la tua identità",
+      "rescheduleVerifyBody": "Inserisci il numero di telefono della tua prenotazione — invieremo un codice di verifica.",
+      "rescheduleVerifyName": "Paziente",
+      "rescheduleConfirmTitle": "Conferma il nuovo orario",
+      "rescheduleConfirmBody": "Il tuo appuntamento attuale sarà spostato all'orario selezionato.",
+      "rescheduleConfirmCta": "Conferma riprogrammazione",
+      "rescheduleUnavailableTitle": "Riprogrammazione non disponibile",
+      "rescheduleUnavailableBody": "Questo appuntamento non può più essere riprogrammato. Puoi comunque gestirlo dalla pagina dell'appuntamento.",
+      "backToManage": "Torna all'appuntamento"
+    },
+    "account": {
+      "title": "I miei appuntamenti",
+      "subtitle": "Visualizza e gestisci i tuoi appuntamenti sanitari.",
+      "upcomingTitle": "In programma",
+      "pastTitle": "Passati",
+      "emptyTitle": "Ancora nessun appuntamento",
+      "emptyBody": "Quando prenoti un appuntamento sanitario, apparirà qui.",
+      "status": {
+        "confirmed": "Confermato",
+        "cancelled": "Annullato",
+        "completed": "Completato",
+        "no_show": "Mancato"
+      }
     }
   },
   "careerVertical": {

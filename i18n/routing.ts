@@ -258,6 +258,18 @@ export const routing = defineRouting({
       me: "/zdravlje/r/[token]",
       ar: "/al-sihha/r/[token]",
     },
+    // Reschedule sub-page (H9). [token] = old manage_token; pick a new slot here.
+    "/health/r/[token]/reschedule": {
+      tr: "/saglik/r/[token]/reschedule",
+      en: "/health/r/[token]/reschedule",
+      de: "/gesundheit/r/[token]/reschedule",
+      it: "/salute/r/[token]/reschedule",
+      ru: "/zdorove/r/[token]/reschedule",
+      uk: "/zdorovya/r/[token]/reschedule",
+      sr: "/zdravlje/r/[token]/reschedule",
+      me: "/zdravlje/r/[token]/reschedule",
+      ar: "/al-sihha/r/[token]/reschedule",
+    },
 
     // Work & career vertical placeholder (K1 — own coming-soon page)
     "/career": {
@@ -358,6 +370,7 @@ export const routing = defineRouting({
     "/my-requests/[id]": "/my-requests/[id]",
     "/notifications": "/notifications",
     "/review/[requestId]": "/review/[requestId]",
+    "/settings/appointments": "/settings/appointments",
     "/settings/notifications": "/settings/notifications",
     "/settings/profile": "/settings/profile",
     "/settings/security": "/settings/security",
