@@ -1,12 +1,15 @@
 import "server-only";
 
 import { createAdminClient } from "@/supabase/server";
-import { getPathname } from "@/i18n/navigation";
-import { getSiteUrl } from "@/lib/email/resend";
 import { sendSms } from "@/lib/sms/infobip";
 import { sendEmail } from "@/lib/email/send-email";
 import { HealthBookingConfirmEmail } from "@/lib/email/templates/health-booking-confirm";
-import { intlLocale } from "@/lib/saglik/intl";
+import {
+  formatAppointmentDateTime,
+  formatDoctor,
+  manageUrl,
+} from "@/lib/saglik/reminder-format";
+import { HEALTH_CONFIRM_SMS, HEALTH_CONFIRM_EMAIL_SUBJECT } from "@/lib/saglik/reminder-templates";
 import type { Locale } from "@/i18n/routing";
 
 /**
@@ -258,6 +261,52 @@ export async function bookAppointment(args: {
   return { ok: true, ...d };
 }
 
+/**
+ * H6: persist the patient's UI locale + enqueue the provider's new-booking notice.
+ * Both go through additive migration-073 RPCs (the 071 book RPC is frozen). Best-effort
+ * & never-throw: a sidecar/enqueue hiccup must not fail the booking. No PII logged.
+ *  - health_set_reminder_locale: claim RPC LEFT JOINs this so t24/t2/followup render in
+ *    the patient's locale (health.patients/reminders_outbox carry no locale column).
+ *  - health_enqueue_provider_new_booking: queues a provider email row the cron delivers.
+ */
+export async function enqueueBookingFollowups(appointmentId: string, locale: Locale): Promise<void> {
+  const supabase = createAdminClient();
+  try {
+    const { error: locErr } = await supabase.rpc("health_set_reminder_locale", {
+      p_appointment_id: appointmentId,
+      p_locale: locale,
+    });
+    if (locErr) console.error("[health-booking] set_reminder_locale failed:", locErr.message);
+  } catch (e) {
+    console.error("[health-booking] set_reminder_locale threw:", e instanceof Error ? e.message : "unknown");
+  }
+  try {
+    const { error: pnbErr } = await supabase.rpc("health_enqueue_provider_new_booking", {
+      p_appointment_id: appointmentId,
+    });
+    if (pnbErr) console.error("[health-booking] enqueue_provider_new_booking failed:", pnbErr.message);
+  } catch (e) {
+    console.error("[health-booking] enqueue_provider_new_booking threw:", e instanceof Error ? e.message : "unknown");
+  }
+}
+
+/**
+ * H6: enqueue the patient's 'cancelled' notice after a cancel. The 071 cancel RPC only
+ * marks pending t24/t2 'skipped'; it does not queue a cancelled row. Idempotent + only
+ * for cancelled appointments (enforced in the RPC). Best-effort & never-throw.
+ */
+export async function enqueueCancelledNotice(manageToken: string): Promise<void> {
+  const supabase = createAdminClient();
+  try {
+    const { error } = await supabase.rpc("health_enqueue_cancelled", {
+      p_manage_token: manageToken,
+    });
+    if (error) console.error("[health-booking] enqueue_cancelled failed:", error.message);
+  } catch (e) {
+    console.error("[health-booking] enqueue_cancelled threw:", e instanceof Error ? e.message : "unknown");
+  }
+}
+
 async function markReminder(
   reminderId: string,
   status: "sent" | "failed",
@@ -272,64 +321,25 @@ async function markReminder(
   if (error) console.error("[health-booking] mark_reminder failed:", error.message);
 }
 
-/** Localized manage URL for the confirm notifications (cancel/manage page). */
-function manageUrl(manageToken: string, locale: Locale): string {
-  const path = getPathname({
-    href: { pathname: "/health/r/[token]", params: { token: manageToken } },
-    locale,
-  });
-  return `${getSiteUrl()}${path}`;
-}
-
-// Backend confirm-SMS templates (not UI dictionary strings). {dt}=date/time, {dr}=doctor.
-const CONFIRM_SMS: Record<Locale, (dt: string, dr: string, url: string) => string> = {
-  tr: (dt, dr, url) => `Glatko Sağlık: Randevunuz onaylandı — ${dt}, ${dr}. Yönet/iptal: ${url}`,
-  en: (dt, dr, url) => `Glatko Health: Your appointment is confirmed — ${dt}, ${dr}. Manage/cancel: ${url}`,
-  de: (dt, dr, url) => `Glatko Health: Ihr Termin ist bestätigt — ${dt}, ${dr}. Verwalten/stornieren: ${url}`,
-  it: (dt, dr, url) => `Glatko Health: Appuntamento confermato — ${dt}, ${dr}. Gestisci/annulla: ${url}`,
-  ru: (dt, dr, url) => `Glatko Health: Запись подтверждена — ${dt}, ${dr}. Управление/отмена: ${url}`,
-  uk: (dt, dr, url) => `Glatko Health: Запис підтверджено — ${dt}, ${dr}. Керування/скасування: ${url}`,
-  sr: (dt, dr, url) => `Glatko Zdravlje: Termin potvrđen — ${dt}, ${dr}. Upravljaj/otkaži: ${url}`,
-  me: (dt, dr, url) => `Glatko Zdravlje: Termin potvrđen — ${dt}, ${dr}. Upravljaj/otkaži: ${url}`,
-  ar: (dt, dr, url) => `Glatko الصحة: تم تأكيد موعدك — ${dt}، ${dr}. الإدارة/الإلغاء: ${url}`,
-};
-
-const CONFIRM_EMAIL_SUBJECT: Record<Locale, string> = {
-  tr: "Randevunuz onaylandı — Glatko Sağlık",
-  en: "Your appointment is confirmed — Glatko Health",
-  de: "Ihr Termin ist bestätigt — Glatko Health",
-  it: "Appuntamento confermato — Glatko Health",
-  ru: "Запись подтверждена — Glatko Health",
-  uk: "Запис підтверджено — Glatko Health",
-  sr: "Termin potvrđen — Glatko Zdravlje",
-  me: "Termin potvrđen — Glatko Zdravlje",
-  ar: "تم تأكيد موعدك — Glatko الصحة",
-};
-
 /**
  * Sends the confirm SMS (always) + confirm email (if the patient gave one), then
  * marks each confirm reminder sent/failed. Best-effort & two-layer: failures are
  * logged (no PII) and never throw — a notification hiccup must not fail the booking.
  * t24/t2 reminders are left 'pending' for the H6 cron dispatcher.
+ *
+ * Date/doctor/URL formatting + the confirm copy are shared with the H6 cron via
+ * lib/saglik/reminder-format + reminder-templates so the two send paths never drift.
  */
 export async function dispatchConfirm(result: Extract<BookResult, { ok: true }>, locale: Locale): Promise<void> {
-  const dateTime = new Intl.DateTimeFormat(intlLocale(locale), {
-    timeZone: "Europe/Podgorica",
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  }).format(new Date(result.slotStart));
-  const doctor = `${result.summary.providerTitle ? `${result.summary.providerTitle} ` : ""}${result.summary.providerName}`.trim();
+  const dateTime = formatAppointmentDateTime(result.slotStart, locale);
+  const doctor = formatDoctor(result.summary.providerTitle, result.summary.providerName);
   const url = manageUrl(result.manageToken, locale);
 
   // SMS confirm (PII: phone/name not logged)
   try {
     const sms = await sendSms({
       to: result.dispatch.phoneE164,
-      text: CONFIRM_SMS[locale](dateTime, doctor, url),
+      text: HEALTH_CONFIRM_SMS[locale](dateTime, doctor, url),
     });
     await markReminder(result.dispatch.confirmSmsReminderId, sms.ok ? "sent" : "failed", sms.ok ? sms.messageId : null);
   } catch (e) {
@@ -342,7 +352,7 @@ export async function dispatchConfirm(result: Extract<BookResult, { ok: true }>,
     try {
       const sent = await sendEmail({
         to: result.dispatch.email,
-        subject: CONFIRM_EMAIL_SUBJECT[locale],
+        subject: HEALTH_CONFIRM_EMAIL_SUBJECT[locale],
         react: HealthBookingConfirmEmail({
           locale,
           patientName: result.dispatch.patientName,

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { cancelAppointment } from "@/lib/saglik/booking";
+import { cancelAppointment, enqueueCancelledNotice } from "@/lib/saglik/booking";
 import { isHealthVerticalEnabled } from "@/lib/saglik/flags";
 
 export const runtime = "nodejs";
@@ -46,6 +46,9 @@ export async function POST(request: Request) {
   }
 
   if (result.ok) {
+    // H6: queue the patient 'cancelled' notice (idempotent; the cron delivers it).
+    // Best-effort — a queue hiccup must not turn a successful cancel into an error.
+    await enqueueCancelledNotice(token);
     return NextResponse.json({ ok: true, status: "cancelled" });
   }
   if (result.reason === "NOT_FOUND") {

@@ -1,7 +1,12 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { isHealthVerticalEnabled } from "@/lib/saglik/flags";
-import { bookAppointment, dispatchConfirm, type BookErrorCode } from "@/lib/saglik/booking";
+import {
+  bookAppointment,
+  dispatchConfirm,
+  enqueueBookingFollowups,
+  type BookErrorCode,
+} from "@/lib/saglik/booking";
 import { locales, type Locale } from "@/i18n/routing";
 
 export const runtime = "nodejs";
@@ -102,6 +107,10 @@ export async function POST(request: Request) {
   // Confirm SMS + email (immediate, best-effort, no PII logged). Awaited so the
   // serverless invocation doesn't terminate the dispatch.
   await dispatchConfirm(result, locale);
+
+  // H6: persist the patient locale (so the cron renders t24/t2/followup correctly) +
+  // queue the provider new-booking notice. Best-effort; never fails the booking.
+  await enqueueBookingFollowups(result.appointmentId, locale);
 
   const res = NextResponse.json({ ok: true, manageToken: result.manageToken });
   // The hold is consumed + the patient is booked; clear the one-shot patient binding.
