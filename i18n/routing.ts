@@ -271,6 +271,56 @@ export const routing = defineRouting({
       ar: "/al-sihha/r/[token]/reschedule",
     },
 
+    // Health PROVIDER tree (H7a — doctor onboarding + profile/calendar). Auth +
+    // flag gated separately from the patient tree (folder app/[locale]/saglik-pro/*,
+    // its OWN route group). tr=/saglik-pro/..., en=/health-pro/...; the bare top
+    // segment ('saglik-pro'/'health-pro') is what HEALTH_PRO_FIRST_SEGMENTS guards.
+    // Gated + noindex (SEO quarantine) until launch (H11).
+    "/health-pro/basvuru": {
+      tr: "/saglik-pro/basvuru",
+      en: "/health-pro/basvuru",
+      de: "/gesundheit-pro/basvuru",
+      it: "/salute-pro/basvuru",
+      ru: "/zdorove-pro/basvuru",
+      uk: "/zdorovya-pro/basvuru",
+      sr: "/zdravlje-pro/basvuru",
+      me: "/zdravlje-pro/basvuru",
+      ar: "/al-sihha-pro/basvuru",
+    },
+    "/health-pro/profil": {
+      tr: "/saglik-pro/profil",
+      en: "/health-pro/profil",
+      de: "/gesundheit-pro/profil",
+      it: "/salute-pro/profil",
+      ru: "/zdorove-pro/profil",
+      uk: "/zdorovya-pro/profil",
+      sr: "/zdravlje-pro/profil",
+      me: "/zdravlje-pro/profil",
+      ar: "/al-sihha-pro/profil",
+    },
+    "/health-pro/ayarlar": {
+      tr: "/saglik-pro/ayarlar",
+      en: "/health-pro/ayarlar",
+      de: "/gesundheit-pro/ayarlar",
+      it: "/salute-pro/ayarlar",
+      ru: "/zdorove-pro/ayarlar",
+      uk: "/zdorovya-pro/ayarlar",
+      sr: "/zdravlje-pro/ayarlar",
+      me: "/zdravlje-pro/ayarlar",
+      ar: "/al-sihha-pro/ayarlar",
+    },
+    "/health-pro/takvim": {
+      tr: "/saglik-pro/takvim",
+      en: "/health-pro/takvim",
+      de: "/gesundheit-pro/takvim",
+      it: "/salute-pro/takvim",
+      ru: "/zdorove-pro/takvim",
+      uk: "/zdorovya-pro/takvim",
+      sr: "/zdravlje-pro/takvim",
+      me: "/zdravlje-pro/takvim",
+      ar: "/al-sihha-pro/takvim",
+    },
+
     // Work & career vertical placeholder (K1 — own coming-soon page)
     "/career": {
       tr: "/kariyer",
