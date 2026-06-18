@@ -2704,7 +2704,7 @@
       "sendCode": "Send verification code",
       "sending": "Sending…",
       "summaryTitle": "Appointment summary",
-      "verifiedBody": "Your appointment is being confirmed. The confirmation step will be enabled very soon.",
+      "verifiedBody": "Your phone is verified. Tap the button below to complete your booking.",
       "verifiedTitle": "Phone verified ✓",
       "verify": "Verify",
       "verifying": "Verifying…",
