@@ -11,7 +11,7 @@ import {
   removeLocation,
   removeService,
   finalizeOnboarding,
-} from "@/app/[locale]/saglik-pro/actions";
+} from "@/app/[locale]/health-pro/actions";
 import {
   profileSchema,
   licenseSchema,

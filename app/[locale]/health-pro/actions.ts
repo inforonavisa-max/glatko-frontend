@@ -73,7 +73,7 @@ async function requireUserId(): Promise<string | null> {
 
 function revalidateProviderTree() {
   // Locale-prefixed routes share these path prefixes; "layout" scope covers all 9.
-  revalidatePath("/[locale]/saglik-pro", "layout");
+  revalidatePath("/[locale]/health-pro", "layout");
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

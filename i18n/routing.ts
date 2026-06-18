@@ -272,7 +272,7 @@ export const routing = defineRouting({
     },
 
     // Health PROVIDER tree (H7a — doctor onboarding + profile/calendar). Auth +
-    // flag gated separately from the patient tree (folder app/[locale]/saglik-pro/*,
+    // flag gated separately from the patient tree (folder app/[locale]/health-pro/*,
     // its OWN route group). tr=/saglik-pro/..., en=/health-pro/...; the bare top
     // segment ('saglik-pro'/'health-pro') is what HEALTH_PRO_FIRST_SEGMENTS guards.
     // Gated + noindex (SEO quarantine) until launch (H11).
