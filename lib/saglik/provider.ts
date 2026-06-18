@@ -400,6 +400,10 @@ export async function listProviderAppointments(
     p_status: status,
   });
   if (error) {
+    // No provider row yet → empty list (not a crash). Same NOT_A_PROVIDER contract as
+    // getProviderDashboard: this wrapper is awaited in the randevular Promise.all, so a
+    // throw here would reject it before the page's no-provider guard. Real failures throw.
+    if (parseProviderError(error.message) === "NOT_A_PROVIDER") return [];
     throw new Error(`health_provider_list_appointments failed: ${error.message}`);
   }
   return (data as ProviderAppointment[] | null) ?? [];
@@ -441,7 +445,9 @@ export type ProviderDashboard = {
  * Single-call dashboard: confirmed appointments in [from,to] (masked phone) + the
  * availability-inputs bundle (settings + ALL own-location schedules + overrides + busy +
  * holds) shaped exactly like 069, so the page runs the pure generateAvailability() twice
- * (real-busy vs empty-busy) for occupancy without any N+1. A genuine RPC failure throws.
+ * (real-busy vs empty-busy) for occupancy without any N+1. Returns null when the caller
+ * has no provider row yet (the RPC RAISEs NOT_A_PROVIDER) — the dashboard pages treat a
+ * null result as the onboarding-nudge state. A genuine RPC failure still throws.
  */
 export async function getProviderDashboard(
   userId: string,
@@ -457,6 +463,11 @@ export async function getProviderDashboard(
     p_locale: locale,
   });
   if (error) {
+    // No provider row yet → the RPC RAISEs NOT_A_PROVIDER (SQLSTATE P0001). Map ONLY
+    // that sentinel to null so the page's graceful `if (!dashboard)` branch can render
+    // the onboarding nudge — otherwise this throw rejects the page's Promise.all and
+    // trips the global error boundary before the guard runs. Real failures still throw.
+    if (parseProviderError(error.message) === "NOT_A_PROVIDER") return null;
     throw new Error(`health_provider_dashboard failed: ${error.message}`);
   }
   return (data as ProviderDashboard | null) ?? null;
@@ -561,13 +572,20 @@ export type ProviderOverride = {
   kind: "holiday" | "break" | "extra";
 };
 
-/** The caller's own schedule overrides. A genuine RPC failure throws. */
+/**
+ * The caller's own schedule overrides, or [] when they have no provider row yet (the RPC
+ * RAISEs NOT_A_PROVIDER) — the override page guards `{draft ? editor : nudge}` on the
+ * null draft, so [] is harmless there. A genuine RPC failure throws.
+ */
 export async function listOverrides(userId: string): Promise<ProviderOverride[]> {
   const supabase = createAdminClient();
   const { data, error } = await supabase.rpc("health_provider_list_overrides", {
     p_user_id: userId,
   });
   if (error) {
+    // No provider row yet → empty list. listOverrides is awaited in the override page's
+    // Promise.all, so a throw here would reject it before the {draft ? …} guard runs.
+    if (parseProviderError(error.message) === "NOT_A_PROVIDER") return [];
     throw new Error(`health_provider_list_overrides failed: ${error.message}`);
   }
   return (data as ProviderOverride[] | null) ?? [];
