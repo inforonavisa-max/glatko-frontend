@@ -332,16 +332,38 @@ export async function enqueueCancelledNotice(manageToken: string): Promise<void>
 
 async function markReminder(
   reminderId: string,
-  status: "sent" | "failed",
+  status: "sent" | "failed" | "pending",
   providerMsgId: string | null,
+  bumpRetry = false,
 ): Promise<void> {
   const supabase = createAdminClient();
   const { error } = await supabase.rpc("health_mark_reminder", {
     p_reminder_id: reminderId,
     p_status: status,
     p_provider_msg_id: providerMsgId,
+    p_bump_retry: bumpRetry,
   });
   if (error) console.error("[health-booking] mark_reminder failed:", error.message);
+}
+
+/**
+ * R1 (migration 084): atomically claim a confirm row for the route's immediate send
+ * (pending->'sending'), mirroring the H6 cron claim so the route and the cron are mutually
+ * exclusive on a row. Returns true if THIS caller won the row (must send); false if the cron
+ * already owns it OR the RPC errors — fail-safe: the route then SKIPS the send (favors
+ * no-duplicate; the row stays pending/sending and the H6 cron, or the 083 15-min recovery if
+ * the route dies after the CAS, delivers it).
+ */
+async function claimConfirmForSend(reminderId: string): Promise<boolean> {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase.rpc("health_claim_reminder_for_send", {
+    p_reminder_id: reminderId,
+  });
+  if (error) {
+    console.error("[health-booking] claim_confirm_for_send failed:", error.message);
+    return false;
+  }
+  return data === true;
 }
 
 /**
@@ -358,44 +380,48 @@ export async function dispatchConfirm(result: Extract<BookResult, { ok: true }>,
   const doctor = formatDoctor(result.summary.providerTitle, result.summary.providerName);
   const url = manageUrl(result.manageToken, locale);
 
-  // SMS confirm (PII: phone/name not logged)
-  try {
-    const sms = await sendSms({
-      to: result.dispatch.phoneE164,
-      text: HEALTH_CONFIRM_SMS[locale](dateTime, doctor, url),
-    });
-    await markReminder(result.dispatch.confirmSmsReminderId, sms.ok ? "sent" : "failed", sms.ok ? sms.messageId : null);
-  } catch (e) {
-    console.error("[health-booking] confirm sms failed:", e instanceof Error ? e.message : "unknown");
-    await markReminder(result.dispatch.confirmSmsReminderId, "failed", null);
+  // SMS confirm (PII: phone/name not logged). R1: claim the row first (CAS pending->sending);
+  // skip if the H6 cron already took it. Transient failure -> retryable 'pending'+bump (the
+  // cron's documented fallback retries it), not terminal 'failed'.
+  if (await claimConfirmForSend(result.dispatch.confirmSmsReminderId)) {
+    try {
+      const sms = await sendSms({
+        to: result.dispatch.phoneE164,
+        text: HEALTH_CONFIRM_SMS[locale](dateTime, doctor, url),
+      });
+      if (sms.ok) await markReminder(result.dispatch.confirmSmsReminderId, "sent", sms.messageId);
+      else await markReminder(result.dispatch.confirmSmsReminderId, "pending", null, true);
+    } catch (e) {
+      console.error("[health-booking] confirm sms failed:", e instanceof Error ? e.message : "unknown");
+      await markReminder(result.dispatch.confirmSmsReminderId, "pending", null, true);
+    }
   }
 
-  // Email confirm (only when the patient provided an email)
+  // Email confirm (only when the patient provided an email). R1 + retryable-on-failure as above.
   if (result.dispatch.email && result.dispatch.confirmEmailReminderId) {
-    try {
-      const sent = await sendEmail({
-        to: result.dispatch.email,
-        subject: HEALTH_CONFIRM_EMAIL_SUBJECT[locale],
-        react: HealthBookingConfirmEmail({
-          locale,
-          patientName: result.dispatch.patientName,
-          doctor,
-          dateTime,
-          serviceName: result.summary.serviceName,
-          locationLabel: result.summary.locationLabel,
-          locationAddress: result.summary.locationAddress,
-          locationCity: result.summary.locationCity,
-          manageUrl: url,
-        }),
-      });
-      await markReminder(
-        result.dispatch.confirmEmailReminderId,
-        sent.success ? "sent" : "failed",
-        sent.success ? sent.messageId ?? null : null,
-      );
-    } catch (e) {
-      console.error("[health-booking] confirm email failed:", e instanceof Error ? e.message : "unknown");
-      await markReminder(result.dispatch.confirmEmailReminderId, "failed", null);
+    if (await claimConfirmForSend(result.dispatch.confirmEmailReminderId)) {
+      try {
+        const sent = await sendEmail({
+          to: result.dispatch.email,
+          subject: HEALTH_CONFIRM_EMAIL_SUBJECT[locale],
+          react: HealthBookingConfirmEmail({
+            locale,
+            patientName: result.dispatch.patientName,
+            doctor,
+            dateTime,
+            serviceName: result.summary.serviceName,
+            locationLabel: result.summary.locationLabel,
+            locationAddress: result.summary.locationAddress,
+            locationCity: result.summary.locationCity,
+            manageUrl: url,
+          }),
+        });
+        if (sent.success) await markReminder(result.dispatch.confirmEmailReminderId, "sent", sent.messageId ?? null);
+        else await markReminder(result.dispatch.confirmEmailReminderId, "pending", null, true);
+      } catch (e) {
+        console.error("[health-booking] confirm email failed:", e instanceof Error ? e.message : "unknown");
+        await markReminder(result.dispatch.confirmEmailReminderId, "pending", null, true);
+      }
     }
   }
 }
@@ -652,42 +678,45 @@ export async function dispatchRescheduleConfirm(
   const doctor = formatDoctor(result.summary.providerTitle, result.summary.providerName);
   const url = manageUrl(result.newManageToken, locale);
 
-  // SMS move notice (PII: phone/name not logged).
-  try {
-    const sms = await sendSms({
-      to: result.dispatch.phoneE164,
-      text: HEALTH_RESCHEDULE_SMS[locale](oldDateTime, newDateTime, doctor, url),
-    });
-    await markReminder(result.dispatch.confirmSmsReminderId, sms.ok ? "sent" : "failed", sms.ok ? sms.messageId : null);
-  } catch (e) {
-    console.error("[health-booking] reschedule sms failed:", e instanceof Error ? e.message : "unknown");
-    await markReminder(result.dispatch.confirmSmsReminderId, "failed", null);
+  // SMS move notice (PII: phone/name not logged). R1: claim first (CAS pending->sending),
+  // skip if the cron took it; transient failure -> retryable 'pending'+bump.
+  if (await claimConfirmForSend(result.dispatch.confirmSmsReminderId)) {
+    try {
+      const sms = await sendSms({
+        to: result.dispatch.phoneE164,
+        text: HEALTH_RESCHEDULE_SMS[locale](oldDateTime, newDateTime, doctor, url),
+      });
+      if (sms.ok) await markReminder(result.dispatch.confirmSmsReminderId, "sent", sms.messageId);
+      else await markReminder(result.dispatch.confirmSmsReminderId, "pending", null, true);
+    } catch (e) {
+      console.error("[health-booking] reschedule sms failed:", e instanceof Error ? e.message : "unknown");
+      await markReminder(result.dispatch.confirmSmsReminderId, "pending", null, true);
+    }
   }
 
-  // Email move notice (only when the patient provided an email).
+  // Email move notice (only when the patient provided an email). R1 + retryable-on-failure as above.
   if (result.dispatch.email && result.dispatch.confirmEmailReminderId) {
-    try {
-      const sent = await sendEmail({
-        to: result.dispatch.email,
-        subject: HEALTH_RESCHEDULE_EMAIL_SUBJECT[locale],
-        react: HealthRescheduleEmail({
-          locale: coerceEmailLocale(locale),
-          patientName: result.dispatch.patientName,
-          doctor,
-          oldDateTime,
-          newDateTime,
-          serviceName: result.summary.serviceName,
-          manageUrl: url,
-        }),
-      });
-      await markReminder(
-        result.dispatch.confirmEmailReminderId,
-        sent.success ? "sent" : "failed",
-        sent.success ? sent.messageId ?? null : null,
-      );
-    } catch (e) {
-      console.error("[health-booking] reschedule email failed:", e instanceof Error ? e.message : "unknown");
-      await markReminder(result.dispatch.confirmEmailReminderId, "failed", null);
+    if (await claimConfirmForSend(result.dispatch.confirmEmailReminderId)) {
+      try {
+        const sent = await sendEmail({
+          to: result.dispatch.email,
+          subject: HEALTH_RESCHEDULE_EMAIL_SUBJECT[locale],
+          react: HealthRescheduleEmail({
+            locale: coerceEmailLocale(locale),
+            patientName: result.dispatch.patientName,
+            doctor,
+            oldDateTime,
+            newDateTime,
+            serviceName: result.summary.serviceName,
+            manageUrl: url,
+          }),
+        });
+        if (sent.success) await markReminder(result.dispatch.confirmEmailReminderId, "sent", sent.messageId ?? null);
+        else await markReminder(result.dispatch.confirmEmailReminderId, "pending", null, true);
+      } catch (e) {
+        console.error("[health-booking] reschedule email failed:", e instanceof Error ? e.message : "unknown");
+        await markReminder(result.dispatch.confirmEmailReminderId, "pending", null, true);
+      }
     }
   }
 }
