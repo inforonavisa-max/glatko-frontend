@@ -38,11 +38,15 @@ function makeRow(overrides: Partial<ClaimedReminder> = {}): ClaimedReminder {
     appointmentId: "22222222-2222-2222-2222-222222222222",
     channel: "sms",
     template: "t24",
-    sendAt: "2026-06-17T08:00:00.000Z",
+    // Relative to now so the default row is always due (past sendAt) + its slot is in the
+    // FUTURE (not stale): hardcoded absolute dates time-bomb once "today" passes the slot,
+    // making isStaleOrIrrelevant() skip every default row. Tests that exercise staleness
+    // override slotStart/now explicitly.
+    sendAt: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
     retryCount: 0,
     appointmentStatus: "confirmed",
-    slotStart: "2026-06-18T08:00:00.000Z",
-    slotEnd: "2026-06-18T08:30:00.000Z",
+    slotStart: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
+    slotEnd: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000 + 30 * 60 * 1000).toISOString(),
     oldSlotStart: null,
     manageToken: "abc123def456abc123def456abc123def456abc123def456",
     patientLocale: "tr",
