@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { submitProfessionalApplication } from "@/app/[locale]/become-a-pro/actions";
 import { cn } from "@/lib/utils";
+import { trackEventWithMeta } from "@/lib/analytics/track";
 import { useFormPersistence } from "@/lib/hooks/useFormPersistence";
 import type { ServiceCategory, MultiLangText } from "@/types/glatko";
 import type { Locale } from "@/i18n/routing";
@@ -441,6 +442,14 @@ export function BecomeAProWizard({
       const result = await submitProfessionalApplication(submitState, fd);
       setSubmitState(result);
       if (result.success) {
+        // Supply-side conversion (G-ADS): pro application submitted. Fired only
+        // on server-confirmed success, mirroring customer_job_posted on the
+        // demand side. Powers pro-acquisition Search/Demand Gen optimization.
+        trackEventWithMeta("pro_signup", {
+          provider_id: userId,
+          job_category: primaryCategoryId || undefined,
+          event_category: "pro_funnel",
+        });
         clearDraft();
       }
     });

@@ -22,7 +22,11 @@ export type GlatkoEventName =
   | "customer_job_posted"
   | "customer_contact_clicked"
   | "customer_bid_accepted"
-  | "customer_message_sent";
+  | "customer_message_sent"
+  // Supply-side (provider/pro acquisition). Fired when a pro completes the
+  // /become-a-pro application — the conversion for pro-acquisition Search/
+  // Demand Gen campaigns. Counterpart to customer_job_posted on the demand side.
+  | "pro_signup";
 
 export type GlatkoContactChannel = "whatsapp" | "viber" | "phone" | "email";
 
@@ -145,6 +149,9 @@ export function trackEventWithMeta(
     customer_contact_clicked: "Contact",
     customer_bid_accepted: "Purchase",
     customer_message_sent: "SubmitApplication",
+    // Pro application completed → registration completion in Meta's taxonomy
+    // (parallels customer_signup).
+    pro_signup: "CompleteRegistration",
   };
   const metaEventName = metaEventMap[eventName];
   if (!metaEventName) return;
