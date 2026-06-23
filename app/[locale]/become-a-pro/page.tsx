@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import { createClient } from "@/supabase/server";
 import { getTranslations } from "next-intl/server";
 import { setRequestLocale } from "next-intl/server";
@@ -10,6 +9,7 @@ import { BecomeAProWizard } from "@/components/glatko/become-a-pro/BecomeAProWiz
 import { GlatkoBentoImages } from "@/components/glatko/landing/BentoImagesGrid";
 import { NoiseCTA } from "@/components/glatko/landing/NoiseCTA";
 import { PageBackground } from "@/components/ui/PageBackground";
+import { Link } from "@/i18n/navigation";
 
 type Props = {
   params: Promise<{ locale: string }> | { locale: string };
@@ -44,8 +44,54 @@ export default async function BecomeAProPage({ params }: Props) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  const t = await getTranslations();
+
+  // Anonymous visitors (e.g. cold traffic from pro-acquisition ads) get a
+  // public marketing pitch instead of a hard login redirect — the wizard
+  // itself still requires auth, so each CTA routes through signup and back.
+  // G-ADS supply-side: pro Search/Demand Gen ads can now land here directly
+  // without bouncing cold clicks straight into a login wall.
   if (!user) {
-    redirect(`/${locale}/login?redirect=/become-a-pro`);
+    const loginHref = "/login?redirect=/become-a-pro";
+    return (
+      <PageBackground opacity={0.1}>
+        <section className="mx-auto max-w-3xl px-4 pt-28 pb-10 text-center sm:px-6">
+          <h1 className="font-serif text-3xl font-semibold text-gray-900 sm:text-4xl dark:text-white">
+            {t("pro.wizard.title")}
+          </h1>
+          <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-gray-600 dark:text-white/60">
+            {t("pro.wizard.subtitle")}
+          </p>
+          <div className="mt-8">
+            <Link
+              href={{ pathname: "/login", query: { redirect: "/become-a-pro" } }}
+              className="inline-flex rounded-xl bg-gradient-to-r from-teal-500 to-teal-600 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-teal-500/30 transition hover:opacity-95"
+            >
+              {t("landing.cta.proFooterBtn")}
+            </Link>
+          </div>
+        </section>
+        <div className="mx-auto max-w-6xl px-4 pb-12 sm:px-6">
+          <GlatkoBentoImages
+            title={t("becomePro.whyJoin.title")}
+            card1Title={t("becomePro.whyJoin.card1")}
+            card1Desc={t("becomePro.whyJoin.card1Desc")}
+            card2Title={t("becomePro.whyJoin.card2")}
+            card2Desc={t("becomePro.whyJoin.card2Desc")}
+            card3Title={t("becomePro.whyJoin.card3")}
+            card3Desc={t("becomePro.whyJoin.card3Desc")}
+            card4Title={t("becomePro.whyJoin.card4")}
+            card4Desc={t("becomePro.whyJoin.card4Desc")}
+          />
+        </div>
+        <NoiseCTA
+          title={t("landing.cta.proTitle")}
+          subtitle={t("landing.cta.proSubtitle")}
+          buttonText={t("landing.cta.proFooterBtn")}
+          buttonHref={loginHref}
+        />
+      </PageBackground>
+    );
   }
 
   const { data: existingPro } = await supabase
@@ -73,8 +119,6 @@ export default async function BecomeAProPage({ params }: Props) {
     .select("*")
     .eq("is_active", true)
     .order("sort_order");
-
-  const t = await getTranslations();
 
   if (existingPro) {
     return (
