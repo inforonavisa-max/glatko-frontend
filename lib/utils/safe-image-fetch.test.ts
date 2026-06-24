@@ -1,5 +1,26 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { isAllowedImageHost, safeFetchImage } from "./safe-image-fetch";
+import {
+  isAllowedImageHost,
+  sniffRasterType,
+  safeFetchImage,
+} from "./safe-image-fetch";
+
+// Real magic-byte prefixes (padded so length checks pass).
+const PNG = new Uint8Array([
+  0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x00,
+]);
+const JPEG = new Uint8Array([
+  0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46, 0x49, 0x46, 0x00, 0x01,
+]);
+const WEBP = new Uint8Array([
+  0x52, 0x49, 0x46, 0x46, 0x00, 0x00, 0x00, 0x00, 0x57, 0x45, 0x42, 0x50,
+]);
+// A forged payload: looks like SVG/HTML, NOT a raster image.
+const SVG = new Uint8Array(
+  [..."<svg xmlns=\"http://www.w3.org/2000/svg\"><script/>"].map((c) =>
+    c.charCodeAt(0),
+  ),
+);
 
 /** Minimal Response-like stub (headers keyed case-insensitively). */
 function mockRes(opts: {
@@ -14,7 +35,7 @@ function mockRes(opts: {
     type = null,
     length = null,
     location = null,
-    body = new Uint8Array([1, 2, 3]),
+    body = PNG,
   } = opts;
   const headers: Record<string, string> = {};
   if (type) headers["content-type"] = type;
@@ -47,6 +68,23 @@ describe("isAllowedImageHost", () => {
   });
 });
 
+describe("sniffRasterType — magic bytes, not the header", () => {
+  it("recognises PNG / JPEG / WebP", () => {
+    expect(sniffRasterType(PNG.buffer)).toBe("image/png");
+    expect(sniffRasterType(JPEG.buffer)).toBe("image/jpeg");
+    expect(sniffRasterType(WEBP.buffer)).toBe("image/webp");
+  });
+  it("rejects SVG / HTML / empty / random", () => {
+    expect(sniffRasterType(SVG.buffer)).toBeNull();
+    expect(sniffRasterType(new Uint8Array([0x00, 0x01, 0x02, 0x03]).buffer)).toBeNull();
+    expect(sniffRasterType(new Uint8Array([]).buffer)).toBeNull();
+    // GIF is a raster but intentionally NOT allowed
+    expect(
+      sniffRasterType(new Uint8Array([0x47, 0x49, 0x46, 0x38]).buffer),
+    ).toBeNull();
+  });
+});
+
 describe("safeFetchImage — SSRF guards", () => {
   const realFetch = globalThis.fetch;
   let fetchMock: ReturnType<typeof vi.fn>;
@@ -61,7 +99,7 @@ describe("safeFetchImage — SSRF guards", () => {
   });
 
   it("fetches an allowlisted https image (manual redirect mode)", async () => {
-    fetchMock.mockResolvedValue(mockRes({ type: "image/jpeg" }));
+    fetchMock.mockResolvedValue(mockRes({ type: "image/jpeg", body: JPEG }));
     const out = await safeFetchImage(
       "https://lh3.googleusercontent.com/a/pic=s96",
     );
@@ -90,7 +128,7 @@ describe("safeFetchImage — SSRF guards", () => {
         return mockRes({ status: 302, location: "https://169.254.169.254/" });
       }
       // If the guard were broken and this ran, it'd hand back an "image".
-      return mockRes({ type: "image/jpeg" });
+      return mockRes({ type: "image/jpeg", body: JPEG });
     });
     const out = await safeFetchImage("https://lh3.googleusercontent.com/a/pic");
     expect(out).toBeNull();
@@ -110,14 +148,14 @@ describe("safeFetchImage — SSRF guards", () => {
           location: "https://lh4.googleusercontent.com/a/pic",
         });
       }
-      return mockRes({ type: "image/png" });
+      return mockRes({ type: "image/png", body: PNG });
     });
     const out = await safeFetchImage("https://lh3.googleusercontent.com/a/pic");
     expect(out?.contentType).toBe("image/png");
     expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
-  it("rejects non-raster content types (html, svg)", async () => {
+  it("rejects non-raster content types (html, svg) at the header", async () => {
     fetchMock.mockResolvedValue(mockRes({ type: "text/html" }));
     expect(
       await safeFetchImage("https://lh3.googleusercontent.com/x"),
@@ -129,9 +167,23 @@ describe("safeFetchImage — SSRF guards", () => {
     ).toBeNull();
   });
 
+  it("rejects a forged image/* header whose BYTES are not a raster (anti stored-XSS)", async () => {
+    // Header lies: claims image/png, body is actually SVG/script.
+    fetchMock.mockResolvedValue(mockRes({ type: "image/png", body: SVG }));
+    const out = await safeFetchImage("https://lh3.googleusercontent.com/evil");
+    expect(out).toBeNull();
+  });
+
+  it("trusts the sniffed type over a mismatched header", async () => {
+    // Header says jpeg, bytes are actually PNG → store as png.
+    fetchMock.mockResolvedValue(mockRes({ type: "image/jpeg", body: PNG }));
+    const out = await safeFetchImage("https://lh3.googleusercontent.com/z");
+    expect(out?.contentType).toBe("image/png");
+  });
+
   it("rejects oversized images (content-length cap)", async () => {
     fetchMock.mockResolvedValue(
-      mockRes({ type: "image/jpeg", length: 6 * 1024 * 1024 }),
+      mockRes({ type: "image/jpeg", length: 6 * 1024 * 1024, body: JPEG }),
     );
     expect(
       await safeFetchImage("https://lh3.googleusercontent.com/big"),
