@@ -84,9 +84,12 @@ export async function getProfessionalProfileBySlug(
 ): Promise<ProfessionalProfile | null> {
   const supabase = createClient();
 
+  // PII lockdown (087): public profile reads the PII-free view (no phone /
+  // company_documents / admin_notes / raw tier_documents). full_name + avatar_url
+  // are flat columns on the view.
   const { data: pro, error } = await supabase
-    .from("glatko_professional_profiles")
-    .select("*, profiles!glatko_professional_profiles_id_fkey(full_name, avatar_url)")
+    .from("glatko_public_professionals")
+    .select("*")
     .eq("slug", slug)
     .single();
 
@@ -99,7 +102,10 @@ export async function getProfessionalProfileBySlug(
 
   return {
     ...pro,
-    profile: pro.profiles ?? undefined,
+    profile:
+      pro.full_name || pro.avatar_url
+        ? { full_name: pro.full_name, avatar_url: pro.avatar_url }
+        : undefined,
     services: (services as ProService[]) ?? [],
   } as ProfessionalProfile;
 }
@@ -114,9 +120,8 @@ export async function getProfessionalsForSitemap(): Promise<
 > {
   const supabase = createClient();
   const { data, error } = await supabase
-    .from("glatko_professional_profiles")
+    .from("glatko_public_professionals")
     .select("slug, updated_at")
-    .eq("is_active", true)
     .eq("verification_status", "approved");
 
   if (error || !data) return [];
@@ -339,6 +344,35 @@ export async function getServiceRequest(requestId: string) {
     return null;
   }
   return data;
+}
+
+/**
+ * PII lockdown (087): a pro's view of a request they were MATCHED to. Reads the
+ * auth.uid()-scoped glatko_matched_request view (address + customer first name
+ * YES; anonymous_email / precise geo / customer_id NO). Returns null if the
+ * caller is not a matched pro for this request. Replaces the prior getServiceRequest
+ * call on the pro request-detail page (that returned all columns incl PII).
+ */
+export async function getMatchedRequestForPro(requestId: string) {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("glatko_matched_request")
+    .select("*")
+    .eq("id", requestId)
+    .maybeSingle();
+  if (error || !data) return null;
+  const { data: category } = await supabase
+    .from("glatko_service_categories")
+    .select("id, slug, name, icon, parent_id")
+    .eq("id", data.category_id as string)
+    .maybeSingle();
+  return {
+    ...data,
+    category: category ?? null,
+    customer: data.customer_full_name
+      ? { full_name: data.customer_full_name as string }
+      : null,
+  };
 }
 
 interface CreateServiceRequestInput {
