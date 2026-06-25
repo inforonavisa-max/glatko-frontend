@@ -5,6 +5,7 @@ import { z } from "zod";
 import { getTranslations } from "next-intl/server";
 
 import { createClient, createAdminClient } from "@/supabase/server";
+import { normalizePhoneE164 } from "@/lib/phone/normalize";
 import { sendAdminProApplicationEmail } from "@/lib/email/pro-emails";
 import { glatkoCaptureException } from "@/lib/sentry/glatko-capture";
 
@@ -109,6 +110,14 @@ export async function submitProfessionalApplication(
     return { success: false, error: t("validation") };
   }
 
+  // G-PHONE: authoritative E.164 normalization (libphonenumber-js, ME default).
+  // The pro phone is shown to matched customers + used for notifications, so a
+  // bad number must never persist — normalize here (server) regardless of client.
+  const phoneResult = normalizePhoneE164(parsed.data.phone);
+  if (!phoneResult.ok) {
+    return { success: false, error: t("phone") };
+  }
+
   // Coerce to canonical lowercase at the write site: this is the path that
   // historically stored uppercase codes, and it bypasses the Zod schema
   // (languages is read raw from FormData, not from parsed.data).
@@ -178,7 +187,7 @@ export async function submitProfessionalApplication(
     id: user.id,
     business_name: parsed.data.businessName,
     bio: parsed.data.bio ?? null,
-    phone: parsed.data.phone,
+    phone: phoneResult.e164,
     location_city: parsed.data.city,
     languages: languages.length > 0 ? languages : ["en"],
     years_experience: parsed.data.yearsExperience ?? null,

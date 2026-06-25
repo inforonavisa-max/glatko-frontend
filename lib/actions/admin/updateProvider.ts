@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createAdminClient, createClient } from "@/supabase/server";
+import { normalizePhoneE164 } from "@/lib/phone/normalize";
 import { isAdminEmail } from "@/lib/admin";
 import { logAdminAction } from "@/lib/admin/audit";
 import {
@@ -58,6 +59,20 @@ export async function updateProviderAction(
     };
   }
   const input: AdminProviderEditPayload = parsed.data;
+
+  // G-PHONE: authoritative E.164 normalization (libphonenumber-js, ME default)
+  // when phone is part of this sparse edit. (Admin UI is TR-hardcoded per policy.)
+  if (input.phone !== undefined && input.phone !== null) {
+    const adminPhone = normalizePhoneE164(input.phone);
+    if (!adminPhone.ok) {
+      return {
+        ok: false,
+        error: "Geçerli bir telefon numarası girin (ör. +382 67 123 456).",
+        code: "VALIDATION",
+      };
+    }
+    input.phone = adminPhone.e164;
+  }
 
   // Build the JSONB column payload: drop control fields + drop `undefined`
   // (absent → sparse no-op) but keep `null` (explicit clear).

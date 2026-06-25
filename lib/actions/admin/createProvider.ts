@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createAdminClient, createClient } from "@/supabase/server";
+import { normalizePhoneE164 } from "@/lib/phone/normalize";
 import { isAdminEmail } from "@/lib/admin";
 import { logAdminAction } from "@/lib/admin/audit";
 import {
@@ -73,6 +74,18 @@ export async function createProviderAction(
     };
   }
   const input: AdminProviderCreateInput = parsed.data;
+
+  // G-PHONE: authoritative E.164 normalization (libphonenumber-js, ME default) —
+  // also lets the admin enter a bare local number (067…) instead of forcing the
+  // explicit +382 the regex required. (Admin UI is TR-hardcoded per policy.)
+  const adminPhone = normalizePhoneE164(input.phone);
+  if (!adminPhone.ok) {
+    return {
+      success: false,
+      error: "Geçerli bir telefon numarası girin (ör. +382 67 123 456).",
+    };
+  }
+  input.phone = adminPhone.e164;
 
   const admin = createAdminClient();
 

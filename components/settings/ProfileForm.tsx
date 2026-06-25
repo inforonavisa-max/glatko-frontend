@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
@@ -16,6 +16,7 @@ import type { UserProfileRow } from "@/lib/actions/profile";
 import { updateProfile } from "@/lib/actions/profile";
 import { GLATKO_CITIES } from "@/lib/glatko/cities";
 import { AvatarUpload } from "@/components/settings/AvatarUpload";
+import { PhoneInput } from "@/components/ui/PhoneInput";
 import { LanguageSelector } from "@/components/settings/LanguageSelector";
 import { Link } from "@/i18n/navigation";
 import { PasswordChangeModal } from "@/components/settings/PasswordChangeModal";
@@ -211,11 +212,16 @@ export function ProfileForm({ initialProfile, email }: ProfileFormProps) {
           <label className="mb-1.5 block text-xs font-medium text-gray-600 dark:text-white/50">
             {tp("phone")}
           </label>
-          <input
-            className={inputCls}
-            type="tel"
-            {...form.register("phone")}
-            placeholder={tp("phonePlaceholder")}
+          <Controller
+            control={form.control}
+            name="phone"
+            render={({ field }) => (
+              <PhoneInput
+                value={field.value ?? ""}
+                onChange={field.onChange}
+                defaultCountry="ME"
+              />
+            )}
           />
           {form.formState.errors.phone && (
             <p className="mt-1 text-xs text-red-600 dark:text-red-400">

@@ -2036,7 +2036,8 @@
       "selectService": "Select at least one service.",
       "pickPrimary": "Choose a primary service.",
       "validation": "Some details look off. Please check the fields.",
-      "generic": "We couldn't submit your application. Please try again shortly."
+      "generic": "We couldn't submit your application. Please try again shortly.",
+      "phone": "Enter a valid phone number (e.g. +382 67 123 456)."
     }
   },
   "validation": {
@@ -2052,7 +2053,8 @@
     "maxItems": "At most {max} items allowed",
     "passwordMismatch": "Passwords do not match",
     "categoryRequired": "Select at least one category",
-    "avatarRequired": "Add a profile photo to continue"
+    "avatarRequired": "Add a profile photo to continue",
+    "phoneInvalid": "Enter a valid phone number (e.g. +382 67 123 456)."
   },
   "seasonal": {
     "active": "In Season",

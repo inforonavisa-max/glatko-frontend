@@ -14,6 +14,7 @@ import { createProviderAction } from "@/lib/actions/admin/createProvider";
 import { updateProviderAction } from "@/lib/actions/admin/updateProvider";
 import { searchUsersForPromoteAction } from "@/lib/actions/admin/searchUsers";
 
+import { PhoneInput } from "@/components/ui/PhoneInput";
 import { ProviderUserSearch, type UserSearchRow } from "./ProviderUserSearch";
 import { ProviderAvatarUpload } from "./ProviderAvatarUpload";
 import { ProviderPhotoUpload } from "./ProviderPhotoUpload";
@@ -437,13 +438,11 @@ export function ProviderCreateForm(props: Props) {
             />
           </FormField>
           <FormField label="Telefon">
-            <input
-              type="tel"
-              required
+            <PhoneInput
               value={state.phone}
-              onChange={(e) => update("phone", e.target.value)}
-              className={formInputCls}
-              placeholder="+382 69 868 069"
+              onChange={(v) => update("phone", v)}
+              defaultCountry="ME"
+              required
             />
           </FormField>
           <FormField label="Tercih edilen dil">

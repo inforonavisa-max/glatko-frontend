@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { resizeImage } from "@/lib/utils/imageResize";
 import { uploadRequestPhoto } from "@/lib/supabase/storage";
 import { cn } from "@/lib/utils";
+import { PhoneInput } from "@/components/ui/PhoneInput";
 
 interface Props {
   photos: string[];
@@ -220,7 +221,7 @@ export function StepPhotos({
         {/* ── Contact fields — D1 login input pattern ── */}
         <div>
           <FieldLabel>{t("request.step4.phone")} *</FieldLabel>
-          <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder={t("request.step4.phonePlaceholder")} required className={inputCls} />
+          <PhoneInput value={phone} onChange={setPhone} defaultCountry="ME" required />
         </div>
 
         <div>

@@ -2036,7 +2036,8 @@
       "selectService": "Wähle mindestens eine Dienstleistung aus.",
       "pickPrimary": "Wähle eine Hauptdienstleistung aus.",
       "validation": "Einige Angaben stimmen nicht. Bitte überprüfe die Felder.",
-      "generic": "Deine Bewerbung konnte nicht gesendet werden. Bitte versuche es gleich erneut."
+      "generic": "Deine Bewerbung konnte nicht gesendet werden. Bitte versuche es gleich erneut.",
+      "phone": "Gib eine gültige Telefonnummer ein (z. B. +382 67 123 456)."
     }
   },
   "validation": {
@@ -2052,7 +2053,8 @@
     "maxItems": "Höchstens {max} Einträge",
     "passwordMismatch": "Passwörter stimmen nicht überein",
     "categoryRequired": "Wählen Sie mindestens eine Kategorie",
-    "avatarRequired": "Bitte fügen Sie ein Profilfoto hinzu"
+    "avatarRequired": "Bitte fügen Sie ein Profilfoto hinzu",
+    "phoneInvalid": "Gib eine gültige Telefonnummer ein (z. B. +382 67 123 456)."
   },
   "seasonal": {
     "active": "Saison",

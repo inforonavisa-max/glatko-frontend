@@ -2036,7 +2036,8 @@
       "selectService": "En az bir hizmet alanı seç.",
       "pickPrimary": "Birincil hizmet alanını seç.",
       "validation": "Girdiğin bilgilerde bir sorun var. Lütfen alanları kontrol et.",
-      "generic": "Başvuru gönderilemedi. Lütfen birazdan tekrar dene."
+      "generic": "Başvuru gönderilemedi. Lütfen birazdan tekrar dene.",
+      "phone": "Geçerli bir telefon numarası gir (ör. +382 67 123 456)."
     }
   },
   "validation": {
@@ -2052,7 +2053,8 @@
     "maxItems": "En fazla {max} öğe",
     "passwordMismatch": "Şifreler eşleşmiyor",
     "categoryRequired": "En az bir kategori seçin",
-    "avatarRequired": "Devam etmek için profil fotoğrafı ekleyin"
+    "avatarRequired": "Devam etmek için profil fotoğrafı ekleyin",
+    "phoneInvalid": "Geçerli bir telefon numarası gir (ör. +382 67 123 456)."
   },
   "seasonal": {
     "active": "Sezonda",
