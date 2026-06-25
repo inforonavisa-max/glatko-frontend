@@ -2036,7 +2036,8 @@
       "selectService": "Seleziona almeno un servizio.",
       "pickPrimary": "Scegli un servizio principale.",
       "validation": "Alcuni dati non sono corretti. Controlla i campi.",
-      "generic": "Non siamo riusciti a inviare la tua candidatura. Riprova tra poco."
+      "generic": "Non siamo riusciti a inviare la tua candidatura. Riprova tra poco.",
+      "phone": "Inserisci un numero di telefono valido (es. +382 67 123 456)."
     }
   },
   "validation": {
@@ -2052,7 +2053,8 @@
     "maxItems": "Al massimo {max} elementi",
     "passwordMismatch": "Le password non coincidono",
     "categoryRequired": "Seleziona almeno una categoria",
-    "avatarRequired": "Aggiungi una foto del profilo per continuare"
+    "avatarRequired": "Aggiungi una foto del profilo per continuare",
+    "phoneInvalid": "Inserisci un numero di telefono valido (es. +382 67 123 456)."
   },
   "seasonal": {
     "active": "In Stagione",

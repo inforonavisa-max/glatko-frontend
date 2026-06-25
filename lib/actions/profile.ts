@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { createClient } from "@/supabase/server";
 import { safeFetchImage } from "@/lib/utils/safe-image-fetch";
+import { normalizePhoneE164 } from "@/lib/phone/normalize";
 import {
   createProfileFieldsSchema,
   createPasswordSchema,
@@ -125,6 +126,17 @@ export async function updateProfile(formData: FormData) {
   }
 
   const normalized = normalizeProfilePayload(validated.data);
+
+  // G-PHONE: authoritative E.164 normalization (libphonenumber-js, ME default).
+  // Phone is optional here; when present it must be a valid number before it
+  // persists (bad input is rejected even via a direct REST/edge call).
+  if (normalized.phone) {
+    const phoneResult = normalizePhoneE164(normalized.phone);
+    if (!phoneResult.ok) {
+      return { error: { phone: [t("phoneInvalid")] } };
+    }
+    normalized.phone = phoneResult.e164;
+  }
 
   // Partial UPDATE only — never upsert (insert would omit NOT NULL columns like email).
   const { error } = await supabase

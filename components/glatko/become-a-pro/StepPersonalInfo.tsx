@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import type { useTranslations } from "next-intl";
+import { PhoneInput } from "@/components/ui/PhoneInput";
 import { ProWizardAvatarUpload } from "./ProWizardAvatarUpload";
 
 const CITY_SLUGS = [
@@ -132,13 +133,7 @@ export function StepPersonalInfo({
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <div>
           <label className={labelCls}>{t("pro.wizard.phone")}</label>
-          <input
-            className={inputCls}
-            type="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="+382 ..."
-          />
+          <PhoneInput value={phone} onChange={setPhone} defaultCountry="ME" />
         </div>
         <div>
           <label className={labelCls}>{t("pro.wizard.city")}</label>

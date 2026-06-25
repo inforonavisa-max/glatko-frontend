@@ -4,6 +4,7 @@ import { z } from "zod";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import { createClient } from "@/supabase/server";
+import { normalizePhoneE164 } from "@/lib/phone/normalize";
 import { pickLocalizedLabel } from "@/lib/i18n/pick-localized-label";
 import { createServiceRequestSchema } from "@/lib/validations/service-request";
 import { sendAdminPendingRequestEmail } from "@/lib/email/request-emails";
@@ -137,7 +138,13 @@ export async function submitServiceRequest(
     };
   }
 
-  data.details.phone = phone;
+  // G-PHONE: authoritative E.164 normalization (libphonenumber-js, ME default)
+  // for the customer's contact number before it is stored on the request.
+  const reqPhone = normalizePhoneE164(phone);
+  if (!reqPhone.ok) {
+    return { success: false, error: t("phoneInvalid") };
+  }
+  data.details.phone = reqPhone.e164;
   if (emailStr) data.details.email = emailStr;
 
   const preferredRaw = (formData.get("preferredProfessionalId") as string) || "";

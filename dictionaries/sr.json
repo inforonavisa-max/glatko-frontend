@@ -2036,7 +2036,8 @@
       "selectService": "Izaberite bar jednu uslugu.",
       "pickPrimary": "Izaberite primarnu uslugu.",
       "validation": "Neki podaci nisu ispravni. Proverite polja.",
-      "generic": "Nismo uspeli da pošaljemo prijavu. Pokušajte ponovo za trenutak."
+      "generic": "Nismo uspeli da pošaljemo prijavu. Pokušajte ponovo za trenutak.",
+      "phone": "Unesite ispravan broj telefona (npr. +382 67 123 456)."
     }
   },
   "validation": {
@@ -2052,7 +2053,8 @@
     "maxItems": "Najviše {max} stavki",
     "passwordMismatch": "Lozinke se ne poklapaju",
     "categoryRequired": "Izaberite bar jednu kategoriju",
-    "avatarRequired": "Dodajte fotografiju profila da nastavite"
+    "avatarRequired": "Dodajte fotografiju profila da nastavite",
+    "phoneInvalid": "Unesite ispravan broj telefona (npr. +382 67 123 456)."
   },
   "seasonal": {
     "active": "У сезони",
